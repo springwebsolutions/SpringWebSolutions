@@ -1,0 +1,8 @@
+# Robots.txt for Spring Web Solutions Digital Platform
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /setup/
+Disallow: /login
+
+Sitemap: https://springwebsolutions.com/sitemap.xml
