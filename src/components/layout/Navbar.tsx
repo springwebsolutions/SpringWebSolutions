@@ -84,8 +84,7 @@ export const Navbar: React.FC = () => {
               </Link>
             )}
 
-            {/* Auth Button */}
-            {user ? (
+            {user && (
               <div className="flex items-center space-x-2 border-l border-white/10 pl-3 light:border-slate-200">
                 <span className="text-sm font-medium text-slate-300 light:text-slate-600 flex items-center gap-1.5">
                   <User size={15} />
@@ -99,14 +98,6 @@ export const Navbar: React.FC = () => {
                   <LogOut size={16} />
                 </button>
               </div>
-            ) : (
-              <Link
-                to="/login"
-                className="btn-secondary py-1.5 px-3 flex items-center gap-1.5 text-sm"
-              >
-                <Lock size={14} />
-                <span>Admin Login</span>
-              </Link>
             )}
           </div>
 
@@ -144,7 +135,7 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile Auth Sections */}
           <div className="border-t border-white/10 pt-4 mt-2 light:border-slate-200 space-y-2">
-            {user ? (
+            {user && (
               <>
                 <div className="px-3 py-1.5 text-slate-300 light:text-slate-600 flex items-center gap-2 text-sm font-medium">
                   <User size={16} />
@@ -168,15 +159,6 @@ export const Navbar: React.FC = () => {
                   <span>Logout</span>
                 </button>
               </>
-            ) : (
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-white/5 border border-white/10 text-slate-200 font-medium"
-              >
-                <Lock size={16} />
-                <span>Admin Login</span>
-              </Link>
             )}
           </div>
         </div>
