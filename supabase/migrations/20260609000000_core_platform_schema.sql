@@ -599,6 +599,7 @@ DECLARE
   v_action TEXT;
   v_old JSONB := NULL;
   v_new JSONB := NULL;
+  v_record_id TEXT;
 BEGIN
   -- Extract user ID from Supabase session context if available
   BEGIN
@@ -610,17 +611,20 @@ BEGIN
   IF (TG_OP = 'DELETE') THEN
     v_action := 'DELETE';
     v_old := to_jsonb(OLD);
+    v_record_id := COALESCE(v_old->>'id', v_old->>'key', 'unknown');
   ELSIF (TG_OP = 'UPDATE') THEN
     v_action := 'UPDATE';
     v_old := to_jsonb(OLD);
     v_new := to_jsonb(NEW);
+    v_record_id := COALESCE(v_new->>'id', v_new->>'key', 'unknown');
   ELSIF (TG_OP = 'INSERT') THEN
     v_action := 'INSERT';
     v_new := to_jsonb(NEW);
+    v_record_id := COALESCE(v_new->>'id', v_new->>'key', 'unknown');
   END IF;
 
   INSERT INTO public.audit_logs (user_id, action, table_name, record_id, old_data, new_data)
-  VALUES (v_user_id, v_action, TG_TABLE_NAME, COALESCE(NEW.id::text, OLD.id::text), v_old, v_new);
+  VALUES (v_user_id, v_action, TG_TABLE_NAME, v_record_id, v_old, v_new);
 
   RETURN COALESCE(NEW, OLD);
 END;
