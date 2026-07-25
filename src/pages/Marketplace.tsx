@@ -113,7 +113,7 @@ export const Marketplace: React.FC = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     selectedType === type.value
                       ? 'bg-brand-emerald text-white'
-                      : 'bg-white/5 text-slate-440 hover:text-white light:bg-slate-100 light:text-slate-600'
+                      : 'bg-white/5 text-slate-400 hover:text-white light:bg-slate-100 light:text-slate-600'
                   }`}
                 >
                   {type.label}
@@ -130,7 +130,7 @@ export const Marketplace: React.FC = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                 placeholder="Search products..."
               />
             </div>

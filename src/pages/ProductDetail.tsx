@@ -202,7 +202,7 @@ export const ProductDetail: React.FC = () => {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-8">
           
           {/* Back link */}
-          <Link to="/marketplace" className="inline-flex items-center gap-1 text-xs text-slate-450 hover:text-white transition-colors light:text-slate-500">
+          <Link to="/marketplace" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors light:text-slate-500">
             <ArrowLeft size={13} />
             <span>Return to digital catalog</span>
           </Link>

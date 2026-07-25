@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 
 // Public Pages
 import DynamicPage from '@/pages/DynamicPage'
@@ -31,9 +32,11 @@ import SupportManager from '@/pages/admin/SupportManager'
 
 function App() {
   const { initialize } = useAuthStore()
+  const { prefetchAllPages } = usePageBuilderStore()
 
   useEffect(() => {
     initialize()
+    prefetchAllPages()
   }, [])
 
   return (

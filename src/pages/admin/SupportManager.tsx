@@ -210,7 +210,7 @@ export const SupportManager: React.FC = () => {
           </div>
           <button 
             onClick={fetchTickets}
-            className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-450 hover:text-white transition-all cursor-pointer"
+            className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
             title="Refresh Inbox"
           >
             <RefreshCw size={15} />
@@ -280,7 +280,7 @@ export const SupportManager: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-white/5 bg-white/2 text-slate-450 font-semibold uppercase tracking-wider text-[10px]">
+                      <tr className="border-b border-white/5 bg-white/2 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                         <th className="px-4 py-3">Client</th>
                         <th className="px-4 py-3">Subject</th>
                         <th className="px-4 py-3">Priority</th>
@@ -289,7 +289,7 @@ export const SupportManager: React.FC = () => {
                         <th className="px-4 py-3 text-right">Updated</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-slate-350">
+                    <tbody className="divide-y divide-white/5 text-slate-300">
                       {filteredTickets.map((t) => {
                         const isSelected = selectedTicket?.id === t.id
                         return (
@@ -345,7 +345,7 @@ export const SupportManager: React.FC = () => {
                     <span className="text-xs font-mono font-bold text-brand-emerald">#{selectedTicket.id.slice(0, 8)}</span>
                     <h4 className="text-xs sm:text-sm font-bold text-white truncate max-w-[200px]">{selectedTicket.subject}</h4>
                   </div>
-                  <p className="text-[10px] text-slate-550 mt-0.5">
+                  <p className="text-[10px] text-slate-500 mt-0.5">
                     Client: <span className="text-slate-400 font-semibold">{selectedTicket.profiles?.full_name}</span> ({selectedTicket.profiles?.company || 'No Company'})
                   </p>
                 </div>

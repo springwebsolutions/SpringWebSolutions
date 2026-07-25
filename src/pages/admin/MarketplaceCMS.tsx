@@ -435,7 +435,7 @@ export const MarketplaceCMS: React.FC = () => {
                 </div>
 
                 {/* Free vs Premium selectors */}
-                <label className="flex items-center space-x-2 text-xs text-slate-350 cursor-pointer select-none py-1">
+                <label className="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer select-none py-1">
                   <input
                     type="checkbox"
                     checked={isFree}
@@ -552,7 +552,7 @@ export const MarketplaceCMS: React.FC = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-slate-350">
+                <table className="w-full text-sm text-left text-slate-300">
                   <thead className="text-xs uppercase bg-white/2 text-slate-400 tracking-wider">
                     <tr>
                       <th className="px-6 py-3.5">Name</th>
@@ -622,7 +622,7 @@ export const MarketplaceCMS: React.FC = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-slate-350">
+                <table className="w-full text-sm text-left text-slate-300">
                   <thead className="text-xs uppercase bg-white/2 text-slate-400 tracking-wider">
                     <tr>
                       <th className="px-6 py-3.5">Client Owner</th>

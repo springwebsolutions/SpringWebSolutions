@@ -11,7 +11,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
   const blocks = content.split(/(?:\r?\n){2,}/)
 
   return (
-    <div className="prose max-w-none text-slate-350 dark:text-slate-300 light:text-slate-800">
+    <div className="prose max-w-none text-slate-300 dark:text-slate-300 light:text-slate-800">
       {blocks.map((block, idx) => {
         const trimmed = block.trim()
         if (!trimmed) return null

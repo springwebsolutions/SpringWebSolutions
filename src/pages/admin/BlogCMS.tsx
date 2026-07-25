@@ -333,7 +333,7 @@ export const BlogCMS: React.FC = () => {
 
                 {editorTab === 'write' ? (
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-450 uppercase tracking-wider flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                       <span>Article Markdown Body</span>
                       <span className="text-[10px] lowercase text-slate-500 font-mono">Supports standard # H2, ## H3, &gt; quotes, * lists, ``` code</span>
                     </label>
@@ -389,7 +389,7 @@ export const BlogCMS: React.FC = () => {
                 </div>
 
                 {/* Featured checkbox */}
-                <label className="flex items-center space-x-2 text-xs text-slate-350 cursor-pointer select-none py-1">
+                <label className="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer select-none py-1">
                   <input
                     type="checkbox"
                     checked={isFeatured}

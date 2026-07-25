@@ -144,7 +144,7 @@ export const MediaLibrary: React.FC = () => {
   }
 
   const getFileIcon = (mime: string) => {
-    if (mime.startsWith('image/')) return <ImageIcon className="text-emerald-450" size={24} />
+    if (mime.startsWith('image/')) return <ImageIcon className="text-emerald-500" size={24} />
     if (mime.includes('zip') || mime.includes('x-zip') || mime.includes('octet-stream')) return <FileArchive className="text-brand-indigo" size={24} />
     return <FileText className="text-blue-400" size={24} />
   }
@@ -247,7 +247,7 @@ export const MediaLibrary: React.FC = () => {
                     <img
                       src={file.file_path}
                       alt={file.filename}
-                      className="w-full h-full object-cover group-hover:scale-101 transition-transform"
+                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform"
                     />
                   ) : (
                     getFileIcon(file.mime_type)

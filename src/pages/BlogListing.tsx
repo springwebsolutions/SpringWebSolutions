@@ -121,7 +121,7 @@ export const BlogListing: React.FC = () => {
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                   !selectedCategory 
                     ? 'bg-brand-emerald text-white shadow-md' 
-                    : 'bg-white/5 text-slate-450 hover:bg-white/10 hover:text-white light:bg-slate-100 light:text-slate-600'
+                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white light:bg-slate-100 light:text-slate-600'
                 }`}
               >
                 All Articles
@@ -133,7 +133,7 @@ export const BlogListing: React.FC = () => {
                   className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                     selectedCategory === cat.slug
                       ? 'bg-brand-emerald text-white shadow-md'
-                      : 'bg-white/5 text-slate-450 hover:bg-white/10 hover:text-white light:bg-slate-100 light:text-slate-600'
+                      : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white light:bg-slate-100 light:text-slate-600'
                   }`}
                 >
                   {cat.name}
@@ -150,7 +150,7 @@ export const BlogListing: React.FC = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                 placeholder="Search articles..."
               />
             </div>
@@ -187,10 +187,10 @@ export const BlogListing: React.FC = () => {
                         <img
                           src={featuredPost.featured_image}
                           alt={featuredPost.title}
-                          className="w-full h-full object-cover group-hover:scale-101 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-650">
+                        <div className="w-full h-full flex items-center justify-center text-slate-600">
                           <BookOpen size={64} />
                         </div>
                       )}
@@ -254,7 +254,7 @@ export const BlogListing: React.FC = () => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-650">
+                            <div className="w-full h-full flex items-center justify-center text-slate-600">
                               <BookOpen size={48} />
                             </div>
                           )}

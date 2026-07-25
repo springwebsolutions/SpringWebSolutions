@@ -153,7 +153,7 @@ export const BlogPost: React.FC = () => {
         <article className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8">
           
           {/* Breadcrumbs / Back button */}
-          <Link to="/blog" className="inline-flex items-center gap-1 text-xs text-slate-450 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
+          <Link to="/blog" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
             <ArrowLeft size={13} />
             <span>Back to digital growth hub</span>
           </Link>
@@ -206,41 +206,20 @@ export const BlogPost: React.FC = () => {
 
           {/* Social share widget drawer */}
           <div className="border-t border-white/5 pt-8 light:border-slate-200 space-y-4">
-            <h3 className="font-display font-semibold text-sm text-slate-350 light:text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+            <h3 className="font-display font-semibold text-sm text-slate-300 light:text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
               <Share2 size={15} />
               <span>Share Article</span>
             </h3>
             <div className="flex space-x-2">
               <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:text-white hover:bg-[#0077b5]/20 hover:border-[#0077b5]/30 transition-all text-slate-300 light:bg-slate-100 light:border-slate-200 light:text-slate-600 flex items-center justify-center"
-                title="Share on LinkedIn"
-              >
-                <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </a>
-              <a
-                href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:text-white hover:bg-white/10 transition-all text-slate-300 light:bg-slate-100 light:border-slate-200 light:text-slate-600 flex items-center justify-center"
-                title="Share on Twitter"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a
                 href={`https://api.whatsapp.com/send?text=${shareTitle}%20${shareUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all text-slate-300 light:bg-slate-100 light:border-slate-200 light:text-slate-600 flex items-center justify-center"
+                className="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all text-slate-300 light:bg-slate-100 light:border-slate-200 light:text-slate-600 flex items-center justify-center gap-2 text-xs font-medium"
                 title="Share on WhatsApp"
               >
                 <MessageSquare size={16} />
+                <span>Share via WhatsApp</span>
               </a>
             </div>
           </div>

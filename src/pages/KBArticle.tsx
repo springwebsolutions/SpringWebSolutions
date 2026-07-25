@@ -87,7 +87,7 @@ export const KBArticle: React.FC = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
           
           {/* Back button */}
-          <Link to="/kb" className="inline-flex items-center gap-1.5 text-xs text-slate-450 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
+          <Link to="/kb" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
             <ArrowLeft size={14} />
             <span>Back to Knowledge Base</span>
           </Link>
@@ -166,7 +166,7 @@ export const KBArticle: React.FC = () => {
                 <div className="glass-panel p-6 rounded-2xl text-center space-y-4">
                   <HelpCircle className="mx-auto text-brand-indigo" size={36} />
                   <h4 className="font-display font-bold text-white text-sm light:text-slate-800">Still Stuck?</h4>
-                  <p className="text-xs text-slate-450 light:text-slate-500 leading-relaxed">
+                  <p className="text-xs text-slate-400 light:text-slate-500 leading-relaxed">
                     If this guide did not solve your issue, our help support desk is open. Submit a ticket and a specialist will assist you.
                   </p>
                   <Link to="/support" className="btn-primary w-full py-2.5 inline-block font-semibold shadow-lg shadow-brand-indigo/10">

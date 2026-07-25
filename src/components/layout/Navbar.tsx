@@ -86,13 +86,13 @@ export const Navbar: React.FC = () => {
 
             {user && (
               <div className="flex items-center space-x-2 border-l border-white/10 pl-3 light:border-slate-200">
-                <span className="text-sm font-medium text-slate-300 light:text-slate-600 flex items-center gap-1.5">
+                <span className="text-sm font-medium text-slate-300 light:text-slate-600 flex items-center gap-1.5 animate-fade-in-up">
                   <User size={15} />
                   {profile?.full_name || user.email}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="p-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                  className="p-2 rounded-lg text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                   title="Logout"
                 >
                   <LogOut size={16} />
@@ -153,7 +153,7 @@ export const Navbar: React.FC = () => {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-rose-500/10 text-rose-400 font-medium"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-rose-500/10 text-rose-500 font-medium"
                 >
                   <LogOut size={16} />
                   <span>Logout</span>

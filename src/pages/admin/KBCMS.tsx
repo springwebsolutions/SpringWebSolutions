@@ -346,7 +346,7 @@ export const KBCMS: React.FC = () => {
           <div className="flex items-center justify-between border-b border-white/5 pb-4">
             <button
               onClick={handleCancelArticleEdit}
-              className="text-slate-450 hover:text-white text-xs flex items-center gap-1 font-semibold"
+              className="text-slate-400 hover:text-white text-xs flex items-center gap-1 font-semibold"
             >
               <ArrowLeft size={14} />
               <span>Back to listings</span>
@@ -402,7 +402,7 @@ export const KBCMS: React.FC = () => {
                     <textarea
                       rows={14}
                       {...regArt('content')}
-                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-xs sm:text-sm font-mono text-emerald-450 focus:outline-none focus:border-brand-emerald"
+                      className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-xs sm:text-sm font-mono text-emerald-500 focus:outline-none focus:border-brand-emerald"
                       placeholder="Write description in Markdown format. Support lists, # headers, > blockquotes and ```code sections."
                     />
                     {artErrors.content?.message && <p className="text-xs text-rose-400">{String(artErrors.content.message)}</p>}
@@ -497,7 +497,7 @@ export const KBCMS: React.FC = () => {
         <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden">
           {articles.length === 0 ? (
             <div className="text-center py-16 space-y-3">
-              <BookOpen className="mx-auto text-slate-650" size={40} />
+              <BookOpen className="mx-auto text-slate-600" size={40} />
               <h4 className="text-sm font-bold text-white">No Articles Logged</h4>
               <p className="text-xs text-slate-500">Log some articles to documentation directories.</p>
             </div>
@@ -505,7 +505,7 @@ export const KBCMS: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-white/5 bg-white/2 text-slate-450 font-semibold uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-white/5 bg-white/2 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                     <th className="px-6 py-3">Title</th>
                     <th className="px-6 py-3">Category</th>
                     <th className="px-6 py-3">Status</th>
@@ -513,7 +513,7 @@ export const KBCMS: React.FC = () => {
                     <th className="px-6 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-slate-350">
+                <tbody className="divide-y divide-white/5 text-slate-300">
                   {articles.map((art) => (
                     <tr key={art.id} className="hover:bg-white/1">
                       <td className="px-6 py-4 font-semibold text-white">
@@ -565,7 +565,7 @@ export const KBCMS: React.FC = () => {
         <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden">
           {categories.length === 0 ? (
             <div className="text-center py-16 space-y-3">
-              <FolderPlus className="mx-auto text-slate-650" size={40} />
+              <FolderPlus className="mx-auto text-slate-600" size={40} />
               <h4 className="text-sm font-bold text-white">No Categories Added</h4>
               <p className="text-xs text-slate-500">Define some content categories to list articles.</p>
             </div>
@@ -573,18 +573,18 @@ export const KBCMS: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-white/5 bg-white/2 text-slate-450 font-semibold uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-white/5 bg-white/2 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                     <th className="px-6 py-3">Name</th>
                     <th className="px-6 py-3">Slug</th>
                     <th className="px-6 py-3">Description</th>
                     <th className="px-6 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-slate-350">
+                <tbody className="divide-y divide-white/5 text-slate-300">
                   {categories.map((cat) => (
                     <tr key={cat.id} className="hover:bg-white/1">
                       <td className="px-6 py-4 font-semibold text-white">{cat.name}</td>
-                      <td className="px-6 py-4 font-mono text-slate-450">{cat.slug}</td>
+                      <td className="px-6 py-4 font-mono text-slate-400">{cat.slug}</td>
                       <td className="px-6 py-4 text-slate-400 max-w-sm truncate">{cat.description || 'No Description'}</td>
                       <td className="px-6 py-4 text-right space-x-2">
                         <button

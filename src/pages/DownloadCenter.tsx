@@ -96,7 +96,7 @@ export const DownloadCenter: React.FC = () => {
 
           {/* Filtering row */}
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-y border-white/5 py-6 dark:border-white/5 light:border-slate-200">
-            <div className="text-xs font-semibold text-slate-450 uppercase tracking-widest">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
               Available Packages ({filteredItems.length})
             </div>
 
@@ -108,7 +108,7 @@ export const DownloadCenter: React.FC = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                 placeholder="Search download files..."
               />
             </div>
@@ -157,7 +157,7 @@ export const DownloadCenter: React.FC = () => {
                   <div className="flex items-center justify-between border-t border-white/5 pt-6 mt-6 light:border-slate-200">
                     <Link
                       to={`/marketplace/${item.slug}`}
-                      className="inline-flex items-center gap-1 text-xs text-slate-450 hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors"
                     >
                       <Eye size={14} />
                       <span>Review Details</span>

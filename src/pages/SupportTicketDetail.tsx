@@ -174,7 +174,7 @@ export const SupportTicketDetail: React.FC = () => {
           {/* Header Row */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-6 dark:border-white/5 light:border-slate-200">
             <div className="space-y-1">
-              <Link to="/support" className="inline-flex items-center gap-1.5 text-xs text-slate-450 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
+              <Link to="/support" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
                 <ArrowLeft size={13} />
                 <span>Back to Support Desk</span>
               </Link>
@@ -186,7 +186,7 @@ export const SupportTicketDetail: React.FC = () => {
                   #{ticket.id.slice(0, 8)}
                 </span>
               </div>
-              <p className="text-xs text-slate-450 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Product: <span className="text-slate-300 light:text-slate-700 font-semibold">{ticket.products?.name || 'General Solutions'}</span>
               </p>
             </div>
@@ -231,7 +231,7 @@ export const SupportTicketDetail: React.FC = () => {
               <div className="glass-panel rounded-3xl border border-white/5 overflow-hidden flex flex-col h-[500px]">
                 
                 {/* Thread Header details */}
-                <div className="bg-white/2 px-6 py-3 border-b border-white/5 text-[10px] text-slate-450 uppercase font-semibold tracking-wider flex items-center justify-between light:border-slate-200">
+                <div className="bg-white/2 px-6 py-3 border-b border-white/5 text-[10px] text-slate-400 uppercase font-semibold tracking-wider flex items-center justify-between light:border-slate-200">
                   <span>Message History</span>
                   <span className={`px-2 py-0.5 rounded text-[9px] border font-bold ${
                     ticket.status === 'open' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
@@ -323,11 +323,11 @@ export const SupportTicketDetail: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Created Date</span>
-                    <span className="font-semibold text-slate-350">{new Date(ticket.created_at).toLocaleString()}</span>
+                    <span className="font-semibold text-slate-300">{new Date(ticket.created_at).toLocaleString()}</span>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Last Activity</span>
-                    <span className="font-semibold text-slate-350">{new Date(ticket.updated_at).toLocaleString()}</span>
+                    <span className="font-semibold text-slate-300">{new Date(ticket.updated_at).toLocaleString()}</span>
                   </div>
                 </div>
               </div>

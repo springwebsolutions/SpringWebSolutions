@@ -17,6 +17,14 @@ export const SiteSettings: React.FC = () => {
   const [whatsapp, setWhatsapp] = useState('')
   const [address, setAddress] = useState('')
 
+  // Social Media Links
+  const [github, setGithub] = useState('')
+  const [linkedin, setLinkedin] = useState('')
+  const [twitter, setTwitter] = useState('')
+  const [instagram, setInstagram] = useState('')
+  const [facebook, setFacebook] = useState('')
+  const [youtube, setYoutube] = useState('')
+
   const [saving, setSaving] = useState(false)
   const [exportLoading, setExportLoading] = useState<string | null>(null)
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
@@ -33,6 +41,14 @@ export const SiteSettings: React.FC = () => {
       setPhone(siteConfig.contact_phone || '')
       setWhatsapp(siteConfig.whatsapp_number || '')
       setAddress(siteConfig.address || '')
+
+      const socials = siteConfig.social_links || {}
+      setGithub(socials.github || '')
+      setLinkedin(socials.linkedin || '')
+      setTwitter(socials.twitter || '')
+      setInstagram(socials.instagram || '')
+      setFacebook(socials.facebook || '')
+      setYoutube(socials.youtube || '')
     }
   }, [siteConfig])
 
@@ -43,6 +59,14 @@ export const SiteSettings: React.FC = () => {
     setNotification(null)
 
     try {
+      const socialLinks: Record<string, string> = {}
+      if (github.trim()) socialLinks.github = github.trim()
+      if (linkedin.trim()) socialLinks.linkedin = linkedin.trim()
+      if (twitter.trim()) socialLinks.twitter = twitter.trim()
+      if (instagram.trim()) socialLinks.instagram = instagram.trim()
+      if (facebook.trim()) socialLinks.facebook = facebook.trim()
+      if (youtube.trim()) socialLinks.youtube = youtube.trim()
+
       const value = {
         company_name: companyName,
         tagline,
@@ -50,7 +74,7 @@ export const SiteSettings: React.FC = () => {
         contact_phone: phone,
         whatsapp_number: whatsapp,
         address,
-        social_links: siteConfig?.social_links || {}
+        social_links: socialLinks
       }
 
       const { error } = await supabase
@@ -60,7 +84,7 @@ export const SiteSettings: React.FC = () => {
 
       if (error) throw error
 
-      setNotification({ type: 'success', msg: 'System configurations saved to database.' })
+      setNotification({ type: 'success', msg: 'System & social media configurations saved to database.' })
       fetchSettings()
     } catch (err: any) {
       console.error(err)
@@ -186,6 +210,80 @@ export const SiteSettings: React.FC = () => {
             />
           </div>
 
+          {/* Social Media Links Section */}
+          <div className="border-t border-white/5 pt-6 space-y-4">
+            <h4 className="font-display font-bold text-white text-sm">Social Media Handles & Profiles</h4>
+            <p className="text-xs text-slate-400">Add or remove your company social media URLs. Empty fields will automatically hide that platform's icon across the site.</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">GitHub URL</label>
+                <input
+                  type="url"
+                  value={github}
+                  onChange={(e) => setGithub(e.target.value)}
+                  placeholder="https://github.com/youragency"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">LinkedIn URL</label>
+                <input
+                  type="url"
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                  placeholder="https://linkedin.com/company/youragency"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Twitter / X URL</label>
+                <input
+                  type="url"
+                  value={twitter}
+                  onChange={(e) => setTwitter(e.target.value)}
+                  placeholder="https://x.com/youragency"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Instagram URL</label>
+                <input
+                  type="url"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="https://instagram.com/youragency"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Facebook URL</label>
+                <input
+                  type="url"
+                  value={facebook}
+                  onChange={(e) => setFacebook(e.target.value)}
+                  placeholder="https://facebook.com/youragency"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">YouTube URL</label>
+                <input
+                  type="url"
+                  value={youtube}
+                  onChange={(e) => setYoutube(e.target.value)}
+                  placeholder="https://youtube.com/@youragency"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
           <button
             type="submit"
             disabled={saving}
@@ -255,7 +353,7 @@ export const SiteSettings: React.FC = () => {
                 className="w-full btn-secondary text-xs flex items-center justify-between py-2 px-3 disabled:opacity-40"
               >
                 <span className="flex items-center gap-2">
-                  <Settings size={14} className="text-slate-405" />
+                  <Settings size={14} className="text-slate-400" />
                   <span>Backup Configurations Settings</span>
                 </span>
                 {exportLoading === 'settings' ? <Loader2 className="animate-spin" size={12} /> : <Download size={12} />}

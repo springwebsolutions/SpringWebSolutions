@@ -277,7 +277,7 @@ export const SupportPortal: React.FC = () => {
             <div className="space-y-4">
               {tickets.length === 0 ? (
                 <div className="text-center py-20 glass-panel rounded-3xl max-w-md mx-auto space-y-4">
-                  <Ticket size={48} className="mx-auto text-slate-650" />
+                  <Ticket size={48} className="mx-auto text-slate-600" />
                   <h3 className="text-lg font-bold text-white light:text-slate-800">No Support Tickets</h3>
                   <p className="text-xs text-slate-400 light:text-slate-600">
                     You currently have no active or archived support requests. Need technical help? File a new ticket above.
@@ -326,7 +326,7 @@ export const SupportPortal: React.FC = () => {
                                 {t.status.replace('_', ' ')}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-slate-450">
+                            <td className="px-6 py-4 text-slate-400">
                               {new Date(t.updated_at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
                             </td>
                             <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>

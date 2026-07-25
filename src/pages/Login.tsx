@@ -105,7 +105,7 @@ export const Login: React.FC = () => {
                 type="email"
                 {...register('email')}
                 className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-900/5 light:border-slate-200 light:text-slate-800"
-                placeholder="admin@springwebsolutions.com"
+                placeholder="admin@springwebsolutions.in"
               />
               {errors.email && <p className="text-xs text-rose-400">{errors.email.message}</p>}
             </div>
@@ -145,7 +145,7 @@ export const Login: React.FC = () => {
 
         {/* Back Link */}
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-350 transition-colors">
+          <Link to="/" className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 transition-colors">
             <ArrowLeft size={12} />
             <span>Return to Site Home</span>
           </Link>

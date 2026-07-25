@@ -128,7 +128,7 @@ export const Dashboard: React.FC = () => {
         <div className="glass-panel p-6 rounded-2xl border border-white/5 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Downloads</span>
-            <div className="h-9 w-9 rounded-lg bg-emerald-450/10 flex items-center justify-center text-emerald-400">
+            <div className="h-9 w-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
               <Download size={18} />
             </div>
           </div>

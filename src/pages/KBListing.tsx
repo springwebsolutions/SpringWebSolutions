@@ -89,7 +89,7 @@ export const KBListing: React.FC = () => {
 
             {/* Search Bar */}
             <div className="relative max-w-lg mx-auto pt-4">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-450 pointer-events-none mt-4">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none mt-4">
                 <Search size={18} />
               </span>
               <input
@@ -166,7 +166,7 @@ export const KBListing: React.FC = () => {
               {/* Right Column - Articles Grid/List */}
               <div className="lg:col-span-9 space-y-6">
                 {searchQuery || selectedCategory ? (
-                  <div className="flex items-center justify-between text-xs text-slate-450">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>
                       Showing {filteredArticles.length} result{filteredArticles.length !== 1 ? 's' : ''}
                       {selectedCategory && ` in ${categories.find(c => c.id === selectedCategory)?.name}`}

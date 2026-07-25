@@ -225,6 +225,234 @@ BEGIN
   END IF;
 END $$;
 
+-- About Page Sections
+DO $$
+DECLARE
+  about_id UUID;
+BEGIN
+  SELECT id INTO about_id FROM public.pages WHERE slug = 'about';
+  IF about_id IS NOT NULL THEN
+    DELETE FROM public.sections WHERE page_id = about_id;
+    
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      about_id,
+      'hero',
+      '{
+        "headline": "The Engineering Team Behind Spring Web Solutions",
+        "subheadline": "We are solution engineers, architects, and designers who believe that software should be robust, design should be clean, and operations should be automated. We help companies eliminate manual labor and scale customer acquisition.",
+        "cta_primary_text": "Meet the Team",
+        "cta_primary_href": "/contact",
+        "cta_secondary_text": "See Our Technology",
+        "cta_secondary_href": "#milestones"
+      }'::jsonb,
+      '{
+        "padding_top": "py-24",
+        "padding_bottom": "py-20"
+      }'::jsonb,
+      0
+    );
+
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      about_id,
+      'stats',
+      '{
+        "items": [
+          {"value": "10+", "label": "Years Experience"},
+          {"value": "50M+", "label": "API Operations Processed"},
+          {"value": "140%", "label": "Average Client Traffic Boost"},
+          {"value": "100%", "label": "On-Time Sprint Deliveries"}
+        ]
+      }'::jsonb,
+      '{
+        "id": "milestones",
+        "padding_top": "py-16",
+        "padding_bottom": "py-16"
+      }'::jsonb,
+      1
+    );
+  END IF;
+END $$;
+
+-- Services Page Sections
+DO $$
+DECLARE
+  services_id UUID;
+BEGIN
+  SELECT id INTO services_id FROM public.pages WHERE slug = 'services';
+  IF services_id IS NOT NULL THEN
+    DELETE FROM public.sections WHERE page_id = services_id;
+    
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      services_id,
+      'hero',
+      '{
+        "headline": "End-to-End Solutions for Growing Businesses",
+        "subheadline": "We design, build, deploy, and maintain custom applications and websites. We specialize in complex API integrations, database mapping, and conversion-optimized checkout funnels.",
+        "cta_primary_text": "Request a Quote",
+        "cta_primary_href": "/contact",
+        "cta_secondary_text": "View Pricing",
+        "cta_secondary_href": "/pricing"
+      }'::jsonb,
+      '{
+        "padding_top": "py-24",
+        "padding_bottom": "py-20"
+      }'::jsonb,
+      0
+    );
+
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      services_id,
+      'services_summary',
+      '{
+        "title": "Our Services Spectrum",
+        "subtitle": "High-performance modules designed to elevate your company operations and client conversion rates.",
+        "items": [
+          {"title": "Website Development", "desc": "High-performance enterprise sites, lightweight landing pages, and interactive product configurators designed to load in milliseconds.", "href": "/contact"},
+          {"title": "Custom CRM/ERP Software", "desc": "Centralized client hubs, internal scheduling dashboards, secure client portals, and legacy system API bridges built using secure auth structures.", "href": "/contact"},
+          {"title": "API & Webhook Automations", "desc": "Zero-latency data flows connecting Stripe payments, Twilio SMS alerts, Zapier logic paths, and custom SQL reporting logs.", "href": "/contact"},
+          {"title": "Search Optimization (SEO)", "desc": "Semantic HTML validation, keyword search intent mapping, schema markups, and PageSpeed audits that drive organic search leads.", "href": "/contact"}
+        ]
+      }'::jsonb,
+      '{
+        "padding_top": "py-16",
+        "padding_bottom": "py-16"
+      }'::jsonb,
+      1
+    );
+
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      services_id,
+      'cta',
+      '{
+        "title": "Ready to Automate Your Workflows?",
+        "subtitle": "Get a free 30-minute system analysis with our engineers. We will review your processes, find database bottlenecks, and outline a concrete action checklist.",
+        "cta_primary_text": "Analyze My Process",
+        "cta_primary_href": "/contact",
+        "cta_secondary_text": "Read Case Studies",
+        "cta_secondary_href": "/blog"
+      }'::jsonb,
+      '{
+        "padding_top": "py-20",
+        "padding_bottom": "py-20"
+      }'::jsonb,
+      2
+    );
+  END IF;
+END $$;
+
+-- Pricing Page Sections
+DO $$
+DECLARE
+  pricing_id UUID;
+BEGIN
+  SELECT id INTO pricing_id FROM public.pages WHERE slug = 'pricing';
+  IF pricing_id IS NOT NULL THEN
+    DELETE FROM public.sections WHERE page_id = pricing_id;
+    
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      pricing_id,
+      'hero',
+      '{
+        "headline": "Flexible Solutions for Any Stage of Growth",
+        "subheadline": "Choose from our starter setups, dedicated custom software project packages, or ongoing maintenance support contracts designed to keep your servers secure.",
+        "cta_primary_text": "Contact Solutions Engineer",
+        "cta_primary_href": "/contact",
+        "cta_secondary_text": "Read FAQs",
+        "cta_secondary_href": "/kb"
+      }'::jsonb,
+      '{
+        "padding_top": "py-24",
+        "padding_bottom": "py-20"
+      }'::jsonb,
+      0
+    );
+
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      pricing_id,
+      'stats',
+      '{
+        "items": [
+          {"value": "100%", "label": "No Lock-ins"},
+          {"value": "Scope", "label": "Clear Deadlines"},
+          {"value": "99.9%", "label": "Uptime Guarantee"},
+          {"value": "SLA", "label": "Dedicated Support"}
+        ]
+      }'::jsonb,
+      '{
+        "padding_top": "py-16",
+        "padding_bottom": "py-16"
+      }'::jsonb,
+      1
+    );
+
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      pricing_id,
+      'cta',
+      '{
+        "title": "Need a Custom Integration Quote?",
+        "subtitle": "If your project requires bespoke data structures, custom user levels, or integrations with third-party software, contact our Solutions Architect directly.",
+        "cta_primary_text": "Connect with Architect",
+        "cta_primary_href": "/contact",
+        "cta_secondary_text": "Explore Services",
+        "cta_secondary_href": "/services"
+      }'::jsonb,
+      '{
+        "padding_top": "py-20",
+        "padding_bottom": "py-20"
+      }'::jsonb,
+      2
+    );
+  END IF;
+END $$;
+
+-- Process Page Sections
+DO $$
+DECLARE
+  process_id UUID;
+BEGIN
+  SELECT id INTO process_id FROM public.pages WHERE slug = 'process';
+  IF process_id IS NOT NULL THEN
+    DELETE FROM public.sections WHERE page_id = process_id;
+    
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      process_id,
+      'hero',
+      '{
+        "headline": "Our Collaborative Engineering Lifecycle",
+        "subheadline": "We adhere to a transparent 8-step execution methodology to guarantee that code quality, deadlines, and project requirements are met with precision.",
+        "cta_primary_text": "Start Project Discovery",
+        "cta_primary_href": "/contact",
+        "cta_secondary_text": "Read Blog Insights",
+        "cta_secondary_href": "/blog"
+      }'::jsonb,
+      '{
+        "padding_top": "py-24",
+        "padding_bottom": "py-20"
+      }'::jsonb,
+      0
+    );
+
+    INSERT INTO public.sections (page_id, type, content, styling, display_order) VALUES (
+      process_id,
+      'stats',
+      '{
+        "items": [
+          {"value": "Step 1", "label": "Discovery & Scope"},
+          {"value": "Step 2", "label": "System Architecture"},
+          {"value": "Step 3", "label": "UI/UX Design Wireframes"},
+          {"value": "Step 4", "label": "Agile Sprint Development"}
+        ]
+      }'::jsonb,
+      '{
+        "padding_top": "py-16",
+        "padding_bottom": "py-16"
+      }'::jsonb,
+      1
+    );
+  END IF;
+END $$;
+
+
 
 -- =========================================================================
 -- SEED INITIAL SYSTEM SETTINGS
@@ -234,13 +462,11 @@ INSERT INTO public.settings (key, value) VALUES
 ('site_config', '{
   "company_name": "Spring Web Solutions",
   "tagline": "Building Websites, Software & Automation That Help Businesses Grow",
-  "contact_email": "hello@springwebsolutions.com",
-  "contact_phone": "+1 (800) 555-0199",
-  "address": "100 Innovation Way, Suite 400, Tech City, TC 94016",
-  "whatsapp_number": "+18005550199",
+  "contact_email": "hello@springwebsolutions.in",
+  "contact_phone": "+91 80126 22119",
+  "address": "Udumalpet, Tamil Nadu",
+  "whatsapp_number": "8012622119",
   "social_links": {
-    "linkedin": "https://linkedin.com/company/springwebsolutions",
-    "twitter": "https://twitter.com/springwebdev",
     "github": "https://github.com/springwebsolutions"
   }
 }'::jsonb),

@@ -96,9 +96,49 @@ export const Contact: React.FC = () => {
                     <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
                       <Mail size={18} />
                     </div>
-                    <div>
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Email Inquiry</div>
-                      <a href="mailto:hello@springwebsolutions.com" className="hover:text-white transition-colors text-base mt-1 block">hello@springwebsolutions.com</a>
+                    <div className="space-y-1">
+                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">General Inquiries</div>
+                      <a href="mailto:hello@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">hello@springwebsolutions.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+                      <Mail size={18} />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Sales & Pricing</div>
+                      <a href="mailto:sales@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">sales@springwebsolutions.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+                      <Mail size={18} />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Technical Support</div>
+                      <a href="mailto:support@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">support@springwebsolutions.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+                      <Mail size={18} />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Developer & Integration</div>
+                      <a href="mailto:developer@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">developer@springwebsolutions.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+                      <Mail size={18} />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Careers & Hiring</div>
+                      <a href="mailto:careers@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">careers@springwebsolutions.in</a>
                     </div>
                   </div>
 
@@ -108,7 +148,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Phone Hotline</div>
-                      <a href="tel:+18005550199" className="hover:text-white transition-colors text-base mt-1 block">+1 (800) 555-0199</a>
+                      <a href="tel:+918012622119" className="hover:text-white transition-colors text-sm mt-1 block font-mono text-slate-200">+91 80126 22119</a>
                     </div>
                   </div>
 
@@ -118,7 +158,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">WhatsApp Chat</div>
-                      <a href="https://wa.me/18005550199" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-base mt-1 block text-brand-emerald font-semibold">Start Direct Chat</a>
+                      <a href="https://wa.me/918012622119" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-sm mt-1 block text-brand-emerald font-semibold">+91 80126 22119 (Start Chat)</a>
                     </div>
                   </div>
 
@@ -128,7 +168,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">HQ Address</div>
-                      <span className="text-base mt-1 block leading-relaxed">100 Innovation Way, Suite 400, Tech City, TC 94016</span>
+                      <span className="text-sm mt-1 block leading-relaxed text-slate-200">Udumalpet, Tamil Nadu</span>
                     </div>
                   </div>
                 </div>
@@ -140,8 +180,8 @@ export const Contact: React.FC = () => {
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
                 <div className="relative text-center p-6 space-y-2 z-10">
                   <MapPin size={32} className="mx-auto text-brand-indigo animate-bounce" />
-                  <div className="font-display font-bold text-white text-sm">Spring Web HQ</div>
-                  <div className="text-xs text-slate-500">San Francisco Bay Area, CA</div>
+                  <div className="font-display font-bold text-white text-sm">Spring Web Solutions</div>
+                  <div className="text-xs text-slate-500">Udumalpet, Tamil Nadu, India</div>
                 </div>
               </div>
             </div>
@@ -182,7 +222,7 @@ export const Contact: React.FC = () => {
                         <input
                           type="text"
                           {...register('name')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                           placeholder="John Doe"
                         />
                         {errors.name && <p className="text-xs text-rose-400">{errors.name.message}</p>}
@@ -193,7 +233,7 @@ export const Contact: React.FC = () => {
                         <input
                           type="email"
                           {...register('email')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                           placeholder="john@company.com"
                         />
                         {errors.email && <p className="text-xs text-rose-400">{errors.email.message}</p>}
@@ -206,7 +246,7 @@ export const Contact: React.FC = () => {
                         <input
                           type="text"
                           {...register('phone')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                           placeholder="+1 (555) 0199"
                         />
                       </div>
@@ -216,7 +256,7 @@ export const Contact: React.FC = () => {
                         <input
                           type="text"
                           {...register('company')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                           placeholder="Enterprise Inc."
                         />
                       </div>
@@ -269,7 +309,7 @@ export const Contact: React.FC = () => {
                       <textarea
                         rows={5}
                         {...register('description')}
-                        className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-955/5 light:border-slate-200 light:text-slate-800"
+                        className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
                         placeholder="Please describe what you want to build or optimize. Outline any web integration requirements, design preferences, or current business bottlenecks."
                       />
                       {errors.description && <p className="text-xs text-rose-400">{errors.description.message}</p>}
