@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthStore } from '@/stores/authStore'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 
-// Public Pages
+// Public Website Pages
 import DynamicPage from '@/pages/DynamicPage'
 import BlogListing from '@/pages/BlogListing'
 import BlogPost from '@/pages/BlogPost'
@@ -16,9 +16,8 @@ import KBArticle from '@/pages/KBArticle'
 import SupportPortal from '@/pages/SupportPortal'
 import SupportTicketDetail from '@/pages/SupportTicketDetail'
 
-// Admin Operations Suite Views
+// SpringWeb Operations Suite Admin Views
 import { AdminLayout } from '@/components/layout/AdminLayout'
-import AdminLogin from '@/pages/admin/AdminLogin'
 import Dashboard from '@/pages/admin/Dashboard'
 import ContentManager from '@/pages/admin/ContentManager'
 import BlogCMS from '@/pages/admin/BlogCMS'
@@ -34,7 +33,7 @@ const ExternalRedirect: React.FC<{ to: string }> = ({ to }) => {
     window.location.href = to
   }, [to])
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-[#040509] text-white text-xs">
+    <div className="flex h-screen w-screen items-center justify-center bg-[#040509] text-white text-xs font-mono">
       Redirecting to SpringWeb Operations Suite…
     </div>
   )
@@ -52,7 +51,7 @@ function App() {
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : ''
   const isSuiteDomain = hostname.startsWith('suite.')
 
-  // ─── Subdomain Route Router for suite.springwebsolutions.in ────────────────
+  // ─── Subdomain Router for suite.springwebsolutions.in ─────────────────────
   if (isSuiteDomain) {
     return (
       <Router>
@@ -60,23 +59,14 @@ function App() {
           <Route path="/" element={<AdminLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="admin/dashboard" element={<Dashboard />} />
             <Route path="content" element={<ContentManager />} />
-            <Route path="admin/content" element={<ContentManager />} />
             <Route path="blog" element={<BlogCMS />} />
-            <Route path="admin/blog" element={<BlogCMS />} />
             <Route path="kb" element={<KBCMS />} />
-            <Route path="admin/kb" element={<KBCMS />} />
             <Route path="marketplace" element={<MarketplaceCMS />} />
-            <Route path="admin/marketplace" element={<MarketplaceCMS />} />
             <Route path="crm" element={<LeadCRM />} />
-            <Route path="admin/crm" element={<LeadCRM />} />
             <Route path="media" element={<MediaLibrary />} />
-            <Route path="admin/media" element={<MediaLibrary />} />
             <Route path="support" element={<SupportManager />} />
-            <Route path="admin/support" element={<SupportManager />} />
             <Route path="settings" element={<SiteSettings />} />
-            <Route path="admin/settings" element={<SiteSettings />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Routes>
@@ -118,7 +108,6 @@ function App() {
         {/* Main Domain /admin -> Redirect to suite subdomain */}
         <Route path="/admin" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
         <Route path="/admin/*" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
-        <Route path="/setup" element={<Navigate to="/login" replace />} />
 
         {/* Catch All - Redirect to Homepage */}
         <Route path="*" element={<Navigate to="/" replace />} />
