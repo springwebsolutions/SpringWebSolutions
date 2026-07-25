@@ -106,7 +106,7 @@ export const BlogPost: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#070a13] flex flex-col">
+      <div className="min-h-screen page-bg flex flex-col">
         <Navbar />
         <div className="flex-grow flex items-center justify-center text-brand-emerald">
           <Loader2 className="animate-spin" size={48} />
@@ -118,7 +118,7 @@ export const BlogPost: React.FC = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-[#070a13] flex flex-col justify-between">
+      <div className="min-h-screen page-bg flex flex-col justify-between">
         <Navbar />
         <main className="flex-grow flex items-center justify-center text-slate-200">
           <div className="p-8 rounded-3xl glass-panel text-center max-w-sm space-y-4">
@@ -139,7 +139,7 @@ export const BlogPost: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc] relative">
+    <div className="min-h-screen page-bg flex flex-col relative">
       
       {/* Scroll indicator progress bar */}
       <div 

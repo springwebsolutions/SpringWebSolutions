@@ -66,7 +66,7 @@ function App() {
         {/* Marketplace & Download Center */}
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplace/:slug" element={<ProductDetail />} />
-        <Route path="/downloads" element={<DownloadCenter />} />
+        <Route path="/downloads" element={<Navigate to="/marketplace?filter=free" replace />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
