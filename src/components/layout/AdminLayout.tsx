@@ -27,14 +27,6 @@ export const AdminLayout: React.FC = () => {
 
   const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
 
-  useEffect(() => {
-    if (initialized && !loading && !user) {
-      if (!isSuiteDomain) {
-        navigate('/admin/login')
-      }
-    }
-  }, [user, initialized, loading, isSuiteDomain])
-
   // If not logged in on subdomain or admin route, render login component directly at root URL
   if (initialized && !loading && !user) {
     return <AdminLogin />
@@ -205,7 +197,7 @@ export const AdminLayout: React.FC = () => {
               <div className="text-[10px] text-emerald-500 font-medium">{role}</div>
             </div>
             <button
-              onClick={() => signOut?.().then(() => navigate('/admin/login'))}
+              onClick={() => signOut?.().then(() => navigate('/'))}
               title="Sign Out"
               className="p-1.5 rounded-lg text-slate-600 hover:text-rose-400 hover:bg-rose-500/10 transition-all opacity-0 group-hover:opacity-100"
             >
