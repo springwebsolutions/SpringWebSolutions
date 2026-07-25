@@ -19,6 +19,7 @@ import SupportTicketDetail from '@/pages/SupportTicketDetail'
 
 // Admin Views
 import { AdminLayout } from '@/components/layout/AdminLayout'
+import AdminLogin from '@/pages/admin/AdminLogin'
 import Dashboard from '@/pages/admin/Dashboard'
 import ContentManager from '@/pages/admin/ContentManager'
 import BlogCMS from '@/pages/admin/BlogCMS'
@@ -69,6 +70,7 @@ function App() {
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/setup" element={<Navigate to="/login" replace />} />
 
         {/* Protected Control Panel Console Routes */}

@@ -17,7 +17,7 @@ export const AdminLayout: React.FC = () => {
 
   useEffect(() => {
     if (initialized && !loading && !user) {
-      navigate('/login')
+      navigate('/admin/login')
     }
   }, [user, initialized, loading])
 
