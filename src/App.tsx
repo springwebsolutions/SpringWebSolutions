@@ -51,11 +51,23 @@ function App() {
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : ''
   const isSuiteDomain = hostname.startsWith('suite.')
 
+  // Clean URL history if /admin is present in address bar on suite subdomain
+  useEffect(() => {
+    if (isSuiteDomain && typeof window !== 'undefined' && window.location.pathname.includes('/admin')) {
+      const cleanPath = window.location.pathname.replace(/\/admin/g, '') || '/'
+      window.history.replaceState(null, '', cleanPath)
+    }
+  }, [isSuiteDomain])
+
   // ─── Subdomain Router for suite.springwebsolutions.in ─────────────────────
   if (isSuiteDomain) {
     return (
       <Router>
         <Routes>
+          {/* Explicitly strip /admin or /admin/* on subdomain and force clean root URL */}
+          <Route path="/admin" element={<Navigate to="/" replace />} />
+          <Route path="/admin/*" element={<Navigate to="/" replace />} />
+
           <Route path="/" element={<AdminLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
@@ -105,7 +117,7 @@ function App() {
         {/* Public Client Auth */}
         <Route path="/login" element={<Login />} />
         
-        {/* Main Domain /admin -> Redirect to suite subdomain */}
+        {/* Main Domain /admin or /admin/* -> Redirect to suite subdomain */}
         <Route path="/admin" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
         <Route path="/admin/*" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
 
