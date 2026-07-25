@@ -1,0 +1,119 @@
+/**
+ * Resend Email Integration Service
+ * Spring Web Solutions
+ */
+
+export interface ResendEmailPayload {
+  from: string
+  to: string | string[]
+  subject: string
+  html: string
+  reply_to?: string
+}
+
+export interface ResendConfig {
+  apiKey?: string
+  fromEmail?: string
+  notificationEmail?: string
+  enableLeadNotify?: boolean
+  enableTicketNotify?: boolean
+}
+
+/**
+ * Send an email via Resend API
+ */
+export async function sendResendEmail(
+  payload: ResendEmailPayload,
+  apiKey?: string
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  const key = apiKey || import.meta.env.VITE_RESEND_API_KEY
+
+  if (!key || key.trim() === '' || key === 'your_resend_api_key') {
+    console.warn('[Resend] Email API Key not configured. Skipping email dispatch.')
+    return { success: false, error: 'Resend API Key is missing or not configured.' }
+  }
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${key.trim()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: payload.from,
+        to: Array.isArray(payload.to) ? payload.to : [payload.to],
+        subject: payload.subject,
+        html: payload.html,
+        ...(payload.reply_to ? { reply_to: payload.reply_to } : {})
+      })
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result.message || result.error || 'Failed to dispatch email via Resend API')
+    }
+
+    return { success: true, data: result }
+  } catch (err: any) {
+    console.error('[Resend Email Dispatch Error]:', err)
+    return { success: false, error: err.message || 'Unknown network error sending email.' }
+  }
+}
+
+/**
+ * Generate clean HTML template for New Lead Inquiry Notification
+ */
+export function buildLeadNotificationHTML(lead: {
+  full_name: string
+  email: string
+  phone?: string
+  service_interest?: string
+  budget_range?: string
+  message?: string
+}): string {
+  return `
+    <div style="font-family: Arial, sans-serif; background-color: #070a13; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
+      <div style="margin-bottom: 24px; text-align: center;">
+        <h2 style="color: #10b981; margin: 0; font-size: 24px;">Spring Web Solutions</h2>
+        <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;">New Client Lead Inquiry Alert</p>
+      </div>
+      
+      <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+        <p style="margin: 8px 0;"><strong>Client Name:</strong> ${lead.full_name}</p>
+        <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:${lead.email}" style="color: #10b981;">${lead.email}</a></p>
+        <p style="margin: 8px 0;"><strong>Phone:</strong> ${lead.phone || 'N/A'}</p>
+        <p style="margin: 8px 0;"><strong>Service Interest:</strong> ${lead.service_interest || 'General'}</p>
+        <p style="margin: 8px 0;"><strong>Budget Range:</strong> ${lead.budget_range || 'N/A'}</p>
+      </div>
+
+      <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.05); border-left: 4px solid #10b981; border-radius: 4px;">
+        <p style="margin: 0; font-weight: bold; color: #10b981;">Inquiry Message:</p>
+        <p style="margin-top: 8px; color: #cbd5e1; white-space: pre-wrap;">${lead.message || 'No additional message provided.'}</p>
+      </div>
+
+      <div style="margin-top: 28px; text-align: center; font-size: 12px; color: #64748b;">
+        <p>Spring Web Solutions • Udumalpet, Tamil Nadu</p>
+      </div>
+    </div>
+  `
+}
+
+/**
+ * Generate clean HTML template for Test Email
+ */
+export function buildTestEmailHTML(senderEmail: string): string {
+  return `
+    <div style="font-family: Arial, sans-serif; background-color: #070a13; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid #10b981;">
+      <div style="text-align: center;">
+        <h2 style="color: #10b981; margin: 0;">Resend Email Integration Verified! ✅</h2>
+        <p style="color: #94a3b8; font-size: 14px; margin-top: 8px;">Your Resend API Key & Sender configuration are functioning correctly.</p>
+      </div>
+      <div style="margin-top: 24px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center; font-size: 13px; color: #cbd5e1;">
+        <p style="margin: 0;">Dispatched from: <strong>${senderEmail}</strong></p>
+        <p style="margin-top: 4px; color: #64748b;">Timestamp: ${new Date().toLocaleString()}</p>
+      </div>
+    </div>
+  `
+}
