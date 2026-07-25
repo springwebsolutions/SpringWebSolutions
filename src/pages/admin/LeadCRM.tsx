@@ -39,6 +39,26 @@ export const LeadCRM: React.FC = () => {
   const [emailSending, setEmailSending] = useState(false)
   const [emailStatus, setEmailStatus] = useState<{ success: boolean; msg: string } | null>(null)
 
+  // Add Lead Modal State
+  const [showAddLeadModal, setShowAddLeadModal] = useState(false)
+  const [newLeadName, setNewLeadName] = useState('')
+  const [newLeadEmail, setNewLeadEmail] = useState('')
+  const [newLeadPhone, setNewLeadPhone] = useState('')
+  const [newLeadCompany, setNewLeadCompany] = useState('')
+  const [newLeadType, setNewLeadType] = useState<Lead['type']>('contact')
+  const [newLeadStatus, setNewLeadStatus] = useState<Lead['status']>('new')
+  const [newLeadBudget, setNewLeadBudget] = useState('')
+  const [newLeadDesc, setNewLeadDesc] = useState('')
+  const [createLoading, setCreateLoading] = useState(false)
+
+  // Quick Standalone Email Modal State
+  const [showQuickEmailModal, setShowQuickEmailModal] = useState(false)
+  const [quickTo, setQuickTo] = useState('')
+  const [quickSubject, setQuickSubject] = useState('')
+  const [quickBody, setQuickBody] = useState('')
+  const [quickSending, setQuickSending] = useState(false)
+  const [quickStatus, setQuickStatus] = useState<{ success: boolean; msg: string } | null>(null)
+
   useEffect(() => {
     fetchLeads()
   }, [])
@@ -97,6 +117,87 @@ export const LeadCRM: React.FC = () => {
     }
   }
 
+  const { createLead } = useCRMStore()
+
+  const handleCreateLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newLeadName.trim() || !newLeadEmail.trim()) return
+    setCreateLoading(true)
+    try {
+      await createLead({
+        name: newLeadName.trim(),
+        email: newLeadEmail.trim(),
+        phone: newLeadPhone.trim() || null,
+        company: newLeadCompany.trim() || null,
+        type: newLeadType,
+        status: newLeadStatus,
+        budget: newLeadBudget.trim() || null,
+        timeline: null,
+        description: newLeadDesc.trim() || null,
+        assigned_to: null
+      })
+      setShowAddLeadModal(false)
+      // Reset form
+      setNewLeadName('')
+      setNewLeadEmail('')
+      setNewLeadPhone('')
+      setNewLeadCompany('')
+      setNewLeadBudget('')
+      setNewLeadDesc('')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setCreateLoading(false)
+    }
+  }
+
+  const handleQuickEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!quickTo.trim() || !quickSubject.trim() || !quickBody.trim()) return
+    setQuickSending(true)
+    setQuickStatus(null)
+
+    try {
+      const formattedHtml = `
+        <div style="font-family: Arial, sans-serif; background-color: #070a13; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="margin-bottom: 24px; text-align: center;">
+            <h2 style="color: #10b981; margin: 0; font-size: 22px;">Spring Web Solutions</h2>
+            <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">Direct Communication</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: #cbd5e1; white-space: pre-wrap;">${quickBody}</div>
+          <div style="margin-top: 24px; text-align: center; font-size: 12px; color: #64748b;">
+            <p>Spring Web Solutions • Udumalpet, Tamil Nadu</p>
+          </div>
+        </div>
+      `
+
+      const res = await sendResendEmail({
+        from: 'Spring Web Solutions <hello@springwebsolutions.in>',
+        to: quickTo.trim(),
+        subject: quickSubject.trim(),
+        html: formattedHtml
+      })
+
+      if (res.success) {
+        setQuickStatus({ success: true, msg: `Email sent to ${quickTo.trim()} via Resend!` })
+        setTimeout(() => {
+          setShowQuickEmailModal(false)
+          setQuickTo('')
+          setQuickSubject('')
+          setQuickBody('')
+          setQuickStatus(null)
+        }, 1800)
+      } else {
+        setQuickStatus({ success: false, msg: res.error || 'Failed to dispatch email.' })
+      }
+    } catch (err: any) {
+      console.error(err)
+      setQuickStatus({ success: false, msg: err.message || 'Error dispatching email.' })
+    } finally {
+      setQuickSending(false)
+    }
+  }
+
   const handleStatusChange = async (leadId: string, status: Lead['status']) => {
     await updateLeadStatus(leadId, status)
   }
@@ -151,6 +252,35 @@ export const LeadCRM: React.FC = () => {
   return (
     <div className="space-y-6">
       
+      {/* Lead CRM Header Action Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-panel p-4 rounded-2xl border border-white/5">
+        <div>
+          <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <Inbox size={18} className="text-brand-emerald" />
+            <span>Lead CRM & Pipeline Management</span>
+          </h3>
+          <p className="text-xs text-slate-400 mt-0.5">Manage deals, track sales pipelines, and dispatch client emails via Resend.</p>
+        </div>
+
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            onClick={() => setShowQuickEmailModal(true)}
+            className="btn-secondary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-semibold cursor-pointer w-1/2 sm:w-auto"
+          >
+            <Send size={14} className="text-brand-emerald" />
+            <span>Compose Resend Email</span>
+          </button>
+
+          <button
+            onClick={() => setShowAddLeadModal(true)}
+            className="btn-primary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-semibold cursor-pointer shadow shadow-brand-emerald/20 w-1/2 sm:w-auto"
+          >
+            <Plus size={16} />
+            <span>Add New Lead</span>
+          </button>
+        </div>
+      </div>
+
       {/* Visual Kanban Board Columns Grid */}
       <div className="flex space-x-4 overflow-x-auto pb-6 select-none min-h-[450px]">
         {columns.map(col => {
@@ -481,6 +611,199 @@ export const LeadCRM: React.FC = () => {
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* ADD NEW LEAD MODAL */}
+      {showAddLeadModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <form onSubmit={handleCreateLeadSubmit} className="glass-panel p-8 rounded-3xl border border-brand-emerald/20 max-w-lg w-full space-y-5 text-xs">
+            <div className="flex items-center justify-between border-b border-white/5 pb-3">
+              <h4 className="font-display font-bold text-white text-base flex items-center gap-2">
+                <Plus size={18} className="text-brand-emerald" />
+                <span>Add New CRM Lead / Client Contact</span>
+              </h4>
+              <button type="button" onClick={() => setShowAddLeadModal(false)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Contact Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={newLeadName}
+                  onChange={(e) => setNewLeadName(e.target.value)}
+                  placeholder="Client Name"
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Email Address *</label>
+                <input
+                  type="email"
+                  required
+                  value={newLeadEmail}
+                  onChange={(e) => setNewLeadEmail(e.target.value)}
+                  placeholder="client@company.com"
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Phone / WhatsApp</label>
+                <input
+                  type="text"
+                  value={newLeadPhone}
+                  onChange={(e) => setNewLeadPhone(e.target.value)}
+                  placeholder="+91 98765 43210"
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Company Name</label>
+                <input
+                  type="text"
+                  value={newLeadCompany}
+                  onChange={(e) => setNewLeadCompany(e.target.value)}
+                  placeholder="Acme Corp"
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Inquiry Type</label>
+                <select
+                  value={newLeadType}
+                  onChange={(e) => setNewLeadType(e.target.value as any)}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-white/10 text-xs text-white focus:outline-none"
+                >
+                  <option value="contact">General Inquiry</option>
+                  <option value="consultation">Consultation Call</option>
+                  <option value="seo_audit">SEO Audit Request</option>
+                  <option value="website_audit">Website Audit</option>
+                  <option value="automation_assessment">Automation Assessment</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Initial Pipeline Stage</label>
+                <select
+                  value={newLeadStatus}
+                  onChange={(e) => setNewLeadStatus(e.target.value as any)}
+                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-white/10 text-xs text-white focus:outline-none"
+                >
+                  <option value="new">New Inbox</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="qualified">Qualified</option>
+                  <option value="proposal_sent">Proposal Sent</option>
+                  <option value="negotiation">Negotiation</option>
+                  <option value="won">Won (Closed)</option>
+                  <option value="lost">Lost</option>
+                </select>
+              </div>
+
+              <div className="space-y-1 sm:col-span-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Budget Estimate</label>
+                <input
+                  type="text"
+                  value={newLeadBudget}
+                  onChange={(e) => setNewLeadBudget(e.target.value)}
+                  placeholder="e.g. ₹50,000 - ₹1,50,000"
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                />
+              </div>
+
+              <div className="space-y-1 sm:col-span-2">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Lead Requirement Notes</label>
+                <textarea
+                  rows={3}
+                  value={newLeadDesc}
+                  onChange={(e) => setNewLeadDesc(e.target.value)}
+                  placeholder="Details regarding project scope or request..."
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button type="button" onClick={() => setShowAddLeadModal(false)} className="btn-secondary py-1.5 px-4 text-xs">Cancel</button>
+              <button type="submit" disabled={createLoading} className="btn-primary py-1.5 px-4 text-xs flex items-center gap-1.5">
+                {createLoading ? <Loader2 className="animate-spin" size={14} /> : <Plus size={14} />}
+                <span>Save Lead to CRM</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* QUICK STANDALONE RESEND EMAIL MODAL */}
+      {showQuickEmailModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <form onSubmit={handleQuickEmailSubmit} className="glass-panel p-8 rounded-3xl border border-brand-emerald/20 max-w-lg w-full space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-white/5 pb-3">
+              <h4 className="font-display font-bold text-white text-base flex items-center gap-2">
+                <Send size={18} className="text-brand-emerald" />
+                <span>Compose Resend Email</span>
+              </h4>
+              <button type="button" onClick={() => setShowQuickEmailModal(false)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase">Recipient Email Address (To) *</label>
+              <input
+                type="email"
+                required
+                value={quickTo}
+                onChange={(e) => setQuickTo(e.target.value)}
+                placeholder="client@example.com"
+                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase">Email Subject *</label>
+              <input
+                type="text"
+                required
+                value={quickSubject}
+                onChange={(e) => setQuickSubject(e.target.value)}
+                placeholder="Proposal Quote & Discussion — Spring Web Solutions"
+                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase">Email Body (HTML/Formatted Text) *</label>
+              <textarea
+                rows={6}
+                required
+                value={quickBody}
+                onChange={(e) => setQuickBody(e.target.value)}
+                placeholder="Write your email content here..."
+                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+              />
+            </div>
+
+            {quickStatus && (
+              <div className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
+                quickStatus.success ? 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+              }`}>
+                {quickStatus.success ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
+                <span>{quickStatus.msg}</span>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 pt-2">
+              <button type="button" onClick={() => setShowQuickEmailModal(false)} className="btn-secondary py-1.5 px-4 text-xs">Cancel</button>
+              <button type="submit" disabled={quickSending} className="btn-primary py-1.5 px-4 text-xs flex items-center gap-1.5 shadow shadow-brand-emerald/20">
+                {quickSending ? <Loader2 className="animate-spin" size={14} /> : <Send size={14} />}
+                <span>Send Email via Resend</span>
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

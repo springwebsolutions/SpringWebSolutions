@@ -70,6 +70,7 @@ interface CRMState {
   addLeadNote: (leadId: string, content: string) => Promise<void>
   addLeadTask: (leadId: string, task: { title: string; description?: string; due_date?: string; assigned_to?: string }) => Promise<void>
   toggleTaskCompleted: (taskId: string, isCompleted: boolean) => Promise<void>
+  createLead: (lead: Omit<Lead, 'id' | 'created_at' | 'updated_at'>) => Promise<Lead | null>
 }
 
 export const useCRMStore = create<CRMState>((set, get) => ({
@@ -289,6 +290,32 @@ export const useCRMStore = create<CRMState>((set, get) => ({
       }
     } catch (err) {
       console.error('Error toggling task:', err)
+    }
+  },
+
+  createLead: async (newLeadData) => {
+    if (!isSupabaseConfigured) return null
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .insert({
+          ...newLeadData,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select('*')
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        await get().fetchLeads()
+        return data as Lead
+      }
+      return null
+    } catch (err) {
+      console.error('Error creating lead:', err)
+      throw err
     }
   }
 }))

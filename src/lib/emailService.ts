@@ -28,13 +28,40 @@ export async function sendResendEmail(
     key = (import.meta.env.VITE_RESEND_API_KEY || '').trim()
   }
 
+  // 1. First try calling Vercel Serverless API endpoint (/api/send-email) to prevent browser CORS blocks
+  try {
+    const apiRes = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: payload.from,
+        to: payload.to,
+        subject: payload.subject,
+        html: payload.html,
+        reply_to: payload.reply_to,
+        apiKey: key
+      })
+    })
+
+    if (apiRes.ok) {
+      const data = await apiRes.json()
+      return { success: true, data: data.data || data }
+    } else if (apiRes.status !== 404) {
+      const errData = await apiRes.json().catch(() => ({}))
+      return { success: false, error: errData.error || 'Serverless email endpoint returned error.' }
+    }
+  } catch (apiErr) {
+    // If API route failed or 404, fallback to direct SDK execution below
+  }
+
+  // 2. Fallback to direct SDK execution
   if (!key || key === 'your_resend_api_key') {
     console.warn('[Resend] Email API Key not configured. Skipping email dispatch.')
     return { success: false, error: 'Resend API Key is missing. Add VITE_RESEND_API_KEY in Vercel environment variables or Admin Settings.' }
   }
 
   try {
-    const resend = new Resend(key.trim())
+    const resend = new Resend(key)
     const { data, error } = await resend.emails.send({
       from: payload.from,
       to: Array.isArray(payload.to) ? payload.to : [payload.to],
