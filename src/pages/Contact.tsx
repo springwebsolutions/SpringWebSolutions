@@ -7,7 +7,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { 
   Mail, Phone, MapPin, Send, MessageSquare, 
-  CheckCircle, Loader2, AlertCircle 
+  CheckCircle, Loader2, AlertCircle, Clock, Sparkles 
 } from 'lucide-react'
 
 export const Contact: React.FC = () => {
@@ -15,7 +15,7 @@ export const Contact: React.FC = () => {
   const [success, setSuccess] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormData>({
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       type: 'contact',
@@ -24,27 +24,25 @@ export const Contact: React.FC = () => {
     }
   })
 
+  const selectedType = watch('type') || 'contact'
+
   const onSubmit = async (data: ContactFormData) => {
     setLoading(true)
     setErrorMsg(null)
 
     if (!isSupabaseConfigured) {
-      setErrorMsg('Platform database configuration is currently offline. Submissions are disabled.')
+      setErrorMsg('Database configuration is currently offline.')
       setLoading(false)
       return
     }
 
     try {
-      // Map form categories to lead type
-      let type: any = 'contact'
-      if (data.type) type = data.type
-
       const { error } = await supabase.from('leads').insert({
         name: data.name,
         email: data.email,
         phone: data.phone || null,
         company: data.company || null,
-        type,
+        type: data.type || 'contact',
         status: 'new',
         budget: data.budget || null,
         timeline: data.timeline || null,
@@ -57,156 +55,150 @@ export const Contact: React.FC = () => {
       reset()
     } catch (err: any) {
       console.error('Lead record submission failed:', err)
-      setErrorMsg(err.message || 'An unexpected error occurred. Please verify your internet and try again.')
+      setErrorMsg(err.message || 'An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
+  const inquiryOptions = [
+    { value: 'contact', label: 'General Inquiry' },
+    { value: 'consultation', label: 'Web / App Development' },
+    { value: 'automation_assessment', label: 'Workflow Automation' },
+    { value: 'seo_audit', label: 'Technical SEO' }
+  ]
+
   return (
-    <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
+    <div className="min-h-screen page-bg flex flex-col">
       <Navbar />
 
-      <main className="flex-grow py-16 lg:py-24 relative overflow-hidden">
-        {/* Glow Effects */}
+      <main className="flex-grow py-12 sm:py-20 relative overflow-hidden">
+        {/* Ambient Glows */}
         <div className="glow-node glow-emerald -top-20 -left-20" />
-        <div className="glow-node glow-indigo bottom-40 -right-20" />
+        <div className="glow-node glow-indigo bottom-20 -right-20" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+          
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <h1 className="text-4xl font-extrabold text-white tracking-tight light:text-slate-900">
-              Start Your Digital Growth Journey
+          <div className="text-center max-w-2xl mx-auto space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-emerald/10 border border-brand-emerald/20 text-brand-emerald text-xs font-bold uppercase tracking-wider">
+              <Sparkles size={13} />
+              <span>Let's Build Something Great</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight light:text-slate-900">
+              Get in Touch
             </h1>
-            <p className="text-lg text-slate-400 light:text-slate-600">
-              Tell us about your project, software scope, or SEO goals. Our engineering team will review details and schedule a direct technical roadmap analysis.
+            <p className="text-slate-400 light:text-slate-600 text-base leading-relaxed">
+              Have a project in mind, need custom software, or want to automate your business processes? Reach out to our engineering team.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            {/* Left Column Info details */}
-            <div className="lg:col-span-5 space-y-8">
-              <div className="glass-panel p-8 rounded-3xl space-y-8">
-                <h2 className="font-display text-2xl font-bold text-white light:text-slate-900">
-                  Connect Directly
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
+            
+            {/* Left Column: Essential Contact Information */}
+            <div className="lg:col-span-4 space-y-6">
+              
+              {/* Contact Cards */}
+              <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
+                <h2 className="font-display text-xl font-bold text-white light:text-slate-900">
+                  Contact Information
                 </h2>
-                
-                <div className="space-y-6 text-sm text-slate-400 light:text-slate-600">
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+
+                <div className="space-y-5 text-sm">
+                  
+                  {/* Email */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="h-10 w-10 rounded-xl bg-brand-emerald/10 border border-brand-emerald/20 flex items-center justify-center text-brand-emerald shrink-0">
                       <Mail size={18} />
                     </div>
-                    <div className="space-y-1">
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">General Inquiries</div>
-                      <a href="mailto:hello@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">hello@springwebsolutions.in</a>
+                    <div>
+                      <div className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Email Us</div>
+                      <a href="mailto:hello@springwebsolutions.in" className="text-white hover:text-brand-emerald transition-colors font-medium text-sm block mt-0.5 light:text-slate-900">
+                        hello@springwebsolutions.in
+                      </a>
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
-                      <Mail size={18} />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Sales & Pricing</div>
-                      <a href="mailto:sales@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">sales@springwebsolutions.in</a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
-                      <Mail size={18} />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Technical Support</div>
-                      <a href="mailto:support@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">support@springwebsolutions.in</a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
-                      <Mail size={18} />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Developer & Integration</div>
-                      <a href="mailto:developer@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">developer@springwebsolutions.in</a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
-                      <Mail size={18} />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Careers & Hiring</div>
-                      <a href="mailto:careers@springwebsolutions.in" className="hover:text-white transition-colors text-sm block font-mono text-brand-emerald">careers@springwebsolutions.in</a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+                  {/* Phone & WhatsApp */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="h-10 w-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
                       <Phone size={18} />
                     </div>
                     <div>
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">Phone Hotline</div>
-                      <a href="tel:+918012622119" className="hover:text-white transition-colors text-sm mt-1 block font-mono text-slate-200">+91 80126 22119</a>
+                      <div className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Call / WhatsApp</div>
+                      <a href="https://wa.me/918012622119" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-emerald transition-colors font-medium text-sm block mt-0.5 light:text-slate-900">
+                        +91 80126 22119
+                      </a>
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
-                      <MessageSquare size={18} />
-                    </div>
-                    <div>
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">WhatsApp Chat</div>
-                      <a href="https://wa.me/918012622119" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-sm mt-1 block text-brand-emerald font-semibold">+91 80126 22119 (Start Chat)</a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="h-10 w-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-brand-emerald shrink-0">
+                  {/* Location */}
+                  <div className="flex items-start gap-3.5">
+                    <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
                       <MapPin size={18} />
                     </div>
                     <div>
-                      <div className="font-display font-semibold text-white text-xs uppercase tracking-wider light:text-slate-700">HQ Address</div>
-                      <span className="text-sm mt-1 block leading-relaxed text-slate-200">Udumalpet, Tamil Nadu</span>
+                      <div className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Office Location</div>
+                      <span className="text-white font-medium text-sm block mt-0.5 light:text-slate-900">
+                        Udumalpet, Tamil Nadu, India
+                      </span>
                     </div>
                   </div>
+
                 </div>
+
+                {/* Response SLA Badge */}
+                <div className="pt-4 border-t border-white/5 light:border-slate-200">
+                  <div className="flex items-center gap-2.5 p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300 light:bg-slate-100 light:text-slate-700">
+                    <Clock size={15} className="text-brand-emerald shrink-0" />
+                    <span>We typically respond within <strong>1 business day</strong>.</span>
+                  </div>
+                </div>
+
               </div>
 
-              {/* Styled Maps Placeholder */}
-              <div className="glass-panel h-64 rounded-3xl relative overflow-hidden border border-white/5 flex items-center justify-center">
-                <div className="absolute inset-0 bg-[#0c1424] opacity-80 pointer-events-none" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem]" />
-                <div className="relative text-center p-6 space-y-2 z-10">
-                  <MapPin size={32} className="mx-auto text-brand-indigo animate-bounce" />
-                  <div className="font-display font-bold text-white text-sm">Spring Web Solutions</div>
-                  <div className="text-xs text-slate-500">Udumalpet, Tamil Nadu, India</div>
+              {/* Direct WhatsApp CTA Card */}
+              <a 
+                href="https://wa.me/918012622119" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="glass-panel p-5 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/40 transition-all flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <MessageSquare size={18} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors">Instant WhatsApp Chat</div>
+                    <div className="text-[11px] text-slate-400">Chat directly with a developer</div>
+                  </div>
                 </div>
-              </div>
+                <span className="text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">→</span>
+              </a>
+
             </div>
 
-            {/* Right Column Form */}
-            <div className="lg:col-span-7">
-              <div className="glass-panel p-8 sm:p-10 rounded-3xl border border-white/5">
+            {/* Right Column: Clean Inquiry Form */}
+            <div className="lg:col-span-8">
+              <div className="glass-panel p-6 sm:p-10 rounded-3xl">
                 {success ? (
-                  <div className="text-center py-16 space-y-6">
-                    <div className="h-16 w-16 mx-auto rounded-full bg-brand-emerald/10 border border-brand-emerald/20 flex items-center justify-center text-brand-emerald">
-                      <CheckCircle size={36} />
+                  <div className="text-center py-12 space-y-5">
+                    <div className="h-14 w-14 mx-auto rounded-full bg-brand-emerald/10 border border-brand-emerald/20 flex items-center justify-center text-brand-emerald">
+                      <CheckCircle size={32} />
                     </div>
-                    <h2 className="text-2xl font-bold text-white light:text-slate-900">Inquiry Logged Successfully!</h2>
+                    <h2 className="text-2xl font-bold text-white light:text-slate-900">Message Received!</h2>
                     <p className="text-sm text-slate-400 light:text-slate-600 max-w-md mx-auto leading-relaxed">
-                      Thank you for contacting Spring Web Solutions. A staff solution engineer has been alerted and will contact you within 1 business day.
+                      Thank you for contacting Spring Web Solutions. An engineer will review your message and get back to you shortly.
                     </p>
                     <button
                       onClick={() => setSuccess(false)}
-                      className="btn-secondary text-sm font-semibold"
+                      className="btn-secondary text-xs font-semibold"
                     >
-                      Submit Another Inquiry
+                      Send Another Message
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     
                     {errorMsg && (
                       <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-start gap-2">
@@ -215,106 +207,90 @@ export const Contact: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Form Step */}
+                    {/* Inquiry Type Chips */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">
+                        What can we help you with?
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {inquiryOptions.map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setValue('type', opt.value as any)}
+                            className={`p-2.5 rounded-xl text-xs font-medium text-center transition-all cursor-pointer border ${
+                              selectedType === opt.value
+                                ? 'bg-brand-emerald/15 border-brand-emerald text-brand-emerald font-bold'
+                                : 'bg-white/5 border-white/10 text-slate-400 hover:text-white light:bg-slate-100 light:border-slate-200 light:text-slate-600'
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Name & Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Your Name</label>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Your Name *</label>
                         <input
                           type="text"
                           {...register('name')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
+                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
                           placeholder="John Doe"
                         />
                         {errors.name && <p className="text-xs text-rose-400">{errors.name.message}</p>}
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Email Address *</label>
                         <input
                           type="email"
                           {...register('email')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
+                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
                           placeholder="john@company.com"
                         />
                         {errors.email && <p className="text-xs text-rose-400">{errors.email.message}</p>}
                       </div>
                     </div>
 
+                    {/* Company & Phone */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Phone (Optional)</label>
-                        <input
-                          type="text"
-                          {...register('phone')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
-                          placeholder="+1 (555) 0199"
-                        />
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company Name</label>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Company / Organization</label>
                         <input
                           type="text"
                           {...register('company')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
-                          placeholder="Enterprise Inc."
+                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
+                          placeholder="Company Ltd."
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Phone Number (Optional)</label>
+                        <input
+                          type="text"
+                          {...register('phone')}
+                          className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
+                          placeholder="+91 98765 43210"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Inquiry Type</label>
-                        <select
-                          {...register('type')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-[#141b2b] border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-50 light:border-slate-200 light:text-slate-800"
-                        >
-                          <option value="contact">General Inquiry</option>
-                          <option value="consultation">Free Consultation</option>
-                          <option value="seo_audit">SEO Audit Request</option>
-                          <option value="website_audit">Website Audit Request</option>
-                          <option value="automation_assessment">Automation Assessment</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Estimated Budget</label>
-                        <select
-                          {...register('budget')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-[#141b2b] border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-50 light:border-slate-200 light:text-slate-800"
-                        >
-                          <option value="<$5k">&lt; $5,000</option>
-                          <option value="$5k-$15k">$5,000 - $15,000</option>
-                          <option value="$15k-$30k">$15,000 - $30,000</option>
-                          <option value="$30k+">$30,000 +</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Target Timeline</label>
-                        <select
-                          {...register('timeline')}
-                          className="w-full px-4 py-2.5 rounded-lg bg-[#141b2b] border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-50 light:border-slate-200 light:text-slate-800"
-                        >
-                          <option value="ASAP">ASAP</option>
-                          <option value="1-2 Months">1 - 2 Months</option>
-                          <option value="3-6 Months">3 - 6 Months</option>
-                          <option value="General Inquiry">Flexible</option>
-                        </select>
-                      </div>
-                    </div>
-
+                    {/* Project Description */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Project Scope / Requirements</label>
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">How can we help? *</label>
                       <textarea
-                        rows={5}
+                        rows={4}
                         {...register('description')}
-                        className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-slate-950/5 light:border-slate-200 light:text-slate-800"
-                        placeholder="Please describe what you want to build or optimize. Outline any web integration requirements, design preferences, or current business bottlenecks."
+                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
+                        placeholder="Tell us about your project requirements, goals, or current bottlenecks..."
                       />
                       {errors.description && <p className="text-xs text-rose-400">{errors.description.message}</p>}
                     </div>
 
+                    {/* Submit Button */}
                     <button
                       type="submit"
                       disabled={loading}
@@ -322,13 +298,13 @@ export const Contact: React.FC = () => {
                     >
                       {loading ? (
                         <>
-                          <Loader2 className="animate-spin" size={18} />
-                          <span>Filing Inquiry...</span>
+                          <Loader2 className="animate-spin" size={16} />
+                          <span>Sending Message...</span>
                         </>
                       ) : (
                         <>
-                          <Send size={18} />
-                          <span>Submit Solutions Request</span>
+                          <Send size={16} />
+                          <span>Send Message</span>
                         </>
                       )}
                     </button>
@@ -336,6 +312,7 @@ export const Contact: React.FC = () => {
                 )}
               </div>
             </div>
+
           </div>
         </div>
       </main>
