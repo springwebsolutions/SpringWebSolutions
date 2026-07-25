@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
       heading: 'Ecosystem',
       links: [
         { label: 'Digital Products', href: '/marketplace' },
-        { label: 'Download Center', href: '/downloads' },
+        { label: 'Free Downloads', href: '/marketplace?filter=free' },
         { label: 'Blog & Articles', href: '/blog' },
         { label: 'Knowledge Base', href: '/kb' }
       ]

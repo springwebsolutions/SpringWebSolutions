@@ -26,7 +26,6 @@ export const Navbar: React.FC = () => {
     { label: 'Services', href: '/services' },
     { label: 'Pricing', href: '/pricing' },
     { label: 'Marketplace', href: '/marketplace' },
-    { label: 'Downloads', href: '/downloads' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: '/kb' },
     { label: 'Support', href: '/support' },
