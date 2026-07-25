@@ -23,11 +23,14 @@ export async function sendResendEmail(
   payload: ResendEmailPayload,
   apiKey?: string
 ): Promise<{ success: boolean; data?: any; error?: string }> {
-  const key = apiKey || import.meta.env.VITE_RESEND_API_KEY
+  let key = (apiKey || '').trim()
+  if (!key) {
+    key = (import.meta.env.VITE_RESEND_API_KEY || '').trim()
+  }
 
-  if (!key || key.trim() === '' || key === 'your_resend_api_key') {
+  if (!key || key === 'your_resend_api_key') {
     console.warn('[Resend] Email API Key not configured. Skipping email dispatch.')
-    return { success: false, error: 'Resend API Key is missing or not configured.' }
+    return { success: false, error: 'Resend API Key is missing. Add VITE_RESEND_API_KEY in Vercel environment variables or Admin Settings.' }
   }
 
   try {

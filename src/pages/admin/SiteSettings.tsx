@@ -378,10 +378,18 @@ export const SiteSettings: React.FC = () => {
 
           {/* Resend Email Integration Section */}
           <div className="border-t border-white/5 pt-6 space-y-4">
-            <h4 className="font-display font-bold text-white text-sm flex items-center gap-2">
-              <Mail size={16} className="text-brand-emerald" />
-              <span>Resend Email Dispatcher Integration</span>
-            </h4>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h4 className="font-display font-bold text-white text-sm flex items-center gap-2">
+                <Mail size={16} className="text-brand-emerald" />
+                <span>Resend Email Dispatcher Integration</span>
+              </h4>
+              {import.meta.env.VITE_RESEND_API_KEY && (
+                <span className="px-2.5 py-1 rounded-full bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald text-[11px] font-semibold flex items-center gap-1 w-max">
+                  <CheckCircle size={12} />
+                  <span>Vercel VITE_RESEND_API_KEY Active</span>
+                </span>
+              )}
+            </div>
             <p className="text-xs text-slate-400">
               Configure Resend API credentials for automated lead notifications, ticket alerts, and transactional client communications.
             </p>
