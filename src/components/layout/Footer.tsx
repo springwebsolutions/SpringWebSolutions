@@ -6,7 +6,7 @@ import { Mail, Phone, MapPin } from 'lucide-react'
 export const Footer: React.FC = () => {
   const { siteConfig, navigation } = usePageBuilderStore()
 
-  const footerLinks = navigation?.footer_links || [
+  const rawFooter = navigation?.footer_links || [
     {
       heading: 'Solutions',
       links: [
@@ -34,6 +34,15 @@ export const Footer: React.FC = () => {
       ]
     }
   ]
+
+  const footerLinks = rawFooter.map((section: any) => ({
+    ...section,
+    links: (section.links || []).filter((l: any) => {
+      const href = (l.href || '').toLowerCase()
+      const label = (l.label || '').toLowerCase()
+      return href !== '/downloads' && href !== '/pricing' && label !== 'download center' && label !== 'pricing'
+    })
+  }))
 
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
   const tagLine = siteConfig?.tagline || 'Building Websites, Software & Automation That Help Businesses Grow'

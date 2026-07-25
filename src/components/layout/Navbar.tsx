@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
     setMobileMenuOpen(false)
   }
 
-  const headerLinks = navigation?.header_menu || [
+  const rawLinks = navigation?.header_menu || [
     { label: 'Home', href: '/' },
     { label: 'About', href: '/about' },
     { label: 'Services', href: '/services' },
@@ -30,6 +30,18 @@ export const Navbar: React.FC = () => {
     { label: 'Support', href: '/support' },
     { label: 'Contact', href: '/contact' }
   ]
+
+  const headerLinks = rawLinks.filter((link: any) => {
+    const href = (link.href || '').toLowerCase()
+    const label = (link.label || '').toLowerCase()
+    return (
+      href !== '/downloads' && 
+      href !== '/pricing' && 
+      label !== 'downloads' && 
+      label !== 'pricing' &&
+      label !== 'download center'
+    )
+  })
 
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
