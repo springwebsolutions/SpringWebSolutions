@@ -228,8 +228,8 @@ export const BlogCMS: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center text-brand-emerald">
-        <Loader2 className="animate-spin" size={36} />
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="animate-spin text-emerald-500" size={28} />
       </div>
     )
   }
@@ -243,21 +243,21 @@ export const BlogCMS: React.FC = () => {
           <div className="flex items-center justify-between">
             <button
               onClick={() => setIsEditing(false)}
-              className="btn-secondary flex items-center gap-1 text-xs cursor-pointer"
+              className="btn-admin-secondary cursor-pointer"
             >
-              <ArrowLeft size={14} />
-              <span>Back to Listing</span>
+              <ArrowLeft size={13} />
+              Back to Listing
             </button>
-            <h3 className="font-display font-bold text-white text-base">
-              {currentPost ? 'Edit Blog Article' : 'Compose Blog Article'}
-            </h3>
+            <h2 className="font-bold text-white text-base">
+              {currentPost ? 'Edit Article' : 'Compose New Article'}
+            </h2>
           </div>
 
           {notification && (
-            <div className={`p-4 rounded-xl flex items-start gap-2.5 text-sm ${
-              notification.type === 'success' ? 'bg-brand-emerald/15 border border-brand-emerald/20 text-brand-emerald' : 'bg-rose-500/10 border border-rose-500/20 text-rose-400'
+            <div className={`p-3.5 rounded-xl flex items-start gap-2.5 text-xs border ${
+              notification.type === 'success' ? 'bg-emerald-500/8 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/8 border-rose-500/20 text-rose-400'
             }`}>
-              {notification.type === 'success' ? <CheckCircle className="shrink-0 mt-0.5" size={16} /> : <AlertCircle className="shrink-0 mt-0.5" size={16} />}
+              {notification.type === 'success' ? <CheckCircle className="shrink-0 mt-0.5" size={14} /> : <AlertCircle className="shrink-0 mt-0.5" size={14} />}
               <span>{notification.msg}</span>
             </div>
           )}
@@ -266,7 +266,7 @@ export const BlogCMS: React.FC = () => {
           <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Editor Text Fields (Col: 8) */}
-            <div className="lg:col-span-8 glass-panel p-8 rounded-3xl border border-white/5 space-y-5">
+            <div className="lg:col-span-8 admin-card p-6 space-y-5">
               
               {/* Title & Slug */}
               <div className="space-y-4">
@@ -454,85 +454,90 @@ export const BlogCMS: React.FC = () => {
         </div>
       ) : (
         // ARTICLE CMS LISTING VIEW
-        <div className="glass-panel p-8 rounded-3xl border border-white/5 space-y-6">
+        <div className="admin-card p-6 space-y-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <h3 className="font-display text-lg font-bold text-white tracking-tight">Blog Articles Manager</h3>
-              <p className="text-xs text-slate-500 mt-1">Manage draft roadmaps, publish technical tutorials, and manage SEO parameters.</p>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-indigo-500/10 border border-white/[0.06] flex items-center justify-center">
+                <BookOpen size={18} className="text-indigo-400" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-white tracking-tight">Blog CMS</h1>
+                <p className="text-[12px] text-slate-500 mt-0.5">Compose, publish, and manage blog articles &amp; SEO metadata.</p>
+              </div>
             </div>
             
             <button
               onClick={handleCreateNewClick}
-              className="btn-primary flex items-center gap-1.5 text-xs font-semibold cursor-pointer shadow shadow-brand-emerald/10"
+              className="btn-admin-primary cursor-pointer"
             >
-              <Plus size={16} />
-              <span>Compose Article</span>
+              <Plus size={14} />
+              Compose Article
             </button>
           </div>
 
-          {/* Posts Grid List */}
+          {/* Posts Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-slate-300">
-              <thead className="text-xs uppercase bg-white/2 text-slate-400 tracking-wider">
+            <table className="admin-table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3.5">Title</th>
-                  <th className="px-6 py-3.5">Category</th>
-                  <th className="px-6 py-3.5">Status</th>
-                  <th className="px-6 py-3.5">Author</th>
-                  <th className="px-6 py-3.5">Date</th>
-                  <th className="px-6 py-3.5 text-center">Actions</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Author</th>
+                  <th>Date</th>
+                  <th className="text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody>
                 {posts.map(post => (
-                  <tr key={post.id} className="hover:bg-white/2 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-white max-w-xs truncate">
-                      {post.title}
+                  <tr key={post.id}>
+                    <td>
+                      <div className="font-semibold text-slate-200 max-w-xs truncate">{post.title}</div>
                     </td>
-                    <td className="px-6 py-4 text-xs">
+                    <td className="text-slate-500">
                       {post.categories?.[0]?.name || 'Uncategorized'}
                     </td>
-                    <td className="px-6 py-4 text-xs">
-                      <span className={`px-2 py-0.5 rounded font-bold uppercase ${
-                        post.status === 'published' ? 'bg-brand-emerald/10 text-brand-emerald' : 'bg-white/5 text-slate-500'
+                    <td>
+                      <span className={`badge ${
+                        post.status === 'published' ? 'badge-green' : 'badge-slate'
                       }`}>
                         {post.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs">
+                    <td className="text-slate-500">
                       {post.profiles?.full_name || 'Staff'}
                     </td>
-                    <td className="px-6 py-4 text-xs text-slate-500">
+                    <td className="text-slate-600">
                       {post.published_at 
                         ? new Date(post.published_at).toLocaleDateString()
-                        : 'Draft'
+                        : '—'
                       }
                     </td>
-                    <td className="px-6 py-4 text-center">
-                      <div className="inline-flex space-x-2">
+                    <td className="text-center">
+                      <div className="inline-flex gap-1.5">
                         <button
                           onClick={() => handleEditClick(post)}
-                          className="p-1.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
+                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
                           title="Edit"
                         >
-                          <Edit size={14} />
+                          <Edit size={13} />
                         </button>
                         <button
                           onClick={() => handleDelete(post.id)}
-                          className="p-1.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-all cursor-pointer"
+                          className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-all cursor-pointer"
                           title="Delete"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={13} />
                         </button>
                       </div>
                     </td>
                   </tr>
                 ))}
-
                 {posts.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="text-center py-12 text-slate-500 text-xs">
-                      No blog posts recorded. Click "Compose Article" to create your first article entry.
+                    <td colSpan={6} className="text-center py-12 text-slate-600">
+                      <BookOpen size={28} className="mx-auto mb-2 opacity-30" />
+                      No articles yet. Click "Compose Article" to get started.
                     </td>
                   </tr>
                 )}

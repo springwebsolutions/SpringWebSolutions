@@ -201,34 +201,38 @@ export const SupportManager: React.FC = () => {
   return (
     <div className="space-y-6">
       
-      {/* Search and Filters Header */}
-      <div className="glass-panel p-6 rounded-3xl border border-white/5 space-y-4">
+      {/* Toolbar */}
+      <div className="admin-card p-5 space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="font-display text-lg font-bold text-white tracking-tight">Support Inbox</h3>
-            <p className="text-xs text-slate-500 mt-1">Review ticket submissions, allocate assignees, and respond to clients.</p>
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-white/[0.06] flex items-center justify-center">
+              <Ticket size={18} className="text-amber-400" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white tracking-tight">Support Desk</h1>
+              <p className="text-[12px] text-slate-500 mt-0.5">Manage tickets, assign staff, and reply to clients.</p>
+            </div>
           </div>
           <button 
             onClick={fetchTickets}
-            className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
+            className="btn-admin-secondary"
             title="Refresh Inbox"
           >
-            <RefreshCw size={15} />
+            <RefreshCw size={13} />
+            Refresh
           </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-2.5">
           {/* Live Search */}
           <div className="relative flex-1">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500 pointer-events-none">
-              <Search size={15} />
-            </span>
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
-              placeholder="Search by subject, client or company..."
+              className="admin-input pl-8"
+              placeholder="Search by subject, client or company…"
             />
           </div>
 
@@ -236,7 +240,7 @@ export const SupportManager: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-[#141b2b] border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+            className="admin-select sm:w-40"
           >
             <option value="all">All Statuses</option>
             <option value="open">Open</option>
@@ -261,67 +265,61 @@ export const SupportManager: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="h-64 flex items-center justify-center text-brand-emerald">
-          <Loader2 className="animate-spin" size={36} />
+        <div className="h-64 flex items-center justify-center">
+          <Loader2 className="animate-spin text-emerald-500" size={28} />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
           
           {/* Left Panel - Tickets list */}
           <div className={`${selectedTicket ? 'lg:col-span-6' : 'lg:col-span-12'} space-y-4 transition-all duration-300`}>
             {filteredTickets.length === 0 ? (
-              <div className="text-center py-20 glass-panel rounded-3xl max-w-md mx-auto space-y-4">
-                <Ticket size={48} className="mx-auto text-slate-700" />
-                <h4 className="text-sm font-bold text-white">No Tickets Found</h4>
-                <p className="text-xs text-slate-500">There are no client tickets that match the selected search criteria.</p>
+              <div className="text-center py-20 admin-card max-w-md mx-auto space-y-3">
+                <Ticket size={36} className="mx-auto text-slate-700" />
+                <div className="text-sm font-bold text-slate-400">No Tickets Found</div>
+                <p className="text-xs text-slate-600">No tickets match your current filters.</p>
               </div>
             ) : (
-              <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden">
+              <div className="admin-card overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs border-collapse">
+                  <table className="admin-table">
                     <thead>
-                      <tr className="border-b border-white/5 bg-white/2 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
-                        <th className="px-4 py-3">Client</th>
-                        <th className="px-4 py-3">Subject</th>
-                        <th className="px-4 py-3">Priority</th>
-                        <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3">Assignee</th>
-                        <th className="px-4 py-3 text-right">Updated</th>
+                      <tr>
+                        <th>Client</th>
+                        <th>Subject</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assignee</th>
+                        <th className="text-right">Updated</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-slate-300">
+                    <tbody>
                       {filteredTickets.map((t) => {
                         const isSelected = selectedTicket?.id === t.id
                         return (
                           <tr
                             key={t.id}
                             onClick={() => handleSelectTicket(t)}
-                            className={`hover:bg-white/1 cursor-pointer transition-colors ${
-                              isSelected ? 'bg-brand-emerald/5 border-l-2 border-brand-emerald' : ''
-                            }`}
+                            className={`cursor-pointer ${isSelected ? 'bg-emerald-500/5' : ''}`}
                           >
-                            <td className="px-4 py-3.5">
-                              <div className="font-semibold text-white">{t.profiles?.full_name || 'Anonymous'}</div>
-                              <div className="text-[10px] text-slate-500 truncate max-w-[120px]">{t.profiles?.company || 'No Company'}</div>
+                            <td>
+                              <div className="font-semibold text-slate-200">{t.profiles?.full_name || 'Anonymous'}</div>
+                              <div className="text-[10px] text-slate-600 truncate max-w-[120px]">{t.profiles?.company || 'No Company'}</div>
                             </td>
-                            <td className="px-4 py-3.5">
-                              <div className="font-semibold text-white max-w-[180px] truncate">{t.subject}</div>
-                              <div className="text-[10px] text-slate-500">{t.products?.name || 'General Solutions'}</div>
+                            <td>
+                              <div className="font-semibold text-slate-200 max-w-[180px] truncate">{t.subject}</div>
+                              <div className="text-[10px] text-slate-600">{t.products?.name || 'General'}</div>
                             </td>
-                            <td className="px-4 py-3.5">
-                              <span className={`px-2 py-0.5 rounded border text-[9px] font-bold uppercase ${getPriorityColor(t.priority)}`}>
-                                {t.priority}
-                              </span>
+                            <td>
+                              <span className={`badge ${getPriorityColor(t.priority)}`}>{t.priority}</span>
                             </td>
-                            <td className="px-4 py-3.5">
-                              <span className={`px-2 py-0.5 rounded border text-[9px] font-bold uppercase ${getStatusColor(t.status)}`}>
-                                {t.status}
-                              </span>
+                            <td>
+                              <span className={`badge ${getStatusColor(t.status)}`}>{t.status}</span>
                             </td>
-                            <td className="px-4 py-3.5 font-medium text-slate-400">
-                              {t.assignee?.full_name || 'Unassigned'}
+                            <td className="text-slate-500 font-medium">
+                              {t.assignee?.full_name || <span className="text-slate-700">Unassigned</span>}
                             </td>
-                            <td className="px-4 py-3.5 text-right text-slate-500">
+                            <td className="text-right text-slate-600">
                               {new Date(t.updated_at).toLocaleDateString()}
                             </td>
                           </tr>
@@ -334,39 +332,38 @@ export const SupportManager: React.FC = () => {
             )}
           </div>
 
-          {/* Right Panel - Ticket Messenger Thread Drawer */}
+          {/* Right Panel - Ticket Chat Drawer */}
           {selectedTicket && (
-            <div className="lg:col-span-6 glass-panel rounded-3xl border border-white/5 overflow-hidden flex flex-col h-[550px]">
+            <div className="lg:col-span-6 admin-card overflow-hidden flex flex-col" style={{ height: '560px' }}>
               
-              {/* Drawer Header details */}
-              <div className="p-4 bg-white/2 border-b border-white/5 flex items-center justify-between gap-4">
+              {/* Drawer Header */}
+              <div className="p-4 border-b border-white/[0.06] flex items-center justify-between gap-4 bg-white/[0.02]">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold text-brand-emerald">#{selectedTicket.id.slice(0, 8)}</span>
-                    <h4 className="text-xs sm:text-sm font-bold text-white truncate max-w-[200px]">{selectedTicket.subject}</h4>
+                    <span className="text-[11px] font-mono font-bold text-emerald-400">#{selectedTicket.id.slice(0, 8)}</span>
+                    <span className={`badge ${getStatusColor(selectedTicket.status)}`}>{selectedTicket.status}</span>
                   </div>
-                  <p className="text-[10px] text-slate-500 mt-0.5">
-                    Client: <span className="text-slate-400 font-semibold">{selectedTicket.profiles?.full_name}</span> ({selectedTicket.profiles?.company || 'No Company'})
+                  <h4 className="text-sm font-bold text-white mt-1 truncate max-w-[240px]">{selectedTicket.subject}</h4>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    {selectedTicket.profiles?.full_name} · {selectedTicket.profiles?.company || 'No Company'}
                   </p>
                 </div>
                 <button
                   onClick={() => setSelectedTicket(null)}
-                  className="text-slate-500 hover:text-white text-xs font-semibold"
+                  className="p-1.5 rounded-lg hover:bg-white/5 text-slate-500 hover:text-white transition-all"
                 >
-                  Close Panel
+                  <XCircle size={16} />
                 </button>
               </div>
 
-              {/* Operations Control Row */}
-              <div className="p-3 bg-white/1 border-b border-white/5 grid grid-cols-2 gap-3">
-                
-                {/* Status selection */}
+              {/* Controls */}
+              <div className="p-3 border-b border-white/[0.06] grid grid-cols-2 gap-2.5 bg-white/[0.01]">
                 <div className="space-y-1">
-                  <label className="text-[9px] uppercase font-bold text-slate-500">Update Status</label>
+                  <label className="text-[10px] uppercase font-bold text-slate-600">Status</label>
                   <select
                     value={selectedTicket.status}
                     onChange={(e) => handleUpdateStatus(selectedTicket.id, e.target.value)}
-                    className="w-full px-2 py-1 rounded bg-[#101524] border border-white/10 text-xs text-white focus:outline-none"
+                    className="admin-select text-xs py-1.5"
                   >
                     <option value="open">Open</option>
                     <option value="in_progress">In Progress</option>
@@ -374,14 +371,12 @@ export const SupportManager: React.FC = () => {
                     <option value="closed">Closed</option>
                   </select>
                 </div>
-
-                {/* Staff Allocator */}
                 <div className="space-y-1">
-                  <label className="text-[9px] uppercase font-bold text-slate-500">Allocate Staff</label>
+                  <label className="text-[10px] uppercase font-bold text-slate-600">Assignee</label>
                   <select
                     value={selectedTicket.assigned_to || ''}
                     onChange={(e) => handleAssignTo(selectedTicket.id, e.target.value)}
-                    className="w-full px-2 py-1 rounded bg-[#101524] border border-white/10 text-xs text-white focus:outline-none"
+                    className="admin-select text-xs py-1.5"
                   >
                     <option value="">Unassigned</option>
                     {staffList.map((st) => (
@@ -389,17 +384,19 @@ export const SupportManager: React.FC = () => {
                     ))}
                   </select>
                 </div>
-
               </div>
 
-              {/* Chat timeline thread */}
-              <div className="flex-grow p-4 overflow-y-auto space-y-3 bg-[#05080e]/40">
+              {/* Message Thread */}
+              <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#030507]">
                 {loadingMessages ? (
-                  <div className="h-full flex items-center justify-center text-brand-emerald">
-                    <Loader2 className="animate-spin" size={24} />
+                  <div className="h-full flex items-center justify-center">
+                    <Loader2 className="animate-spin text-emerald-500" size={20} />
                   </div>
                 ) : messages.length === 0 ? (
-                  <div className="text-center text-xs text-slate-600 py-10">No messages in thread.</div>
+                  <div className="text-center text-xs text-slate-700 py-10">
+                    <MessageSquare size={24} className="mx-auto mb-2 opacity-30" />
+                    No messages yet
+                  </div>
                 ) : (
                   messages.map((msg) => {
                     const isStaff = msg.sender_id === user?.id || msg.sender_id !== selectedTicket.user_id
@@ -408,17 +405,17 @@ export const SupportManager: React.FC = () => {
                         key={msg.id}
                         className={`flex flex-col max-w-[85%] ${isStaff ? 'ml-auto items-end' : 'mr-auto items-start'}`}
                       >
-                        <div className="flex items-center gap-1.5 text-[9px] text-slate-500 mb-0.5">
-                          <span className="font-semibold text-slate-400">
-                            {isStaff ? 'You (Staff)' : (selectedTicket.profiles?.full_name || 'Client')}
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-600 mb-1">
+                          <span className="font-semibold">
+                            {isStaff ? 'Staff' : (selectedTicket.profiles?.full_name || 'Client')}
                           </span>
-                          <span>•</span>
-                          <span>{new Date(msg.created_at).toLocaleDateString()}</span>
+                          <span>·</span>
+                          <span>{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
-                        <div className={`p-3 rounded-xl text-xs whitespace-pre-wrap ${
+                        <div className={`p-3 rounded-xl text-xs leading-relaxed whitespace-pre-wrap ${
                           isStaff 
-                            ? 'bg-brand-indigo text-white rounded-tr-none' 
-                            : 'bg-white/5 border border-white/5 text-slate-200 rounded-tl-none'
+                            ? 'bg-indigo-600 text-white rounded-tr-none' 
+                            : 'bg-white/[0.05] border border-white/[0.07] text-slate-200 rounded-tl-none'
                         }`}>
                           {msg.message}
                         </div>
@@ -428,24 +425,24 @@ export const SupportManager: React.FC = () => {
                 )}
               </div>
 
-              {/* Reply form textbox */}
-              <div className="p-3 bg-white/2 border-t border-white/5">
+              {/* Reply Box */}
+              <div className="p-3 border-t border-white/[0.06] bg-white/[0.02]">
                 <form onSubmit={handleSendReply} className="flex gap-2">
                   <input
                     type="text"
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    className="flex-grow px-3 py-2 rounded bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
-                    placeholder="Type client reply message..."
+                    className="admin-input flex-1"
+                    placeholder="Write a reply…"
                     disabled={sending || selectedTicket.status === 'closed'}
                   />
                   <button
                     type="submit"
                     disabled={sending || !replyText.trim() || selectedTicket.status === 'closed'}
-                    className="btn-primary py-2 px-4 font-semibold text-xs flex items-center gap-1 shrink-0"
+                    className="btn-admin-primary shrink-0"
                   >
                     {sending ? <Loader2 className="animate-spin" size={13} /> : <MessageSquare size={13} />}
-                    <span>Reply</span>
+                    Send
                   </button>
                 </form>
               </div>
