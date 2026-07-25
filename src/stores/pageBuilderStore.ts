@@ -234,8 +234,8 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           subheadline: "We design, build, deploy, and maintain custom applications and websites. We specialize in complex API integrations, database mapping, conversion-optimized checkout funnels, and transparent pricing packages.",
           cta_primary_text: "Request a Quote",
           cta_primary_href: "/contact",
-          cta_secondary_text: "View Pricing Plans",
-          cta_secondary_href: "#pricing"
+          cta_secondary_text: "Contact Architect",
+          cta_secondary_href: "/contact"
         },
         styling: { padding_top: "py-24", padding_bottom: "py-20" },
         display_order: 0,
