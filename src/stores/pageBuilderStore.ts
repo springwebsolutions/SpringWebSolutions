@@ -230,12 +230,12 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         page_id: 'default-services-id',
         type: 'hero',
         content: {
-          headline: "End-to-End Solutions for Growing Businesses",
-          subheadline: "We design, build, deploy, and maintain custom applications and websites. We specialize in complex API integrations, database mapping, and conversion-optimized checkout funnels.",
+          headline: "End-to-End Digital Services & Pricing Plans",
+          subheadline: "We design, build, deploy, and maintain custom applications and websites. We specialize in complex API integrations, database mapping, conversion-optimized checkout funnels, and transparent pricing packages.",
           cta_primary_text: "Request a Quote",
           cta_primary_href: "/contact",
-          cta_secondary_text: "View Pricing",
-          cta_secondary_href: "/pricing"
+          cta_secondary_text: "View Pricing Plans",
+          cta_secondary_href: "#pricing"
         },
         styling: { padding_top: "py-24", padding_bottom: "py-20" },
         display_order: 0,
@@ -260,6 +260,18 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         is_active: true
       },
       {
+        id: 'services-pricing',
+        page_id: 'default-services-id',
+        type: 'pricing_summary',
+        content: {
+          title: "Transparent & Scalable Pricing Plans",
+          subtitle: "Select a package designed for your current growth stage, or contact our engineers for bespoke enterprise software requirements."
+        },
+        styling: { padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 2,
+        is_active: true
+      },
+      {
         id: 'services-cta',
         page_id: 'default-services-id',
         type: 'cta',
@@ -272,7 +284,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           cta_secondary_href: "/blog"
         },
         styling: { padding_top: "py-20", padding_bottom: "py-20" },
-        display_order: 2,
+        display_order: 3,
         is_active: true
       }
     ]

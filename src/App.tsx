@@ -46,7 +46,7 @@ function App() {
         <Route path="/" element={<DynamicPage />} />
         <Route path="/about" element={<DynamicPage />} />
         <Route path="/services" element={<DynamicPage />} />
-        <Route path="/pricing" element={<DynamicPage />} />
+        <Route path="/pricing" element={<Navigate to="/services#pricing" replace />} />
         <Route path="/industries" element={<DynamicPage />} />
         <Route path="/process" element={<DynamicPage />} />
         <Route path="/contact" element={<Contact />} />
