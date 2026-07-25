@@ -9,7 +9,6 @@ import BlogListing from '@/pages/BlogListing'
 import BlogPost from '@/pages/BlogPost'
 import Marketplace from '@/pages/Marketplace'
 import ProductDetail from '@/pages/ProductDetail'
-import DownloadCenter from '@/pages/DownloadCenter'
 import Contact from '@/pages/Contact'
 import Login from '@/pages/Login'
 import KBListing from '@/pages/KBListing'
@@ -46,11 +45,10 @@ function App() {
         <Route path="/" element={<DynamicPage />} />
         <Route path="/about" element={<DynamicPage />} />
         <Route path="/services" element={<DynamicPage />} />
-        <Route path="/pricing" element={<Navigate to="/services" replace />} />
         <Route path="/industries" element={<DynamicPage />} />
         <Route path="/process" element={<DynamicPage />} />
         <Route path="/contact" element={<Contact />} />
-        
+
         {/* Blog System */}
         <Route path="/blog" element={<BlogListing />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
@@ -63,10 +61,9 @@ function App() {
         <Route path="/support" element={<SupportPortal />} />
         <Route path="/support/:id" element={<SupportTicketDetail />} />
 
-        {/* Marketplace & Download Center */}
+        {/* Marketplace */}
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplace/:slug" element={<ProductDetail />} />
-        <Route path="/downloads" element={<Navigate to="/marketplace?filter=free" replace />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
