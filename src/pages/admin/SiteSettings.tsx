@@ -4,12 +4,17 @@ import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { sendResendEmail, buildTestEmailHTML } from '@/lib/emailService'
 import { 
   Settings, Save, Download, ShieldCheck, Mail, Send,
-  Loader2, CheckCircle, AlertCircle, FileSpreadsheet, FileJson 
+  Loader2, CheckCircle, AlertCircle, FileSpreadsheet, FileJson, Menu, Plus, Trash2 
 } from 'lucide-react'
 
 export const SiteSettings: React.FC = () => {
-  const { siteConfig, fetchSettings } = usePageBuilderStore()
+  const { siteConfig, navigation, fetchSettings, saveNavigation } = usePageBuilderStore()
   
+  // Header Menu Items State
+  const [headerMenu, setHeaderMenu] = useState<Array<{ label: string; href: string }>>([])
+  const [navSaving, setNavSaving] = useState(false)
+  const [navSuccess, setNavSuccess] = useState(false)
+
   // General details
   const [companyName, setCompanyName] = useState('')
   const [tagline, setTagline] = useState('')
@@ -63,7 +68,42 @@ export const SiteSettings: React.FC = () => {
       setResendFromEmail(resend.from_email || import.meta.env.VITE_RESEND_FROM_EMAIL || 'hello@springwebsolutions.in')
       setResendNotifyEmail(resend.notify_email || 'sales@springwebsolutions.in')
     }
-  }, [siteConfig])
+    if (navigation && navigation.header_menu) {
+      setHeaderMenu(JSON.parse(JSON.stringify(navigation.header_menu)))
+    }
+  }, [siteConfig, navigation])
+
+  const handleHeaderMenuItemChange = (index: number, key: 'label' | 'href', value: string) => {
+    const updated = [...headerMenu]
+    updated[index][key] = value
+    setHeaderMenu(updated)
+  }
+
+  const handleAddMenuItem = () => {
+    setHeaderMenu(prev => [...prev, { label: 'New Link', href: '/' }])
+  }
+
+  const handleRemoveMenuItem = (index: number) => {
+    setHeaderMenu(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const handleSaveNavigation = async () => {
+    setNavSaving(true)
+    setNavSuccess(false)
+    try {
+      const navPayload = {
+        ...(navigation || {}),
+        header_menu: headerMenu
+      }
+      await saveNavigation(navPayload)
+      setNavSuccess(true)
+      setTimeout(() => setNavSuccess(false), 3000)
+    } catch (err) {
+      console.error('Save navigation error:', err)
+    } finally {
+      setNavSaving(false)
+    }
+  }
 
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -478,6 +518,71 @@ export const SiteSettings: React.FC = () => {
                 {exportLoading === 'settings' ? <Loader2 className="animate-spin" size={12} /> : <Download size={12} />}
               </button>
             </div>
+          </div>
+
+          {/* Navigation Links Manager Card */}
+          <div className="glass-panel p-6 rounded-2xl border border-white/5 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/5 pb-2">
+              <h4 className="font-display font-semibold text-xs text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                <Menu className="text-brand-emerald" size={16} />
+                <span>Header Navbar Links</span>
+              </h4>
+              <button
+                onClick={handleAddMenuItem}
+                className="btn-secondary text-[11px] py-1 px-2 flex items-center gap-1 cursor-pointer"
+              >
+                <Plus size={12} />
+                <span>Add Link</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Add, edit, or remove top navigation bar menu links.
+            </p>
+
+            <div className="space-y-3 pt-1">
+              {headerMenu.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={item.label}
+                    onChange={(e) => handleHeaderMenuItemChange(idx, 'label', e.target.value)}
+                    placeholder="Label"
+                    className="w-1/2 px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                  />
+                  <input
+                    type="text"
+                    value={item.href}
+                    onChange={(e) => handleHeaderMenuItemChange(idx, 'href', e.target.value)}
+                    placeholder="/path"
+                    className="w-1/2 px-2.5 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs font-mono text-slate-300 focus:outline-none focus:border-brand-emerald"
+                  />
+                  <button
+                    onClick={() => handleRemoveMenuItem(idx)}
+                    className="p-1.5 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 shrink-0 cursor-pointer"
+                    title="Remove link"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {navSuccess && (
+              <div className="p-2 rounded bg-brand-emerald/15 text-brand-emerald text-xs flex items-center gap-1">
+                <CheckCircle size={14} />
+                <span>Navbar links updated!</span>
+              </div>
+            )}
+
+            <button
+              onClick={handleSaveNavigation}
+              disabled={navSaving}
+              className="w-full btn-primary text-xs py-2 flex items-center justify-center gap-1.5 font-semibold cursor-pointer"
+            >
+              {navSaving ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
+              <span>Save Navigation Links</span>
+            </button>
           </div>
         </div>
 

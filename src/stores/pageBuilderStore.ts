@@ -39,6 +39,10 @@ interface PageBuilderState {
   saveSectionContent: (sectionId: string, content: any, styling?: any) => Promise<void>
   toggleSectionActive: (sectionId: string, isActive: boolean) => Promise<void>
   updateSectionsOrder: (reorderedSections: SectionData[]) => Promise<void>
+  addSection: (pageId: string, type: string, content: any, styling?: any) => Promise<void>
+  deleteSection: (sectionId: string) => Promise<void>
+  updatePageSEO: (pageId: string, seoTitle: string, seoDescription: string, seoKeywords: string) => Promise<void>
+  saveNavigation: (navigationData: any) => Promise<void>
 }
 
 // Fallback seed data for immediate 0ms initial render without network delay
@@ -722,6 +726,118 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
       }
     } catch (err) {
       console.error('Error updating sections order:', err)
+      throw err
+    }
+  },
+
+  addSection: async (pageId: string, type: string, content: any, styling: any = {}) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const currentSecs = get().currentSections
+      const nextOrder = currentSecs.length > 0 ? Math.max(...currentSecs.map(s => s.display_order)) + 1 : 0
+
+      const { data, error } = await supabase
+        .from('sections')
+        .insert({
+          page_id: pageId,
+          type,
+          content,
+          styling: { padding_top: 'py-16', padding_bottom: 'py-16', ...styling },
+          display_order: nextOrder,
+          is_active: true
+        })
+        .select()
+        .single()
+
+      if (error) throw error
+
+      const newSections = [...currentSecs, data]
+      const curPage = get().currentPage
+      if (curPage) {
+        const updatedCache = {
+          ...get().pageCache,
+          [curPage.slug]: { page: curPage, sections: newSections }
+        }
+        try { localStorage.setItem('page_builder_cache', JSON.stringify(updatedCache)) } catch (e) {}
+        set({ currentSections: newSections, pageCache: updatedCache })
+      } else {
+        set({ currentSections: newSections })
+      }
+    } catch (err) {
+      console.error('Error adding section:', err)
+      throw err
+    }
+  },
+
+  deleteSection: async (sectionId: string) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { error } = await supabase
+        .from('sections')
+        .delete()
+        .eq('id', sectionId)
+
+      if (error) throw error
+
+      const newSections = get().currentSections.filter(s => s.id !== sectionId)
+      const curPage = get().currentPage
+      if (curPage) {
+        const updatedCache = {
+          ...get().pageCache,
+          [curPage.slug]: { page: curPage, sections: newSections }
+        }
+        try { localStorage.setItem('page_builder_cache', JSON.stringify(updatedCache)) } catch (e) {}
+        set({ currentSections: newSections, pageCache: updatedCache })
+      } else {
+        set({ currentSections: newSections })
+      }
+    } catch (err) {
+      console.error('Error deleting section:', err)
+      throw err
+    }
+  },
+
+  updatePageSEO: async (pageId: string, seoTitle: string, seoDescription: string, seoKeywords: string) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { data, error } = await supabase
+        .from('pages')
+        .update({
+          seo_title: seoTitle,
+          seo_description: seoDescription,
+          seo_keywords: seoKeywords,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', pageId)
+        .select()
+        .single()
+
+      if (error) throw error
+
+      if (data) {
+        set({ currentPage: data })
+        get().fetchPages()
+      }
+    } catch (err) {
+      console.error('Error updating page SEO:', err)
+      throw err
+    }
+  },
+
+  saveNavigation: async (navigationData: any) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { error } = await supabase
+        .from('settings')
+        .update({ value: navigationData })
+        .eq('key', 'navigation')
+
+      if (error) throw error
+
+      set({ navigation: navigationData })
+      try { localStorage.setItem('site_nav_cache', JSON.stringify(navigationData)) } catch (e) {}
+    } catch (err) {
+      console.error('Error saving navigation:', err)
       throw err
     }
   }
