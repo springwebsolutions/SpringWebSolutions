@@ -45,12 +45,7 @@ export const DynamicPage: React.FC = () => {
     checkAdmin()
   }, [])
 
-  // Redirect to setup wizard if database is empty of pages and no super admin is defined
-  useEffect(() => {
-    if (isSupabaseConfigured && !loading && pages.length === 0 && hasSuperAdmin === false) {
-      navigate('/setup')
-    }
-  }, [pages, loading, hasSuperAdmin])
+
 
   // Render Supabase Connection Guide if credentials are missing
   if (!isSupabaseConfigured) {

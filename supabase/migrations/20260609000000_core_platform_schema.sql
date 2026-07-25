@@ -781,29 +781,23 @@ CREATE OR REPLACE FUNCTION public.create_first_super_admin(
 )
 RETURNS BOOLEAN AS $$
 DECLARE
-  v_super_admin_role_id INTEGER;
+  v_super_admin_role_id UUID;
 BEGIN
-  -- Check if any super admin already exists
-  IF EXISTS (
-    SELECT 1 FROM public.user_roles ur
-    JOIN public.roles r ON ur.role_id = r.id
-    WHERE r.name = 'super_admin'
-  ) THEN
-    RAISE EXCEPTION 'A Super Administrator already exists in the system.';
-  END IF;
+  -- 1. Ensure profile exists FIRST to satisfy user_roles foreign key constraint
+  INSERT INTO public.profiles (id, full_name, company)
+  VALUES (admin_id, admin_full_name, admin_company)
+  ON CONFLICT (id) DO UPDATE 
+  SET full_name = EXCLUDED.full_name, company = EXCLUDED.company;
 
-  -- Get super_admin role ID
+  -- 2. Get super_admin role ID
   SELECT id INTO v_super_admin_role_id FROM public.roles WHERE name = 'super_admin';
 
-  -- Link user to super_admin
-  INSERT INTO public.user_roles (user_id, role_id)
-  VALUES (admin_id, v_super_admin_role_id)
-  ON CONFLICT DO NOTHING;
-
-  -- Update profile details if they already exist
-  UPDATE public.profiles 
-  SET full_name = admin_full_name, company = admin_company
-  WHERE id = admin_id;
+  -- 3. Link user to super_admin
+  IF v_super_admin_role_id IS NOT NULL THEN
+    INSERT INTO public.user_roles (user_id, role_id)
+    VALUES (admin_id, v_super_admin_role_id)
+    ON CONFLICT (user_id, role_id) DO NOTHING;
+  END IF;
 
   RETURN TRUE;
 END;

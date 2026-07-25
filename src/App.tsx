@@ -12,7 +12,6 @@ import ProductDetail from '@/pages/ProductDetail'
 import DownloadCenter from '@/pages/DownloadCenter'
 import Contact from '@/pages/Contact'
 import Login from '@/pages/Login'
-import Setup from '@/pages/Setup'
 import KBListing from '@/pages/KBListing'
 import KBArticle from '@/pages/KBArticle'
 import SupportPortal from '@/pages/SupportPortal'
@@ -68,9 +67,9 @@ function App() {
         <Route path="/marketplace/:slug" element={<ProductDetail />} />
         <Route path="/downloads" element={<DownloadCenter />} />
 
-        {/* Auth & Initialization Wizards */}
+        {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/setup" element={<Setup />} />
+        <Route path="/setup" element={<Navigate to="/login" replace />} />
 
         {/* Protected Control Panel Console Routes */}
         <Route path="/admin" element={<AdminLayout />}>
