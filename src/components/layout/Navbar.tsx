@@ -83,15 +83,15 @@ export const Navbar: React.FC = () => {
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-            {/* Admin Dashboard Entry */}
+            {/* Operations Suite Entry */}
             {user && (hasRole('super_admin') || hasRole('admin') || hasRole('editor') || hasRole('sales') || hasRole('support')) && (
-              <Link
-                to="/admin/dashboard"
+              <a
+                href="https://suite.springwebsolutions.in/"
                 className="p-2 rounded-lg bg-white/5 border border-white/10 text-brand-emerald hover:text-white transition-all light:bg-slate-100 light:border-slate-200"
-                title="Admin Dashboard"
+                title="Operations Suite"
               >
                 <LayoutDashboard size={18} />
-              </Link>
+              </a>
             )}
 
             {user && (
@@ -151,15 +151,15 @@ export const Navbar: React.FC = () => {
                   <User size={16} />
                   {profile?.full_name || user.email}
                 </div>
-                {/* Admin Dashboard */}
+                {/* Operations Suite */}
                 {(hasRole('super_admin') || hasRole('admin') || hasRole('editor') || hasRole('sales') || hasRole('support')) && (
-                  <Link
-                    to="/admin/dashboard"
+                  <a
+                    href="https://suite.springwebsolutions.in/"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block px-3 py-2 text-base font-medium text-brand-emerald rounded-md"
                   >
-                    Admin Dashboard
-                  </Link>
+                    Operations Suite
+                  </a>
                 )}
                 <button
                   onClick={handleLogout}

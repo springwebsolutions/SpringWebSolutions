@@ -169,7 +169,7 @@ export const BlogListing: React.FC = () => {
                 There are no published blog posts matching this filter. Log in to the Admin Panel to write one.
               </p>
               <div className="pt-2">
-                <Link to="/admin/blog" className="btn-secondary text-xs">Write First Post</Link>
+                <a href="https://suite.springwebsolutions.in/blog" className="btn-secondary text-xs">Write First Post</a>
               </div>
             </div>
           ) : (

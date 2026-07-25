@@ -195,6 +195,9 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => { loadDashboardStats() }, [])
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6 pb-4">
@@ -340,10 +343,10 @@ export const Dashboard: React.FC = () => {
             <p className="text-[11px] text-slate-600 mt-0.5">Jump to key areas</p>
           </div>
           <div className="space-y-2">
-            <QuickAction to="/admin/blog" icon={BookOpen} label="New Blog Post" desc="Publish a new article" color="bg-indigo-500/20 border border-indigo-500/20" />
-            <QuickAction to="/admin/crm" icon={Inbox} label="Lead CRM & Email" desc="Manage & email leads" color="bg-emerald-500/20 border border-emerald-500/20" />
-            <QuickAction to="/admin/support" icon={Ticket} label="Support Desk" desc="View open tickets" color="bg-amber-500/20 border border-amber-500/20" />
-            <QuickAction to="/admin/content" icon={Globe} label="Website CMS" desc="Edit site content" color="bg-sky-500/20 border border-sky-500/20" />
+            <QuickAction to={`${prefix}/blog`} icon={BookOpen} label="New Blog Post" desc="Publish a new article" color="bg-indigo-500/20 border border-indigo-500/20" />
+            <QuickAction to={`${prefix}/crm`} icon={Inbox} label="Lead CRM & Email" desc="Manage & email leads" color="bg-emerald-500/20 border border-emerald-500/20" />
+            <QuickAction to={`${prefix}/support`} icon={Ticket} label="Support Desk" desc="View open tickets" color="bg-amber-500/20 border border-amber-500/20" />
+            <QuickAction to={`${prefix}/content`} icon={Globe} label="Website CMS" desc="Edit site content" color="bg-sky-500/20 border border-sky-500/20" />
           </div>
         </div>
 
@@ -354,7 +357,7 @@ export const Dashboard: React.FC = () => {
               <h3 className="text-sm font-bold text-white">Recent Leads</h3>
               <p className="text-[11px] text-slate-600 mt-0.5">Latest CRM entries</p>
             </div>
-            <Link to="/admin/crm" className="text-[11px] text-emerald-500 hover:text-emerald-400 font-semibold flex items-center gap-1">
+            <Link to={`${prefix}/crm`} className="text-[11px] text-emerald-500 hover:text-emerald-400 font-semibold flex items-center gap-1">
               View all <ArrowUpRight size={11} />
             </Link>
           </div>

@@ -30,7 +30,7 @@ export const Login: React.FC = () => {
       const isStaff = hasRole('super_admin') || hasRole('admin') || hasRole('editor') || 
                       hasRole('sales') || hasRole('support') || hasRole('content_writer')
       if (isStaff) {
-        navigate('/admin/dashboard')
+        window.location.href = 'https://suite.springwebsolutions.in/'
       } else {
         navigate('/support')
       }
@@ -67,8 +67,8 @@ export const Login: React.FC = () => {
                       useAuthStore.getState().hasRole('content_writer')
       
       if (isStaff) {
-        setSuccessMsg('Staff member recognized! Redirecting to Admin Console...')
-        setTimeout(() => navigate('/admin/dashboard'), 1000)
+        setSuccessMsg('Staff member recognized! Redirecting to Operations Suite...')
+        setTimeout(() => { window.location.href = 'https://suite.springwebsolutions.in/' }, 1000)
       } else {
         navigate('/support')
       }

@@ -84,34 +84,36 @@ export const AdminLayout: React.FC = () => {
     )
   }
 
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   const navGroups: NavGroup[] = [
     {
       label: 'Core',
       items: [
-        { label: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+        { label: 'Overview', href: `${prefix}/dashboard`, icon: LayoutDashboard },
       ]
     },
     {
       label: 'Content',
       items: [
-        { label: 'Website CMS', href: '/admin/content', icon: Globe },
-        { label: 'Blog CMS', href: '/admin/blog', icon: BookOpen },
-        { label: 'Knowledge Base', href: '/admin/kb', icon: HelpCircle },
-        { label: 'Marketplace', href: '/admin/marketplace', icon: ShoppingBag },
-        { label: 'Media Library', href: '/admin/media', icon: Image },
+        { label: 'Website CMS', href: `${prefix}/content`, icon: Globe },
+        { label: 'Blog CMS', href: `${prefix}/blog`, icon: BookOpen },
+        { label: 'Knowledge Base', href: `${prefix}/kb`, icon: HelpCircle },
+        { label: 'Marketplace', href: `${prefix}/marketplace`, icon: ShoppingBag },
+        { label: 'Media Library', href: `${prefix}/media`, icon: Image },
       ]
     },
     {
       label: 'Operations',
       items: [
-        { label: 'Lead CRM', href: '/admin/crm', icon: Users },
-        { label: 'Support Desk', href: '/admin/support', icon: Ticket },
+        { label: 'Lead CRM', href: `${prefix}/crm`, icon: Users },
+        { label: 'Support Desk', href: `${prefix}/support`, icon: Ticket },
       ]
     },
     {
       label: 'System',
       items: [
-        { label: 'Settings', href: '/admin/settings', icon: Settings },
+        { label: 'Settings', href: `${prefix}/settings`, icon: Settings },
       ]
     }
   ]
