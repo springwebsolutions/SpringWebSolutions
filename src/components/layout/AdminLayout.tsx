@@ -51,7 +51,7 @@ export const AdminLayout: React.FC = () => {
             <div className="absolute inset-0 rounded-2xl border-2 border-emerald-400/30 animate-ping" />
           </div>
           <div className="text-center">
-            <div className="text-white font-semibold text-sm">Initializing Control Center</div>
+            <div className="text-white font-semibold text-sm">Initializing Operations Suite</div>
             <div className="text-slate-500 text-xs mt-1">Verifying authentication…</div>
           </div>
         </div>
@@ -130,7 +130,7 @@ export const AdminLayout: React.FC = () => {
         {sidebarOpen && (
           <div className="min-w-0">
             <div className="font-display font-bold text-white text-sm tracking-tight leading-none">Spring Web</div>
-            <div className="text-[10px] text-slate-500 font-medium mt-0.5 tracking-widest uppercase">Control Center</div>
+            <div className="text-[10px] text-slate-500 font-medium mt-0.5 tracking-widest uppercase">Operations Suite</div>
           </div>
         )}
       </div>

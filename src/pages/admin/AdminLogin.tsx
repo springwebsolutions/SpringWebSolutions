@@ -85,7 +85,7 @@ export const AdminLogin: React.FC = () => {
               <Lock size={10} />
               <span>Restricted Staff Portal</span>
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-tight leading-tight">Internal Control Center</h1>
+            <h1 className="text-2xl font-bold text-white tracking-tight leading-tight">SpringWeb Operations Suite</h1>
             <p className="text-[13px] text-slate-500 mt-1">Authorized personnel only — staff &amp; administrators</p>
           </div>
         </div>
