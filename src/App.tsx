@@ -16,7 +16,7 @@ import KBArticle from '@/pages/KBArticle'
 import SupportPortal from '@/pages/SupportPortal'
 import SupportTicketDetail from '@/pages/SupportTicketDetail'
 
-// Admin Views
+// Admin Operations Suite Views
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import AdminLogin from '@/pages/admin/AdminLogin'
 import Dashboard from '@/pages/admin/Dashboard'
@@ -29,6 +29,17 @@ import SiteSettings from '@/pages/admin/SiteSettings'
 import KBCMS from '@/pages/admin/KBCMS'
 import SupportManager from '@/pages/admin/SupportManager'
 
+const ExternalRedirect: React.FC<{ to: string }> = ({ to }) => {
+  useEffect(() => {
+    window.location.href = to
+  }, [to])
+  return (
+    <div className="flex h-screen w-screen items-center justify-center bg-[#040509] text-white text-xs">
+      Redirecting to SpringWeb Operations Suite…
+    </div>
+  )
+}
+
 function App() {
   const { initialize } = useAuthStore()
   const { prefetchAllPages } = usePageBuilderStore()
@@ -38,6 +49,45 @@ function App() {
     prefetchAllPages()
   }, [])
 
+  const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : ''
+  const isSuiteDomain = hostname.startsWith('suite.')
+
+  // ─── Subdomain Route Router for suite.springwebsolutions.in ────────────────
+  if (isSuiteDomain) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/login" element={<AdminLogin />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          
+          <Route path="/" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="admin/dashboard" element={<Dashboard />} />
+            <Route path="content" element={<ContentManager />} />
+            <Route path="admin/content" element={<ContentManager />} />
+            <Route path="blog" element={<BlogCMS />} />
+            <Route path="admin/blog" element={<BlogCMS />} />
+            <Route path="kb" element={<KBCMS />} />
+            <Route path="admin/kb" element={<KBCMS />} />
+            <Route path="marketplace" element={<MarketplaceCMS />} />
+            <Route path="admin/marketplace" element={<MarketplaceCMS />} />
+            <Route path="crm" element={<LeadCRM />} />
+            <Route path="admin/crm" element={<LeadCRM />} />
+            <Route path="media" element={<MediaLibrary />} />
+            <Route path="admin/media" element={<MediaLibrary />} />
+            <Route path="support" element={<SupportManager />} />
+            <Route path="admin/support" element={<SupportManager />} />
+            <Route path="settings" element={<SiteSettings />} />
+            <Route path="admin/settings" element={<SiteSettings />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
+        </Routes>
+      </Router>
+    )
+  }
+
+  // ─── Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
   return (
     <Router>
       <Routes>
@@ -65,25 +115,13 @@ function App() {
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/marketplace/:slug" element={<ProductDetail />} />
 
-        {/* Auth Routes */}
+        {/* Public Client Auth */}
         <Route path="/login" element={<Login />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
+        
+        {/* Main Domain /admin -> Redirect to suite subdomain */}
+        <Route path="/admin" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
+        <Route path="/admin/*" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
         <Route path="/setup" element={<Navigate to="/login" replace />} />
-
-        {/* Protected Control Panel Console Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="content" element={<ContentManager />} />
-          <Route path="blog" element={<BlogCMS />} />
-          <Route path="kb" element={<KBCMS />} />
-          <Route path="marketplace" element={<MarketplaceCMS />} />
-          <Route path="crm" element={<LeadCRM />} />
-          <Route path="media" element={<MediaLibrary />} />
-          <Route path="support" element={<SupportManager />} />
-          <Route path="settings" element={<SiteSettings />} />
-          <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
-        </Route>
 
         {/* Catch All - Redirect to Homepage */}
         <Route path="*" element={<Navigate to="/" replace />} />
