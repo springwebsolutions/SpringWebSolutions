@@ -63,6 +63,7 @@ export const LeadCRM: React.FC = () => {
   const [taskSubmitting, setTaskSubmitting] = useState(false)
 
   // Resend Direct Email Form
+  const [emailFrom, setEmailFrom] = useState('hello@springwebsolutions.in')
   const [emailSubject, setEmailSubject] = useState('')
   const [emailBody, setEmailBody] = useState('')
   const [docName, setDocName] = useState('')
@@ -84,6 +85,7 @@ export const LeadCRM: React.FC = () => {
 
   // Quick Standalone Email Modal State
   const [showQuickEmailModal, setShowQuickEmailModal] = useState(false)
+  const [quickFrom, setQuickFrom] = useState('hello@springwebsolutions.in')
   const [quickTo, setQuickTo] = useState('')
   const [quickSubject, setQuickSubject] = useState('')
   const [quickBody, setQuickBody] = useState('')
@@ -151,8 +153,10 @@ export const LeadCRM: React.FC = () => {
 
       const attachmentsPayload = (docName.trim() && docUrl.trim()) ? [{ filename: docName.trim(), path: docUrl.trim() }] : undefined
 
+      const activeSender = emailFrom.trim() || 'hello@springwebsolutions.in'
+
       const result = await sendResendEmail({
-        from: 'Spring Web Solutions <hello@springwebsolutions.in>',
+        from: `Spring Web Solutions <${activeSender}>`,
         to: selectedLead.email,
         subject: emailSubject.trim(),
         html: formattedHtml,
@@ -165,7 +169,7 @@ export const LeadCRM: React.FC = () => {
         saveSentLog({
           id: 'log-' + Date.now(),
           to: selectedLead.email,
-          from: 'hello@springwebsolutions.in',
+          from: activeSender,
           subject: emailSubject.trim(),
           body: emailBody.trim(),
           document_name: docName.trim() || undefined,
@@ -174,7 +178,7 @@ export const LeadCRM: React.FC = () => {
           status: 'sent'
         })
 
-        await addLeadNote(selectedLead.id, `📨 Dispatched Resend Email: "${emailSubject.trim()}"${docName ? ` (Attached: ${docName})` : ''}`)
+        await addLeadNote(selectedLead.id, `📨 Dispatched Resend Email (from ${activeSender}): "${emailSubject.trim()}"${docName ? ` (Attached: ${docName})` : ''}`)
         if (selectedLead.status === 'new') {
           await updateLeadStatus(selectedLead.id, 'contacted')
         }
@@ -256,8 +260,10 @@ export const LeadCRM: React.FC = () => {
 
       const attachmentsPayload = (quickDocName.trim() && quickDocUrl.trim()) ? [{ filename: quickDocName.trim(), path: quickDocUrl.trim() }] : undefined
 
+      const activeQuickSender = quickFrom.trim() || 'hello@springwebsolutions.in'
+
       const res = await sendResendEmail({
-        from: 'Spring Web Solutions <hello@springwebsolutions.in>',
+        from: `Spring Web Solutions <${activeQuickSender}>`,
         to: quickTo.trim(),
         subject: quickSubject.trim(),
         html: formattedHtml,
@@ -270,7 +276,7 @@ export const LeadCRM: React.FC = () => {
         saveSentLog({
           id: 'log-' + Date.now(),
           to: quickTo.trim(),
-          from: 'hello@springwebsolutions.in',
+          from: activeQuickSender,
           subject: quickSubject.trim(),
           body: quickBody.trim(),
           document_name: quickDocName.trim() || undefined,
@@ -671,9 +677,25 @@ export const LeadCRM: React.FC = () => {
               {/* DIRECT RESEND EMAIL TAB */}
               {activeTab === 'email' && (
                 <form onSubmit={handleSendResendEmail} className="space-y-3 text-xs">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Sender Email Address (From)</label>
+                    <select
+                      value={emailFrom}
+                      onChange={(e) => setEmailFrom(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-brand-emerald"
+                    >
+                      <option value="hello@springwebsolutions.in">hello@springwebsolutions.in (General Inquiries)</option>
+                      <option value="sales@springwebsolutions.in">sales@springwebsolutions.in (Sales & Pricing Quotes)</option>
+                      <option value="support@springwebsolutions.in">support@springwebsolutions.in (Technical Support Desk)</option>
+                      <option value="developer@springwebsolutions.in">developer@springwebsolutions.in (Engineering & API)</option>
+                      <option value="admin@springwebsolutions.in">admin@springwebsolutions.in (System Administrator)</option>
+                      <option value="careers@springwebsolutions.in">careers@springwebsolutions.in (Careers & Hiring)</option>
+                    </select>
+                  </div>
+
                   <div className="flex items-center justify-between text-[11px] text-slate-400 bg-white/5 p-2 rounded-lg border border-white/10">
-                    <span>Recipient: <strong className="text-brand-emerald">{selectedLead.email}</strong></span>
-                    <span>Sender: <strong className="text-slate-200">hello@springwebsolutions.in</strong></span>
+                    <span>Recipient To: <strong className="text-brand-emerald">{selectedLead.email}</strong></span>
+                    <span>Sender: <strong className="text-emerald-400 font-mono">{emailFrom}</strong></span>
                   </div>
 
                   <div className="space-y-1">
@@ -1058,6 +1080,25 @@ export const LeadCRM: React.FC = () => {
             <div className="flex-1 overflow-y-auto space-y-4 pr-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase flex items-center justify-between">
+                    <span>Sender Email Address (From) *</span>
+                    <span className="text-[10px] text-brand-emerald">Official .in Domain</span>
+                  </label>
+                  <select
+                    value={quickFrom}
+                    onChange={(e) => setQuickFrom(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-brand-emerald"
+                  >
+                    <option value="hello@springwebsolutions.in">hello@springwebsolutions.in (General Inquiries)</option>
+                    <option value="sales@springwebsolutions.in">sales@springwebsolutions.in (Sales & Pricing Quotes)</option>
+                    <option value="support@springwebsolutions.in">support@springwebsolutions.in (Technical Support Desk)</option>
+                    <option value="developer@springwebsolutions.in">developer@springwebsolutions.in (Engineering & API)</option>
+                    <option value="admin@springwebsolutions.in">admin@springwebsolutions.in (System Administrator)</option>
+                    <option value="careers@springwebsolutions.in">careers@springwebsolutions.in (Careers & Hiring)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1 sm:col-span-2">
                   <label className="text-[10px] font-bold text-slate-400 uppercase">Recipient Email Address (To) *</label>
                   <input
                     type="email"
@@ -1130,8 +1171,8 @@ export const LeadCRM: React.FC = () => {
 
             {/* Modal Actions Footer */}
             <div className="flex items-center justify-between border-t border-white/10 pt-3 shrink-0">
-              <div className="text-[11px] text-slate-500">
-                Dispatches via <strong className="text-slate-300">hello@springwebsolutions.in</strong>
+              <div className="text-[11px] text-slate-400">
+                Sending from <strong className="text-brand-emerald font-mono">{quickFrom}</strong>
               </div>
 
               <div className="flex justify-end gap-3">
