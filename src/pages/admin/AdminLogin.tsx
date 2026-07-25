@@ -18,13 +18,17 @@ export const AdminLogin: React.FC = () => {
     resolver: zodResolver(loginSchema)
   })
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+
   useEffect(() => {
     if (user) {
       const isStaff = hasRole('super_admin') || hasRole('admin') || hasRole('editor') || 
                       hasRole('sales') || hasRole('support') || hasRole('content_writer')
-      if (isStaff) navigate('/admin/dashboard')
+      if (isStaff) {
+        navigate(isSuiteDomain ? '/dashboard' : '/admin/dashboard')
+      }
     }
-  }, [user, navigate, hasRole])
+  }, [user, navigate, hasRole, isSuiteDomain])
 
   const onSubmit = async (data: LoginData) => {
     setLoading(true)
@@ -53,7 +57,7 @@ export const AdminLogin: React.FC = () => {
                       useAuthStore.getState().hasRole('content_writer')
       
       if (isStaff) {
-        navigate('/admin/dashboard')
+        navigate(isSuiteDomain ? '/dashboard' : '/admin/dashboard')
       } else {
         await supabase.auth.signOut()
         setErrorMsg('Access Restricted: This console is reserved for internal staff members.')

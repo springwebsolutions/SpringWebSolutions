@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import AdminLogin from '@/pages/admin/AdminLogin'
 import { 
   LayoutDashboard, FileText, BookOpen, ShoppingBag, 
   Users, Image, Ticket, Settings, ArrowLeft, Loader2, 
@@ -24,11 +25,20 @@ export const AdminLayout: React.FC = () => {
     initialize()
   }, [])
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+
   useEffect(() => {
     if (initialized && !loading && !user) {
-      navigate('/admin/login')
+      if (!isSuiteDomain) {
+        navigate('/admin/login')
+      }
     }
-  }, [user, initialized, loading])
+  }, [user, initialized, loading, isSuiteDomain])
+
+  // If not logged in on subdomain or admin route, render login component directly at root URL
+  if (initialized && !loading && !user) {
+    return <AdminLogin />
+  }
 
   // Verify staff roles access
   const isAuthorized = user && (
