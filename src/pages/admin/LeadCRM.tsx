@@ -68,6 +68,7 @@ export const LeadCRM: React.FC = () => {
   const [emailBody, setEmailBody] = useState('')
   const [docName, setDocName] = useState('')
   const [docUrl, setDocUrl] = useState('')
+  const [attachedFile, setAttachedFile] = useState<{ name: string; size: string; dataUrl: string } | null>(null)
   const [emailSending, setEmailSending] = useState(false)
   const [emailStatus, setEmailStatus] = useState<{ success: boolean; msg: string } | null>(null)
 
@@ -91,9 +92,29 @@ export const LeadCRM: React.FC = () => {
   const [quickBody, setQuickBody] = useState('')
   const [quickDocName, setQuickDocName] = useState('')
   const [quickDocUrl, setQuickDocUrl] = useState('')
+  const [quickAttachedFile, setQuickAttachedFile] = useState<{ name: string; size: string; dataUrl: string } | null>(null)
   const [isMaximized, setIsMaximized] = useState(false)
   const [quickSending, setQuickSending] = useState(false)
   const [quickStatus, setQuickStatus] = useState<{ success: boolean; msg: string } | null>(null)
+
+  const handleFileUpload = (file: File, isQuick: boolean) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string
+      const sizeFormatted = (file.size / (1024 * 1024)).toFixed(2) + ' MB'
+      const fileObj = { name: file.name, size: sizeFormatted, dataUrl }
+
+      if (isQuick) {
+        setQuickAttachedFile(fileObj)
+        if (!quickDocName) setQuickDocName(file.name)
+      } else {
+        setAttachedFile(fileObj)
+        if (!docName) setDocName(file.name)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
 
   const saveSentLog = (log: SentEmailLog) => {
     setSentLogs(prev => {
@@ -127,10 +148,17 @@ export const LeadCRM: React.FC = () => {
 
     try {
       let attachmentHtml = ''
-      if (docName.trim() && docUrl.trim()) {
+      if (attachedFile) {
         attachmentHtml = `
           <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; text-align: left;">
-            <div style="font-[10px]; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Shared Attachment Document</div>
+            <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Direct File Attachment</div>
+            <div style="font-size: 14px; font-weight: bold; color: #ffffff;">📄 ${attachedFile.name} (${attachedFile.size})</div>
+          </div>
+        `
+      } else if (docName.trim() && docUrl.trim()) {
+        attachmentHtml = `
+          <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; text-align: left;">
+            <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Shared Attachment Document</div>
             <div style="font-size: 14px; font-weight: bold; color: #ffffff; margin-bottom: 8px;">📄 ${docName.trim()}</div>
             <a href="${docUrl.trim()}" target="_blank" style="display: inline-block; background-color: #10b981; color: #070a13; font-weight: bold; font-size: 12px; padding: 8px 16px; border-radius: 8px; text-decoration: none;">Download Attached File</a>
           </div>
@@ -151,7 +179,12 @@ export const LeadCRM: React.FC = () => {
         </div>
       `
 
-      const attachmentsPayload = (docName.trim() && docUrl.trim()) ? [{ filename: docName.trim(), path: docUrl.trim() }] : undefined
+      let attachmentsPayload: any = undefined
+      if (attachedFile) {
+        attachmentsPayload = [{ filename: attachedFile.name, content: attachedFile.dataUrl }]
+      } else if (docName.trim() && docUrl.trim()) {
+        attachmentsPayload = [{ filename: docName.trim(), path: docUrl.trim() }]
+      }
 
       const activeSender = emailFrom.trim() || 'hello@springwebsolutions.in'
 
@@ -172,13 +205,13 @@ export const LeadCRM: React.FC = () => {
           from: activeSender,
           subject: emailSubject.trim(),
           body: emailBody.trim(),
-          document_name: docName.trim() || undefined,
+          document_name: attachedFile ? attachedFile.name : (docName.trim() || undefined),
           document_url: docUrl.trim() || undefined,
           sent_at: new Date().toISOString(),
           status: 'sent'
         })
 
-        await addLeadNote(selectedLead.id, `📨 Dispatched Resend Email (from ${activeSender}): "${emailSubject.trim()}"${docName ? ` (Attached: ${docName})` : ''}`)
+        await addLeadNote(selectedLead.id, `📨 Dispatched Resend Email (from ${activeSender}): "${emailSubject.trim()}"${attachedFile ? ` (Attached File: ${attachedFile.name})` : docName ? ` (Attached: ${docName})` : ''}`)
         if (selectedLead.status === 'new') {
           await updateLeadStatus(selectedLead.id, 'contacted')
         }
@@ -234,10 +267,17 @@ export const LeadCRM: React.FC = () => {
 
     try {
       let attachmentHtml = ''
-      if (quickDocName.trim() && quickDocUrl.trim()) {
+      if (quickAttachedFile) {
         attachmentHtml = `
           <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; text-align: left;">
-            <div style="font-[10px]; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Shared Attachment Document</div>
+            <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Direct File Attachment</div>
+            <div style="font-size: 14px; font-weight: bold; color: #ffffff;">📄 ${quickAttachedFile.name} (${quickAttachedFile.size})</div>
+          </div>
+        `
+      } else if (quickDocName.trim() && quickDocUrl.trim()) {
+        attachmentHtml = `
+          <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; text-align: left;">
+            <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Shared Attachment Document</div>
             <div style="font-size: 14px; font-weight: bold; color: #ffffff; margin-bottom: 8px;">📄 ${quickDocName.trim()}</div>
             <a href="${quickDocUrl.trim()}" target="_blank" style="display: inline-block; background-color: #10b981; color: #070a13; font-weight: bold; font-size: 12px; padding: 8px 16px; border-radius: 8px; text-decoration: none;">Download Attached File</a>
           </div>
@@ -258,7 +298,12 @@ export const LeadCRM: React.FC = () => {
         </div>
       `
 
-      const attachmentsPayload = (quickDocName.trim() && quickDocUrl.trim()) ? [{ filename: quickDocName.trim(), path: quickDocUrl.trim() }] : undefined
+      let attachmentsPayload: any = undefined
+      if (quickAttachedFile) {
+        attachmentsPayload = [{ filename: quickAttachedFile.name, content: quickAttachedFile.dataUrl }]
+      } else if (quickDocName.trim() && quickDocUrl.trim()) {
+        attachmentsPayload = [{ filename: quickDocName.trim(), path: quickDocUrl.trim() }]
+      }
 
       const activeQuickSender = quickFrom.trim() || 'hello@springwebsolutions.in'
 
@@ -279,7 +324,7 @@ export const LeadCRM: React.FC = () => {
           from: activeQuickSender,
           subject: quickSubject.trim(),
           body: quickBody.trim(),
-          document_name: quickDocName.trim() || undefined,
+          document_name: quickAttachedFile ? quickAttachedFile.name : (quickDocName.trim() || undefined),
           document_url: quickDocUrl.trim() || undefined,
           sent_at: new Date().toISOString(),
           status: 'sent'
@@ -712,10 +757,35 @@ export const LeadCRM: React.FC = () => {
 
                   {/* Document Attachment Section */}
                   <div className="p-3 rounded-lg bg-white/2 border border-white/5 space-y-2">
-                    <label className="text-[10px] font-bold text-brand-emerald uppercase flex items-center gap-1">
-                      <Paperclip size={12} />
-                      <span>Document / Proposal Attachment (Optional)</span>
-                    </label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-bold text-brand-emerald uppercase flex items-center gap-1">
+                        <Paperclip size={12} />
+                        <span>Document / Proposal Attachment</span>
+                      </label>
+                      <label className="btn-secondary py-1 px-2.5 text-[10px] flex items-center gap-1 cursor-pointer font-semibold">
+                        <Paperclip size={10} className="text-brand-emerald" />
+                        <span>Upload File from PC</span>
+                        <input
+                          type="file"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              handleFileUpload(e.target.files[0], false)
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    {attachedFile && (
+                      <div className="p-2 rounded bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald text-xs flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 font-semibold truncate">
+                          📄 {attachedFile.name} ({attachedFile.size})
+                        </span>
+                        <button type="button" onClick={() => setAttachedFile(null)} className="text-rose-400 hover:text-white font-bold ml-2">✕ Remove</button>
+                      </div>
+                    )}
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <input
                         type="text"
@@ -728,7 +798,7 @@ export const LeadCRM: React.FC = () => {
                         type="url"
                         value={docUrl}
                         onChange={(e) => setDocUrl(e.target.value)}
-                        placeholder="File Download URL (https://...)"
+                        placeholder="Or File Download URL (https://...)"
                         className="px-2.5 py-1.5 rounded bg-white/5 border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-brand-emerald"
                       />
                     </div>
@@ -1124,11 +1194,36 @@ export const LeadCRM: React.FC = () => {
               </div>
 
               {/* Document Sharing Attachment Section */}
-              <div className="p-4 rounded-2xl bg-white/2 border border-white/10 space-y-2">
-                <label className="text-[11px] font-bold text-brand-emerald uppercase flex items-center gap-1.5">
-                  <Paperclip size={14} />
-                  <span>Document / File Attachment Sharing</span>
-                </label>
+              <div className="p-4 rounded-2xl bg-white/2 border border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold text-brand-emerald uppercase flex items-center gap-1.5">
+                    <Paperclip size={14} />
+                    <span>Document & File Attachment Upload</span>
+                  </label>
+                  <label className="btn-secondary py-1.5 px-3 text-xs flex items-center gap-1.5 cursor-pointer font-semibold">
+                    <Paperclip size={12} className="text-brand-emerald" />
+                    <span>Upload File from PC</span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          handleFileUpload(e.target.files[0], true)
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {quickAttachedFile && (
+                  <div className="p-2.5 rounded-xl bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald text-xs flex items-center justify-between">
+                    <span className="flex items-center gap-2 font-bold truncate">
+                      📄 Attached File: {quickAttachedFile.name} ({quickAttachedFile.size})
+                    </span>
+                    <button type="button" onClick={() => setQuickAttachedFile(null)} className="p-1 text-rose-400 hover:text-white font-bold">✕ Remove</button>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="text"
@@ -1141,7 +1236,7 @@ export const LeadCRM: React.FC = () => {
                     type="url"
                     value={quickDocUrl}
                     onChange={(e) => setQuickDocUrl(e.target.value)}
-                    placeholder="File Link / Download URL (https://...)"
+                    placeholder="Or External File Link (https://...)"
                     className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-brand-emerald"
                   />
                 </div>

@@ -34,13 +34,27 @@ export default async function handler(req, res) {
     const sender = from || 'Spring Web Solutions <hello@springwebsolutions.in>';
     const recipients = Array.isArray(to) ? to : [to];
 
+    let formattedAttachments = undefined;
+    if (attachments && Array.isArray(attachments) && attachments.length > 0) {
+      formattedAttachments = attachments.map(att => {
+        if (att.content && typeof att.content === 'string' && att.content.includes('base64,')) {
+          const base64Clean = att.content.split('base64,')[1];
+          return {
+            filename: att.filename,
+            content: Buffer.from(base64Clean, 'base64')
+          };
+        }
+        return att;
+      });
+    }
+
     const { data, error } = await resend.emails.send({
       from: sender,
       to: recipients,
       subject: subject || 'Notification from Spring Web Solutions',
       html: html || '<p>Hello from Spring Web Solutions</p>',
       ...(reply_to ? { replyTo: reply_to } : {}),
-      ...(attachments && Array.isArray(attachments) && attachments.length > 0 ? { attachments } : {})
+      ...(formattedAttachments ? { attachments: formattedAttachments } : {})
     });
 
     if (error) {
