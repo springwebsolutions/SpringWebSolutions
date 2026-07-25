@@ -1,7 +1,4 @@
-/**
- * Resend Email Integration Service
- * Spring Web Solutions
- */
+import { Resend } from 'resend'
 
 export interface ResendEmailPayload {
   from: string
@@ -20,7 +17,7 @@ export interface ResendConfig {
 }
 
 /**
- * Send an email via Resend API
+ * Send an email via official Resend SDK
  */
 export async function sendResendEmail(
   payload: ResendEmailPayload,
@@ -34,28 +31,20 @@ export async function sendResendEmail(
   }
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${key.trim()}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: payload.from,
-        to: Array.isArray(payload.to) ? payload.to : [payload.to],
-        subject: payload.subject,
-        html: payload.html,
-        ...(payload.reply_to ? { reply_to: payload.reply_to } : {})
-      })
+    const resend = new Resend(key.trim())
+    const { data, error } = await resend.emails.send({
+      from: payload.from,
+      to: Array.isArray(payload.to) ? payload.to : [payload.to],
+      subject: payload.subject,
+      html: payload.html,
+      ...(payload.reply_to ? { replyTo: payload.reply_to } : {})
     })
 
-    const result = await response.json()
-
-    if (!response.ok) {
-      throw new Error(result.message || result.error || 'Failed to dispatch email via Resend API')
+    if (error) {
+      throw new Error(error.message || 'Failed to dispatch email via Resend SDK')
     }
 
-    return { success: true, data: result }
+    return { success: true, data }
   } catch (err: any) {
     console.error('[Resend Email Dispatch Error]:', err)
     return { success: false, error: err.message || 'Unknown network error sending email.' }
