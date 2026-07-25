@@ -6,6 +6,7 @@ export interface ResendEmailPayload {
   subject: string
   html: string
   reply_to?: string
+  attachments?: Array<{ filename: string; path?: string; content?: string }>
 }
 
 export interface ResendConfig {
@@ -39,6 +40,7 @@ export async function sendResendEmail(
         subject: payload.subject,
         html: payload.html,
         reply_to: payload.reply_to,
+        attachments: payload.attachments,
         apiKey: key
       })
     })

@@ -4,8 +4,21 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { sendResendEmail } from '@/lib/emailService'
 import { 
   Inbox, Phone, Mail, Building, Plus, Trash2, Send, CheckCircle, AlertCircle,
-  MessageSquare, Calendar, CheckSquare, ListTodo, Activity, Loader2, ArrowRight 
+  MessageSquare, Calendar, CheckSquare, ListTodo, Activity, Loader2, ArrowRight,
+  Paperclip, FileText, Maximize2, Minimize2, Eye, ExternalLink, Archive
 } from 'lucide-react'
+
+export interface SentEmailLog {
+  id: string
+  to: string
+  from: string
+  subject: string
+  body: string
+  document_name?: string
+  document_url?: string
+  sent_at: string
+  status: 'sent' | 'failed'
+}
 
 export const LeadCRM: React.FC = () => {
   const { 
@@ -23,6 +36,22 @@ export const LeadCRM: React.FC = () => {
     toggleTaskCompleted 
   } = useCRMStore()
 
+  // CRM Top View Switcher
+  const [crmViewMode, setCrmViewMode] = useState<'kanban' | 'sent_outbox'>('kanban')
+
+  // Sent Emails Log History
+  const [sentLogs, setSentLogs] = useState<SentEmailLog[]>(() => {
+    try {
+      const saved = localStorage.getItem('sws_sent_emails_log')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+
+  // Selected Sent Log Preview Modal
+  const [previewSentLog, setPreviewSentLog] = useState<SentEmailLog | null>(null)
+
   const [activeTab, setActiveTab] = useState<'notes' | 'tasks' | 'timeline' | 'email'>('notes')
   
   // Note Form
@@ -36,6 +65,8 @@ export const LeadCRM: React.FC = () => {
   // Resend Direct Email Form
   const [emailSubject, setEmailSubject] = useState('')
   const [emailBody, setEmailBody] = useState('')
+  const [docName, setDocName] = useState('')
+  const [docUrl, setDocUrl] = useState('')
   const [emailSending, setEmailSending] = useState(false)
   const [emailStatus, setEmailStatus] = useState<{ success: boolean; msg: string } | null>(null)
 
@@ -56,8 +87,23 @@ export const LeadCRM: React.FC = () => {
   const [quickTo, setQuickTo] = useState('')
   const [quickSubject, setQuickSubject] = useState('')
   const [quickBody, setQuickBody] = useState('')
+  const [quickDocName, setQuickDocName] = useState('')
+  const [quickDocUrl, setQuickDocUrl] = useState('')
+  const [isMaximized, setIsMaximized] = useState(false)
   const [quickSending, setQuickSending] = useState(false)
   const [quickStatus, setQuickStatus] = useState<{ success: boolean; msg: string } | null>(null)
+
+  const saveSentLog = (log: SentEmailLog) => {
+    setSentLogs(prev => {
+      const updated = [log, ...prev]
+      try {
+        localStorage.setItem('sws_sent_emails_log', JSON.stringify(updated))
+      } catch (err) {
+        console.error(err)
+      }
+      return updated
+    })
+  }
 
   useEffect(() => {
     fetchLeads()
@@ -78,6 +124,17 @@ export const LeadCRM: React.FC = () => {
     setEmailStatus(null)
 
     try {
+      let attachmentHtml = ''
+      if (docName.trim() && docUrl.trim()) {
+        attachmentHtml = `
+          <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; text-align: left;">
+            <div style="font-[10px]; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Shared Attachment Document</div>
+            <div style="font-size: 14px; font-weight: bold; color: #ffffff; margin-bottom: 8px;">📄 ${docName.trim()}</div>
+            <a href="${docUrl.trim()}" target="_blank" style="display: inline-block; background-color: #10b981; color: #070a13; font-weight: bold; font-size: 12px; padding: 8px 16px; border-radius: 8px; text-decoration: none;">Download Attached File</a>
+          </div>
+        `
+      }
+
       const formattedHtml = `
         <div style="font-family: Arial, sans-serif; background-color: #070a13; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
           <div style="margin-bottom: 24px; text-align: center;">
@@ -85,24 +142,39 @@ export const LeadCRM: React.FC = () => {
             <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">Client Relationship Response</p>
           </div>
           <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: #cbd5e1; white-space: pre-wrap;">${emailBody}</div>
+          ${attachmentHtml}
           <div style="margin-top: 24px; text-align: center; font-size: 12px; color: #64748b;">
             <p>Spring Web Solutions • Udumalpet, Tamil Nadu</p>
           </div>
         </div>
       `
 
+      const attachmentsPayload = (docName.trim() && docUrl.trim()) ? [{ filename: docName.trim(), path: docUrl.trim() }] : undefined
+
       const result = await sendResendEmail({
         from: 'Spring Web Solutions <hello@springwebsolutions.in>',
         to: selectedLead.email,
         subject: emailSubject.trim(),
-        html: formattedHtml
+        html: formattedHtml,
+        attachments: attachmentsPayload
       })
 
       if (result.success) {
         setEmailStatus({ success: true, msg: `Email successfully sent to ${selectedLead.email} via Resend!` })
-        // Log note automatically
-        await addLeadNote(selectedLead.id, `📨 Dispatched Resend Email: "${emailSubject.trim()}"`)
-        // Update status to contacted if new
+        
+        saveSentLog({
+          id: 'log-' + Date.now(),
+          to: selectedLead.email,
+          from: 'hello@springwebsolutions.in',
+          subject: emailSubject.trim(),
+          body: emailBody.trim(),
+          document_name: docName.trim() || undefined,
+          document_url: docUrl.trim() || undefined,
+          sent_at: new Date().toISOString(),
+          status: 'sent'
+        })
+
+        await addLeadNote(selectedLead.id, `📨 Dispatched Resend Email: "${emailSubject.trim()}"${docName ? ` (Attached: ${docName})` : ''}`)
         if (selectedLead.status === 'new') {
           await updateLeadStatus(selectedLead.id, 'contacted')
         }
@@ -137,7 +209,6 @@ export const LeadCRM: React.FC = () => {
         assigned_to: null
       })
       setShowAddLeadModal(false)
-      // Reset form
       setNewLeadName('')
       setNewLeadEmail('')
       setNewLeadPhone('')
@@ -158,6 +229,17 @@ export const LeadCRM: React.FC = () => {
     setQuickStatus(null)
 
     try {
+      let attachmentHtml = ''
+      if (quickDocName.trim() && quickDocUrl.trim()) {
+        attachmentHtml = `
+          <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; text-align: left;">
+            <div style="font-[10px]; font-weight: bold; text-transform: uppercase; color: #10b981; margin-bottom: 4px;">Shared Attachment Document</div>
+            <div style="font-size: 14px; font-weight: bold; color: #ffffff; margin-bottom: 8px;">📄 ${quickDocName.trim()}</div>
+            <a href="${quickDocUrl.trim()}" target="_blank" style="display: inline-block; background-color: #10b981; color: #070a13; font-weight: bold; font-size: 12px; padding: 8px 16px; border-radius: 8px; text-decoration: none;">Download Attached File</a>
+          </div>
+        `
+      }
+
       const formattedHtml = `
         <div style="font-family: Arial, sans-serif; background-color: #070a13; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
           <div style="margin-bottom: 24px; text-align: center;">
@@ -165,26 +247,45 @@ export const LeadCRM: React.FC = () => {
             <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">Direct Communication</p>
           </div>
           <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: #cbd5e1; white-space: pre-wrap;">${quickBody}</div>
+          ${attachmentHtml}
           <div style="margin-top: 24px; text-align: center; font-size: 12px; color: #64748b;">
             <p>Spring Web Solutions • Udumalpet, Tamil Nadu</p>
           </div>
         </div>
       `
 
+      const attachmentsPayload = (quickDocName.trim() && quickDocUrl.trim()) ? [{ filename: quickDocName.trim(), path: quickDocUrl.trim() }] : undefined
+
       const res = await sendResendEmail({
         from: 'Spring Web Solutions <hello@springwebsolutions.in>',
         to: quickTo.trim(),
         subject: quickSubject.trim(),
-        html: formattedHtml
+        html: formattedHtml,
+        attachments: attachmentsPayload
       })
 
       if (res.success) {
         setQuickStatus({ success: true, msg: `Email sent to ${quickTo.trim()} via Resend!` })
+
+        saveSentLog({
+          id: 'log-' + Date.now(),
+          to: quickTo.trim(),
+          from: 'hello@springwebsolutions.in',
+          subject: quickSubject.trim(),
+          body: quickBody.trim(),
+          document_name: quickDocName.trim() || undefined,
+          document_url: quickDocUrl.trim() || undefined,
+          sent_at: new Date().toISOString(),
+          status: 'sent'
+        })
+
         setTimeout(() => {
           setShowQuickEmailModal(false)
           setQuickTo('')
           setQuickSubject('')
           setQuickBody('')
+          setQuickDocName('')
+          setQuickDocUrl('')
           setQuickStatus(null)
         }, 1800)
       } else {
@@ -253,19 +354,45 @@ export const LeadCRM: React.FC = () => {
     <div className="space-y-6">
       
       {/* Lead CRM Header Action Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-panel p-4 rounded-2xl border border-white/5">
-        <div>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 glass-panel p-4 rounded-2xl border border-white/5">
+        <div className="space-y-1">
           <h3 className="text-base font-bold text-white flex items-center gap-2">
             <Inbox size={18} className="text-brand-emerald" />
-            <span>Lead CRM & Pipeline Management</span>
+            <span>Lead CRM & Email Dispatch Studio</span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">Manage deals, track sales pipelines, and dispatch client emails via Resend.</p>
+          
+          {/* Sub-navigation tabs */}
+          <div className="flex items-center gap-2 pt-1">
+            <button
+              onClick={() => setCrmViewMode('kanban')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                crmViewMode === 'kanban'
+                  ? 'bg-brand-emerald text-slate-950 font-bold shadow'
+                  : 'bg-white/5 text-slate-400 hover:text-white'
+              }`}
+            >
+              Kanban Deals Pipeline ({leads.length})
+            </button>
+
+            <button
+              onClick={() => setCrmViewMode('sent_outbox')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                crmViewMode === 'sent_outbox'
+                  ? 'bg-brand-emerald text-slate-950 font-bold shadow'
+                  : 'bg-white/5 text-slate-400 hover:text-white'
+              }`}
+            >
+              <Send size={12} />
+              <span>Sent Outbox Log</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-black/20 text-[10px]">{sentLogs.length}</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <button
             onClick={() => setShowQuickEmailModal(true)}
-            className="btn-secondary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-semibold cursor-pointer w-1/2 sm:w-auto"
+            className="btn-secondary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-semibold cursor-pointer w-1/2 md:w-auto"
           >
             <Send size={14} className="text-brand-emerald" />
             <span>Compose Resend Email</span>
@@ -273,7 +400,7 @@ export const LeadCRM: React.FC = () => {
 
           <button
             onClick={() => setShowAddLeadModal(true)}
-            className="btn-primary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-semibold cursor-pointer shadow shadow-brand-emerald/20 w-1/2 sm:w-auto"
+            className="btn-primary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-semibold cursor-pointer shadow shadow-brand-emerald/20 w-1/2 md:w-auto"
           >
             <Plus size={16} />
             <span>Add New Lead</span>
@@ -281,7 +408,10 @@ export const LeadCRM: React.FC = () => {
         </div>
       </div>
 
-      {/* Visual Kanban Board Columns Grid */}
+      {/* VIEW 1: KANBAN PIPELINE */}
+      {crmViewMode === 'kanban' && (
+        <>
+          {/* Visual Kanban Board Columns Grid */}
       <div className="flex space-x-4 overflow-x-auto pb-6 select-none min-h-[450px]">
         {columns.map(col => {
           const colLeads = leads.filter(l => l.status === col.id)
@@ -558,6 +688,30 @@ export const LeadCRM: React.FC = () => {
                     />
                   </div>
 
+                  {/* Document Attachment Section */}
+                  <div className="p-3 rounded-lg bg-white/2 border border-white/5 space-y-2">
+                    <label className="text-[10px] font-bold text-brand-emerald uppercase flex items-center gap-1">
+                      <Paperclip size={12} />
+                      <span>Document / Proposal Attachment (Optional)</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        value={docName}
+                        onChange={(e) => setDocName(e.target.value)}
+                        placeholder="Document Title (e.g. Project_Proposal.pdf)"
+                        className="px-2.5 py-1.5 rounded bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                      />
+                      <input
+                        type="url"
+                        value={docUrl}
+                        onChange={(e) => setDocUrl(e.target.value)}
+                        placeholder="File Download URL (https://...)"
+                        className="px-2.5 py-1.5 rounded bg-white/5 border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-brand-emerald"
+                      />
+                    </div>
+                  </div>
+
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Email Message (HTML/Formatted Text)</label>
                     <textarea
@@ -611,6 +765,92 @@ export const LeadCRM: React.FC = () => {
             </div>
           </div>
 
+        </div>
+      )}
+      </>
+      )}
+
+      {/* VIEW 2: SENT OUTBOX HISTORY */}
+      {crmViewMode === 'sent_outbox' && (
+        <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/5 space-y-6">
+          <div className="flex items-center justify-between border-b border-white/5 pb-4">
+            <div>
+              <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
+                <Send size={18} className="text-brand-emerald" />
+                <span>Sent Outbox Log & Email Audit Trail</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">Complete log of all client emails dispatched via Resend SDK & Vercel API with document attachments.</p>
+            </div>
+
+            <button
+              onClick={() => setShowQuickEmailModal(true)}
+              className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 font-semibold cursor-pointer shadow shadow-brand-emerald/15"
+            >
+              <Send size={14} />
+              <span>Compose Email</span>
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs text-slate-300">
+              <thead className="bg-white/5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-white/10">
+                <tr>
+                  <th className="py-3 px-4">Recipient</th>
+                  <th className="py-3 px-4">Subject</th>
+                  <th className="py-3 px-4">Attachment Document</th>
+                  <th className="py-3 px-4">Sent Time</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {sentLogs.map((log) => (
+                  <tr key={log.id} className="hover:bg-white/2 transition-colors">
+                    <td className="py-3 px-4 font-mono font-medium text-emerald-400">{log.to}</td>
+                    <td className="py-3 px-4 font-semibold text-white max-w-xs truncate">{log.subject}</td>
+                    <td className="py-3 px-4">
+                      {log.document_name ? (
+                        <a
+                          href={log.document_url || '#'}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20 hover:underline"
+                        >
+                          <Paperclip size={10} />
+                          <span>{log.document_name}</span>
+                          <ExternalLink size={10} />
+                        </a>
+                      ) : (
+                        <span className="text-slate-600 text-[10px]">None</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4 text-slate-400">{new Date(log.sent_at).toLocaleString()}</td>
+                    <td className="py-3 px-4">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20">
+                        {log.status.toUpperCase()}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button
+                        onClick={() => setPreviewSentLog(log)}
+                        className="btn-secondary py-1 px-2.5 text-[11px] inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <Eye size={12} />
+                        <span>Preview</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {sentLogs.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="text-center py-12 text-slate-500 text-xs">
+                      No sent emails logged yet. Click "Compose Resend Email" above to dispatch emails!
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -739,71 +979,236 @@ export const LeadCRM: React.FC = () => {
         </div>
       )}
 
-      {/* QUICK STANDALONE RESEND EMAIL MODAL */}
+      {/* QUICK STANDALONE RESEND EMAIL STUDIO MODAL */}
       {showQuickEmailModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <form onSubmit={handleQuickEmailSubmit} className="glass-panel p-8 rounded-3xl border border-brand-emerald/20 max-w-lg w-full space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-white/5 pb-3">
-              <h4 className="font-display font-bold text-white text-base flex items-center gap-2">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
+          <form
+            onSubmit={handleQuickEmailSubmit}
+            className={`glass-panel rounded-3xl border border-brand-emerald/20 flex flex-col transition-all duration-300 ${
+              isMaximized ? 'w-[96vw] h-[92vh] p-6 sm:p-8' : 'max-w-3xl w-full max-h-[90vh] p-6 sm:p-8'
+            } overflow-hidden space-y-4 text-xs`}
+          >
+            {/* Modal Header Controls */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 shrink-0">
+              <div className="flex items-center gap-2">
                 <Send size={18} className="text-brand-emerald" />
-                <span>Compose Resend Email</span>
-              </h4>
-              <button type="button" onClick={() => setShowQuickEmailModal(false)} className="text-slate-400 hover:text-white">✕</button>
+                <div>
+                  <h4 className="font-display font-bold text-white text-base">Resend Email Studio</h4>
+                  <p className="text-[11px] text-slate-400">Compose transactional & promotional emails with document attachments.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsMaximized(!isMaximized)}
+                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  title={isMaximized ? 'Restore Normal Window' : 'Maximize Fullscreen Window'}
+                >
+                  {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowQuickEmailModal(false)}
+                  className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Recipient Email Address (To) *</label>
-              <input
-                type="email"
-                required
-                value={quickTo}
-                onChange={(e) => setQuickTo(e.target.value)}
-                placeholder="client@example.com"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
-              />
+            {/* Quick Templates Selector */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 shrink-0">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">Quick Presets:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuickSubject('Project Proposal & Quote — Spring Web Solutions')
+                  setQuickBody(`Hello,\n\nWe have prepared a comprehensive project proposal for your web/software solution.\n\nPlease find the attached document or view details at https://springwebsolutions.in.\n\nBest regards,\nSpring Web Solutions Team`)
+                }}
+                className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 cursor-pointer"
+              >
+                📄 Proposal Quote
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setQuickSubject('Following up on your technical requirement — Spring Web Solutions')
+                  setQuickBody(`Hi,\n\nFollowing up on our recent communication. We would love to answer any questions or schedule a consultation call.\n\nLet us know when works best for you!\n\nBest regards,\nSpring Web Solutions`)
+                }}
+                className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 cursor-pointer"
+              >
+                📞 Follow Up
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setQuickSubject('Technical Architecture & Specifications — Spring Web Solutions')
+                  setQuickBody(`Hello,\n\nHere are the technical specifications and infrastructure details for your project solution.\n\nLet us know if you require any custom integration parameters.\n\nBest regards,\nSpring Web Solutions`)
+                }}
+                className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-[11px] text-slate-300 cursor-pointer"
+              >
+                ⚙️ Technical Spec
+              </button>
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Email Subject *</label>
-              <input
-                type="text"
-                required
-                value={quickSubject}
-                onChange={(e) => setQuickSubject(e.target.value)}
-                placeholder="Proposal Quote & Discussion — Spring Web Solutions"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
-              />
+            {/* Form Inputs Container */}
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Recipient Email Address (To) *</label>
+                  <input
+                    type="email"
+                    required
+                    value={quickTo}
+                    onChange={(e) => setQuickTo(e.target.value)}
+                    placeholder="client@example.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Email Subject Line *</label>
+                  <input
+                    type="text"
+                    required
+                    value={quickSubject}
+                    onChange={(e) => setQuickSubject(e.target.value)}
+                    placeholder="Proposal Quote & Discussion — Spring Web Solutions"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald font-semibold"
+                  />
+                </div>
+              </div>
+
+              {/* Document Sharing Attachment Section */}
+              <div className="p-4 rounded-2xl bg-white/2 border border-white/10 space-y-2">
+                <label className="text-[11px] font-bold text-brand-emerald uppercase flex items-center gap-1.5">
+                  <Paperclip size={14} />
+                  <span>Document / File Attachment Sharing</span>
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={quickDocName}
+                    onChange={(e) => setQuickDocName(e.target.value)}
+                    placeholder="Document Title (e.g. Project_Quote_2026.pdf)"
+                    className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
+                  />
+                  <input
+                    type="url"
+                    value={quickDocUrl}
+                    onChange={(e) => setQuickDocUrl(e.target.value)}
+                    placeholder="File Link / Download URL (https://...)"
+                    className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white font-mono focus:outline-none focus:border-brand-emerald"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1 flex-1 flex flex-col">
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Email Body Content *</label>
+                <textarea
+                  rows={isMaximized ? 12 : 8}
+                  required
+                  value={quickBody}
+                  onChange={(e) => setQuickBody(e.target.value)}
+                  placeholder="Write message to recipient..."
+                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-brand-emerald leading-relaxed font-sans resize-y"
+                />
+              </div>
+
+              {quickStatus && (
+                <div className={`p-3.5 rounded-xl text-xs flex items-center gap-2 ${
+                  quickStatus.success ? 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                }`}>
+                  {quickStatus.success ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
+                  <span>{quickStatus.msg}</span>
+                </div>
+              )}
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-400 uppercase">Email Body (HTML/Formatted Text) *</label>
-              <textarea
-                rows={6}
-                required
-                value={quickBody}
-                onChange={(e) => setQuickBody(e.target.value)}
-                placeholder="Write your email content here..."
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-emerald"
-              />
+            {/* Modal Actions Footer */}
+            <div className="flex items-center justify-between border-t border-white/10 pt-3 shrink-0">
+              <div className="text-[11px] text-slate-500">
+                Dispatches via <strong className="text-slate-300">hello@springwebsolutions.in</strong>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button type="button" onClick={() => setShowQuickEmailModal(false)} className="btn-secondary py-2 px-4 text-xs font-semibold">Cancel</button>
+                <button type="submit" disabled={quickSending} className="btn-primary py-2 px-5 text-xs flex items-center gap-2 font-semibold shadow-lg shadow-brand-emerald/20 cursor-pointer">
+                  {quickSending ? <Loader2 className="animate-spin" size={14} /> : <Send size={14} />}
+                  <span>Send Email via Resend</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* SENT LOG PREVIEW MODAL */}
+      {previewSentLog && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="glass-panel p-8 rounded-3xl border border-white/10 max-w-2xl w-full space-y-6 text-xs relative">
+            <button
+              onClick={() => setPreviewSentLog(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+            >
+              ✕
+            </button>
+
+            <div className="border-b border-white/10 pb-3">
+              <span className="px-2 py-0.5 rounded bg-brand-emerald/15 text-brand-emerald font-bold text-[10px] uppercase">Sent Resend Email Log</span>
+              <h3 className="font-display font-bold text-white text-lg mt-1">{previewSentLog.subject}</h3>
             </div>
 
-            {quickStatus && (
-              <div className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
-                quickStatus.success ? 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-              }`}>
-                {quickStatus.success ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
-                <span>{quickStatus.msg}</span>
+            <div className="grid grid-cols-2 gap-4 text-slate-400 bg-white/5 p-3 rounded-xl border border-white/5">
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase block">Recipient To</span>
+                <span className="font-mono text-white font-semibold">{previewSentLog.to}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase block">Dispatched Time</span>
+                <span className="text-slate-300">{new Date(previewSentLog.sent_at).toLocaleString()}</span>
+              </div>
+            </div>
+
+            {previewSentLog.document_name && (
+              <div className="p-3 rounded-xl bg-brand-emerald/10 border border-brand-emerald/20 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Paperclip size={16} className="text-brand-emerald" />
+                  <div>
+                    <div className="font-bold text-white">{previewSentLog.document_name}</div>
+                    <div className="text-[10px] text-slate-400 truncate max-w-xs">{previewSentLog.document_url}</div>
+                  </div>
+                </div>
+                {previewSentLog.document_url && (
+                  <a
+                    href={previewSentLog.document_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-primary py-1 px-3 text-[11px] flex items-center gap-1"
+                  >
+                    <span>Download</span>
+                    <ExternalLink size={12} />
+                  </a>
+                )}
               </div>
             )}
 
-            <div className="flex justify-end gap-3 pt-2">
-              <button type="button" onClick={() => setShowQuickEmailModal(false)} className="btn-secondary py-1.5 px-4 text-xs">Cancel</button>
-              <button type="submit" disabled={quickSending} className="btn-primary py-1.5 px-4 text-xs flex items-center gap-1.5 shadow shadow-brand-emerald/20">
-                {quickSending ? <Loader2 className="animate-spin" size={14} /> : <Send size={14} />}
-                <span>Send Email via Resend</span>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-400 uppercase">Message Body Content</label>
+              <div className="p-4 rounded-xl bg-white/2 border border-white/10 text-slate-300 leading-relaxed font-sans whitespace-pre-wrap max-h-60 overflow-y-auto">
+                {previewSentLog.body}
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2 border-t border-white/5">
+              <button onClick={() => setPreviewSentLog(null)} className="btn-secondary py-1.5 px-4 text-xs font-semibold">
+                Close Log
               </button>
             </div>
-          </form>
+          </div>
         </div>
       )}
 

@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { from, to, subject, html, reply_to, apiKey } = req.body || {};
+  const { from, to, subject, html, reply_to, apiKey, attachments } = req.body || {};
 
   const keyToUse = (apiKey || process.env.VITE_RESEND_API_KEY || process.env.RESEND_API_KEY || '').trim();
 
@@ -39,7 +39,8 @@ export default async function handler(req, res) {
       to: recipients,
       subject: subject || 'Notification from Spring Web Solutions',
       html: html || '<p>Hello from Spring Web Solutions</p>',
-      ...(reply_to ? { replyTo: reply_to } : {})
+      ...(reply_to ? { replyTo: reply_to } : {}),
+      ...(attachments && Array.isArray(attachments) && attachments.length > 0 ? { attachments } : {})
     });
 
     if (error) {
