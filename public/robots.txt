@@ -5,4 +5,4 @@ Disallow: /admin/
 Disallow: /setup/
 Disallow: /login
 
-Sitemap: https://springwebsolutions.com/sitemap.xml
+Sitemap: https://www.springwebsolutions.in/sitemap.xml

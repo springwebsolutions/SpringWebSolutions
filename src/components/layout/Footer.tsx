@@ -163,9 +163,14 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom row */}
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 light:border-slate-200">
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 light:border-slate-200 gap-4">
           <p>© {new Date().getFullYear()} {companyName}. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 sm:mt-0">
+          <div className="text-[11px] text-slate-600 dark:text-slate-500 font-sans text-center sm:text-right">
+            <span>Engineering Web &amp; Software Solutions in </span>
+            <strong className="text-slate-400 dark:text-slate-400 font-semibold">Udumalpet, Tamil Nadu, India</strong>
+            <span> &amp; Worldwide.</span>
+          </div>
+          <div className="flex space-x-6">
             <a href="/privacy" className="hover:text-brand-emerald">Privacy Policy</a>
             <a href="/terms" className="hover:text-brand-emerald">Terms of Service</a>
             <a href="/sitemap.xml" className="hover:text-brand-emerald">Sitemap</a>
