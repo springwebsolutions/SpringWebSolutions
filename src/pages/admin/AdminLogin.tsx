@@ -152,14 +152,10 @@ export const AdminLogin: React.FC = () => {
         </div>
 
         {/* Portal Links */}
-        <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+        <div className="text-center text-xs text-slate-500">
           <Link to="/" className="inline-flex items-center gap-1 hover:text-slate-300 transition-colors">
             <ArrowLeft size={12} />
-            <span>Return to Site</span>
-          </Link>
-
-          <Link to="/login" className="hover:text-brand-emerald transition-colors font-medium">
-            Client Portal Login ➔
+            <span>Return to Site Home</span>
           </Link>
         </div>
 
