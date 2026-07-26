@@ -17,16 +17,20 @@ interface TechStackProps {
 
 const defaultCategories: TechCategory[] = [
   {
-    name: "Frontend & High-Speed Frameworks",
+    name: "Web & Frontend Engineering",
     items: ["React.js", "Next.js", "Vite", "TypeScript", "Tailwind CSS", "HTML5/CSS3"]
   },
   {
-    name: "Backend & Database Infrastructure",
-    items: ["Node.js", "Express", "Python", "Laravel", "Supabase", "PostgreSQL", "REST & Webhook APIs"]
+    name: "Android & Mobile App Stack",
+    items: ["Kotlin", "Android SDK", "Flutter", "React Native", "Firebase", "Play Store API"]
   },
   {
-    name: "CMS, E-Commerce & Cloud Deployment",
-    items: ["WordPress", "WooCommerce", "Shopify", "Vercel", "Docker", "AWS Cloud"]
+    name: "Windows & Desktop Software",
+    items: ["C# .NET", "WinUI 3 / WPF", "Electron", "SQLite / SQL Server", "MSI Installer"]
+  },
+  {
+    name: "Backend & Cloud Infrastructure",
+    items: ["Node.js", "Python", "Supabase", "PostgreSQL", "REST & Webhook APIs", "Docker"]
   }
 ]
 
@@ -55,7 +59,7 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
         </div>
 
         {/* Tech Stack Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {techCategories.map((cat, idx) => (
             <div
               key={idx}

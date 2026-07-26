@@ -9,6 +9,7 @@ import { FaqSection } from './FaqSection'
 import { ComparisonTable } from './ComparisonTable'
 import { CaseStudiesSection } from './CaseStudiesSection'
 import { TeamSection } from './TeamSection'
+import { AppDevelopmentSection } from './AppDevelopmentSection'
 import type { SectionData } from '@/stores/pageBuilderStore'
 
 interface SectionRendererProps {
@@ -27,7 +28,12 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'stats':
               return <div id="stats" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
             case 'services_summary':
-              return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
+              return (
+                <React.Fragment key={sec.id}>
+                  <div id="services"><ServicesGrid content={sec.content} styling={sec.styling} /></div>
+                  <div id="app-development"><AppDevelopmentSection /></div>
+                </React.Fragment>
+              )
             case 'pricing':
             case 'pricing_summary':
             case 'pricing_table':

@@ -7,6 +7,12 @@ export const ComparisonTable: React.FC<{ content?: any; styling?: any }> = ({ co
 
   const criteria = [
     {
+      feature: "Multi-Platform Application Development",
+      others: "Single web pages only or high costs for mobile & desktop software",
+      us: "Unified Web + Android + iOS + Windows Desktop App Architecture",
+      highlight: true
+    },
+    {
       feature: "Source Code Ownership",
       others: "Locked in proprietary systems or monthly maintenance fees",
       us: "100% Full Source Code & Database Ownership",
