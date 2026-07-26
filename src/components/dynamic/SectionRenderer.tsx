@@ -49,7 +49,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'tech_stack':
               return <div id="tech" key={sec.id}><TechStack content={sec.content} styling={sec.styling} /></div>
             case 'cta':
-              return <div id="contact" key={sec.id}><CtaSection content={sec.content} styling={sec.styling} /></div>
+              return null
             case 'testimonials_summary':
               return null
             default:

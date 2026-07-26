@@ -19,11 +19,10 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
       { id: 'home-case-studies', type: 'case_studies', display_order: 4 },
       { id: 'home-comparison', type: 'comparison', display_order: 5 },
       { id: 'home-team', type: 'team', display_order: 6 },
-      { id: 'home-faq', type: 'faq', display_order: 7 },
-      { id: 'home-cta', type: 'cta', display_order: 8 }
+      { id: 'home-faq', type: 'faq', display_order: 7 }
     ]
 
-    const filteredFetched = (fetchedSections || []).filter(s => s.type !== 'stats')
+    const filteredFetched = (fetchedSections || []).filter(s => s.type !== 'stats' && s.type !== 'cta')
     const existingTypes = new Set(filteredFetched.map(s => s.type))
     const merged = [...filteredFetched]
 
