@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react'
 
 interface HeroProps {
   content: {
@@ -36,8 +36,12 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           
-          {/* Left Column: Headline */}
+          {/* Left Column: Headline & Company Badge */}
           <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-bold uppercase tracking-widest font-display animate-fade-in-up">
+              <Sparkles size={13} className="text-emerald-500" />
+              <span>Spring Web Solutions</span>
+            </div>
 
             <h1 className="animate-fade-in-up text-4xl sm:text-5xl md:text-6xl font-extrabold leading-none tracking-tight text-slate-900 dark:text-white font-display">
               {headline}
