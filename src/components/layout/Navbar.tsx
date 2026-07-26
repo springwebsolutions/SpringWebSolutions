@@ -99,7 +99,7 @@ export const Navbar: React.FC = () => {
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/90 dark:bg-[#040509]/90 light:bg-white/95 border-white/10 light:border-slate-200 backdrop-blur-md transition-colors duration-300 shadow-sm">
+    <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/60 dark:bg-[#040509]/60 light:bg-white/75 border-white/10 light:border-slate-200/80 backdrop-blur-xl transition-all duration-300 shadow-lg shadow-black/20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
