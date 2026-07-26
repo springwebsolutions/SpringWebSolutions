@@ -48,9 +48,9 @@ const TypewriterText: React.FC = () => {
   }, [subIndex, index, reverse])
 
   return (
-    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600 font-black min-w-[200px] text-left">
+    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-700 light:via-teal-700 light:to-indigo-700 font-black min-w-[200px] text-left">
       {TYPEWRITER_WORDS[index].substring(0, subIndex)}
-      <span className="animate-pulse text-emerald-400 light:text-emerald-600 font-light ml-0.5">|</span>
+      <span className="animate-pulse text-emerald-400 light:text-emerald-700 font-light ml-0.5">|</span>
     </span>
   )
 }
@@ -145,7 +145,7 @@ const ParticleCanvas: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-60 dark:opacity-60 light:opacity-20"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-60 dark:opacity-60 light:opacity-15"
       aria-hidden="true"
     />
   )
@@ -162,14 +162,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   } = content
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
+    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-100 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
 
       {/* ── High-Tech Hero Background Image & Overlay ── */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-55 dark:opacity-55 light:opacity-50 pointer-events-none transition-opacity duration-500 scale-105 contrast-110 brightness-110 light:contrast-125"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-55 dark:opacity-55 light:opacity-30 pointer-events-none transition-opacity duration-500 scale-105 contrast-110 brightness-110 light:contrast-125"
         style={{ backgroundImage: `url('/hero-bg.png')` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/75 via-[#040509]/55 to-[#040509]/95 dark:from-[#040509]/75 dark:via-[#040509]/55 dark:to-[#040509]/95 light:from-slate-100/60 light:via-slate-50/40 light:to-slate-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/75 via-[#040509]/55 to-[#040509]/95 dark:from-[#040509]/75 dark:via-[#040509]/55 dark:to-[#040509]/95 light:from-white/85 light:via-slate-100/75 light:to-slate-100/90 pointer-events-none" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
@@ -233,14 +233,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         {/* Brand Title */}
         <div className="space-y-4 max-w-4xl mx-auto">
           {/* Badge: slides in from left */}
-          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
-            <Sparkles size={14} className="text-emerald-500 dark:text-emerald-400 light:text-emerald-600 animate-spin-slow" /> Official Web Engineering &amp; Automation Agency
+          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 light:text-emerald-700 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
+            <Sparkles size={14} className="text-emerald-500 dark:text-emerald-400 light:text-emerald-700 animate-spin-slow" /> Official Web Engineering &amp; Automation Agency
           </div>
 
           {/* H1: slides up with blur unmasking + persistent glow pulse */}
-          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-2xl">
+          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-950 leading-none drop-shadow-2xl">
             Spring Web{' '}
-            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-500 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-500 light:from-emerald-600 light:via-teal-500 light:to-indigo-600">
+            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-500 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-500 light:from-emerald-600 light:via-teal-600 light:to-indigo-600">
               Solutions
             </span>
           </h1>
@@ -249,14 +249,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         {/* Sub-Headline with Dynamic Typewriter Animation */}
         <div className="max-w-3xl mx-auto space-y-6">
           {/* H2 with Typewriter effect */}
-          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-300 dark:text-slate-300 light:text-slate-800 font-display leading-snug">
+          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-300 dark:text-slate-300 light:text-slate-900 font-display leading-snug">
             Helping Businesses Grow Through{' '}
             <br className="hidden sm:inline" />
             <TypewriterText />
           </h2>
 
           {/* Paragraph */}
-          <p className="hero-p-enter text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
+          <p className="hero-p-enter text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-900 font-sans light:font-semibold leading-relaxed max-w-2xl mx-auto">
             {subheadline}
           </p>
 
@@ -272,7 +272,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             
             <Link
               to={cta_secondary_href || '/#services'}
-              className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8"
+              className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 light:bg-white light:text-slate-900 light:border-slate-300 light:shadow-md hover:light:bg-slate-50"
             >
               <span>{cta_secondary_text || 'Explore Services'}</span>
               <ArrowUpRight size={16} className="opacity-70 group-hover:opacity-100 transition-all" />
@@ -290,9 +290,9 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
                 <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
-                <span className="ml-2 font-mono text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700 font-semibold">springweb-architecture-v3.ts</span>
+                <span className="ml-2 font-mono text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-800 font-semibold">springweb-architecture-v3.ts</span>
               </div>
-              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-500 dark:text-emerald-400 light:text-emerald-600">
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-500 dark:text-emerald-400 light:text-emerald-700">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -304,31 +304,31 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-[11px] font-bold uppercase tracking-wider font-display">
+                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 light:text-emerald-700 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Award size={14} /> Completed Projects
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">3</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-950 font-display">3</div>
               </div>
 
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-indigo-400 dark:text-indigo-400 light:text-indigo-600 text-[11px] font-bold uppercase tracking-wider font-display">
+                <div className="flex items-center gap-1.5 text-indigo-400 dark:text-indigo-400 light:text-indigo-700 text-[11px] font-bold uppercase tracking-wider font-display">
                   <CheckCircle2 size={14} /> Sprint Delivery
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">100%</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-950 font-display">100%</div>
               </div>
 
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-[11px] font-bold uppercase tracking-wider font-display">
+                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 light:text-emerald-700 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Zap size={14} /> PageSpeed
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">&lt; 1s Load</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-950 font-display">&lt; 1s Load</div>
               </div>
 
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-teal-400 dark:text-teal-400 light:text-teal-600 text-[11px] font-bold uppercase tracking-wider font-display">
+                <div className="flex items-center gap-1.5 text-teal-400 dark:text-teal-400 light:text-teal-700 text-[11px] font-bold uppercase tracking-wider font-display">
                   <ShieldCheck size={14} /> Uptime SLA
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">99.9%</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-950 font-display">99.9%</div>
               </div>
             </div>
 
