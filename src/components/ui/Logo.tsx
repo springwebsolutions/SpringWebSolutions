@@ -13,45 +13,36 @@ export const Logo: React.FC<LogoProps> = ({
   size = 'md',
   variant = 'auto'
 }) => {
-  const iconSizeClass = 
-    size === 'sm' ? 'h-8 w-8' :
+  const iconDimensions = 
+    size === 'sm' ? 'h-9 w-9' :
     size === 'md' ? 'h-10 w-10' :
     size === 'lg' ? 'h-12 w-12' : 'h-16 w-16'
 
-  const textSizeClass = 
-    size === 'sm' ? 'text-xs' :
-    size === 'md' ? 'text-sm' :
-    size === 'lg' ? 'text-base' : 'text-xl'
+  const textSize = 
+    size === 'sm' ? 'text-lg sm:text-xl' :
+    size === 'md' ? 'text-xl sm:text-2xl' :
+    size === 'lg' ? 'text-2xl sm:text-3xl' : 'text-3xl'
 
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      {/* Official Logo Mark / Image Container */}
-      <div className={`${iconSizeClass} rounded-xl overflow-hidden bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-slate-200/50 hover:scale-105 transition-transform`}>
+      {/* Official S-W Emblem Mark */}
+      <div className={`${iconDimensions} rounded-xl bg-white p-0.5 shadow-md shadow-emerald-500/10 flex items-center justify-center shrink-0 border border-white/20 hover:scale-105 transition-all duration-200`}>
         <img 
-          src="/logo.jpg" 
-          alt="Spring Web Solutions Logo" 
-          className="w-full h-full object-contain"
+          src="/logo-emblem.jpg" 
+          alt="Spring Web Solutions" 
+          className="w-full h-full object-contain rounded-lg"
         />
       </div>
 
-      {/* Typography */}
+      {/* Restored Original Brand Typography */}
       {showText && (
-        <div className="flex flex-col justify-center">
-          <span className={`font-serif font-bold tracking-[0.18em] uppercase leading-tight ${
-            variant === 'light' ? 'text-white' :
-            variant === 'dark' ? 'text-slate-900' :
-            'text-white dark:text-white light:text-slate-900'
-          } ${textSizeClass}`}>
-            SPRING WEB
-          </span>
-          <span className={`font-serif font-semibold tracking-[0.25em] uppercase text-[9px] sm:text-[10px] leading-tight ${
-            variant === 'light' ? 'text-emerald-400' :
-            variant === 'dark' ? 'text-emerald-600' :
-            'text-emerald-400 dark:text-emerald-400 light:text-emerald-600'
-          }`}>
-            SOLUTIONS
-          </span>
-        </div>
+        <span className={`font-display font-bold tracking-tight ${
+          variant === 'light' ? 'text-white' :
+          variant === 'dark' ? 'text-slate-900' :
+          'text-white dark:text-white light:text-slate-900'
+        } ${textSize}`}>
+          Spring Web Solutions
+        </span>
       )}
     </div>
   )
