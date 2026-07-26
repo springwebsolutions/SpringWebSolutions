@@ -14,7 +14,7 @@ export const Logo: React.FC<LogoProps> = ({
   variant = 'auto'
 }) => {
   const iconDimensions = 
-    size === 'sm' ? 'h-9 w-9' :
+    size === 'sm' ? 'h-8 w-8' :
     size === 'md' ? 'h-10 w-10' :
     size === 'lg' ? 'h-12 w-12' : 'h-16 w-16'
 
@@ -25,12 +25,12 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      {/* Official S-W Emblem Mark */}
-      <div className={`${iconDimensions} rounded-xl bg-white p-0.5 shadow-md shadow-emerald-500/10 flex items-center justify-center shrink-0 border border-white/20 hover:scale-105 transition-all duration-200`}>
+      {/* Centered Transparent S-W Emblem */}
+      <div className={`${iconDimensions} flex items-center justify-center shrink-0 hover:scale-105 transition-transform duration-200`}>
         <img 
-          src="/logo-emblem.jpg" 
+          src="/logo-emblem.png" 
           alt="Spring Web Solutions" 
-          className="w-full h-full object-contain rounded-lg"
+          className="w-full h-full object-contain filter drop-shadow-sm"
         />
       </div>
 

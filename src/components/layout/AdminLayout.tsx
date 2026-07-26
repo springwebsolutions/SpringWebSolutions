@@ -147,9 +147,7 @@ export const AdminLayout: React.FC = () => {
         {sidebarOpen ? (
           <Logo size="sm" variant="light" />
         ) : (
-          <div className="h-8 w-8 rounded-xl overflow-hidden bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-slate-200/50">
-            <img src="/logo.jpg" alt="Logo Mark" className="w-full h-full object-contain" />
-          </div>
+          <img src="/logo-emblem.png" alt="Logo Mark" className="h-8 w-8 object-contain" />
         )}
       </div>
 
