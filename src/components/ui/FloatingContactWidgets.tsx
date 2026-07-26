@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { MessageSquare, X, Send, Phone, CheckCircle2, Sparkles, MessageCircle, ArrowUpRight, Bot, User, Loader2, RefreshCw } from 'lucide-react'
+import { MessageSquare, X, Send, Phone, CheckCircle2, Sparkles, MessageCircle, ArrowUpRight, Bot, User, Loader2, RefreshCw, UserCheck } from 'lucide-react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { liveChatService, type LiveChatMessage } from '@/lib/liveChatService'
 
 interface ChatMessage {
   id: string
-  sender: 'user' | 'bot'
+  sender: 'user' | 'bot' | 'agent'
+  sender_name?: string
   text: string
   time: string
   options?: Array<{ label: string; action: string }>
@@ -14,9 +16,11 @@ export const FloatingContactWidgets: React.FC = () => {
   const [isLiveChatOpen, setIsLiveChatOpen] = useState(false)
   const [inputMessage, setInputMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [isHumanConnected, setIsHumanConnected] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const whatsappNumber = '918012622119'
+  const sessionId = liveChatService.getSessionId()
 
   const initialMessages: ChatMessage[] = [
     {
@@ -27,13 +31,34 @@ export const FloatingContactWidgets: React.FC = () => {
       options: [
         { label: '🌐 Website Development Quote', action: 'quote' },
         { label: '⚡ Custom CRM / ERP Software', action: 'crm' },
-        { label: '🚀 Technical SEO Audit', action: 'seo' },
+        { label: '🎧 Request Live Admin / Human Chat', action: 'human' },
         { label: '📞 Book Phone Callback', action: 'callback' }
       ]
     }
   ]
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
+
+  // Realtime subscription to live chat messages from admin agent
+  useEffect(() => {
+    const unsubscribe = liveChatService.subscribeToSession(sessionId, (newMsg: LiveChatMessage) => {
+      if (newMsg.sender === 'agent') {
+        setIsHumanConnected(true)
+        const formatted: ChatMessage = {
+          id: newMsg.id,
+          sender: 'agent',
+          sender_name: newMsg.sender_name || 'Admin Engineer',
+          text: newMsg.text,
+          time: new Date(newMsg.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+        setMessages(prev => {
+          if (prev.some(m => m.id === formatted.id)) return prev
+          return [...prev, formatted]
+        })
+      }
+    })
+    return () => unsubscribe()
+  }, [sessionId])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -73,22 +98,22 @@ export const FloatingContactWidgets: React.FC = () => {
       let botText = ''
       let options: Array<{ label: string; action: string }> | undefined = undefined
 
-      if (actionType === 'quote' || userText.toLowerCase().includes('website') || userText.toLowerCase().includes('quote')) {
+      if (actionType === 'human' || userText.toLowerCase().includes('admin') || userText.toLowerCase().includes('human') || userText.toLowerCase().includes('agent')) {
+        botText = '🟢 You are now flagged for Live Admin / Engineer Chat! An administrator in our Operations Suite has been notified and can chat with you here directly in real-time.'
+        setIsHumanConnected(true)
+        options = [
+          { label: '💬 Also Chat on WhatsApp Directly', action: 'whatsapp' }
+        ]
+      } else if (actionType === 'quote' || userText.toLowerCase().includes('website') || userText.toLowerCase().includes('quote')) {
         botText = 'Great! We engineer high-speed corporate sites, e-commerce stores, and web apps with sub-second page speed (<1s) and 100% full source code ownership. Standard turnaround is 1 to 2 weeks.'
         options = [
-          { label: '📝 Request Free Scope Document', action: 'scope' },
+          { label: '🎧 Request Live Admin / Human Chat', action: 'human' },
           { label: '💬 Chat on WhatsApp Directly', action: 'whatsapp' }
         ]
       } else if (actionType === 'crm' || userText.toLowerCase().includes('crm') || userText.toLowerCase().includes('erp') || userText.toLowerCase().includes('software')) {
         botText = 'We build custom business portals, inventory ERP systems, client dashboards, and automated lead management CRM software tailored to your specific workflow.'
         options = [
-          { label: '📅 Book 30-Min Discovery Call', action: 'callback' },
-          { label: '💬 Chat on WhatsApp Directly', action: 'whatsapp' }
-        ]
-      } else if (actionType === 'seo' || userText.toLowerCase().includes('seo') || userText.toLowerCase().includes('ranking')) {
-        botText = 'Our Technical SEO suite includes JSON-LD schema markups, Core Web Vitals optimization, mobile responsive styling, and fast indexation on Google Search Console.'
-        options = [
-          { label: '🔍 Audit My Website', action: 'audit' },
+          { label: '🎧 Request Live Admin / Human Chat', action: 'human' },
           { label: '💬 Chat on WhatsApp Directly', action: 'whatsapp' }
         ]
       } else if (actionType === 'callback' || userText.toLowerCase().includes('call') || userText.toLowerCase().includes('phone')) {
@@ -97,10 +122,10 @@ export const FloatingContactWidgets: React.FC = () => {
         botText = 'Thank you! I have recorded your contact details into our Lead CRM. Our senior solution architect will reach out to you shortly.'
         saveLeadToCRM(userText)
       } else {
-        botText = `Thank you for reaching out! I've logged "${userText}" for our team. Would you like to connect on WhatsApp or leave your email/phone for a callback?`
+        botText = `Thank you for reaching out! I've logged "${userText}" for our team. Would you like to talk to a live admin or connect on WhatsApp?`
         options = [
-          { label: '💬 Open WhatsApp Chat', action: 'whatsapp' },
-          { label: '🔄 Start New Inquiry', action: 'reset' }
+          { label: '🎧 Connect to Live Admin', action: 'human' },
+          { label: '💬 Open WhatsApp Chat', action: 'whatsapp' }
         ]
         saveLeadToCRM(userText)
       }
@@ -130,6 +155,7 @@ export const FloatingContactWidgets: React.FC = () => {
     if (actionType === 'reset') {
       setMessages(initialMessages)
       setInputMessage('')
+      setIsHumanConnected(false)
       return
     }
 
@@ -143,6 +169,10 @@ export const FloatingContactWidgets: React.FC = () => {
 
     setMessages(prev => [...prev, userMsg])
     setInputMessage('')
+
+    // Broadcast user message to realtime service for Admin Panel
+    liveChatService.sendMessage(sessionId, 'user', text || actionType || 'Inquiry')
+
     handleBotResponse(text || actionType || '', actionType)
   }
 
@@ -164,13 +194,21 @@ export const FloatingContactWidgets: React.FC = () => {
               <div>
                 <h4 className="text-sm font-bold tracking-tight">SpringWeb AI Assistant</h4>
                 <p className="text-[11px] text-emerald-100 flex items-center gap-1">
-                  <CheckCircle2 size={11} className="text-emerald-300" /> Automated • Instant Responses
+                  {isHumanConnected ? (
+                    <span className="flex items-center gap-1 font-bold text-amber-300">
+                      <UserCheck size={11} /> Admin Engineer Connected
+                    </span>
+                  ) : (
+                    <>
+                      <CheckCircle2 size={11} className="text-emerald-300" /> Automated • Instant Responses
+                    </>
+                  )}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-1">
               <button
-                onClick={() => setMessages(initialMessages)}
+                onClick={() => { setMessages(initialMessages); setIsHumanConnected(false) }}
                 className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
                 title="Reset Chat"
               >
@@ -193,7 +231,11 @@ export const FloatingContactWidgets: React.FC = () => {
                 className={`flex flex-col space-y-1.5 ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
-                  {msg.sender === 'bot' ? (
+                  {msg.sender === 'agent' ? (
+                    <span className="flex items-center gap-1 text-amber-400 font-bold">
+                      <UserCheck size={10} /> {msg.sender_name || 'Admin Engineer'}
+                    </span>
+                  ) : msg.sender === 'bot' ? (
                     <span className="flex items-center gap-1 text-emerald-400 font-semibold">
                       <Sparkles size={10} /> SpringWeb Bot
                     </span>
@@ -209,6 +251,8 @@ export const FloatingContactWidgets: React.FC = () => {
                   className={`p-3 rounded-2xl text-xs font-sans leading-relaxed max-w-[88%] ${
                     msg.sender === 'user'
                       ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-semibold rounded-br-none shadow-md'
+                      : msg.sender === 'agent'
+                      ? 'bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/30 text-white font-medium rounded-bl-none shadow-md'
                       : 'bg-white/[0.05] border border-white/10 text-slate-200 rounded-bl-none'
                   }`}
                 >

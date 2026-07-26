@@ -394,6 +394,7 @@ export const Dashboard: React.FC = () => {
             <p className="text-[11px] text-slate-600 mt-0.5">Jump to key areas</p>
           </div>
           <div className="space-y-2">
+            <QuickAction to={`${prefix}/contacts`} icon={MessageSquare} label="Contact Submissions & Live Chat" desc="Form submissions & real-time chat" color="bg-emerald-500/20 border border-emerald-500/20" />
             <QuickAction to={`${prefix}/blog`} icon={BookOpen} label="New Blog Post" desc="Publish a new article" color="bg-indigo-500/20 border border-indigo-500/20" />
             <QuickAction to={`${prefix}/crm`} icon={Inbox} label="Lead CRM & Email" desc="Manage & email leads" color="bg-emerald-500/20 border border-emerald-500/20" />
             <QuickAction to={`${prefix}/support`} icon={Ticket} label="Support Desk" desc="View open tickets" color="bg-amber-500/20 border border-amber-500/20" />

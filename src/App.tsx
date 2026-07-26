@@ -29,6 +29,7 @@ import MediaLibrary from '@/pages/admin/MediaLibrary'
 import SiteSettings from '@/pages/admin/SiteSettings'
 import KBCMS from '@/pages/admin/KBCMS'
 import SupportManager from '@/pages/admin/SupportManager'
+import ContactSubmissions from '@/pages/admin/ContactSubmissions'
 
 const ExternalRedirect: React.FC<{ to: string }> = ({ to }) => {
   useEffect(() => {
@@ -80,6 +81,7 @@ function App() {
             <Route path="crm" element={<LeadCRM />} />
             <Route path="media" element={<MediaLibrary />} />
             <Route path="support" element={<SupportManager />} />
+            <Route path="contacts" element={<ContactSubmissions />} />
             <Route path="settings" element={<SiteSettings />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>

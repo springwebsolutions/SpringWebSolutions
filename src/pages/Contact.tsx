@@ -31,9 +31,28 @@ export const Contact: React.FC = () => {
     setLoading(true)
     setErrorMsg(null)
 
+    // Save fallback entry locally so Admin Panel can view it even in offline mode
+    try {
+      const localEntries = JSON.parse(localStorage.getItem('sw_contact_submissions') || '[]')
+      localEntries.unshift({
+        id: 'cs_' + Date.now(),
+        name: data.name,
+        email: data.email,
+        phone: data.phone || '',
+        company: data.company || '',
+        type: data.type || 'contact',
+        status: 'new',
+        budget: data.budget || '',
+        timeline: data.timeline || '',
+        description: data.description,
+        created_at: new Date().toISOString()
+      })
+      localStorage.setItem('sw_contact_submissions', JSON.stringify(localEntries))
+    } catch (e) {}
+
     if (!isSupabaseConfigured) {
       // Graceful fallback when database is in offline or client demo mode
-      console.info('[Lead Fallback Captured]:', data)
+      console.info('[Lead & Contact Submission Captured]:', data)
       setSuccess(true)
       reset()
       setLoading(false)
@@ -41,7 +60,8 @@ export const Contact: React.FC = () => {
     }
 
     try {
-      const { error } = await supabase.from('leads').insert({
+      // Insert into leads table
+      await supabase.from('leads').insert({
         name: data.name,
         email: data.email,
         phone: data.phone || null,
@@ -53,12 +73,24 @@ export const Contact: React.FC = () => {
         description: data.description
       })
 
-      if (error) throw error
+      // Insert into contact_submissions table
+      await supabase.from('contact_submissions').insert({
+        name: data.name,
+        email: data.email,
+        phone: data.phone || null,
+        company: data.company || null,
+        type: data.type || 'contact',
+        status: 'new',
+        budget: data.budget || null,
+        timeline: data.timeline || null,
+        description: data.description,
+        created_at: new Date().toISOString()
+      })
 
       setSuccess(true)
       reset()
     } catch (err: any) {
-      console.error('Lead record submission failed:', err)
+      console.error('Lead & Contact record submission failed:', err)
       setErrorMsg(err.message || 'An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
