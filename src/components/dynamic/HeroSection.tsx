@@ -333,23 +333,6 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
               </div>
             </div>
 
-            {/* High-Tech SaaS Software Dashboard Image Showcase */}
-            <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl group mt-4">
-              <img 
-                src="/saas-dashboard.png" 
-                alt="SpringWeb SaaS Platform & Software Architecture Dashboard" 
-                className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500 rounded-2xl"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#060913] via-transparent to-transparent opacity-60" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-semibold text-white bg-black/60 backdrop-blur-md p-3 rounded-xl border border-white/10">
-                <span className="flex items-center gap-2 text-emerald-400">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                  SpringWeb Custom Operations &amp; Enterprise SaaS Suite
-                </span>
-                <span className="text-slate-400 font-mono text-[11px] hidden sm:inline">v3.4 Production Ready</span>
-              </div>
-            </div>
-
           </div>
         </div>
 
