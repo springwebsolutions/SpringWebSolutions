@@ -62,16 +62,16 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
     <section className="py-20 bg-[#060810] dark:bg-[#060810] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Title Block */}
-        <div className="space-y-4 max-w-3xl animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-semibold uppercase tracking-widest">
+        {/* Title Block: Centered Header */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest font-display">
             <Cpu size={13} /> Modern Stack Architecture
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight uppercase">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl">
+            <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
               {subtitle}
             </p>
           )}

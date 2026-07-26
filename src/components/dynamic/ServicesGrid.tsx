@@ -92,13 +92,13 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
     <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
         
-        {/* Title Block */}
-        <div className="space-y-4 max-w-3xl animate-fade-in-up">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight">
+        {/* Title Block: Centered Header */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight uppercase">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl">
+            <p className="text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
               {subtitle}
             </p>
           )}
