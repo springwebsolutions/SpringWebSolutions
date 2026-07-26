@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,7 +8,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { 
   Mail, Phone, MapPin, Send, MessageSquare, 
-  CheckCircle, Loader2, AlertCircle, Clock, Sparkles 
+  CheckCircle, Loader2, AlertCircle, Clock, Sparkles, Headphones 
 } from 'lucide-react'
 
 export const Contact: React.FC = () => {
@@ -175,6 +176,24 @@ export const Contact: React.FC = () => {
                 </div>
                 <span className="text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition-transform">→</span>
               </a>
+
+              {/* Existing Client Support Portal Card */}
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-emerald-500/10 border border-indigo-500/20 space-y-3">
+                <div className="flex items-center gap-2 text-indigo-400 font-bold text-sm font-display">
+                  <Headphones size={18} />
+                  <span>Existing Client Support Desk</span>
+                </div>
+                <p className="text-xs text-slate-300 light:text-slate-600 leading-relaxed font-light font-sans">
+                  Need technical assistance, submit a ticket, or check ongoing project status? Visit our dedicated client support desk.
+                </p>
+                <Link
+                  to="/support"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md transition-all w-full justify-center"
+                >
+                  <Headphones size={15} />
+                  <span>Access Client Support Desk</span>
+                </Link>
+              </div>
 
             </div>
 
