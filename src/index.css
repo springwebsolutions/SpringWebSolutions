@@ -302,6 +302,121 @@ h1, h2, h3, h4, h5, h6 {
   animation-delay: 300ms;
 }
 
+/* ── Hero Text Animations ── */
+
+/* Slower, deeper entrance for the main brand headline */
+@keyframes heroSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Badge slides in from left */
+@keyframes badgeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Sub-headline rises up gently */
+@keyframes subFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* CTA buttons scale in */
+@keyframes ctaReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Shimmer sweep on gradient text */
+@keyframes textShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Terminal card slides up from bottom */
+@keyframes terminalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle glow pulse on the brand name */
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 20px rgba(16,185,129,0.0); }
+  50% { text-shadow: 0 0 40px rgba(16,185,129,0.25), 0 0 80px rgba(99,102,241,0.15); }
+}
+
+.hero-badge-enter {
+  animation: badgeSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-h1-enter {
+  animation: heroSlideUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 150ms;
+}
+
+.hero-h1-glow {
+  animation: glowPulse 4s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.hero-shimmer-text {
+  background-size: 200% auto;
+  animation: textShimmer 4s linear infinite;
+}
+
+.hero-sub-enter {
+  animation: subFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 350ms;
+}
+
+.hero-p-enter {
+  animation: subFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 500ms;
+}
+
+.hero-cta-enter {
+  animation: ctaReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 650ms;
+}
+
+.hero-terminal-enter {
+  animation: terminalReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 800ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up {
     animation: none !important;

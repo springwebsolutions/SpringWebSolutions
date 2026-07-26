@@ -121,7 +121,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   } = content
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
+    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-900 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
+
+      {/* ── High-Tech Hero Background Image & Overlay ── */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-35 dark:opacity-35 light:opacity-20 pointer-events-none transition-opacity duration-500 scale-105"
+        style={{ backgroundImage: `url('/hero-bg.png')` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/80 via-[#040509]/60 to-[#040509] dark:from-[#040509]/80 dark:via-[#040509]/60 dark:to-[#040509] light:from-slate-900/85 light:via-slate-900/70 light:to-slate-900 pointer-events-none" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
@@ -186,27 +193,35 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
         
         {/* Brand Title */}
-        <div className="space-y-4 max-w-4xl mx-auto animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
+        <div className="space-y-4 max-w-4xl mx-auto">
+          {/* Badge: slides in from left */}
+          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
             <Sparkles size={14} className="text-emerald-500" /> Official Web Engineering & Automation Agency
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-2xl">
-            Spring Web <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-400 to-indigo-600">Solutions</span>
+          {/* H1: slides up with blur unmasking + persistent glow pulse */}
+          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-2xl">
+            Spring Web{' '}
+            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-500">
+              Solutions
+            </span>
           </h1>
         </div>
 
         {/* Sub-Headline & CTAs */}
         <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-300 dark:text-slate-300 light:text-slate-800 font-display leading-snug">
+          {/* H2: rises up after h1 */}
+          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-300 dark:text-slate-300 light:text-slate-800 font-display leading-snug">
             {headline}
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
+          {/* Paragraph: fades in after h2 */}
+          <p className="hero-p-enter text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
             {subheadline}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          {/* CTAs: scale-reveal last */}
+          <div className="hero-cta-enter flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link
               to={cta_primary_href || '/contact'}
               className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group shadow-xl shadow-emerald-500/30 text-sm font-bold py-3.5 px-8"
@@ -225,8 +240,8 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           </div>
         </div>
 
-        {/* Stats Terminal Card */}
-        <div className="max-w-4xl mx-auto pt-4 animate-fade-in-up">
+        {/* Stats Terminal Card: slides up from bottom last */}
+        <div className="hero-terminal-enter max-w-4xl mx-auto pt-4">
           <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white/95 border border-white/10 light:border-slate-200 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
             
             {/* Terminal Header */}
