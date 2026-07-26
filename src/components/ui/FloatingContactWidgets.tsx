@@ -147,7 +147,7 @@ export const FloatingContactWidgets: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-14 right-6 z-50 flex flex-col items-end space-y-3 pointer-events-auto">
+    <div className="fixed bottom-20 right-6 z-50 flex flex-col items-end space-y-3 pointer-events-auto">
       
       {/* Live AI Chatbot Drawer */}
       {isLiveChatOpen && (
