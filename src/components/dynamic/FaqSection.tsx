@@ -66,18 +66,18 @@ export const FaqSection: React.FC<{ content?: any; styling?: any }> = ({ content
   }
 
   return (
-    <section className="py-20 bg-[#040509] text-white border-b border-white/5 relative overflow-hidden">
+    <section className="py-20 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-semibold uppercase tracking-widest">
             <HelpCircle size={13} /> Transparent Answers
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight font-display">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight font-display text-white dark:text-white light:text-slate-900">
             {title}
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed">
             {subtitle}
           </p>
         </div>
@@ -100,7 +100,7 @@ export const FaqSection: React.FC<{ content?: any; styling?: any }> = ({ content
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                   isActive
                     ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20'
-                    : 'bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10'
+                    : 'bg-white/5 dark:bg-white/5 light:bg-white border border-white/10 light:border-slate-200 text-slate-400 dark:text-slate-400 light:text-slate-700 hover:text-emerald-500'
                 }`}
               >
                 <Icon size={14} />
@@ -117,21 +117,21 @@ export const FaqSection: React.FC<{ content?: any; styling?: any }> = ({ content
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white/[0.02] border border-white/10 hover:border-white/20 transition-all overflow-hidden"
+                className="rounded-2xl bg-white/[0.02] dark:bg-white/[0.02] light:bg-white border border-white/10 light:border-slate-200 overflow-hidden shadow-sm"
               >
                 <button
                   onClick={() => toggleAccordion(idx)}
                   className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer"
                 >
-                  <span className="font-bold text-sm sm:text-base text-white font-display">
+                  <span className="font-bold text-sm sm:text-base text-white dark:text-white light:text-slate-900 font-display">
                     {faq.question}
                   </span>
-                  <div className={`p-1.5 rounded-lg bg-white/5 text-emerald-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 bg-emerald-500/20' : ''}`}>
+                  <div className={`p-1.5 rounded-lg bg-white/5 dark:bg-white/5 light:bg-slate-100 text-emerald-500 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 bg-emerald-500/20' : ''}`}>
                     <ChevronDown size={18} />
                   </div>
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-300 font-sans leading-relaxed border-t border-white/5 bg-white/[0.01]">
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-300 dark:text-slate-300 light:text-slate-600 font-sans leading-relaxed border-t border-white/5 light:border-slate-100">
                     {faq.answer}
                   </div>
                 )}

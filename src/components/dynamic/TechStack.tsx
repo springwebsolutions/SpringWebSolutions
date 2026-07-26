@@ -1,5 +1,5 @@
 import React from 'react'
-import { Code2, Layers, Cpu, Database, Server, Globe } from 'lucide-react'
+import { Code2, Cpu } from 'lucide-react'
 
 interface TechCategory {
   name: string
@@ -36,19 +36,19 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
   const techCategories = content?.categories && content.categories.length > 0 ? content.categories : defaultCategories
 
   return (
-    <section className="py-20 bg-[#060810] text-white border-b border-white/5 relative overflow-hidden">
+    <section className="py-20 bg-[#060810] dark:bg-[#060810] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Title Block */}
         <div className="space-y-4 max-w-3xl animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-semibold uppercase tracking-widest">
             <Cpu size={13} /> Modern Stack Architecture
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-sm sm:text-base text-slate-400 font-sans font-light leading-relaxed max-w-2xl">
+            <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl">
               {subtitle}
             </p>
           )}
@@ -59,11 +59,11 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
           {techCategories.map((cat, idx) => (
             <div
               key={idx}
-              className="p-8 rounded-3xl bg-[#080b14] border border-white/10 space-y-6 flex flex-col hover:border-emerald-500/30 transition-all shadow-xl"
+              className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 space-y-6 flex flex-col hover:border-emerald-500/30 transition-all shadow-xl"
             >
-              <div className="flex items-center gap-2 border-b border-white/10 pb-4">
-                <Code2 size={18} className="text-emerald-400 shrink-0" />
-                <h3 className="font-display text-base font-bold text-white">
+              <div className="flex items-center gap-2 border-b border-white/10 light:border-slate-100 pb-4">
+                <Code2 size={18} className="text-emerald-500 shrink-0" />
+                <h3 className="font-display text-base font-bold text-white dark:text-white light:text-slate-900">
                   {cat.name}
                 </h3>
               </div>
@@ -72,7 +72,7 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
                 {cat.items.map((item, itemIdx) => (
                   <span
                     key={itemIdx}
-                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-200 font-semibold font-mono tracking-wide hover:border-emerald-500/40 hover:text-emerald-400 transition-all"
+                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-100 border border-white/10 light:border-slate-200 text-xs text-slate-200 dark:text-slate-200 light:text-slate-700 font-semibold font-mono tracking-wide hover:border-emerald-500/40 hover:text-emerald-500 transition-all"
                   >
                     {item}
                   </span>
