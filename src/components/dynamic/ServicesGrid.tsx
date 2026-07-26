@@ -65,7 +65,28 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
     }
   ]
 
-  const services = (content?.items && content.items.length >= 4) ? content.items : defaultServices
+  let services = defaultServices
+  if (content?.items && Array.isArray(content.items) && content.items.length > 0) {
+    const itemTitles = content.items.map((i: any) => (i.title || '').toLowerCase())
+    const hasAndroid = itemTitles.some((t: string) => t.includes('android') || t.includes('mobile') || t.includes('app'))
+    const hasWindows = itemTitles.some((t: string) => t.includes('windows') || t.includes('desktop'))
+
+    services = [...content.items]
+    if (!hasAndroid) {
+      services.push({
+        title: 'Android & Mobile App Development',
+        desc: 'Native Android (Kotlin) & cross-platform iOS mobile apps with offline sync, push notifications & Play Store deployment.',
+        href: '/services'
+      })
+    }
+    if (!hasWindows) {
+      services.push({
+        title: 'Windows Desktop App Development',
+        desc: 'High-performance C# .NET, WinUI 3 & WPF desktop software applications for POS, billing & offline system management.',
+        href: '/services'
+      })
+    }
+  }
 
   return (
     <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
