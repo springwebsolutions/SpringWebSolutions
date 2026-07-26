@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Sparkles, Zap, CheckCircle2, ShieldCheck, Award } from 'lucide-react'
 
@@ -12,6 +12,47 @@ interface HeroProps {
     cta_secondary_href: string
   }
   styling?: any
+}
+
+/* ── Interactive Typewriter Animated Text Component ── */
+const TYPEWRITER_WORDS = [
+  'Websites & Web Apps',
+  'SaaS & Custom Software',
+  'Business Automation',
+  'WhatsApp & Lead CRMs',
+  'High-Speed Web Platforms'
+]
+
+const TypewriterText: React.FC = () => {
+  const [index, setIndex] = useState(0)
+  const [subIndex, setSubIndex] = useState(0)
+  const [reverse, setReverse] = useState(false)
+
+  useEffect(() => {
+    if (subIndex === TYPEWRITER_WORDS[index].length + 1 && !reverse) {
+      const timeout = setTimeout(() => setReverse(true), 2000)
+      return () => clearTimeout(timeout)
+    }
+
+    if (subIndex === 0 && reverse) {
+      setReverse(false)
+      setIndex((prev) => (prev + 1) % TYPEWRITER_WORDS.length)
+      return
+    }
+
+    const timeout = setTimeout(() => {
+      setSubIndex((prev) => prev + (reverse ? -1 : 1))
+    }, reverse ? 40 : 75)
+
+    return () => clearTimeout(timeout)
+  }, [subIndex, index, reverse])
+
+  return (
+    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600 font-black border-b-2 border-emerald-500/40 pb-0.5 min-w-[200px] text-left">
+      {TYPEWRITER_WORDS[index].substring(0, subIndex)}
+      <span className="animate-pulse text-emerald-400 light:text-emerald-600 font-light ml-0.5">|</span>
+    </span>
+  )
 }
 
 /* ── Animated Particle Network Canvas ── */
@@ -125,10 +166,10 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
       {/* ── High-Tech Hero Background Image & Overlay ── */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 dark:opacity-30 light:opacity-10 pointer-events-none transition-opacity duration-500 scale-105"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 dark:opacity-30 light:opacity-45 pointer-events-none transition-opacity duration-500 scale-105 light:contrast-125 light:brightness-110"
         style={{ backgroundImage: `url('/hero-bg.png')` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/90 via-[#040509]/75 to-[#040509] dark:from-[#040509]/90 dark:via-[#040509]/75 dark:to-[#040509] light:from-slate-50/90 light:via-slate-50/80 light:to-slate-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/90 via-[#040509]/75 to-[#040509] dark:from-[#040509]/90 dark:via-[#040509]/75 dark:to-[#040509] light:from-slate-100/65 light:via-slate-50/45 light:to-slate-50 pointer-events-none" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
@@ -157,21 +198,18 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
           </linearGradient>
         </defs>
-        {/* Horizontal circuit traces */}
         <line x1="0" y1="25%" x2="30%" y2="25%" stroke="url(#lineGrad1)" strokeWidth="1">
           <animate attributeName="x2" values="0%;30%;0%" dur="8s" repeatCount="indefinite" />
         </line>
         <line x1="70%" y1="70%" x2="100%" y2="70%" stroke="url(#lineGrad2)" strokeWidth="1">
           <animate attributeName="x1" values="100%;70%;100%" dur="10s" repeatCount="indefinite" />
         </line>
-        {/* Vertical circuit traces */}
         <line x1="15%" y1="0" x2="15%" y2="40%" stroke="url(#lineGrad1)" strokeWidth="0.8">
           <animate attributeName="y2" values="0%;40%;0%" dur="9s" repeatCount="indefinite" />
         </line>
         <line x1="85%" y1="60%" x2="85%" y2="100%" stroke="url(#lineGrad2)" strokeWidth="0.8">
           <animate attributeName="y1" values="100%;60%;100%" dur="7s" repeatCount="indefinite" />
         </line>
-        {/* Corner circuit nodes */}
         <circle cx="15%" cy="40%" r="4" fill="#10b981" opacity="0.6">
           <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite" />
         </circle>
@@ -196,7 +234,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         <div className="space-y-4 max-w-4xl mx-auto">
           {/* Badge: slides in from left */}
           <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
-            <Sparkles size={14} className="text-emerald-500 dark:text-emerald-400 light:text-emerald-600" /> Official Web Engineering & Automation Agency
+            <Sparkles size={14} className="text-emerald-500 dark:text-emerald-400 light:text-emerald-600 animate-spin-slow" /> Official Web Engineering &amp; Automation Agency
           </div>
 
           {/* H1: slides up with blur unmasking + persistent glow pulse */}
@@ -208,19 +246,21 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           </h1>
         </div>
 
-        {/* Sub-Headline & CTAs */}
+        {/* Sub-Headline with Dynamic Typewriter Animation */}
         <div className="max-w-3xl mx-auto space-y-6">
-          {/* H2: rises up after h1 */}
+          {/* H2 with Typewriter effect */}
           <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-300 dark:text-slate-300 light:text-slate-800 font-display leading-snug">
-            {headline}
+            Helping Businesses Grow Through{' '}
+            <br className="hidden sm:inline" />
+            <TypewriterText />
           </h2>
 
-          {/* Paragraph: fades in after h2 */}
+          {/* Paragraph */}
           <p className="hero-p-enter text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
             {subheadline}
           </p>
 
-          {/* CTAs: scale-reveal last */}
+          {/* CTAs */}
           <div className="hero-cta-enter flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link
               to={cta_primary_href || '/contact'}
@@ -240,7 +280,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           </div>
         </div>
 
-        {/* Stats Terminal Card: slides up from bottom last */}
+        {/* Stats Terminal Card */}
         <div className="hero-terminal-enter max-w-4xl mx-auto pt-4">
           <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200/80 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
             
@@ -284,7 +324,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">&lt; 1s Load</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-slate-200 space-y-1">
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
                 <div className="flex items-center gap-1.5 text-teal-400 dark:text-teal-400 light:text-teal-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <ShieldCheck size={14} /> Uptime SLA
                 </div>
