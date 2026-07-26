@@ -4,5 +4,6 @@ Allow: /
 Disallow: /admin/
 Disallow: /setup/
 Disallow: /login
+Disallow: /api/
 
 Sitemap: https://www.springwebsolutions.in/sitemap.xml

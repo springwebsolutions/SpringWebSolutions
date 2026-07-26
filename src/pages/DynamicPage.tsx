@@ -98,6 +98,18 @@ export const DynamicPage: React.FC = () => {
   }, [pageSlug])
 
   useEffect(() => {
+    if (pageSlug === 'home') {
+      document.title = 'Spring Web Solutions | Web, Android, iOS & Windows Software Development Agency in Udumalpet, Tamil Nadu, India'
+    } else if (pageSlug === 'about') {
+      document.title = 'About Us | Spring Web Solutions Engineering Team & Standards'
+    } else if (pageSlug === 'services') {
+      document.title = 'Our Services | Web Development, Android Apps, Windows Software & SEO'
+    } else if (currentPage?.title) {
+      document.title = `${currentPage.title} | Spring Web Solutions`
+    }
+  }, [pageSlug, currentPage])
+
+  useEffect(() => {
     const checkAdmin = async () => {
       if (isSupabaseConfigured) {
         try {
