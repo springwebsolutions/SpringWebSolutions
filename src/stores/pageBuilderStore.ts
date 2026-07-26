@@ -139,6 +139,42 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         is_active: true
       },
       {
+        id: 'home-case-studies',
+        page_id: 'default-home-id',
+        type: 'case_studies',
+        content: {
+          title: "Engineering Transformation Case Studies",
+          subtitle: "Explore real-world technical transformations where custom software and high-speed web engineering delivered measurable business results."
+        },
+        styling: { padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 5,
+        is_active: true
+      },
+      {
+        id: 'home-comparison',
+        page_id: 'default-home-id',
+        type: 'comparison',
+        content: {
+          title: "Why Choose Spring Web Solutions?",
+          subtitle: "See how our high-performance engineering standards compare against traditional freelance work and generic template agencies."
+        },
+        styling: { padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 6,
+        is_active: true
+      },
+      {
+        id: 'home-faq',
+        page_id: 'default-home-id',
+        type: 'faq',
+        content: {
+          title: "Frequently Asked Questions",
+          subtitle: "Everything you need to know about our web engineering process, code ownership, timelines, and technical standards."
+        },
+        styling: { padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 7,
+        is_active: true
+      },
+      {
         id: 'home-cta',
         page_id: 'default-home-id',
         type: 'cta',
@@ -147,11 +183,11 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           subtitle: "Book a technical analysis with our solution engineers. We will review your processes, current website, or software idea and provide a concrete action checklist.",
           cta_primary_text: "Request Consultation",
           cta_primary_href: "/contact",
-          cta_secondary_text: "Explore Case Studies",
-          cta_secondary_href: "/blog"
+          cta_secondary_text: "Explore Services",
+          cta_secondary_href: "/services"
         },
         styling: { padding_top: "py-20", padding_bottom: "py-20" },
-        display_order: 5,
+        display_order: 8,
         is_active: true
       }
     ]
@@ -189,14 +225,38 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         type: 'stats',
         content: {
           items: [
-            { value: "10+", label: "Years Experience" },
-            { value: "50M+", label: "API Operations Processed" },
-            { value: "140%", label: "Average Client Traffic Boost" },
-            { value: "100%", label: "On-Time Sprint Deliveries" }
+            { value: "3", label: "Projects Completed" },
+            { value: "100%", label: "Clean Code & Quality" },
+            { value: "< 1s", label: "PageSpeed Performance" },
+            { value: "100%", label: "On-Time Delivery Rate" }
           ]
         },
         styling: { id: "milestones", padding_top: "py-16", padding_bottom: "py-16" },
         display_order: 1,
+        is_active: true
+      },
+      {
+        id: 'about-team',
+        page_id: 'default-about-id',
+        type: 'team',
+        content: {
+          title: "Our Engineering Principles & Leadership",
+          subtitle: "Spring Web Solutions is powered by solution architects and software engineers dedicated to high-speed code, zero tech bloat, and total transparency."
+        },
+        styling: { padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 2,
+        is_active: true
+      },
+      {
+        id: 'about-faq',
+        page_id: 'default-about-id',
+        type: 'faq',
+        content: {
+          title: "Frequently Asked Questions",
+          subtitle: "Learn more about our development methodology, code security, and post-launch maintenance."
+        },
+        styling: { padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 3,
         is_active: true
       }
     ]

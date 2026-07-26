@@ -16,6 +16,8 @@ import KBArticle from '@/pages/KBArticle'
 import SupportPortal from '@/pages/SupportPortal'
 import SupportTicketDetail from '@/pages/SupportTicketDetail'
 
+import WhatsAppWidget from '@/components/ui/WhatsAppWidget'
+
 // SpringWeb Operations Suite Admin Views
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import Dashboard from '@/pages/admin/Dashboard'
@@ -124,6 +126,7 @@ function App() {
         {/* Catch All - Redirect to Homepage */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <WhatsAppWidget />
     </Router>
   )
 }

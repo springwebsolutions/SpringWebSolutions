@@ -3,9 +3,12 @@ import { HeroSection } from './HeroSection'
 import { StatsSection } from './StatsSection'
 import { ServicesGrid } from './ServicesGrid'
 import { PricingSection } from './PricingSection'
-import { TestimonialCarousel } from './TestimonialCarousel'
 import { TechStack } from './TechStack'
 import { CtaSection } from './CtaSection'
+import { FaqSection } from './FaqSection'
+import { ComparisonTable } from './ComparisonTable'
+import { CaseStudiesSection } from './CaseStudiesSection'
+import { TeamSection } from './TeamSection'
 import type { SectionData } from '@/stores/pageBuilderStore'
 
 interface SectionRendererProps {
@@ -29,12 +32,20 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'pricing_summary':
             case 'pricing_table':
               return <PricingSection key={sec.id} content={sec.content} styling={sec.styling} />
-            case 'testimonials_summary':
-              return null
+            case 'case_studies':
+              return <CaseStudiesSection key={sec.id} content={sec.content} styling={sec.styling} />
+            case 'comparison':
+              return <ComparisonTable key={sec.id} content={sec.content} styling={sec.styling} />
+            case 'team':
+              return <TeamSection key={sec.id} content={sec.content} styling={sec.styling} />
+            case 'faq':
+              return <FaqSection key={sec.id} content={sec.content} styling={sec.styling} />
             case 'tech_stack':
               return <TechStack key={sec.id} content={sec.content} styling={sec.styling} />
             case 'cta':
               return <CtaSection key={sec.id} content={sec.content} styling={sec.styling} />
+            case 'testimonials_summary':
+              return null
             default:
               return (
                 <div key={sec.id} className="py-8 text-center text-xs text-slate-500 border border-dashed border-white/5 my-4 rounded-xl">
