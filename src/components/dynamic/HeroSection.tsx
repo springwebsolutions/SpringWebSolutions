@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Sparkles, Code2, CheckCircle2, Cpu } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Sparkles, Zap, CheckCircle2, ShieldCheck, Award } from 'lucide-react'
 
 interface HeroProps {
   content: {
@@ -77,42 +77,55 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           </div>
         </div>
 
-        {/* ─── Animated Glassmorphic Interactive Code Architecture Terminal ─── */}
+        {/* ─── Animated Glassmorphic Marked Terminal Card (Combined Design) ─── */}
         <div className="max-w-4xl mx-auto pt-4 animate-fade-in-up">
-          <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-slate-900 border border-white/10 p-4 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 light:border-slate-200 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
             
             {/* Terminal Window Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs text-slate-400">
+            <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-3 text-xs text-slate-400">
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
-                <span className="ml-2 font-mono text-[11px] text-slate-300 font-semibold">springweb-architecture-v3.ts</span>
+                <span className="ml-2 font-mono text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700 font-semibold">springweb-architecture-v3.ts</span>
               </div>
-              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-400">
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-500">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                <span>SYSTEM ACTIVE • READY TO BUILD</span>
+                <span>STATUS: 99.9% UPTIME SLA</span>
               </div>
             </div>
 
-            {/* Live Solution Pipeline Code Viewer */}
-            <div className="bg-[#030407] rounded-2xl p-4 text-left font-mono text-xs sm:text-sm text-slate-300 space-y-2 overflow-x-auto shadow-inner border border-white/5 leading-relaxed">
-              <div className="flex items-center justify-between text-slate-500 text-[11px] pb-1 border-b border-white/5">
-                <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
-                  <Code2 size={13} /> // SpringWeb Solution Architecture
-                </span>
-                <span className="text-teal-400">Environment: Production</span>
+            {/* Combined 4 Stats Cards Grid inside Marked Design */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <Award size={14} /> Completed Projects
+                </div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">3</div>
               </div>
-              <div className="space-y-1 pt-1">
-                <p className="text-slate-400"><span className="text-indigo-400">const</span> clientPlatform = <span className="text-emerald-400">new SpringWebEngine</span>({'{'}</p>
-                <p className="pl-4 text-slate-300">frontend: <span className="text-amber-300">'React 19 + Next.js + Vite'</span>,</p>
-                <p className="pl-4 text-slate-300">database: <span className="text-amber-300">'Supabase PostgreSQL Enterprise'</span>,</p>
-                <p className="pl-4 text-slate-300">automation: [<span className="text-teal-300">'Instant Lead CRM'</span>, <span className="text-teal-300">'WhatsApp API'</span>],</p>
-                <p className="pl-4 text-slate-300">codeOwnership: <span className="text-emerald-400">'100% Full Client Ownership'</span></p>
-                <p className="text-slate-400 font-bold">{'}'});</p>
+
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <CheckCircle2 size={14} /> Sprint Delivery
+                </div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">100%</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <Zap size={14} /> PageSpeed
+                </div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">&lt; 1s Load</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <ShieldCheck size={14} /> Uptime SLA
+                </div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">99.9%</div>
               </div>
             </div>
 
