@@ -58,7 +58,12 @@ export const Marketplace: React.FC = () => {
           .order('created_at', { ascending: false })
 
         if (error) throw error
-        setProducts(data || [])
+        
+        // Filter out placeholder products
+        const placeholderSlugs = ['price-iq', 'spring-ui-kit', 'whatsapp-dispatcher']
+        const activeRealProducts = (data || []).filter(p => !placeholderSlugs.includes(p.slug))
+        
+        setProducts(activeRealProducts)
       } catch (err) {
         console.error('Error fetching marketplace catalog:', err)
       } finally {
