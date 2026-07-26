@@ -266,7 +266,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           <div className="hero-cta-enter flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Link
               to={cta_primary_href || '/contact'}
-              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group shadow-xl shadow-emerald-500/30 text-sm font-bold py-3.5 px-8"
+              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group shadow-xl shadow-blue-500/40 text-sm font-bold py-3.5 px-8"
             >
               <span>{cta_primary_text || 'Get Free Consultation'}</span>
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
