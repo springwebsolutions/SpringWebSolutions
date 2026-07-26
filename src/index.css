@@ -549,3 +549,32 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(239, 68, 68, 0.18);
 }
 
+/* Animated Glowing Background Orbs & Pulse */
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); opacity: 0.4; }
+  50% { transform: translate(40px, -50px) scale(1.2); opacity: 0.75; }
+}
+
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); opacity: 0.3; }
+  50% { transform: translate(-50px, 40px) scale(1.25); opacity: 0.65; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.08); }
+}
+
+.animate-orb-1 {
+  animation: orb-float-1 12s ease-in-out infinite;
+}
+
+.animate-orb-2 {
+  animation: orb-float-2 15s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+

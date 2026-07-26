@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Sparkles, Terminal, CheckCircle2, Cpu, Zap, ShieldCheck, Code2 } from 'lucide-react'
 
 interface HeroProps {
   content: {
@@ -26,18 +26,20 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
   return (
     <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
-      {/* Decorative Glow Nodes */}
-      <div className="glow-node glow-emerald -top-20 -left-20" />
-      <div className="glow-node glow-indigo top-40 -right-20" />
+      
+      {/* ─── Dynamic Animated Background Orbs ─── */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-500/15 filter blur-[120px] pointer-events-none animate-orb-1" />
+      <div className="absolute top-1/3 -right-32 w-96 h-96 rounded-full bg-indigo-600/15 filter blur-[120px] pointer-events-none animate-orb-2" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-teal-500/10 filter blur-[140px] pointer-events-none animate-pulse-slow" />
 
-      {/* Grid Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+      {/* Grid Overlay Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 text-center">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
         
         {/* BIG CENTERED BRAND TITLE BLOCK */}
         <div className="space-y-4 max-w-4xl mx-auto animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-extrabold uppercase tracking-widest font-display">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
             <Sparkles size={14} className="text-emerald-500" /> Official Web Engineering & Automation Agency
           </div>
 
@@ -56,7 +58,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             {subheadline}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Link
               to={cta_primary_href || '/contact'}
               className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group shadow-xl shadow-emerald-500/20 text-sm font-bold py-3.5 px-8"
@@ -72,6 +74,61 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
               <span>{cta_secondary_text || 'Explore Services'}</span>
               <ArrowUpRight size={16} className="opacity-70 group-hover:opacity-100 transition-all" />
             </Link>
+          </div>
+        </div>
+
+        {/* ─── Animated Glassmorphic Interactive Visual Terminal Component ─── */}
+        <div className="max-w-4xl mx-auto pt-6 animate-fade-in-up">
+          <div className="rounded-3xl bg-[#080b14]/80 dark:bg-[#080b14]/80 light:bg-white/90 border border-white/10 light:border-slate-200 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
+            
+            {/* Terminal Window Header */}
+            <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-3 text-xs text-slate-400">
+              <div className="flex items-center space-x-2">
+                <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
+                <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
+                <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
+                <span className="ml-2 font-mono text-[11px] text-slate-400 light:text-slate-600 font-semibold">springweb-architecture-v3.0.ts</span>
+              </div>
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-500">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>STATUS: 99.9% UPTIME SLA</span>
+              </div>
+            </div>
+
+            {/* Architecture Floating Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+              <div className="p-3 rounded-2xl bg-white/[0.03] dark:bg-white/[0.03] light:bg-slate-50 border border-white/5 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <Zap size={13} /> Peak Speed
+                </div>
+                <div className="text-lg font-extrabold text-white dark:text-white light:text-slate-900 font-display">&lt; 0.5s Load</div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-white/[0.03] dark:bg-white/[0.03] light:bg-slate-50 border border-white/5 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <Code2 size={13} /> Code Standard
+                </div>
+                <div className="text-lg font-extrabold text-white dark:text-white light:text-slate-900 font-display">100% Owned</div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-white/[0.03] dark:bg-white/[0.03] light:bg-slate-50 border border-white/5 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <ShieldCheck size={13} /> Web Vitals
+                </div>
+                <div className="text-lg font-extrabold text-white dark:text-white light:text-slate-900 font-display">100/100 Score</div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-white/[0.03] dark:bg-white/[0.03] light:bg-slate-50 border border-white/5 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
+                  <Cpu size={13} /> Automation
+                </div>
+                <div className="text-lg font-extrabold text-white dark:text-white light:text-slate-900 font-display">CRM &amp; WhatsApp</div>
+              </div>
+            </div>
+
           </div>
         </div>
 
