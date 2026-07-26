@@ -51,16 +51,19 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
           {services.map((service, idx) => (
             <div
               key={idx}
-              className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 light:shadow-sm flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group animate-fade-in-up"
+              className="relative overflow-hidden p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 light:shadow-sm flex flex-col justify-between hover:-translate-y-2 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/15 transition-all duration-300 group animate-fade-in-up"
               style={{ animationDelay: `${(idx + 1) * 150}ms` }}
             >
+              {/* Top Accent Glowing Beam Line */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
               <div className="space-y-6">
-                <div className="h-12 w-12 rounded-xl bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 light:border-slate-200 flex items-center justify-center">
+                <div className="h-12 w-12 rounded-xl bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 light:border-slate-200 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30 transition-all duration-300 shadow-md">
                   {getServiceIcon(service.title)}
                 </div>
                 
                 <div className="space-y-3">
-                  <h3 className="font-display text-2xl font-bold text-white dark:text-white light:text-slate-900">
+                  <h3 className="font-display text-2xl font-bold text-white dark:text-white light:text-slate-900 group-hover:text-emerald-400 light:group-hover:text-emerald-600 transition-colors">
                     {service.title}
                   </h3>
                   
@@ -76,7 +79,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-500 hover:text-emerald-400 transition-colors"
                 >
                   <span>Learn More</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300" />
                 </Link>
               </div>
             </div>

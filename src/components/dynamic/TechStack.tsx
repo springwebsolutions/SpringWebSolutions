@@ -59,11 +59,11 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
           {techCategories.map((cat, idx) => (
             <div
               key={idx}
-              className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 space-y-6 flex flex-col hover:border-emerald-500/30 transition-all shadow-xl"
+              className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 space-y-6 flex flex-col hover:border-emerald-500/40 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 group"
             >
               <div className="flex items-center gap-2 border-b border-white/10 light:border-slate-100 pb-4">
-                <Code2 size={18} className="text-emerald-500 shrink-0" />
-                <h3 className="font-display text-base font-bold text-white dark:text-white light:text-slate-900">
+                <Code2 size={18} className="text-emerald-500 shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300" />
+                <h3 className="font-display text-base font-bold text-white dark:text-white light:text-slate-900 group-hover:text-emerald-400 light:group-hover:text-emerald-600 transition-colors">
                   {cat.name}
                 </h3>
               </div>
@@ -72,7 +72,7 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
                 {cat.items.map((item, itemIdx) => (
                   <span
                     key={itemIdx}
-                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-100 border border-white/10 light:border-slate-200 text-xs text-slate-200 dark:text-slate-200 light:text-slate-700 font-semibold font-mono tracking-wide hover:border-emerald-500/40 hover:text-emerald-500 transition-all"
+                    className="px-3.5 py-2 rounded-xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-100 border border-white/10 light:border-slate-200 text-xs text-slate-200 dark:text-slate-200 light:text-slate-700 font-semibold font-mono tracking-wide hover:-translate-y-1 hover:scale-105 hover:bg-emerald-500/10 hover:border-emerald-500/50 hover:text-emerald-400 light:hover:text-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 cursor-default"
                   >
                     {item}
                   </span>

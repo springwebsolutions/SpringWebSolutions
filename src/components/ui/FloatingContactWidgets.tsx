@@ -275,16 +275,16 @@ export const FloatingContactWidgets: React.FC = () => {
         </div>
       )}
 
-      {/* TWO SEPARATE FLOATING BUTTONS */}
-      <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+      {/* TWO SEPARATE FLOATING BUTTONS WITH LEVITATION ANIMATION */}
+      <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 animate-float-gentle">
         
         {/* BUTTON 1: WhatsApp Button (Direct WhatsApp Link) */}
         <button
           onClick={() => handleWhatsAppDirect()}
-          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs shadow-lg shadow-emerald-600/30 hover:scale-105 transition-all duration-300 cursor-pointer"
+          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs shadow-lg shadow-emerald-600/30 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
           title="Direct WhatsApp Chat"
         >
-          <MessageCircle size={17} className="fill-slate-950 text-[#25D366]" />
+          <MessageCircle size={17} className="fill-slate-950 text-[#25D366] animate-bounce" />
           <span>WhatsApp Us</span>
           <ArrowUpRight size={13} className="text-slate-950 opacity-80" />
         </button>
@@ -292,7 +292,7 @@ export const FloatingContactWidgets: React.FC = () => {
         {/* BUTTON 2: Live Support AI Chatbot Button (In-Chat Bot Responses) */}
         <button
           onClick={() => setIsLiveChatOpen(!isLiveChatOpen)}
-          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 transition-all duration-300 cursor-pointer border border-white/20"
+          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-white/20"
           title="Open SpringWeb AI Chatbot"
         >
           <span className="relative flex h-2.5 w-2.5">
@@ -305,7 +305,7 @@ export const FloatingContactWidgets: React.FC = () => {
             </span>
           ) : (
             <span className="flex items-center gap-1.5">
-              <Bot size={15} /> AI Assistant
+              <Bot size={15} className="animate-pulse" /> AI Assistant
             </span>
           )}
         </button>
