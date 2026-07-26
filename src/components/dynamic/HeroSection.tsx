@@ -162,9 +162,9 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   } = content
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] border-b border-white/10 transition-colors duration-300">
+    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] border-b border-white/10 transition-colors duration-300 hero-dark-banner">
 
-      {/* ── High-Tech Hero Background Image & Overlay (Vivid 75% Opacity, Never White) ── */}
+      {/* ── High-Tech Hero Background Image & Overlay (Vivid 75% Opacity, NEVER CHANGED) ── */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-75 pointer-events-none transition-opacity duration-500 scale-105 contrast-110 brightness-105"
         style={{ backgroundImage: `url('/hero-bg.png')` }}
@@ -227,7 +227,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
       {/* ── Fine Dot Grid Overlay ── */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none opacity-100" />
 
-      {/* ── Content Container: Brilliant White Text with Drop Shadows ── */}
+      {/* ── Content Container: Forced Brilliant White Text Across All Modes ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
         
         {/* Brand Title Block */}
@@ -238,7 +238,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           </div>
 
           {/* H1 Title: Pure White with Strong Drop Shadow */}
-          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)]">
+          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display !text-white leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)]">
             Spring Web{' '}
             <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
               Solutions
@@ -249,15 +249,15 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         {/* Sub-Headline & Description */}
         <div className="max-w-3xl mx-auto space-y-6">
           {/* H2 Headline */}
-          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-white font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold !text-white font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
             Helping Businesses Grow Through{' '}
             <br className="hidden sm:inline" />
             <TypewriterText />
           </h2>
 
           {/* Paragraph Container: Dark Glass Card for 100% Text Clarity */}
-          <div className="hero-p-enter max-w-2xl mx-auto bg-[#040509]/75 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/10 shadow-2xl">
-            <p className="text-sm sm:text-base text-slate-100 font-sans font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
+          <div className="hero-p-enter hero-p-box max-w-2xl mx-auto backdrop-blur-md p-4 sm:p-5 rounded-2xl border shadow-2xl">
+            <p className="text-sm sm:text-base !text-slate-100 font-sans font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
               {subheadline}
             </p>
           </div>
@@ -274,7 +274,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             
             <Link
               to={cta_secondary_href || '/#services'}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-md rounded-xl transition-all shadow-xl"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 bg-white/10 hover:bg-white/20 !text-white border border-white/20 backdrop-blur-md rounded-xl transition-all shadow-xl"
             >
               <span>{cta_secondary_text || 'Explore Services'}</span>
               <ArrowUpRight size={16} className="opacity-70 group-hover:opacity-100 transition-all" />
@@ -284,7 +284,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
         {/* Stats Terminal Card */}
         <div className="hero-terminal-enter max-w-4xl mx-auto pt-4">
-          <div className="rounded-3xl bg-[#080b14]/90 border border-white/10 p-4 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
+          <div className="hero-terminal-box rounded-3xl border p-4 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
             
             {/* Terminal Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs text-slate-400">
@@ -292,7 +292,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
                 <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
-                <span className="ml-2 font-mono text-[11px] text-slate-300 font-semibold">springweb-architecture-v3.ts</span>
+                <span className="ml-2 font-mono text-[11px] !text-slate-300 font-semibold">springweb-architecture-v3.ts</span>
               </div>
               <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-400">
                 <span className="relative flex h-2 w-2">
@@ -305,32 +305,32 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1">
+              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/15 space-y-1">
                 <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Award size={14} /> Completed Projects
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white font-display">3</div>
+                <div className="text-2xl sm:text-3xl font-black !text-white font-display">3</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1">
+              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/15 space-y-1">
                 <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
                   <CheckCircle2 size={14} /> Sprint Delivery
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white font-display">100%</div>
+                <div className="text-2xl sm:text-3xl font-black !text-white font-display">100%</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1">
+              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1">
                 <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Zap size={14} /> PageSpeed
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white font-display">&lt; 1s Load</div>
+                <div className="text-2xl sm:text-3xl font-black !text-white font-display">&lt; 1s Load</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1">
+              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1">
                 <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
                   <ShieldCheck size={14} /> Uptime SLA
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-white font-display">99.9%</div>
+                <div className="text-2xl sm:text-3xl font-black !text-white font-display">99.9%</div>
               </div>
             </div>
 

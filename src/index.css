@@ -75,6 +75,24 @@ h1, h2, h3, h4, h5, h6 {
   color: #0f172a;
 }
 
+/* Ensure hero section headings & text stay bright white over the dark cyber hero background image in all modes */
+.hero-dark-banner h1,
+.hero-dark-banner h2,
+.hero-dark-banner h3,
+.hero-dark-banner p {
+  color: #ffffff !important;
+}
+
+.hero-dark-banner .hero-p-box {
+  background-color: rgba(4, 5, 9, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.hero-dark-banner .hero-terminal-box {
+  background-color: rgba(8, 11, 20, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
 /* ── Light mode scrollbar ── */
 .light ::-webkit-scrollbar-track {
   background: #f1f5f9;
