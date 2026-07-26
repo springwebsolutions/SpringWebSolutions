@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { Mail, Phone, MapPin, Headphones } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 export const Footer: React.FC = () => {
   const { siteConfig, navigation } = usePageBuilderStore()
@@ -74,11 +75,8 @@ export const Footer: React.FC = () => {
           
           {/* Logo & Intro Column */}
           <div className="lg:col-span-2 space-y-6">
-            <Link to="/" className="flex items-center space-x-2">
-              <span className="h-8 w-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md">S</span>
-              <span className="font-display text-xl font-bold tracking-tight text-white dark:text-white light:text-slate-900">
-                {companyName}
-              </span>
+            <Link to="/" className="flex items-center">
+              <Logo size="md" />
             </Link>
             <p className="text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 max-w-sm font-sans font-light leading-relaxed">
               {tagLine}

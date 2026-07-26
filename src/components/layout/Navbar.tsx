@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Menu, X, Sun, Moon, Lock, User, LogOut, LayoutDashboard } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate()
@@ -103,11 +104,8 @@ export const Navbar: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              <span className="h-8 w-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md">S</span>
-              <span className="font-display text-xl font-bold tracking-tight text-white dark:text-white light:text-slate-900">
-                {companyName}
-              </span>
+            <Link to="/" className="flex items-center">
+              <Logo size="sm" />
             </Link>
           </div>
 

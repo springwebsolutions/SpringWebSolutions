@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginData } from '@/lib/validation'
 import { Shield, KeyRound, Mail, Loader2, AlertCircle, ArrowLeft, Zap, Lock, Eye, EyeOff } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 export const AdminLogin: React.FC = () => {
   const navigate = useNavigate()
@@ -80,9 +81,9 @@ export const AdminLogin: React.FC = () => {
       <div className="relative w-full max-w-[420px] space-y-6">
 
         {/* Logo mark */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-indigo-500 items-center justify-center shadow-2xl shadow-emerald-500/20 mx-auto">
-            <Zap size={26} className="text-white" />
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <div className="inline-flex justify-center mb-1">
+            <Logo size="lg" />
           </div>
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[11px] font-bold uppercase tracking-widest mb-2">

@@ -8,6 +8,7 @@ import {
   ShieldAlert, HelpCircle, ChevronRight, Bell, LogOut,
   Zap, Globe, Menu, X, MessageSquare, Calendar
 } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 type NavGroup = {
   label: string
@@ -142,15 +143,12 @@ export const AdminLayout: React.FC = () => {
   const SidebarContent = () => (
     <>
       {/* Logo / Branding */}
-      <div className={`flex items-center gap-3 px-5 h-[64px] border-b border-white/[0.06] shrink-0 ${!sidebarOpen && 'justify-center px-0'}`}>
-        <div className="relative h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
-          <Zap size={15} className="text-white" />
-          <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-[#06080f] animate-pulse" />
-        </div>
-        {sidebarOpen && (
-          <div className="min-w-0">
-            <div className="font-display font-bold text-white text-sm tracking-tight leading-none">Spring Web Solutions</div>
-            <div className="text-[10px] text-slate-500 font-medium mt-0.5 tracking-widest uppercase">Operations Suite</div>
+      <div className={`flex items-center gap-3 px-4 h-[64px] border-b border-white/[0.06] shrink-0 ${!sidebarOpen && 'justify-center px-0'}`}>
+        {sidebarOpen ? (
+          <Logo size="sm" variant="light" />
+        ) : (
+          <div className="h-8 w-8 rounded-xl overflow-hidden bg-white p-0.5 shadow-md flex items-center justify-center shrink-0 border border-slate-200/50">
+            <img src="/logo.jpg" alt="Logo Mark" className="w-full h-full object-contain" />
           </div>
         )}
       </div>

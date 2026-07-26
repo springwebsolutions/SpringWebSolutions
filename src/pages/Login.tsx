@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginData } from '@/lib/validation'
 import { KeyRound, Mail, Loader2, AlertCircle, ArrowLeft, User, UserPlus, CheckCircle } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 export const Login: React.FC = () => {
   const navigate = useNavigate()
@@ -134,8 +135,10 @@ export const Login: React.FC = () => {
       <div className="w-full max-w-md space-y-6">
         
         {/* Branding Header */}
-        <div className="text-center space-y-2">
-          <Link to="/" className="inline-flex h-12 w-12 rounded-xl bg-gradient-to-tr from-brand-emerald to-brand-indigo items-center justify-center font-extrabold text-white text-lg shadow-md mb-2">S</Link>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <Link to="/" className="inline-flex justify-center mb-1">
+            <Logo size="lg" />
+          </Link>
           <h1 className="text-2xl font-bold tracking-tight text-white">Client & Customer Portal</h1>
           <p className="text-xs text-slate-400">Sign in to access your resources, software downloads & support tickets.</p>
         </div>
