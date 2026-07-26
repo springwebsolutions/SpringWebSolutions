@@ -23,6 +23,10 @@ export const TestimonialCarousel: React.FC<TestimonialProps> = ({ content }) => 
   const { title, subtitle, items } = content
   const testimonials = items || []
 
+  if (!testimonials || testimonials.length === 0) {
+    return null
+  }
+
   return (
     <section className="py-20 bg-brand-obsidian dark:bg-brand-obsidian light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
