@@ -267,7 +267,7 @@ export const Marketplace: React.FC = () => {
               {filteredProducts.map((prod) => (
                 <div
                   key={prod.id}
-                  className="group rounded-2xl glass-panel border border-white/5 hover:-translate-y-1 transition-all flex flex-col justify-between overflow-hidden"
+                  className="group rounded-2xl glass-panel border border-white/5 hover:-translate-y-2 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 flex flex-col justify-between overflow-hidden"
                 >
                   {/* Card Banner */}
                   <div className="card-banner h-40 p-6 flex flex-col justify-between relative">

@@ -60,10 +60,10 @@ export const Footer: React.FC = () => {
             Let's craft something <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-indigo-600">meaningful</span>.
           </h2>
           <div className="flex items-center gap-3 flex-wrap self-start md:self-auto">
-            <Link to="/contact" className="btn-primary shadow-lg shadow-emerald-500/10">
+            <Link to="/contact" className="btn-primary shadow-lg shadow-blue-500/20 hover:scale-105 transition-all duration-300">
               Get in Touch
             </Link>
-            <Link to="/support" className="btn-secondary flex items-center gap-2">
+            <Link to="/support" className="btn-secondary flex items-center gap-2 hover:scale-105 transition-all duration-300">
               <Headphones size={15} />
               <span>Client Support</span>
             </Link>
@@ -110,7 +110,7 @@ export const Footer: React.FC = () => {
               <ul className="space-y-2 text-sm text-slate-400 dark:text-slate-400 light:text-slate-600">
                 {group.links.map((link: any, lIdx: number) => (
                   <li key={lIdx}>
-                    <Link to={link.href} className="hover:text-emerald-500 transition-colors">
+                    <Link to={link.href} className="hover:text-emerald-500 hover:translate-x-1 inline-flex items-center transition-all duration-200">
                       {link.label}
                     </Link>
                   </li>

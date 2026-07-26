@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ChevronDown, HelpCircle, ShieldCheck, Code2, Zap, Clock } from 'lucide-react'
+import { ChevronDown, HelpCircle, ShieldCheck, Code2, Zap, Clock, ArrowRight } from 'lucide-react'
 
 interface FaqItem {
   question: string
@@ -111,30 +111,44 @@ export const FaqSection: React.FC<{ content?: any; styling?: any }> = ({ content
         </div>
 
         {/* Accordion List */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filteredFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white/[0.02] dark:bg-white/[0.02] light:bg-white border border-white/10 light:border-slate-200 overflow-hidden shadow-sm"
+                className={`rounded-2xl border overflow-hidden shadow-sm transition-all duration-300 ${
+                  isOpen
+                    ? 'bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border-emerald-500/30 light:border-emerald-400/40 shadow-emerald-500/10'
+                    : 'bg-white/[0.02] dark:bg-white/[0.02] light:bg-white border-white/10 light:border-slate-200'
+                }`}
               >
                 <button
                   onClick={() => toggleAccordion(idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer group"
+                  aria-expanded={isOpen}
                 >
-                  <span className="font-bold text-sm sm:text-base text-white dark:text-white light:text-slate-900 font-display">
+                  <span className={`font-bold text-sm sm:text-base font-display transition-colors duration-200 ${
+                    isOpen ? 'text-emerald-400 light:text-emerald-600' : 'text-white dark:text-white light:text-slate-900'
+                  }`}>
                     {faq.question}
                   </span>
-                  <div className={`p-1.5 rounded-lg bg-white/5 dark:bg-white/5 light:bg-slate-100 text-emerald-500 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 bg-emerald-500/20' : ''}`}>
+                  <div className={`p-1.5 rounded-lg transition-all duration-300 shrink-0 ${
+                    isOpen
+                      ? 'rotate-180 bg-emerald-500/20 text-emerald-400'
+                      : 'bg-white/5 dark:bg-white/5 light:bg-slate-100 text-emerald-500'
+                  }`}>
                     <ChevronDown size={18} />
                   </div>
                 </button>
-                {isOpen && (
+                <div
+                  className="overflow-hidden transition-all duration-300 ease-in-out"
+                  style={{ maxHeight: isOpen ? '400px' : '0px', opacity: isOpen ? 1 : 0 }}
+                >
                   <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-300 dark:text-slate-300 light:text-slate-600 font-sans leading-relaxed border-t border-white/5 light:border-slate-100">
                     {faq.answer}
                   </div>
-                )}
+                </div>
               </div>
             )
           })}

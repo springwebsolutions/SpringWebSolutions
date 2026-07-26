@@ -242,7 +242,7 @@ export const BlogListing: React.FC = () => {
                     <Link
                       key={post.id}
                       to={`/blog/${post.slug}`}
-                      className="group flex flex-col justify-between h-full rounded-2xl overflow-hidden glass-panel border border-white/5 hover:-translate-y-1 transition-all"
+                      className="group flex flex-col h-full rounded-2xl overflow-hidden glass-panel border border-white/5 hover:-translate-y-2 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300"
                     >
                       <div>
                         {/* Image banner */}

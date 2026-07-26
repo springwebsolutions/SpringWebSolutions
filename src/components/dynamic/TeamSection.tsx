@@ -53,7 +53,7 @@ export const TeamSection: React.FC<{ content?: any; styling?: any }> = ({ conten
             return (
               <div
                 key={idx}
-                className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-slate-50 border border-white/10 light:border-slate-200 light:shadow-sm hover:border-emerald-500/30 transition-all space-y-6 flex flex-col justify-between group"
+                className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-slate-50 border border-white/10 light:border-slate-200 light:shadow-sm hover:border-emerald-500/40 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 space-y-6 flex flex-col justify-between group"
               >
                 <div className="space-y-4">
                   <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
@@ -72,7 +72,7 @@ export const TeamSection: React.FC<{ content?: any; styling?: any }> = ({ conten
                   <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Core Competencies:</span>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {pillar.skills.map((s, i) => (
-                      <span key={i} className="px-2.5 py-1 rounded-lg bg-white/5 dark:bg-white/5 light:bg-white border border-white/10 light:border-slate-200 text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700">
+                      <span key={i} className="px-2.5 py-1 rounded-lg bg-white/5 dark:bg-white/5 light:bg-white border border-white/10 light:border-slate-200 text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700 hover:border-emerald-500/40 hover:text-emerald-400 hover:-translate-y-0.5 hover:scale-105 transition-all duration-200 cursor-default">
                         {s}
                       </span>
                     ))}

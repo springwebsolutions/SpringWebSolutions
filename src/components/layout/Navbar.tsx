@@ -15,6 +15,21 @@ export const Navbar: React.FC = () => {
     fetchSettings()
   }, [])
 
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false)
+    }
+    document.addEventListener('keydown', handleEsc)
+    return () => document.removeEventListener('keydown', handleEsc)
+  }, [])
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileMenuOpen])
+
   const handleLogout = async () => {
     await signOut()
     navigate('/')
@@ -98,16 +113,24 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center space-x-1">
-            {headerLinks.map((link: any, idx: number) => (
-              <Link
-                key={idx}
-                to={link.href}
-                onClick={(e) => handleNavClick(e, link.href, link.label)}
-                className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-700 light:hover:text-emerald-600 rounded-md transition-colors font-sans"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {headerLinks.map((link: any, idx: number) => {
+              const isActive = location.pathname === link.href ||
+                (link.href !== '/' && location.pathname.startsWith(link.href))
+              return (
+                <Link
+                  key={idx}
+                  to={link.href}
+                  onClick={(e) => handleNavClick(e, link.href, link.label)}
+                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors font-sans ${
+                    isActive
+                      ? 'text-emerald-500 bg-emerald-500/10 dark:text-emerald-400 light:text-emerald-600'
+                      : 'text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-700 light:hover:text-emerald-600'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </div>
 
           {/* Action Buttons (Auth & Theme Switcher) */}
@@ -176,18 +199,26 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-panel border-b bg-brand-obsidian p-4 space-y-3">
+        <div className="md:hidden border-b border-white/10 light:border-slate-200 bg-[#040509]/98 light:bg-white backdrop-blur-xl p-4 space-y-3 shadow-2xl">
           <div className="space-y-1">
-            {headerLinks.map((link: any, idx: number) => (
-              <Link
-                key={idx}
-                to={link.href}
-                onClick={(e) => handleNavClick(e, link.href, link.label)}
-                className="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white rounded-md light:text-slate-600"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {headerLinks.map((link: any, idx: number) => {
+              const isActive = location.pathname === link.href ||
+                (link.href !== '/' && location.pathname.startsWith(link.href))
+              return (
+                <Link
+                  key={idx}
+                  to={link.href}
+                  onClick={(e) => handleNavClick(e, link.href, link.label)}
+                  className={`block px-3 py-2.5 text-base font-medium rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-emerald-500/10 text-emerald-400 light:text-emerald-600'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 light:text-slate-700 light:hover:bg-slate-100'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </div>
           <div className="pt-4 border-t border-white/10 space-y-2">
             {user ? (
