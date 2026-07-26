@@ -104,7 +104,7 @@ const ParticleCanvas: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-60 dark:opacity-60 light:opacity-25"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-60 dark:opacity-60 light:opacity-20"
       aria-hidden="true"
     />
   )
@@ -121,21 +121,21 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   } = content
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-900 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
+    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
 
       {/* ── High-Tech Hero Background Image & Overlay ── */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-35 dark:opacity-35 light:opacity-20 pointer-events-none transition-opacity duration-500 scale-105"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 dark:opacity-30 light:opacity-10 pointer-events-none transition-opacity duration-500 scale-105"
         style={{ backgroundImage: `url('/hero-bg.png')` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/80 via-[#040509]/60 to-[#040509] dark:from-[#040509]/80 dark:via-[#040509]/60 dark:to-[#040509] light:from-slate-900/85 light:via-slate-900/70 light:to-slate-900 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/90 via-[#040509]/75 to-[#040509] dark:from-[#040509]/90 dark:via-[#040509]/75 dark:to-[#040509] light:from-slate-50/90 light:via-slate-50/80 light:to-slate-50 pointer-events-none" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
 
       {/* ── Layered Animated Gradient Orbs ── */}
-      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/20 filter blur-[130px] pointer-events-none animate-orb-1" />
-      <div className="absolute top-1/3 -right-40 w-[28rem] h-[28rem] rounded-full bg-indigo-600/20 filter blur-[130px] pointer-events-none animate-orb-2" />
+      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/20 dark:bg-emerald-500/20 light:bg-emerald-400/10 filter blur-[130px] pointer-events-none animate-orb-1" />
+      <div className="absolute top-1/3 -right-40 w-[28rem] h-[28rem] rounded-full bg-indigo-600/20 dark:bg-indigo-600/20 light:bg-indigo-400/10 filter blur-[130px] pointer-events-none animate-orb-2" />
       <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-teal-500/15 filter blur-[100px] pointer-events-none animate-pulse-slow" />
 
       {/* ── Animated SVG Circuit Lines ── */}
@@ -187,7 +187,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
       </svg>
 
       {/* ── Fine Dot Grid Overlay ── */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none dark:opacity-100 light:opacity-30" />
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] light:bg-[radial-gradient(rgba(0,0,0,0.04)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none dark:opacity-100 light:opacity-40" />
 
       {/* ── Content ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
@@ -195,14 +195,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         {/* Brand Title */}
         <div className="space-y-4 max-w-4xl mx-auto">
           {/* Badge: slides in from left */}
-          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
-            <Sparkles size={14} className="text-emerald-500" /> Official Web Engineering & Automation Agency
+          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
+            <Sparkles size={14} className="text-emerald-500 dark:text-emerald-400 light:text-emerald-600" /> Official Web Engineering & Automation Agency
           </div>
 
           {/* H1: slides up with blur unmasking + persistent glow pulse */}
           <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-2xl">
             Spring Web{' '}
-            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-500">
+            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-500 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-500 light:from-emerald-600 light:via-teal-500 light:to-indigo-600">
               Solutions
             </span>
           </h1>
@@ -242,17 +242,17 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
         {/* Stats Terminal Card: slides up from bottom last */}
         <div className="hero-terminal-enter max-w-4xl mx-auto pt-4">
-          <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white/95 border border-white/10 light:border-slate-200 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200/80 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
             
             {/* Terminal Header */}
-            <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-3 text-xs text-slate-400">
+            <div className="flex items-center justify-between border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-3 text-xs text-slate-400">
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
                 <span className="ml-2 font-mono text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700 font-semibold">springweb-architecture-v3.ts</span>
               </div>
-              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-500">
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-500 dark:text-emerald-400 light:text-emerald-600">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -263,26 +263,29 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Award size={14} /> Completed Projects
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">3</div>
               </div>
-              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
+
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-indigo-400 dark:text-indigo-400 light:text-indigo-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <CheckCircle2 size={14} /> Sprint Delivery
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">100%</div>
               </div>
-              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
+
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-white/10 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 light:text-emerald-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Zap size={14} /> PageSpeed
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">&lt; 1s Load</div>
               </div>
-              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
-                <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
+
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 dark:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-teal-400 dark:text-teal-400 light:text-teal-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <ShieldCheck size={14} /> Uptime SLA
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">99.9%</div>
