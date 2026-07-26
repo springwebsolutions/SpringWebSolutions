@@ -53,11 +53,6 @@ export const AppDevelopmentSection: React.FC = () => {
                 </li>
               </ul>
             </div>
-
-            {/* Pure Software Image */}
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-[1.02] transition-transform duration-300">
-              <img src="/app-dev.png" alt="Android & Mobile App Development UI" className="w-full h-48 object-cover" />
-            </div>
           </div>
 
           {/* Card 2: Windows Desktop Software Engineering */}
@@ -86,11 +81,6 @@ export const AppDevelopmentSection: React.FC = () => {
                 </li>
               </ul>
             </div>
-
-            {/* Pure Software Image */}
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-[1.02] transition-transform duration-300">
-              <img src="/windows-dev.png" alt="Windows Desktop Software Application UI" className="w-full h-48 object-cover" />
-            </div>
           </div>
 
           {/* Card 3: Custom Enterprise Software & API Pipelines */}
@@ -118,11 +108,6 @@ export const AppDevelopmentSection: React.FC = () => {
                   <span>Full Source Code &amp; IP Rights Ownership</span>
                 </li>
               </ul>
-            </div>
-
-            {/* Pure Software Image */}
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-[1.02] transition-transform duration-300">
-              <img src="/software-suite.png" alt="Enterprise Software Architecture Suite" className="w-full h-48 object-cover" />
             </div>
           </div>
 
