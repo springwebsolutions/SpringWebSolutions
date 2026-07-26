@@ -28,12 +28,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'stats':
               return <div id="stats" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
             case 'services_summary':
-              return (
-                <React.Fragment key={sec.id}>
-                  <div id="services"><ServicesGrid content={sec.content} styling={sec.styling} /></div>
-                  <div id="app-development"><AppDevelopmentSection /></div>
-                </React.Fragment>
-              )
+              return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
             case 'pricing':
             case 'pricing_summary':
             case 'pricing_table':

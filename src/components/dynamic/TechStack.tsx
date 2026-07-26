@@ -37,7 +37,26 @@ const defaultCategories: TechCategory[] = [
 export const TechStack: React.FC<TechStackProps> = ({ content }) => {
   const title = content?.title || "Our Technology Stack & Ecosystem"
   const subtitle = content?.subtitle || "We build with proven, modern, and reliable frameworks designed for zero lag, top security, and industrial-grade scalability."
-  const techCategories = content?.categories && content.categories.length > 0 ? content.categories : defaultCategories
+  let techCategories = defaultCategories
+  if (content?.categories && Array.isArray(content.categories) && content.categories.length > 0) {
+    const catNames = content.categories.map((c: any) => (c.name || '').toLowerCase())
+    const hasAndroid = catNames.some((n: string) => n.includes('android') || n.includes('mobile'))
+    const hasWindows = catNames.some((n: string) => n.includes('windows') || n.includes('desktop'))
+
+    techCategories = [...content.categories]
+    if (!hasAndroid) {
+      techCategories.splice(1, 0, {
+        name: "Android & Mobile App Stack",
+        items: ["Kotlin", "Android SDK", "Flutter", "React Native", "Firebase", "Play Store API"]
+      })
+    }
+    if (!hasWindows) {
+      techCategories.splice(2, 0, {
+        name: "Windows & Desktop Software",
+        items: ["C# .NET", "WinUI 3 / WPF", "Electron", "SQLite / SQL Server", "MSI Installer"]
+      })
+    }
+  }
 
   return (
     <section className="py-20 bg-[#060810] dark:bg-[#060810] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
