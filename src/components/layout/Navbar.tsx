@@ -78,14 +78,14 @@ export const Navbar: React.FC = () => {
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
   return (
-    <nav className="sticky top-0 z-50 w-full glass-panel border-b bg-brand-obsidian/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/90 dark:bg-[#040509]/90 light:bg-white/95 border-white/10 light:border-slate-200 backdrop-blur-md transition-colors duration-300 shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <span className="h-8 w-8 rounded-lg bg-gradient-to-tr from-brand-emerald to-brand-indigo flex items-center justify-center font-bold text-white shadow-md">S</span>
-              <span className="font-display text-xl font-bold tracking-tight text-white dark:text-white light:text-brand-dark">
+              <span className="h-8 w-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md">S</span>
+              <span className="font-display text-xl font-bold tracking-tight text-white dark:text-white light:text-slate-900">
                 {companyName}
               </span>
             </Link>
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
                 key={idx}
                 to={link.href}
                 onClick={(e) => handleNavClick(e, link.href, link.label)}
-                className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-md transition-colors light:text-slate-600 light:hover:text-slate-900"
+                className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-700 light:hover:text-emerald-600 rounded-md transition-colors font-sans"
               >
                 {link.label}
               </Link>

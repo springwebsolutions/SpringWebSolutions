@@ -28,17 +28,17 @@ export const StatsSection: React.FC<StatsProps> = ({ content }) => {
   })
 
   return (
-    <section className="py-12 relative bg-brand-obsidian dark:bg-brand-obsidian light:bg-slate-50 transition-colors duration-300">
+    <section className="py-12 relative bg-[#040509] dark:bg-[#040509] light:bg-slate-50 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel grid grid-cols-2 md:grid-cols-4 gap-8 p-8 border border-white/5 divide-y-0 divide-x divide-white/5 light:divide-slate-200 animate-fade-in-up">
+        <div className="rounded-3xl bg-white/[0.03] dark:bg-white/[0.03] light:bg-white grid grid-cols-2 md:grid-cols-4 gap-8 p-8 border border-white/10 light:border-slate-200 light:shadow-sm animate-fade-in-up">
           {items.map((stat, idx) => (
-            <div key={idx} className="text-center px-4 space-y-2 first:border-l-0 border-l border-white/5 dark:border-white/5 light:border-slate-200 first:pl-0">
+            <div key={idx} className="text-center px-4 space-y-2 first:border-l-0 border-l border-white/10 dark:border-white/10 light:border-slate-200 first:pl-0">
               {/* Stat value */}
-              <div className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-emerald to-brand-indigo">
+              <div className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-indigo-600">
                 {stat.value}
               </div>
               {/* Stat label description */}
-              <div className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+              <div className="text-xs sm:text-sm font-semibold text-slate-400 dark:text-slate-400 light:text-slate-600 uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>
