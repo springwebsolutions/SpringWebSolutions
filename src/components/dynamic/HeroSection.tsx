@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Sparkles, Zap, CheckCircle2, ShieldCheck, Award } from 'lucide-react'
 
@@ -14,6 +14,102 @@ interface HeroProps {
   styling?: any
 }
 
+/* ── Animated Particle Network Canvas ── */
+const ParticleCanvas: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let animId: number
+    let W = canvas.offsetWidth
+    let H = canvas.offsetHeight
+    canvas.width = W
+    canvas.height = H
+
+    const NUM = 55
+    type Pt = { x: number; y: number; vx: number; vy: number; r: number; color: string }
+    const colors = ['rgba(16,185,129,', 'rgba(99,102,241,', 'rgba(45,212,191,']
+
+    const pts: Pt[] = Array.from({ length: NUM }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: (Math.random() - 0.5) * 0.45,
+      r: Math.random() * 2 + 1,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    }))
+
+    const MAX_DIST = 145
+
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H)
+
+      // Draw connections
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x
+          const dy = pts[i].y - pts[j].y
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist < MAX_DIST) {
+            const alpha = (1 - dist / MAX_DIST) * 0.28
+            ctx.beginPath()
+            ctx.strokeStyle = `rgba(16,185,129,${alpha})`
+            ctx.lineWidth = 0.8
+            ctx.moveTo(pts[i].x, pts[i].y)
+            ctx.lineTo(pts[j].x, pts[j].y)
+            ctx.stroke()
+          }
+        }
+      }
+
+      // Draw nodes
+      for (const p of pts) {
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = p.color + '0.75)'
+        ctx.shadowBlur = 8
+        ctx.shadowColor = p.color + '0.5)'
+        ctx.fill()
+        ctx.shadowBlur = 0
+
+        p.x += p.vx
+        p.y += p.vy
+        if (p.x < 0 || p.x > W) p.vx *= -1
+        if (p.y < 0 || p.y > H) p.vy *= -1
+      }
+
+      animId = requestAnimationFrame(draw)
+    }
+
+    draw()
+
+    const onResize = () => {
+      W = canvas.offsetWidth
+      H = canvas.offsetHeight
+      canvas.width = W
+      canvas.height = H
+    }
+    window.addEventListener('resize', onResize)
+
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-60 dark:opacity-60 light:opacity-25"
+      aria-hidden="true"
+    />
+  )
+}
+
 export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   const {
     headline,
@@ -26,24 +122,76 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
   return (
     <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
-      
-      {/* ─── Dynamic Animated Background Orbs ─── */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-500/15 filter blur-[120px] pointer-events-none animate-orb-1" />
-      <div className="absolute top-1/3 -right-32 w-96 h-96 rounded-full bg-indigo-600/15 filter blur-[120px] pointer-events-none animate-orb-2" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-teal-500/10 filter blur-[140px] pointer-events-none animate-pulse-slow" />
 
-      {/* Grid Overlay Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+      {/* ── Particle Network Background ── */}
+      <ParticleCanvas />
 
+      {/* ── Layered Animated Gradient Orbs ── */}
+      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/20 filter blur-[130px] pointer-events-none animate-orb-1" />
+      <div className="absolute top-1/3 -right-40 w-[28rem] h-[28rem] rounded-full bg-indigo-600/20 filter blur-[130px] pointer-events-none animate-orb-2" />
+      <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-teal-500/15 filter blur-[100px] pointer-events-none animate-pulse-slow" />
+
+      {/* ── Animated SVG Circuit Lines ── */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none opacity-10 dark:opacity-10 light:opacity-5"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0" />
+            <stop offset="50%" stopColor="#10b981" stopOpacity="1" />
+            <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="lineGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#6366f1" stopOpacity="0" />
+            <stop offset="50%" stopColor="#2dd4bf" stopOpacity="1" />
+            <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* Horizontal circuit traces */}
+        <line x1="0" y1="25%" x2="30%" y2="25%" stroke="url(#lineGrad1)" strokeWidth="1">
+          <animate attributeName="x2" values="0%;30%;0%" dur="8s" repeatCount="indefinite" />
+        </line>
+        <line x1="70%" y1="70%" x2="100%" y2="70%" stroke="url(#lineGrad2)" strokeWidth="1">
+          <animate attributeName="x1" values="100%;70%;100%" dur="10s" repeatCount="indefinite" />
+        </line>
+        {/* Vertical circuit traces */}
+        <line x1="15%" y1="0" x2="15%" y2="40%" stroke="url(#lineGrad1)" strokeWidth="0.8">
+          <animate attributeName="y2" values="0%;40%;0%" dur="9s" repeatCount="indefinite" />
+        </line>
+        <line x1="85%" y1="60%" x2="85%" y2="100%" stroke="url(#lineGrad2)" strokeWidth="0.8">
+          <animate attributeName="y1" values="100%;60%;100%" dur="7s" repeatCount="indefinite" />
+        </line>
+        {/* Corner circuit nodes */}
+        <circle cx="15%" cy="40%" r="4" fill="#10b981" opacity="0.6">
+          <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="85%" cy="60%" r="4" fill="#6366f1" opacity="0.6">
+          <animate attributeName="opacity" values="0.8;0.2;0.8" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="30%" cy="25%" r="3" fill="#2dd4bf" opacity="0.5">
+          <animate attributeName="opacity" values="0.3;0.9;0.3" dur="5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="70%" cy="70%" r="3" fill="#10b981" opacity="0.5">
+          <animate attributeName="opacity" values="0.9;0.3;0.9" dur="5s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+
+      {/* ── Fine Dot Grid Overlay ── */}
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none dark:opacity-100 light:opacity-30" />
+
+      {/* ── Content ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
         
-        {/* BIG CENTERED BRAND TITLE BLOCK */}
+        {/* Brand Title */}
         <div className="space-y-4 max-w-4xl mx-auto animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-extrabold uppercase tracking-widest font-display shadow-sm">
             <Sparkles size={14} className="text-emerald-500" /> Official Web Engineering & Automation Agency
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-2xl">
             Spring Web <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-400 to-indigo-600">Solutions</span>
           </h1>
         </div>
@@ -61,14 +209,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link
               to={cta_primary_href || '/contact'}
-              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group shadow-xl shadow-emerald-500/20 text-sm font-bold py-3.5 px-8"
+              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 group shadow-xl shadow-emerald-500/30 text-sm font-bold py-3.5 px-8"
             >
               <span>{cta_primary_text || 'Get Free Consultation'}</span>
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             
             <Link
-              to={cta_secondary_href || '/services'}
+              to={cta_secondary_href || '/#services'}
               className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8"
             >
               <span>{cta_secondary_text || 'Explore Services'}</span>
@@ -77,11 +225,11 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           </div>
         </div>
 
-        {/* ─── Animated Glassmorphic Marked Terminal Card (Combined Design) ─── */}
+        {/* Stats Terminal Card */}
         <div className="max-w-4xl mx-auto pt-4 animate-fade-in-up">
-          <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 light:border-slate-200 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
+          <div className="rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white/95 border border-white/10 light:border-slate-200 p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
             
-            {/* Terminal Window Header */}
+            {/* Terminal Header */}
             <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-3 text-xs text-slate-400">
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
@@ -98,7 +246,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
               </div>
             </div>
 
-            {/* Combined 4 Stats Cards Grid inside Marked Design */}
+            {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
                 <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
@@ -106,21 +254,18 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">3</div>
               </div>
-
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
                 <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
                   <CheckCircle2 size={14} /> Sprint Delivery
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">100%</div>
               </div>
-
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
                 <div className="flex items-center gap-1.5 text-emerald-500 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Zap size={14} /> PageSpeed
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">&lt; 1s Load</div>
               </div>
-
               <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/10 light:border-slate-200 space-y-1">
                 <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
                   <ShieldCheck size={14} /> Uptime SLA
