@@ -255,12 +255,10 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             <TypewriterText />
           </h2>
 
-          {/* Paragraph Container: Dark Glass Card for 100% Text Clarity */}
-          <div className="hero-p-enter hero-p-box max-w-2xl mx-auto backdrop-blur-md p-4 sm:p-5 rounded-2xl border shadow-2xl">
-            <p className="text-sm sm:text-base !text-slate-100 font-sans font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]">
-              {subheadline}
-            </p>
-          </div>
+          {/* Hero Subtitle Paragraph: Clean borderless floating text */}
+          <p className="hero-p-enter max-w-2xl mx-auto text-base sm:text-lg !text-slate-200 font-sans font-normal leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+            {subheadline}
+          </p>
 
           {/* CTAs */}
           <div className="hero-cta-enter flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
