@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Menu, X, Sun, Moon, Lock, User, LogOut, LayoutDashboard } from 'lucide-react'
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { theme, toggleTheme, siteConfig, navigation, fetchSettings } = usePageBuilderStore()
   const { user, profile, hasRole, signOut } = useAuthStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -20,10 +21,41 @@ export const Navbar: React.FC = () => {
     setMobileMenuOpen(false)
   }
 
+  const handleNavClick = (e: React.MouseEvent, href: string, label: string) => {
+    const isHomePage = location.pathname === '/' || location.pathname === ''
+    const scrollTargetId = label.toLowerCase() === 'home' ? 'home'
+      : label.toLowerCase() === 'about' ? 'about'
+      : label.toLowerCase() === 'services' ? 'services'
+      : label.toLowerCase() === 'contact' ? 'contact'
+      : null
+
+    if (scrollTargetId) {
+      if (isHomePage) {
+        e.preventDefault()
+        const targetEl = document.getElementById(scrollTargetId)
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth' })
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      } else {
+        e.preventDefault()
+        navigate('/')
+        setTimeout(() => {
+          const targetEl = document.getElementById(scrollTargetId)
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' })
+          }
+        }, 300)
+      }
+    }
+    setMobileMenuOpen(false)
+  }
+
   const rawLinks = navigation?.header_menu || [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
     { label: 'Services', href: '/services' },
+    { label: 'About', href: '/about' },
     { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: '/kb' },
@@ -65,6 +97,7 @@ export const Navbar: React.FC = () => {
               <Link
                 key={idx}
                 to={link.href}
+                onClick={(e) => handleNavClick(e, link.href, link.label)}
                 className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-md transition-colors light:text-slate-600 light:hover:text-slate-900"
               >
                 {link.label}
@@ -94,64 +127,70 @@ export const Navbar: React.FC = () => {
               </a>
             )}
 
-            {user && (
-              <div className="flex items-center space-x-2 border-l border-white/10 pl-3 light:border-slate-200">
-                <span className="text-sm font-medium text-slate-300 light:text-slate-600 flex items-center gap-1.5 animate-fade-in-up">
-                  <User size={15} />
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-slate-300 light:text-slate-600 font-medium">
                   {profile?.full_name || user.email}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="p-2 rounded-lg text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                  className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 transition-all cursor-pointer"
                   title="Logout"
                 >
                   <LogOut size={16} />
                 </button>
               </div>
+            ) : (
+              <Link
+                to="/login"
+                className="btn-primary text-xs flex items-center space-x-1"
+              >
+                <User size={14} />
+                <span>Client Login</span>
+              </Link>
             )}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Hamburger Toggle */}
           <div className="flex md:hidden items-center space-x-2">
             <button
               onClick={() => toggleTheme()}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all light:bg-slate-100 light:border-slate-200"
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 light:text-slate-600"
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all light:bg-slate-100 light:border-slate-200"
+              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white light:text-slate-600"
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-white/10 light:border-slate-200 bg-brand-obsidian/95 backdrop-blur-lg px-4 py-4 space-y-2">
-          {headerLinks.map((link: any, idx: number) => (
-            <Link
-              key={idx}
-              to={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white rounded-md transition-colors light:text-slate-600 light:hover:text-slate-900"
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          {/* Mobile Auth Sections */}
-          <div className="border-t border-white/10 pt-4 mt-2 light:border-slate-200 space-y-2">
-            {user && (
+        <div className="md:hidden glass-panel border-b bg-brand-obsidian p-4 space-y-3">
+          <div className="space-y-1">
+            {headerLinks.map((link: any, idx: number) => (
+              <Link
+                key={idx}
+                to={link.href}
+                onClick={(e) => handleNavClick(e, link.href, link.label)}
+                className="block px-3 py-2 text-base font-medium text-slate-300 hover:text-white rounded-md light:text-slate-600"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="pt-4 border-t border-white/10 space-y-2">
+            {user ? (
               <>
                 <div className="px-3 py-1.5 text-slate-300 light:text-slate-600 flex items-center gap-2 text-sm font-medium">
                   <User size={16} />
                   {profile?.full_name || user.email}
                 </div>
-                {/* Operations Suite */}
                 {(hasRole('super_admin') || hasRole('admin') || hasRole('editor') || hasRole('sales') || hasRole('support')) && (
                   <a
                     href="https://suite.springwebsolutions.in/"
@@ -169,6 +208,14 @@ export const Navbar: React.FC = () => {
                   <span>Logout</span>
                 </button>
               </>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="btn-primary w-full text-center block text-sm"
+              >
+                Client Login
+              </Link>
             )}
           </div>
         </div>
@@ -176,3 +223,4 @@ export const Navbar: React.FC = () => {
     </nav>
   )
 }
+export default Navbar

@@ -23,27 +23,27 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
         .map(sec => {
           switch (sec.type) {
             case 'hero':
-              return <HeroSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="home" key={sec.id}><HeroSection content={sec.content} styling={sec.styling} /></div>
             case 'stats':
-              return <StatsSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="stats" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
             case 'services_summary':
-              return <ServicesGrid key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
             case 'pricing':
             case 'pricing_summary':
             case 'pricing_table':
-              return <PricingSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="pricing" key={sec.id}><PricingSection content={sec.content} styling={sec.styling} /></div>
             case 'case_studies':
-              return <CaseStudiesSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="case-studies" key={sec.id}><CaseStudiesSection content={sec.content} styling={sec.styling} /></div>
             case 'comparison':
-              return <ComparisonTable key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="comparison" key={sec.id}><ComparisonTable content={sec.content} styling={sec.styling} /></div>
             case 'team':
-              return <TeamSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="about" key={sec.id}><TeamSection content={sec.content} styling={sec.styling} /></div>
             case 'faq':
-              return <FaqSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="faq" key={sec.id}><FaqSection content={sec.content} styling={sec.styling} /></div>
             case 'tech_stack':
-              return <TechStack key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="tech" key={sec.id}><TechStack content={sec.content} styling={sec.styling} /></div>
             case 'cta':
-              return <CtaSection key={sec.id} content={sec.content} styling={sec.styling} />
+              return <div id="contact" key={sec.id}><CtaSection content={sec.content} styling={sec.styling} /></div>
             case 'testimonials_summary':
               return null
             default:
