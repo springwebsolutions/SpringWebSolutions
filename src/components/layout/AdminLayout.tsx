@@ -6,7 +6,7 @@ import {
   LayoutDashboard, FileText, BookOpen, ShoppingBag, 
   Users, Image, Ticket, Settings, ArrowLeft, Loader2, 
   ShieldAlert, HelpCircle, ChevronRight, Bell, LogOut,
-  Zap, Globe, Menu, X
+  Zap, Globe, Menu, X, MessageSquare, Calendar
 } from 'lucide-react'
 
 type NavGroup = {
@@ -17,12 +17,19 @@ type NavGroup = {
 export const AdminLayout: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, loading, initialized, hasRole, initialize, signOut } = useAuthStore()
+  const { user, profile, loading, initialized, hasRole, initialize, signOut } = useAuthStore()
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [currentTime, setCurrentTime] = useState(new Date())
 
   useEffect(() => {
     initialize()
+  }, [])
+
+  // Live clock update every minute
+  useEffect(() => {
+    const t = setInterval(() => setCurrentTime(new Date()), 60000)
+    return () => clearInterval(t)
   }, [])
 
   const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
@@ -108,6 +115,7 @@ export const AdminLayout: React.FC = () => {
       items: [
         { label: 'Lead CRM', href: `${prefix}/crm`, icon: Users },
         { label: 'Support Desk', href: `${prefix}/support`, icon: Ticket },
+        { label: 'Contact Submissions', href: `${prefix}/contacts`, icon: MessageSquare },
       ]
     },
     {
@@ -122,18 +130,26 @@ export const AdminLayout: React.FC = () => {
     .flatMap(g => g.items)
     .find(n => location.pathname.startsWith(n.href))
 
-  const role = (hasRole('super_admin') ? 'Super Admin' : hasRole('admin') ? 'Admin' : hasRole('editor') ? 'Editor' : hasRole('sales') ? 'Sales' : 'Support')
+  const displayName = (profile as any)?.full_name || user?.email?.split('@')[0] || 'Admin'
+  const role = (
+    hasRole('super_admin') ? 'Super Admin' :
+    hasRole('admin') ? 'Admin' :
+    hasRole('editor') ? 'Editor' :
+    hasRole('content_writer') ? 'Writer' :
+    hasRole('sales') ? 'Sales' : 'Support'
+  )
 
   const SidebarContent = () => (
     <>
       {/* Logo / Branding */}
       <div className={`flex items-center gap-3 px-5 h-[64px] border-b border-white/[0.06] shrink-0 ${!sidebarOpen && 'justify-center px-0'}`}>
-        <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
+        <div className="relative h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
           <Zap size={15} className="text-white" />
+          <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-[#06080f] animate-pulse" />
         </div>
         {sidebarOpen && (
           <div className="min-w-0">
-            <div className="font-display font-bold text-white text-sm tracking-tight leading-none">Spring Web</div>
+            <div className="font-display font-bold text-white text-sm tracking-tight leading-none">Spring Web Solutions</div>
             <div className="text-[10px] text-slate-500 font-medium mt-0.5 tracking-widest uppercase">Operations Suite</div>
           </div>
         )}
@@ -192,10 +208,10 @@ export const AdminLayout: React.FC = () => {
         {sidebarOpen ? (
           <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-white/[0.04] transition-all group cursor-default">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500/30 to-indigo-500/30 border border-white/10 flex items-center justify-center shrink-0">
-              <span className="text-white text-xs font-bold uppercase">{user?.email?.[0]}</span>
+              <span className="text-white text-xs font-bold uppercase">{displayName[0]}</span>
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-semibold text-white truncate">{user?.email?.split('@')[0]}</div>
+              <div className="text-xs font-semibold text-white truncate">{displayName}</div>
               <div className="text-[10px] text-emerald-500 font-medium">{role}</div>
             </div>
             <button
@@ -275,6 +291,16 @@ export const AdminLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Live date/time */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+              <Calendar size={11} className="text-slate-500" />
+              <span className="text-[11px] text-slate-400 font-mono">
+                {currentTime.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                {' · '}
+                {currentTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}
+              </span>
+            </div>
+
             {/* Live indicator */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/8 border border-emerald-500/15">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -289,9 +315,9 @@ export const AdminLayout: React.FC = () => {
             {/* Role badge */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.07]">
               <div className="h-5 w-5 rounded-md bg-gradient-to-br from-emerald-500/40 to-indigo-500/40 flex items-center justify-center">
-                <span className="text-white text-[10px] font-bold uppercase">{user?.email?.[0]}</span>
+                <span className="text-white text-[10px] font-bold uppercase">{displayName[0]}</span>
               </div>
-              <span className="text-xs font-semibold text-slate-300">{user?.email?.split('@')[0]}</span>
+              <span className="text-xs font-semibold text-slate-300">{displayName}</span>
               <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 font-semibold">{role}</span>
             </div>
           </div>

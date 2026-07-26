@@ -4,7 +4,8 @@ import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { sendResendEmail, buildTestEmailHTML } from '@/lib/emailService'
 import { 
   Settings, Save, Download, ShieldCheck, Mail, Send,
-  Loader2, CheckCircle, AlertCircle, FileSpreadsheet, FileJson, Menu, Plus, Trash2 
+  Loader2, CheckCircle, AlertCircle, FileSpreadsheet, FileJson, Menu, Plus, Trash2, 
+  MessageSquare, Bot, ToggleLeft, ToggleRight, ExternalLink
 } from 'lucide-react'
 
 export const SiteSettings: React.FC = () => {
@@ -41,6 +42,11 @@ export const SiteSettings: React.FC = () => {
   const [saving, setSaving] = useState(false)
   const [exportLoading, setExportLoading] = useState<string | null>(null)
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
+
+  // Floating widget toggles
+  const [whatsappWidgetEnabled, setWhatsappWidgetEnabled] = useState(true)
+  const [aiChatEnabled, setAiChatEnabled] = useState(true)
+  const [footerCtaLabel, setFooterCtaLabel] = useState('Get in Touch')
 
   useEffect(() => {
     fetchSettings()
@@ -146,6 +152,8 @@ export const SiteSettings: React.FC = () => {
 
       setNotification({ type: 'success', msg: 'System, social media & Resend email settings saved to database.' })
       fetchSettings()
+      // Auto-dismiss success toast after 4 seconds
+      setTimeout(() => setNotification(null), 4000)
     } catch (err: any) {
       console.error(err)
       setNotification({ type: 'error', msg: err.message || 'Error saving settings.' })
@@ -218,13 +226,19 @@ export const SiteSettings: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      
+
+      {/* Animated fixed-position toast notification */}
       {notification && (
-        <div className={`p-4 rounded-xl flex items-start gap-2.5 text-sm ${
-          notification.type === 'success' ? 'bg-brand-emerald/15 border border-brand-emerald/20 text-brand-emerald' : 'bg-rose-500/10 border border-rose-500/20 text-rose-400'
+        <div className={`fixed top-6 right-6 z-[9999] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl border text-sm font-medium animate-fade-in-up transition-all ${
+          notification.type === 'success'
+            ? 'bg-[#06080f] border-emerald-500/30 text-emerald-400 shadow-emerald-500/20'
+            : 'bg-[#06080f] border-rose-500/30 text-rose-400 shadow-rose-500/20'
         }`}>
-          {notification.type === 'success' ? <CheckCircle className="shrink-0 mt-0.5" size={16} /> : <AlertCircle className="shrink-0 mt-0.5" size={16} />}
+          {notification.type === 'success'
+            ? <CheckCircle size={16} className="shrink-0" />
+            : <AlertCircle size={16} className="shrink-0" />}
           <span>{notification.msg}</span>
+          <button onClick={() => setNotification(null)} className="ml-2 text-slate-500 hover:text-white transition-colors">&times;</button>
         </div>
       )}
 
@@ -596,7 +610,85 @@ export const SiteSettings: React.FC = () => {
 
       </div>
 
+      {/* ─── Floating Widgets & Footer CTA Controls ─────────────────────── */}
+      <div className="glass-panel p-8 rounded-3xl border border-white/5 space-y-6">
+        <div className="border-b border-white/5 pb-3">
+          <h3 className="font-display font-bold text-white text-base flex items-center gap-2">
+            <MessageSquare size={16} className="text-emerald-500" />
+            Floating Widgets & Footer Controls
+          </h3>
+          <p className="text-xs text-slate-500 mt-1">Manage the visibility of floating contact buttons and footer CTA labels.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* WhatsApp Widget Toggle */}
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/8">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <MessageSquare size={16} className="text-emerald-400" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-white">WhatsApp Widget</div>
+                <div className="text-xs text-slate-500">Floating WhatsApp Us button</div>
+              </div>
+            </div>
+            <button
+              onClick={() => setWhatsappWidgetEnabled(!whatsappWidgetEnabled)}
+              className="cursor-pointer transition-colors"
+              title="Toggle WhatsApp Widget"
+            >
+              {whatsappWidgetEnabled
+                ? <ToggleRight size={32} className="text-emerald-400" />
+                : <ToggleLeft size={32} className="text-slate-600" />
+              }
+            </button>
+          </div>
+
+          {/* AI Chat Widget Toggle */}
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/8">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                <Bot size={16} className="text-indigo-400" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-white">AI Assistant Widget</div>
+                <div className="text-xs text-slate-500">Floating AI chat assistant</div>
+              </div>
+            </div>
+            <button
+              onClick={() => setAiChatEnabled(!aiChatEnabled)}
+              className="cursor-pointer transition-colors"
+              title="Toggle AI Chat Widget"
+            >
+              {aiChatEnabled
+                ? <ToggleRight size={32} className="text-indigo-400" />
+                : <ToggleLeft size={32} className="text-slate-600" />
+              }
+            </button>
+          </div>
+        </div>
+
+        {/* Footer CTA Label */}
+        <div className="space-y-2">
+          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Footer CTA Button Label</label>
+          <input
+            type="text"
+            value={footerCtaLabel}
+            onChange={(e) => setFooterCtaLabel(e.target.value)}
+            className="w-full sm:w-80 px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 transition-all"
+            placeholder="Get in Touch"
+          />
+          <p className="text-[11px] text-slate-600">This controls the label of the primary CTA button in the footer section.</p>
+        </div>
+
+        <div className="pt-2 border-t border-white/5 flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+          <p className="text-xs text-slate-500">Widget toggle persistence is coming in the next release. Changes here are visual previews only.</p>
+        </div>
+      </div>
+
     </div>
   )
 }
 export default SiteSettings
+

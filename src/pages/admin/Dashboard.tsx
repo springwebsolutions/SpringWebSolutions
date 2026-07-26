@@ -7,11 +7,12 @@ import {
   Users, Download, IndianRupee,
   TrendingUp, Inbox, RefreshCw, ArrowUpRight,
   BookOpen, Ticket, Globe,
-  Activity, CheckCircle2, Clock, AlertTriangle
+  Activity, CheckCircle2, Clock, AlertTriangle,
+  MessageSquare, HelpCircle, Settings
 } from 'lucide-react'
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, BarChart, Bar
+  Tooltip, ResponsiveContainer, BarChart, Bar, Cell
 } from 'recharts'
 
 // ─── Stat Card ─────────────────────────────────────────────────────────────
@@ -98,11 +99,13 @@ const EmptyChart: React.FC<{ message: string }> = ({ message }) => (
 // ─── Main Dashboard ─────────────────────────────────────────────────────────
 export const Dashboard: React.FC = () => {
   const { leads, fetchLeads, metrics } = useCRMStore()
-  const { user } = useAuthStore()
+  const { user, profile } = useAuthStore()
 
   const [visitorCount, setVisitorCount] = useState<number>(0)
   const [downloadCount, setDownloadCount] = useState<number>(0)
   const [revenue, setRevenue] = useState<number>(0)
+  const [contactCount, setContactCount] = useState<number>(0)
+  const [ticketCount, setTicketCount] = useState<number>(0)
   const [recentAudits, setRecentAudits] = useState<any[]>([])
   const [visitorChartData, setVisitorChartData] = useState<any[]>([])
   const [refreshing, setRefreshing] = useState(false)
@@ -110,6 +113,7 @@ export const Dashboard: React.FC = () => {
 
   const greetingHour = new Date().getHours()
   const greeting = greetingHour < 12 ? 'Good morning' : greetingHour < 18 ? 'Good afternoon' : 'Good evening'
+  const displayName = (profile as any)?.full_name || user?.email?.split('@')[0] || 'Admin'
 
   // Lead pipeline: all real CRM data
   const leadPipelineData = [
@@ -178,7 +182,20 @@ export const Dashboard: React.FC = () => {
         .eq('status', 'completed')
       if (!oErr) setRevenue(orders ? orders.reduce((s, o) => s + Number(o.total), 0) : 0)
 
-      // 6. Audit logs (real)
+      // 6. Contact form submissions count (real)
+      const { count: cCount } = await supabase
+        .from('contact_submissions')
+        .select('*', { count: 'exact', head: true })
+      setContactCount(cCount ?? 0)
+
+      // 7. Open support tickets count (real)
+      const { count: tCount } = await supabase
+        .from('support_tickets')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'open')
+      setTicketCount(tCount ?? 0)
+
+      // 8. Audit logs (real)
       const { data: audits } = await supabase
         .from('audit_logs')
         .select('action, table_name, created_at')
@@ -195,10 +212,25 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => { loadDashboardStats() }, [])
 
+  const greeting_line = (
+    <h1 className="text-2xl font-bold text-white tracking-tight">
+      {greeting}, <span className="text-emerald-400">{displayName}</span> 👋
+    </h1>
+  )
+
+  // Color map for lead pipeline bars
+  const pipelineBarColor = (name: string) => {
+    if (name === 'Won') return '#10b981'
+    if (name === 'Lost') return '#f43f5e'
+    if (name === 'New') return '#38bdf8'
+    if (name === 'Qualified') return '#a78bfa'
+    if (name === 'Proposal') return '#f59e0b'
+    return '#64748b'
+  }
+
   const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
   const prefix = isSuiteDomain ? '' : '/admin'
 
-  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="space-y-6 pb-4">
 
@@ -208,10 +240,8 @@ export const Dashboard: React.FC = () => {
         <div className="absolute bottom-0 left-1/3 w-48 h-48 bg-indigo-500/5 rounded-full translate-y-1/2 blur-3xl pointer-events-none" />
         <div className="relative flex items-center justify-between flex-wrap gap-4">
           <div>
-            <div className="text-xs font-semibold text-emerald-500 uppercase tracking-widest mb-1">Spring Web Solutions</div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              {greeting}, <span className="text-emerald-400">{user?.email?.split('@')[0]}</span> 👋
-            </h1>
+            <div className="text-xs font-semibold text-emerald-500 uppercase tracking-widest mb-1">Spring Web Solutions — Operations Suite</div>
+            {greeting_line}
             <p className="text-sm text-slate-400 mt-1">Here's what's happening across your platform today.</p>
           </div>
           <button
@@ -233,8 +263,8 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* KPI Cards — real data only, no fallbacks */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      {/* KPI Cards — 6 cards in 2 rows */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         <StatCard
           title="Total Pageviews"
           value={visitorCount.toLocaleString()}
@@ -267,6 +297,23 @@ export const Dashboard: React.FC = () => {
           iconColor="text-amber-400"
           iconBg="bg-amber-500/10"
           sub={revenue === 0 ? 'No completed orders yet' : 'Completed order totals'}
+        />
+        <StatCard
+          title="Contact Submissions"
+          value={contactCount}
+          icon={MessageSquare}
+          iconColor="text-violet-400"
+          iconBg="bg-violet-500/10"
+          sub={contactCount === 0 ? 'No enquiries yet' : 'From contact form'}
+        />
+        <StatCard
+          title="Open Support Tickets"
+          value={ticketCount}
+          icon={Ticket}
+          iconColor="text-rose-400"
+          iconBg="bg-rose-500/10"
+          trend={ticketCount > 0 ? { val: `${ticketCount} Open`, up: false } : undefined}
+          sub={ticketCount === 0 ? 'All tickets resolved' : 'Awaiting response'}
         />
       </div>
 
@@ -325,7 +372,11 @@ export const Dashboard: React.FC = () => {
                   <XAxis dataKey="name" stroke="#374151" tick={{ fill: '#6b7280', fontSize: 10 }} tickLine={false} axisLine={false} />
                   <YAxis stroke="#374151" tick={{ fill: '#6b7280', fontSize: 11 }} tickLine={false} axisLine={false} allowDecimals={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="count" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={28} />
+            <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={28}>
+                  {leadPipelineData.map((entry, index) => (
+                    <Cell key={index} fill={pipelineBarColor(entry.name)} />
+                  ))}
+                </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -347,6 +398,8 @@ export const Dashboard: React.FC = () => {
             <QuickAction to={`${prefix}/crm`} icon={Inbox} label="Lead CRM & Email" desc="Manage & email leads" color="bg-emerald-500/20 border border-emerald-500/20" />
             <QuickAction to={`${prefix}/support`} icon={Ticket} label="Support Desk" desc="View open tickets" color="bg-amber-500/20 border border-amber-500/20" />
             <QuickAction to={`${prefix}/content`} icon={Globe} label="Website CMS" desc="Edit site content" color="bg-sky-500/20 border border-sky-500/20" />
+            <QuickAction to={`${prefix}/kb`} icon={HelpCircle} label="Knowledge Base" desc="Manage KB articles" color="bg-violet-500/20 border border-violet-500/20" />
+            <QuickAction to={`${prefix}/settings`} icon={Settings} label="Site Settings" desc="Email, socials & config" color="bg-rose-500/20 border border-rose-500/20" />
           </div>
         </div>
 
