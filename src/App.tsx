@@ -99,12 +99,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Website Routes - Single Page Scroll Redirects */}
+        {/* Public Website Routes */}
         <Route path="/" element={<DynamicPage />} />
         <Route path="/about" element={<SectionRedirect targetId="about" />} />
         <Route path="/services" element={<SectionRedirect targetId="services" />} />
-        <Route path="/industries" element={<SectionRedirect targetId="services" />} />
-        <Route path="/process" element={<SectionRedirect targetId="services" />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Blog System */}
