@@ -88,16 +88,23 @@ function App() {
     )
   }
 
-  // ─── Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
+  const SectionRedirect: React.FC<{ targetId: string }> = ({ targetId }) => {
+  useEffect(() => {
+    window.location.href = `/#${targetId}`
+  }, [targetId])
+  return null
+}
+
+// Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
   return (
     <Router>
       <Routes>
-        {/* Public Website Routes */}
+        {/* Public Website Routes - Single Page Scroll Redirects */}
         <Route path="/" element={<DynamicPage />} />
-        <Route path="/about" element={<DynamicPage />} />
-        <Route path="/services" element={<DynamicPage />} />
-        <Route path="/industries" element={<DynamicPage />} />
-        <Route path="/process" element={<DynamicPage />} />
+        <Route path="/about" element={<SectionRedirect targetId="about" />} />
+        <Route path="/services" element={<SectionRedirect targetId="services" />} />
+        <Route path="/industries" element={<SectionRedirect targetId="services" />} />
+        <Route path="/process" element={<SectionRedirect targetId="services" />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Blog System */}
