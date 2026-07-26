@@ -388,7 +388,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
 const getInitialCache = (): Record<string, { page: PageData; sections: SectionData[] }> => {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const saved = localStorage.getItem('page_builder_cache')
+      const saved = localStorage.getItem('page_builder_cache_v3')
       if (saved) {
         const parsed = JSON.parse(saved)
         if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
@@ -490,7 +490,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
           }
           
           try {
-            localStorage.setItem('page_builder_cache', JSON.stringify(updatedCache))
+            localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache))
           } catch (e) {}
 
           set({
@@ -533,7 +533,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
         }
 
         try {
-          localStorage.setItem('page_builder_cache', JSON.stringify(updatedCache))
+          localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache))
         } catch (e) {}
 
         set({

@@ -30,7 +30,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'pricing_table':
               return <PricingSection key={sec.id} content={sec.content} styling={sec.styling} />
             case 'testimonials_summary':
-              return <TestimonialCarousel key={sec.id} content={sec.content} styling={sec.styling} />
+              return null
             case 'tech_stack':
               return <TechStack key={sec.id} content={sec.content} styling={sec.styling} />
             case 'cta':
