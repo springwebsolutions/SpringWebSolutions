@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { MessageSquare, X, Send, Phone, CheckCircle2, Sparkles, MessageCircle, ArrowUpRight, Bot, User, Loader2, RefreshCw, UserCheck } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { MessageSquare, X, Send, Phone, CheckCircle2, Sparkles, MessageCircle, ArrowUpRight, Bot, User, Loader2, RefreshCw, UserCheck, Ticket, Lock } from 'lucide-react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/authStore'
 import { liveChatService, type LiveChatMessage } from '@/lib/liveChatService'
 
 interface ChatMessage {
@@ -13,10 +15,14 @@ interface ChatMessage {
 }
 
 export const FloatingContactWidgets: React.FC = () => {
+  const navigate = useNavigate()
+  const { user, profile } = useAuthStore()
+
   const [isLiveChatOpen, setIsLiveChatOpen] = useState(false)
   const [inputMessage, setInputMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [isHumanConnected, setIsHumanConnected] = useState(false)
+  const [ticketFlowState, setTicketFlowState] = useState<'none' | 'awaiting_subject'>('none')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const whatsappNumber = '918012622119'
@@ -31,6 +37,7 @@ export const FloatingContactWidgets: React.FC = () => {
       options: [
         { label: '🌐 Website Development Quote', action: 'quote' },
         { label: '⚡ Custom CRM / ERP Software', action: 'crm' },
+        { label: '🎫 Create Support Ticket', action: 'ticket' },
         { label: '🎧 Request Live Admin / Human Chat', action: 'human' },
         { label: '📞 Book Phone Callback', action: 'callback' }
       ]
@@ -88,17 +95,81 @@ export const FloatingContactWidgets: React.FC = () => {
     }
   }
 
+  const createSupportTicket = async (subject: string, priority: string = 'medium') => {
+    if (!user) return null
+    let ticketId = 'TICK-' + Math.floor(1000 + Math.random() * 9000)
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data: ticketRes, error: tErr } = await supabase
+          .from('tickets')
+          .insert({
+            user_id: user.id,
+            subject: subject,
+            priority: priority,
+            status: 'open'
+          })
+          .select()
+          .single()
+
+        if (ticketRes && !tErr) {
+          ticketId = ticketRes.id
+          await supabase.from('ticket_messages').insert({
+            ticket_id: ticketRes.id,
+            sender_id: user.id,
+            message: `[Created via SpringWeb Chatbot]: ${subject}`
+          })
+        }
+      } catch (e) {
+        console.error('Chatbot ticket creation error:', e)
+      }
+    }
+    return ticketId
+  }
+
   const handleBotResponse = (userText: string, actionType?: string) => {
     setIsTyping(true)
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsTyping(false)
       const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
       let botText = ''
       let options: Array<{ label: string; action: string }> | undefined = undefined
 
-      if (actionType === 'human' || userText.toLowerCase().includes('admin') || userText.toLowerCase().includes('human') || userText.toLowerCase().includes('agent')) {
+      if (actionType === 'ticket') {
+        if (!user) {
+          botText = '🔒 Support Ticket creation is available exclusively to registered client accounts. Please sign in to your account or register to submit support tickets.'
+          options = [
+            { label: '🔑 Sign In / Create Account', action: 'go_login' },
+            { label: '🎧 Request Live Admin Chat', action: 'human' }
+          ]
+        } else {
+          const userName = (profile as any)?.full_name || user.email?.split('@')[0] || 'Client'
+          botText = `🎫 Welcome ${userName}! You can raise a support ticket directly from this chat. Select priority below or type your issue details:`
+          setTicketFlowState('awaiting_subject')
+          options = [
+            { label: '🔴 High Priority Ticket', action: 'ticket_priority_high' },
+            { label: '🟡 Medium Priority Ticket', action: 'ticket_priority_medium' },
+            { label: '🟢 General Support Ticket', action: 'ticket_priority_low' }
+          ]
+        }
+      } else if (actionType?.startsWith('ticket_priority_') || (ticketFlowState === 'awaiting_subject' && userText)) {
+        if (!user) {
+          botText = '🔒 Support Ticket creation requires an active client account.'
+          options = [{ label: '🔑 Sign In Now', action: 'go_login' }]
+        } else {
+          const priority = actionType === 'ticket_priority_high' ? 'high' : actionType === 'ticket_priority_low' ? 'low' : 'medium'
+          const subject = userText || 'Support Request via AI Chatbot'
+          const ticketId = await createSupportTicket(subject, priority)
+          botText = `✅ Support Ticket #${(ticketId || '').toString().slice(0, 8)} created successfully! Our engineering team has been notified and will review your ticket.`
+          options = [
+            { label: '📋 View Ticket in Support Portal', action: 'go_support' },
+            { label: '🔄 Main Menu', action: 'reset' }
+          ]
+          setTicketFlowState('none')
+        }
+      } else if (actionType === 'human' || userText.toLowerCase().includes('admin') || userText.toLowerCase().includes('human') || userText.toLowerCase().includes('agent')) {
         botText = '🟢 You are now flagged for Live Admin / Engineer Chat! An administrator in our Operations Suite has been notified and can chat with you here directly in real-time.'
         setIsHumanConnected(true)
         options = [
@@ -122,8 +193,9 @@ export const FloatingContactWidgets: React.FC = () => {
         botText = 'Thank you! I have recorded your contact details into our Lead CRM. Our senior solution architect will reach out to you shortly.'
         saveLeadToCRM(userText)
       } else {
-        botText = `Thank you for reaching out! I've logged "${userText}" for our team. Would you like to talk to a live admin or connect on WhatsApp?`
+        botText = `Thank you for reaching out! I've logged "${userText}" for our team. Would you like to talk to a live admin or create a support ticket?`
         options = [
+          { label: '🎫 Create Support Ticket', action: 'ticket' },
           { label: '🎧 Connect to Live Admin', action: 'human' },
           { label: '💬 Open WhatsApp Chat', action: 'whatsapp' }
         ]
@@ -147,6 +219,18 @@ export const FloatingContactWidgets: React.FC = () => {
     const text = customText || inputMessage.trim()
     if (!text && !actionType) return
 
+    if (actionType === 'go_login') {
+      setIsLiveChatOpen(false)
+      navigate('/login')
+      return
+    }
+
+    if (actionType === 'go_support') {
+      setIsLiveChatOpen(false)
+      navigate('/support')
+      return
+    }
+
     if (actionType === 'whatsapp') {
       handleWhatsAppDirect(text)
       return
@@ -156,6 +240,7 @@ export const FloatingContactWidgets: React.FC = () => {
       setMessages(initialMessages)
       setInputMessage('')
       setIsHumanConnected(false)
+      setTicketFlowState('none')
       return
     }
 
