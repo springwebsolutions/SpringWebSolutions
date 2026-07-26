@@ -48,7 +48,7 @@ const TypewriterText: React.FC = () => {
   }, [subIndex, index, reverse])
 
   return (
-    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600 font-black border-b-2 border-emerald-500/40 pb-0.5 min-w-[200px] text-left">
+    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600 font-black min-w-[200px] text-left">
       {TYPEWRITER_WORDS[index].substring(0, subIndex)}
       <span className="animate-pulse text-emerald-400 light:text-emerald-600 font-light ml-0.5">|</span>
     </span>
