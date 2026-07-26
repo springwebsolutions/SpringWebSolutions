@@ -22,11 +22,16 @@ export const Navbar: React.FC = () => {
   }
 
   const handleNavClick = (e: React.MouseEvent, href: string, label: string) => {
+    // Contact link should ALWAYS navigate directly to /contact page
+    if (label.toLowerCase() === 'contact' || href === '/contact') {
+      setMobileMenuOpen(false)
+      return
+    }
+
     const isHomePage = location.pathname === '/' || location.pathname === ''
     const scrollTargetId = label.toLowerCase() === 'home' ? 'home'
       : label.toLowerCase() === 'about' ? 'about'
       : label.toLowerCase() === 'services' ? 'services'
-      : label.toLowerCase() === 'contact' ? 'contact'
       : null
 
     if (scrollTargetId) {
