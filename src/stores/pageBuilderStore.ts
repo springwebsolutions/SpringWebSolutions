@@ -80,9 +80,9 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         type: 'stats',
         content: {
           items: [
-            { value: "250+", label: "Projects Completed" },
-            { value: "98%", label: "Client Success Rate" },
-            { value: "40%+", label: "Average Time Saved" },
+            { value: "3", label: "Completed Projects" },
+            { value: "100%", label: "Sprint Delivery Rate" },
+            { value: "< 1s", label: "Average Page Load Speed" },
             { value: "99.9%", label: "Uptime SLA Guarantee" }
           ]
         },
@@ -114,25 +114,12 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         type: 'testimonials_summary',
         content: {
           title: "Delivering Measurable Outcomes for Growing Teams",
-          subtitle: "Read real testimonials from local businesses, manufacturers, and startups who scaled their operations with our code.",
-          items: [
-            {
-              quote: "Spring Web Solutions engineered our inventory ERP system. It saved our floor managers 12 hours a week and eliminated data sync errors completely.",
-              author: "Marcus Sterling",
-              company: "Apex Manufacturing",
-              role: "Chief Operations Officer"
-            },
-            {
-              quote: "Our organic site traffic increased by 140% in six months after their technical SEO overhaul. The page load speed dropped under 1 second.",
-              author: "Dr. Clara Chen",
-              company: "Metropolitan Medical Clinic",
-              role: "Clinic Director"
-            }
-          ]
+          subtitle: "Read real feedback from clients who scaled their operations with our code.",
+          items: []
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
         display_order: 3,
-        is_active: true
+        is_active: false
       },
       {
         id: 'home-tech',

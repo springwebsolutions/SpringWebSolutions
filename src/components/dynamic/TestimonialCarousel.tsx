@@ -48,10 +48,10 @@ export const TestimonialCarousel: React.FC<TestimonialProps> = ({ content }) => 
               style={{ animationDelay: `${(idx + 1) * 150}ms` }}
             >
               <div className="absolute top-6 right-6 text-brand-emerald/10 pointer-events-none">
-                <Quote size={64} className="text-brand-emerald opacity-20" />
+                <Quote size={56} className="text-brand-emerald opacity-20 light:opacity-10" />
               </div>
 
-              <div className="space-y-4 relative">
+              <div className="space-y-4 relative z-10">
                 {/* Stars */}
                 <div className="flex space-x-1">
                   {[...Array(test.rating || 5)].map((_, i) => (
@@ -59,7 +59,7 @@ export const TestimonialCarousel: React.FC<TestimonialProps> = ({ content }) => 
                   ))}
                 </div>
 
-                <p className="text-base italic text-slate-600 dark:text-slate-300 leading-relaxed font-sans font-light">
+                <p className="text-base italic text-slate-700 dark:text-slate-300 light:text-slate-800 leading-relaxed font-sans font-normal">
                   "{test.quote}"
                 </p>
               </div>
