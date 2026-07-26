@@ -11,7 +11,21 @@ interface StatsProps {
 }
 
 export const StatsSection: React.FC<StatsProps> = ({ content }) => {
-  const items = content?.items || []
+  const rawItems = content?.items || []
+
+  // Sanitize and ensure accurate numbers for Spring Web Solutions
+  const items = rawItems.map(stat => {
+    if (stat.value === '250+' || stat.value === '250' || stat.value === '10+' || stat.label.toLowerCase().includes('projects completed')) {
+      return { value: '3', label: 'Completed Projects' }
+    }
+    if (stat.value === '98%') {
+      return { value: '100%', label: 'Sprint Delivery Rate' }
+    }
+    if (stat.value === '40%+' || stat.value === '50M+') {
+      return { value: '< 1s', label: 'Average Page Load Speed' }
+    }
+    return stat
+  })
 
   return (
     <section className="py-12 relative bg-brand-obsidian dark:bg-brand-obsidian light:bg-slate-50 transition-colors duration-300">
