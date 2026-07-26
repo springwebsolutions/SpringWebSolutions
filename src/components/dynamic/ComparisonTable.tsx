@@ -69,8 +69,11 @@ export const ComparisonTable: React.FC<{ content?: any; styling?: any }> = ({ co
                 <tr className="border-b border-white/10 light:border-slate-200 bg-white/[0.03] light:bg-slate-100">
                   <th className="p-5 text-xs font-bold text-slate-400 dark:text-slate-400 light:text-slate-700 uppercase tracking-wider w-1/3">Feature / Standard</th>
                   <th className="p-5 text-xs font-bold text-slate-400 dark:text-slate-400 light:text-slate-700 uppercase tracking-wider w-1/3 bg-rose-500/[0.02] light:bg-rose-500/[0.04]">Traditional Agencies / Freelancers</th>
-                  <th className="p-5 text-xs font-bold text-emerald-500 uppercase tracking-wider w-1/3 bg-emerald-500/[0.08] light:bg-emerald-500/[0.1] flex items-center gap-2">
-                    <Zap size={14} className="text-emerald-500" /> Spring Web Solutions
+                  <th className="p-5 text-xs font-bold text-emerald-500 uppercase tracking-wider w-1/3 bg-emerald-500/[0.08] light:bg-emerald-500/[0.1]">
+                    <div className="flex items-center gap-2">
+                      <Zap size={14} className="text-emerald-500 shrink-0" />
+                      <span>Spring Web Solutions</span>
+                    </div>
                   </th>
                 </tr>
               </thead>
