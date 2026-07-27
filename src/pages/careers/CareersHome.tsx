@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { AdBanner } from '@/components/careers/AdBanner'
 import { Footer } from '@/components/layout/Footer'
+import { POPULAR_INDIA_LOCATIONS } from '@/data/indiaLocations'
 import {
   Search, MapPin, Briefcase, Globe, Sparkles, Building2, CheckCircle2,
   BookOpen, ArrowRight, Laptop, Filter, ChevronRight, Award, Zap
@@ -121,31 +122,45 @@ export const CareersHome: React.FC = () => {
                     className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
                   />
 
-                  {/* Autocomplete Suggestions Dropdown - Floating outside form card with High Z-Index */}
+                  {/* Dynamic Real-Time Location Autocomplete Dropdown */}
                   {locationDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 sm:min-w-[320px] mt-2 p-2 rounded-2xl bg-[#0b0f1a] border border-emerald-500/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-50 space-y-1 backdrop-blur-2xl max-h-72 overflow-y-auto">
-                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 border-b border-white/5 mb-1">
-                        Popular Quick Suggestions
+                    <div className="absolute top-full left-0 right-0 sm:min-w-[340px] mt-2 p-2 rounded-2xl bg-[#0b0f1a] border border-emerald-500/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-50 space-y-1 backdrop-blur-2xl max-h-72 overflow-y-auto">
+                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 border-b border-white/5 mb-1 flex items-center justify-between">
+                        <span>{selectedLocation && selectedLocation !== 'all' ? 'Matching Cities & States' : 'Popular Cities & Regions'}</span>
+                        <span className="text-[9px] text-slate-400 font-mono">India &amp; Global</span>
                       </div>
-                      {[
-                        { label: 'All Locations (Global)', val: 'all' },
-                        { label: 'Pan-India National', val: 'India' },
-                        { label: 'Tamil Nadu Statewide', val: 'Tamil Nadu' },
-                        { label: 'Chennai Metro', val: 'Chennai' },
-                        { label: 'Bengaluru / Bangalore', val: 'Bengaluru' },
-                        { label: 'Coimbatore & Tiruppur', val: 'Coimbatore' },
-                        { label: 'Udumalpet & Local TN', val: 'Udumalpet' },
-                        { label: '100% Work From Home (WFH)', val: 'Remote' },
-                        { label: 'International (US/EU/UAE)', val: 'International' }
-                      ].map((item, idx) => (
+                      
+                      {/* Option for All Locations */}
+                      <button
+                        type="button"
+                        onMouseDown={() => { setSelectedLocation('all'); setLocationDropdownOpen(false) }}
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center justify-between cursor-pointer border border-emerald-500/20"
+                      >
+                        <span>All Locations (Global &amp; Pan-India)</span>
+                        <span className="text-[10px] font-mono">Reset</span>
+                      </button>
+
+                      {(
+                        selectedLocation && selectedLocation !== 'all'
+                          ? POPULAR_INDIA_LOCATIONS.filter(loc => 
+                              loc.name.toLowerCase().includes(selectedLocation.toLowerCase()) || 
+                              loc.state.toLowerCase().includes(selectedLocation.toLowerCase())
+                            )
+                          : POPULAR_INDIA_LOCATIONS
+                      ).slice(0, 16).map((item, idx) => (
                         <button
                           key={idx}
                           type="button"
-                          onMouseDown={() => { setSelectedLocation(item.val); setLocationDropdownOpen(false) }}
+                          onMouseDown={() => { setSelectedLocation(item.name.replace(/ \(.*\)/, '')); setLocationDropdownOpen(false) }}
                           className="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 border border-transparent transition-all flex items-center justify-between cursor-pointer"
                         >
-                          <span>{item.label}</span>
-                          <span className="text-[10px] text-emerald-400 font-mono font-bold">Select</span>
+                          <div className="flex items-center gap-2">
+                            <MapPin size={12} className="text-emerald-400 flex-shrink-0" />
+                            <span className="font-medium text-white">{item.name}</span>
+                          </div>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">
+                            {item.state}
+                          </span>
                         </button>
                       ))}
                     </div>

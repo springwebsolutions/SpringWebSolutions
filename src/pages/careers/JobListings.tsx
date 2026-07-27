@@ -133,11 +133,20 @@ export const JobListings: React.FC = () => {
                   <div className="flex items-center gap-1.5 flex-wrap pt-1">
                     {[
                       { label: 'All', val: 'all' },
-                      { label: 'India', val: 'India' },
+                      { label: 'Pan-India', val: 'India' },
                       { label: 'Tamil Nadu', val: 'Tamil Nadu' },
                       { label: 'Chennai', val: 'Chennai' },
+                      { label: 'Coimbatore', val: 'Coimbatore' },
+                      { label: 'Madurai', val: 'Madurai' },
+                      { label: 'Trichy', val: 'Trichy' },
+                      { label: 'Salem', val: 'Salem' },
+                      { label: 'Tiruppur', val: 'Tiruppur' },
+                      { label: 'Udumalpet', val: 'Udumalpet' },
                       { label: 'Bengaluru', val: 'Bengaluru' },
-                      { label: 'Remote', val: 'Remote' }
+                      { label: 'Hyderabad', val: 'Hyderabad' },
+                      { label: 'Mumbai', val: 'Mumbai' },
+                      { label: 'Delhi NCR', val: 'Delhi' },
+                      { label: 'Remote WFH', val: 'Remote' }
                     ].map((chip, idx) => (
                       <button
                         key={idx}
