@@ -43,6 +43,11 @@ import { AdminJobPostings } from '@/pages/admin/AdminJobPostings'
 import { AdminCareerGuides } from '@/pages/admin/AdminCareerGuides'
 import { AdminAdManager } from '@/pages/admin/AdminAdManager'
 
+// Enterprise Operations Consoles
+import { AdminApplications } from '@/pages/admin/AdminApplications'
+import { LeadAnalytics } from '@/pages/admin/LeadAnalytics'
+import { SystemHealth } from '@/pages/admin/SystemHealth'
+
 const ExternalRedirect: React.FC<{ to: string }> = ({ to }) => {
   useEffect(() => {
     window.location.href = to
@@ -108,12 +113,15 @@ function App() {
             <Route path="kb" element={<KBCMS />} />
             <Route path="marketplace" element={<MarketplaceCMS />} />
             <Route path="jobs" element={<AdminJobPostings />} />
+            <Route path="job-applications" element={<AdminApplications />} />
             <Route path="career-guides" element={<AdminCareerGuides />} />
             <Route path="ads" element={<AdminAdManager />} />
             <Route path="crm" element={<LeadCRM />} />
+            <Route path="analytics" element={<LeadAnalytics />} />
             <Route path="media" element={<MediaLibrary />} />
             <Route path="support" element={<SupportManager />} />
             <Route path="contacts" element={<ContactSubmissions />} />
+            <Route path="health" element={<SystemHealth />} />
             <Route path="settings" element={<SiteSettings />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>

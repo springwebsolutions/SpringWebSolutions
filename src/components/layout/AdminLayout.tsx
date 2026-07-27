@@ -6,7 +6,8 @@ import {
   LayoutDashboard, FileText, BookOpen, ShoppingBag, 
   Users, Image, Ticket, Settings, ArrowLeft, Loader2, 
   ShieldAlert, HelpCircle, ChevronRight, Bell, LogOut,
-  Zap, Globe, Menu, X, MessageSquare, Calendar, Briefcase, Megaphone
+  Zap, Globe, Menu, X, MessageSquare, Calendar, Briefcase, Megaphone,
+  TrendingUp, Activity, UserCheck
 } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
 
@@ -115,6 +116,7 @@ export const AdminLayout: React.FC = () => {
       label: 'Careers & Ads Portal',
       items: [
         { label: 'Job Openings', href: `${prefix}/jobs`, icon: Briefcase },
+        { label: 'Candidate Applications', href: `${prefix}/job-applications`, icon: UserCheck },
         { label: 'Educational Guides', href: `${prefix}/career-guides`, icon: BookOpen },
         { label: 'Ad Slot Manager', href: `${prefix}/ads`, icon: Megaphone },
       ]
@@ -123,6 +125,7 @@ export const AdminLayout: React.FC = () => {
       label: 'Operations',
       items: [
         { label: 'Lead CRM', href: `${prefix}/crm`, icon: Users },
+        { label: 'Lead Analytics', href: `${prefix}/analytics`, icon: TrendingUp },
         { label: 'Support Desk', href: `${prefix}/support`, icon: Ticket },
         { label: 'Contact Submissions', href: `${prefix}/contacts`, icon: MessageSquare },
       ]
@@ -130,6 +133,7 @@ export const AdminLayout: React.FC = () => {
     {
       label: 'System',
       items: [
+        { label: 'System Health', href: `${prefix}/health`, icon: Activity },
         { label: 'Settings', href: `${prefix}/settings`, icon: Settings },
       ]
     }
