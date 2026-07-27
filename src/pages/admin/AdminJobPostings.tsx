@@ -13,6 +13,7 @@ export const AdminJobPostings: React.FC = () => {
     title: '',
     slug: '',
     company_name: 'Spring Web Solutions',
+    is_internal_hiring: true,
     location_country: 'India',
     location_state: 'Tamil Nadu',
     location_city: 'Udumalpet',
@@ -36,6 +37,7 @@ export const AdminJobPostings: React.FC = () => {
       title: '',
       slug: '',
       company_name: 'Spring Web Solutions',
+      is_internal_hiring: true,
       location_country: 'India',
       location_state: 'Tamil Nadu',
       location_city: 'Udumalpet',
@@ -61,6 +63,7 @@ export const AdminJobPostings: React.FC = () => {
       title: job.title,
       slug: job.slug,
       company_name: job.company_name,
+      is_internal_hiring: job.is_internal_hiring !== false,
       location_country: job.location_country,
       location_state: job.location_state,
       location_city: job.location_city,
@@ -190,6 +193,45 @@ export const AdminJobPostings: React.FC = () => {
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+              
+              {/* Internal vs External Vacancy Selection */}
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                <label className="block text-slate-200 font-bold uppercase tracking-wider text-[11px] font-mono">
+                  Posting Type &amp; Resume Pipeline Routing
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div 
+                    onClick={() => setForm({ ...form, is_internal_hiring: true, company_name: 'Spring Web Solutions' })}
+                    className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${
+                      form.is_internal_hiring 
+                        ? 'bg-emerald-500/20 border-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/10' 
+                        : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Sparkles size={16} className={form.is_internal_hiring ? 'text-emerald-400' : 'text-slate-500'} />
+                    <div>
+                      <div className="text-xs">SpringWeb Direct Opening</div>
+                      <div className="text-[10px] text-slate-400 font-normal">Routes to Admin Resume Pipeline</div>
+                    </div>
+                  </div>
+
+                  <div 
+                    onClick={() => setForm({ ...form, is_internal_hiring: false })}
+                    className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${
+                      !form.is_internal_hiring 
+                        ? 'bg-indigo-500/20 border-indigo-500 text-white font-bold shadow-lg shadow-indigo-500/10' 
+                        : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <MapPin size={16} className={!form.is_internal_hiring ? 'text-indigo-400' : 'text-slate-500'} />
+                    <div>
+                      <div className="text-xs">Third-Party Local Vacancy</div>
+                      <div className="text-[10px] text-slate-400 font-normal">Redirects to employer site/email</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-slate-300 font-bold mb-1">Job Title</label>

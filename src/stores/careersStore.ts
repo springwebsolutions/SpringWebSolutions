@@ -7,6 +7,7 @@ export interface JobPosting {
   slug: string
   company_name: string
   company_logo?: string
+  is_internal_hiring?: boolean // true = SpringWeb Solutions internal opening, false = external employer vacancy
   location_country: string
   location_state: string
   location_city: string
@@ -82,6 +83,7 @@ const SEED_JOBS: JobPosting[] = [
     slug: 'senior-fullstack-react-node-engineer',
     company_name: 'Spring Web Solutions',
     company_logo: '/logo-emblem.png',
+    is_internal_hiring: true,
     location_country: 'India',
     location_state: 'Tamil Nadu',
     location_city: 'Udumalpet',
@@ -109,6 +111,7 @@ const SEED_JOBS: JobPosting[] = [
     title: 'Native Android (Kotlin) Mobile Developer',
     slug: 'native-android-kotlin-developer',
     company_name: 'Apex Mobile Technologies',
+    is_internal_hiring: false,
     location_country: 'India',
     location_state: 'Tamil Nadu',
     location_city: 'Coimbatore',

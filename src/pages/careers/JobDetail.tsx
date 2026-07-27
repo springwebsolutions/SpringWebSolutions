@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
@@ -49,12 +49,38 @@ export const JobDetail: React.FC = () => {
     .filter(j => j.id !== job.id && (j.niche_category === job.niche_category || j.location_city === job.location_city))
     .slice(0, 3)
 
+  const isInternal = job.is_internal_hiring !== false
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false)
+  const [submittedSuccess, setSubmittedSuccess] = useState(false)
+  const [applicantForm, setApplicantForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    experience: '3 Years',
+    expected_salary: '',
+    resume_url: '',
+    cover_note: ''
+  })
+
   const handleApply = () => {
-    if (job.apply_link_or_email.startsWith('mailto:')) {
-      window.location.href = job.apply_link_or_email
+    if (isInternal) {
+      setIsApplyModalOpen(true)
     } else {
-      window.open(job.apply_link_or_email, '_blank')
+      if (job.apply_link_or_email.startsWith('mailto:')) {
+        window.location.href = job.apply_link_or_email
+      } else {
+        window.open(job.apply_link_or_email, '_blank')
+      }
     }
+  }
+
+  const handleInternalSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmittedSuccess(true)
+    setTimeout(() => {
+      setSubmittedSuccess(false)
+      setIsApplyModalOpen(false)
+    }, 2500)
   }
 
   return (
@@ -73,6 +99,14 @@ export const JobDetail: React.FC = () => {
               <ArrowLeft size={14} />
               <span>Back to Vacancies</span>
             </button>
+
+            <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
+              isInternal 
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' 
+                : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
+            }`}>
+              {isInternal ? '🌟 SpringWeb Direct Opening' : '🏢 Employer Vacancy'}
+            </span>
 
             <div className="text-xs text-slate-500 font-mono">
               Posted: {new Date(job.created_at).toLocaleDateString()}
@@ -202,6 +236,103 @@ export const JobDetail: React.FC = () => {
 
         </div>
       </main>
+
+      {/* Application Modal for SpringWeb Internal Openings */}
+      {isApplyModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#080b14] border border-white/10 rounded-3xl p-6 max-w-lg w-full space-y-6">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div>
+                <h3 className="text-lg font-bold font-display text-white">Apply for Position</h3>
+                <div className="text-xs text-emerald-400 font-mono mt-0.5">{job.title}</div>
+              </div>
+              <button
+                onClick={() => setIsApplyModalOpen(false)}
+                className="text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {submittedSuccess ? (
+              <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center space-y-3">
+                <CheckCircle2 size={36} className="text-emerald-400 mx-auto" />
+                <h4 className="font-bold text-white text-sm">Application Submitted Successfully!</h4>
+                <p className="text-xs text-slate-400">Our hiring team will review your resume and contact you via email.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleInternalSubmit} className="space-y-4 text-xs">
+                <div>
+                  <label className="block text-slate-300 font-bold mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={applicantForm.name}
+                    onChange={(e) => setApplicantForm({ ...applicantForm, name: e.target.value })}
+                    placeholder="Enter your full name"
+                    className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      value={applicantForm.email}
+                      onChange={(e) => setApplicantForm({ ...applicantForm, email: e.target.value })}
+                      placeholder="you@email.com"
+                      className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">Phone Number</label>
+                    <input
+                      type="text"
+                      required
+                      value={applicantForm.phone}
+                      onChange={(e) => setApplicantForm({ ...applicantForm, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 font-bold mb-1">Resume Link / Portfolio URL</label>
+                  <input
+                    type="url"
+                    required
+                    value={applicantForm.resume_url}
+                    onChange={(e) => setApplicantForm({ ...applicantForm, resume_url: e.target.value })}
+                    placeholder="https://drive.google.com/your-resume.pdf or LinkedIn"
+                    className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 font-bold mb-1">Cover Note / Key Achievements</label>
+                  <textarea
+                    rows={3}
+                    value={applicantForm.cover_note}
+                    onChange={(e) => setApplicantForm({ ...applicantForm, cover_note: e.target.value })}
+                    placeholder="Briefly describe your relevant skills and project experience..."
+                    className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+                >
+                  Submit Application
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

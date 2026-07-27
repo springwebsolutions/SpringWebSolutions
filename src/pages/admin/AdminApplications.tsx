@@ -132,7 +132,7 @@ export const AdminApplications: React.FC = () => {
             <Briefcase size={13} /> Recruitment Console
           </div>
           <h1 className="text-3xl font-black font-display tracking-tight uppercase text-white">Candidate Applications</h1>
-          <p className="text-sm text-slate-400 mt-1 font-light">Manage incoming job applications, resume reviews, candidate scores, and hiring stages.</p>
+          <p className="text-sm text-slate-400 mt-1 font-light">Manage candidate applications, resume submissions, match scores, and interview stages exclusively for SpringWeb Solutions internal hiring positions.</p>
         </div>
 
         <div className="flex items-center gap-3">
