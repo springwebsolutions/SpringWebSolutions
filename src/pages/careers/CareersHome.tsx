@@ -38,13 +38,13 @@ export const CareersHome: React.FC = () => {
   const featuredJobs = activeJobs.filter(j => j.featured).slice(0, 6)
   const publishedGuides = guides.filter(g => g.status === 'published').slice(0, 3)
 
-  // Geographical Location Matrix
+  // Geographical Location Matrix (All-India, Tamil Nadu Statewide, Metros & Remote)
   const locations = [
-    { name: 'Udumalpet & Local TN', count: activeJobs.filter(j => j.location_city === 'Udumalpet' || j.location_state === 'Tamil Nadu').length },
-    { name: 'Coimbatore & Tiruppur Tech Hub', count: activeJobs.filter(j => j.location_city === 'Coimbatore' || j.location_city === 'Tiruppur').length },
-    { name: 'National Openings (India)', count: activeJobs.filter(j => j.location_country === 'India').length },
-    { name: 'International & US/EU Remote', count: activeJobs.filter(j => j.location_country !== 'India' || j.is_remote).length },
-    { name: 'Remote / Work From Home (WFH)', count: activeJobs.filter(j => j.is_wfh || j.is_remote).length }
+    { name: 'All-India National Openings', query: 'India', count: activeJobs.filter(j => j.location_country === 'India').length, badge: 'Pan-India' },
+    { name: 'Tamil Nadu Statewide', query: 'Tamil Nadu', count: activeJobs.filter(j => j.location_state === 'Tamil Nadu' || j.location_city === 'Chennai' || j.location_city === 'Coimbatore' || j.location_city === 'Udumalpet' || j.location_city === 'Tiruppur').length, badge: 'Statewide' },
+    { name: 'Remote / Work From Home', query: 'WFH', count: activeJobs.filter(j => j.is_wfh || j.is_remote).length, badge: '100% WFH' },
+    { name: 'Bengaluru & Tech Metros', query: 'Bengaluru', count: activeJobs.filter(j => j.location_city === 'Bengaluru' || j.location_state === 'Karnataka' || j.location_city === 'Hyderabad').length, badge: 'Tech Metros' },
+    { name: 'International & Global', query: 'International', count: activeJobs.filter(j => j.location_country !== 'India' || j.is_remote).length, badge: 'Worldwide' }
   ]
 
   const nicheCategories = [
@@ -72,18 +72,18 @@ export const CareersHome: React.FC = () => {
             
             <div className="text-center max-w-4xl mx-auto space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest font-display">
-                <Sparkles size={14} /> Global &amp; Local Careers Engine
+                <Sparkles size={14} /> Global &amp; All-India Careers Engine
               </div>
 
               <h1 className="text-4xl sm:text-6xl font-black tracking-tight font-display uppercase leading-tight">
-                Discover Career Vacancies, <br />
+                Discover Career Vacancies Across <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400">
-                  Local, Remote &amp; Global Opportunities
+                  All-India, Tamil Nadu &amp; Global Remote
                 </span>
               </h1>
 
               <p className="text-slate-400 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
-                Browse active job openings in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, All-India, and high-paying International Remote/WFH contracts. Supported by educational career guides &amp; skill roadmaps.
+                Search active openings across All-India metros (Bengaluru, Chennai, Hyderabad, Mumbai, Delhi), Tamil Nadu statewide regions, and high-paying International Remote/WFH contracts.
               </p>
             </div>
 
@@ -115,12 +115,14 @@ export const CareersHome: React.FC = () => {
                     onChange={(e) => setSelectedLocation(e.target.value)}
                     className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[#080b14] border border-white/10 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
                   >
-                    <option value="all">All Locations (Global &amp; Local)</option>
-                    <option value="Udumalpet">Udumalpet &amp; Local Area</option>
+                    <option value="all">All India &amp; Global Locations</option>
+                    <option value="India">All-India National</option>
+                    <option value="Tamil Nadu">Tamil Nadu Statewide</option>
+                    <option value="Chennai">Chennai Metro</option>
+                    <option value="Bengaluru">Bengaluru / Bangalore</option>
                     <option value="Coimbatore">Coimbatore &amp; Tiruppur</option>
-                    <option value="Tamil Nadu">Tamil Nadu State</option>
-                    <option value="India">All India National</option>
-                    <option value="United States">International / Remote</option>
+                    <option value="Udumalpet">Udumalpet &amp; Local TN</option>
+                    <option value="United States">International Remote</option>
                   </select>
                 </div>
 
@@ -165,10 +167,10 @@ export const CareersHome: React.FC = () => {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-2">
               <h2 className="text-xl font-bold font-display text-white uppercase tracking-tight">
-                Explore Vacancies by Location &amp; Region
+                Explore Vacancies by Region &amp; Location
               </h2>
               <p className="text-xs text-slate-400 font-light">
-                Find opportunities tailored to your city, state, country, or preferred work style.
+                Find opportunities across Tamil Nadu, Pan-India Metros, or 100% Remote/WFH contracts.
               </p>
             </div>
 
@@ -176,17 +178,20 @@ export const CareersHome: React.FC = () => {
               {locations.map((loc, idx) => (
                 <Link
                   key={idx}
-                  to={`/jobs?loc=${encodeURIComponent(loc.name.split(' ')[0])}`}
+                  to={`/jobs?loc=${encodeURIComponent(loc.query)}`}
                   className="p-5 rounded-2xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:-translate-y-1 transition-all group space-y-2"
                 >
                   <div className="flex items-center justify-between">
                     <MapPin size={16} className="text-emerald-400 group-hover:scale-110 transition-transform" />
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                      {loc.count} Jobs
+                      {loc.badge}
                     </span>
                   </div>
                   <div className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors line-clamp-1">
                     {loc.name}
+                  </div>
+                  <div className="text-[11px] text-slate-400 font-mono">
+                    {loc.count} Active Openings
                   </div>
                 </Link>
               ))}

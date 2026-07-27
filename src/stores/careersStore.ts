@@ -184,6 +184,58 @@ const SEED_JOBS: JobPosting[] = [
     status: 'active',
     featured: true,
     created_at: new Date().toISOString()
+  },
+  {
+    id: 'job-5',
+    title: 'Senior Frontend Architect (React & Next.js)',
+    slug: 'senior-frontend-architect-chennai',
+    company_name: 'Vanguard Systems',
+    location_country: 'India',
+    location_state: 'Tamil Nadu',
+    location_city: 'Chennai',
+    location_area: 'OMR IT Corridor',
+    is_remote: true,
+    is_wfh: true,
+    job_type: 'Full-Time',
+    experience_level: 'Senior Level',
+    salary_range: '₹12,00,000 - ₹20,00,000 / year',
+    niche_category: 'Software Engineering',
+    description: 'Lead frontend architecture for enterprise SaaS web applications across Tamil Nadu and All-India.',
+    requirements: [
+      '5+ years in modern React, Next.js, and TypeScript',
+      'Performance tuning and micro-frontend design',
+      'Hybrid/WFH flexibility across Tamil Nadu'
+    ],
+    apply_link_or_email: 'mailto:careers@vanguardsystems.in',
+    status: 'active',
+    featured: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'job-6',
+    title: 'Cloud Infrastructure & DevOps Lead',
+    slug: 'cloud-infrastructure-devops-lead-bengaluru',
+    company_name: 'CloudPulse India',
+    location_country: 'India',
+    location_state: 'Karnataka',
+    location_city: 'Bengaluru',
+    location_area: 'Electronic City',
+    is_remote: true,
+    is_wfh: true,
+    job_type: 'Full-Time',
+    experience_level: 'Lead / Executive',
+    salary_range: '₹18,00,000 - ₹28,00,000 / year',
+    niche_category: 'Cloud & Infrastructure',
+    description: 'Architect scalable AWS, Kubernetes, Docker, and CI/CD pipelines for pan-India product teams.',
+    requirements: [
+      '4+ years AWS, Terraform, Docker, and Kubernetes deployment',
+      'Experience managing microservices & Supabase/PostgreSQL clusters',
+      'Flexible WFH / Bangalore office setup'
+    ],
+    apply_link_or_email: 'mailto:talent@cloudpulse.io',
+    status: 'active',
+    featured: true,
+    created_at: new Date().toISOString()
   }
 ]
 
