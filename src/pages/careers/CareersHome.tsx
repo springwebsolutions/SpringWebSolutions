@@ -68,7 +68,7 @@ export const CareersHome: React.FC = () => {
         </div>
 
         {/* Hero Section */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
+        <section className="py-16 md:py-24 relative z-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10 relative z-10">
             
             <div className="text-center max-w-4xl mx-auto space-y-6">
@@ -88,8 +88,8 @@ export const CareersHome: React.FC = () => {
               </p>
             </div>
 
-            {/* Main Search Bar Card */}
-            <form onSubmit={handleSearchSubmit} className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-2xl relative z-40">
+            {/* Main Search Bar Card - Overflow Visible to allow Dropdown Floating */}
+            <form onSubmit={handleSearchSubmit} className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-2xl relative z-40 overflow-visible">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
                 
                 {/* Keyword Search Input */}
@@ -121,9 +121,9 @@ export const CareersHome: React.FC = () => {
                     className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
                   />
 
-                  {/* Autocomplete Suggestions Dropdown - Fixed High Z-Index & No Clipping */}
+                  {/* Autocomplete Suggestions Dropdown - Floating outside form card with High Z-Index */}
                   {locationDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl bg-[#0c101d] border border-emerald-500/30 shadow-2xl shadow-black/80 z-50 space-y-1 backdrop-blur-2xl max-h-64 overflow-y-auto">
+                    <div className="absolute top-full left-0 right-0 sm:min-w-[320px] mt-2 p-2 rounded-2xl bg-[#0b0f1a] border border-emerald-500/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-50 space-y-1 backdrop-blur-2xl max-h-72 overflow-y-auto">
                       <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 border-b border-white/5 mb-1">
                         Popular Quick Suggestions
                       </div>
