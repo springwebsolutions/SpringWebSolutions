@@ -42,12 +42,12 @@ export const CareersFooter: React.FC = () => {
           
           {/* Column 1: Brand & Portal Mission */}
           <div className="lg:col-span-2 space-y-5">
-            <Link to="/" className="inline-flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-emerald-400 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-500/20">
-                W
+            <Link to="/careers" className="inline-flex items-center gap-3 group cursor-pointer">
+              <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-1.5 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <img src="/logo-emblem.png" alt="SpringWeb Careers" className="h-full w-full object-contain" />
               </div>
               <div>
-                <div className="font-black text-lg text-white font-display uppercase tracking-tight flex items-center gap-2">
+                <div className="font-black text-lg text-white font-display uppercase tracking-tight flex items-center gap-2 group-hover:text-emerald-400 transition-colors">
                   SpringWeb <span className="text-emerald-400 font-mono text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">CAREERS</span>
                 </div>
                 <div className="text-[10px] text-slate-400 font-mono">Vacancies, WFH &amp; Career Guides Portal</div>
