@@ -89,7 +89,7 @@ export const CareersHome: React.FC = () => {
             </div>
 
             {/* Main Search Bar Card */}
-            <form onSubmit={handleSearchSubmit} className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-2xl">
+            <form onSubmit={handleSearchSubmit} className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-2xl relative z-40">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
                 
                 {/* Keyword Search Input */}
@@ -121,10 +121,12 @@ export const CareersHome: React.FC = () => {
                     className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
                   />
 
-                  {/* Autocomplete Suggestions Dropdown */}
+                  {/* Autocomplete Suggestions Dropdown - Fixed High Z-Index & No Clipping */}
                   {locationDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl bg-[#080b14] border border-white/15 shadow-2xl z-50 space-y-1 backdrop-blur-2xl">
-                      <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Popular Quick Suggestions</div>
+                    <div className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl bg-[#0c101d] border border-emerald-500/30 shadow-2xl shadow-black/80 z-50 space-y-1 backdrop-blur-2xl max-h-64 overflow-y-auto">
+                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 border-b border-white/5 mb-1">
+                        Popular Quick Suggestions
+                      </div>
                       {[
                         { label: 'All Locations (Global)', val: 'all' },
                         { label: 'Pan-India National', val: 'India' },
@@ -140,7 +142,7 @@ export const CareersHome: React.FC = () => {
                           key={idx}
                           type="button"
                           onMouseDown={() => { setSelectedLocation(item.val); setLocationDropdownOpen(false) }}
-                          className="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-between cursor-pointer"
+                          className="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 border border-transparent transition-all flex items-center justify-between cursor-pointer"
                         >
                           <span>{item.label}</span>
                           <span className="text-[10px] text-emerald-400 font-mono font-bold">Select</span>
