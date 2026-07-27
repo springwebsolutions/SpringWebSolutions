@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { useCareersStore } from '@/stores/careersStore'
 import type { CareerGuide } from '@/stores/careersStore'
 import { Plus, Trash2, Edit2, BookOpen } from 'lucide-react'
@@ -51,7 +52,7 @@ export const AdminCareerGuides: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const tagsArray = form.tags.split(',').map(t => t.trim()).filter(Boolean)
+    const tagsArray = form.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
     const generatedSlug = form.slug || form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
 
     if (editingGuide) {

@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { useCareersStore } from '@/stores/careersStore'
 import type { JobPosting } from '@/stores/careersStore'
 import { Plus, Trash2, Edit2, CheckCircle2, MapPin, Laptop, Sparkles } from 'lucide-react'
@@ -81,7 +82,7 @@ export const AdminJobPostings: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const reqArray = form.requirements.split('\n').filter(r => r.trim().length > 0)
+    const reqArray = form.requirements.split('\n').filter((r: string) => r.trim().length > 0)
     const generatedSlug = form.slug || form.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
 
     if (editingJob) {

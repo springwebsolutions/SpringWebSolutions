@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import { useCareersStore } from '@/stores/careersStore'
 import type { AdConfig } from '@/stores/careersStore'
 import { ExternalLink, Megaphone } from 'lucide-react'

@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { useCareersStore } from '@/stores/careersStore'
 import type { AdConfig } from '@/stores/careersStore'
 import { Megaphone, CheckCircle2, Save, ExternalLink, ShieldCheck, Zap } from 'lucide-react'
