@@ -55,7 +55,7 @@ export const CareersFooter: React.FC = () => {
             </Link>
 
             <p className="text-xs text-slate-400 leading-relaxed font-light">
-              SpringWeb Careers Vault connects talent with verified job opportunities across Udumalpet, Coimbatore, Chennai, Tamil Nadu statewide, Pan-India metros, and high-paying International Remote/WFH contracts.
+              SpringWeb Careers Vault connects job seekers with verified employment opportunities across Tamil Nadu, All-India Metros, and International Remote/WFH contracts.
             </p>
 
             <div className="flex items-center gap-4 text-xs font-mono text-emerald-400 pt-2">
@@ -63,7 +63,7 @@ export const CareersFooter: React.FC = () => {
                 <ShieldCheck size={14} /> 100% Verified Vacancies
               </div>
               <div className="flex items-center gap-1.5">
-                <Globe size={14} /> Global &amp; Local Reach
+                <Globe size={14} /> Pan-India &amp; Global Reach
               </div>
             </div>
           </div>
@@ -75,32 +75,27 @@ export const CareersFooter: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
+                <Link to="/jobs?loc=India" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-semibold text-white">
+                  <MapPin size={12} className="text-emerald-400" /> All-India Metros
+                </Link>
+              </li>
+              <li>
                 <Link to="/jobs?loc=Tamil%20Nadu" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
                   <MapPin size={12} className="text-emerald-400" /> Tamil Nadu Statewide
                 </Link>
               </li>
               <li>
                 <Link to="/jobs?loc=Chennai" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                  <MapPin size={12} className="text-emerald-400" /> Chennai Metro Openings
+                  <MapPin size={12} className="text-emerald-400" /> Chennai &amp; Tech Parks
                 </Link>
               </li>
               <li>
-                <Link to="/jobs?loc=Coimbatore" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                  <MapPin size={12} className="text-emerald-400" /> Coimbatore &amp; Tiruppur
+                <Link to="/jobs?loc=Bengaluru" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                  <MapPin size={12} className="text-emerald-400" /> Bengaluru &amp; South Metros
                 </Link>
               </li>
               <li>
-                <Link to="/jobs?loc=Udumalpet" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                  <MapPin size={12} className="text-emerald-400" /> Udumalpet &amp; Local Area
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs?loc=India" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                  <MapPin size={12} className="text-emerald-400" /> All-India Metros
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs?wfh=true" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <Link to="/jobs?wfh=true" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-semibold text-emerald-400">
                   <Laptop size={12} className="text-emerald-400" /> 100% Work From Home (WFH)
                 </Link>
               </li>
@@ -154,7 +149,7 @@ export const CareersFooter: React.FC = () => {
               </li>
               <li>
                 <Link to="/career-guides/technical-interview-prep-roadmap" className="hover:text-emerald-400 transition-colors">
-                  Interview Roadmaps
+                  Interview Preparation Roadmaps
                 </Link>
               </li>
               <li>
@@ -165,17 +160,6 @@ export const CareersFooter: React.FC = () => {
                   className="hover:text-emerald-400 transition-colors flex items-center gap-1 text-emerald-400 font-bold"
                 >
                   <span>Main Agency Website</span>
-                  <ExternalLink size={11} />
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://suite.springwebsolutions.in/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="hover:text-emerald-400 transition-colors flex items-center gap-1"
-                >
-                  <span>Operations Suite Admin</span>
                   <ExternalLink size={11} />
                 </a>
               </li>
