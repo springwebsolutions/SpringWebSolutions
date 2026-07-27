@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
-import { Footer } from '@/components/layout/Footer'
 import {
   Search, MapPin, Briefcase, Filter, Laptop, ArrowRight,
   Sparkles, CheckCircle2, ChevronRight, RefreshCw, Building2, LocateFixed, Loader2
@@ -328,7 +328,7 @@ export const JobListings: React.FC = () => {
         </div>
       </main>
 
-      <Footer />
+      <CareersFooter />
     </div>
   )
 }

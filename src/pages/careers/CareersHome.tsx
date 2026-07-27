@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
-import { Footer } from '@/components/layout/Footer'
 import { POPULAR_INDIA_LOCATIONS } from '@/data/indiaLocations'
 import {
   Search, MapPin, Briefcase, Globe, Sparkles, Building2, CheckCircle2,
@@ -455,7 +455,7 @@ export const CareersHome: React.FC = () => {
 
       </main>
 
-      <Footer />
+      <CareersFooter />
     </div>
   )
 }

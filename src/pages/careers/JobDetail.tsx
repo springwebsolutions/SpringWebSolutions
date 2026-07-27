@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
-import { Footer } from '@/components/layout/Footer'
 import {
   MapPin, Briefcase, Building2, CheckCircle2, Laptop, ArrowLeft,
   Share2, Mail, ExternalLink, Calendar, Award
@@ -40,7 +40,7 @@ export const JobDetail: React.FC = () => {
             </Link>
           </div>
         </div>
-        <Footer />
+        <CareersFooter />
       </div>
     )
   }
@@ -334,7 +334,7 @@ export const JobDetail: React.FC = () => {
         </div>
       )}
 
-      <Footer />
+      <CareersFooter />
     </div>
   )
 }

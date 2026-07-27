@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
-import { Footer } from '@/components/layout/Footer'
 import { BookOpen, ArrowLeft, Calendar, User, Tag } from 'lucide-react'
 
 export const CareerGuideDetail: React.FC = () => {
@@ -35,7 +35,7 @@ export const CareerGuideDetail: React.FC = () => {
             </Link>
           </div>
         </div>
-        <Footer />
+        <CareersFooter />
       </div>
     )
   }
@@ -88,7 +88,7 @@ export const CareerGuideDetail: React.FC = () => {
         </div>
       </main>
 
-      <Footer />
+      <CareersFooter />
     </div>
   )
 }
