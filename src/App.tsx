@@ -63,9 +63,9 @@ function App() {
     prefetchAllPages()
   }, [])
 
-  const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : ''
-  const isSuiteDomain = hostname.startsWith('suite.')
-  const isCareersDomain = hostname.startsWith('careers.') || hostname.startsWith('jobs.')
+  const hostname = typeof window !== 'undefined' ? (window.location.hostname || window.location.host || '').toLowerCase() : ''
+  const isSuiteDomain = hostname.startsWith('suite.') || hostname.includes('suite.springwebsolutions.in')
+  const isCareersDomain = hostname.startsWith('careers.') || hostname.includes('careers.springwebsolutions.in') || hostname.startsWith('jobs.') || hostname.includes('jobs.springwebsolutions.in')
 
   // Clean URL history if /admin is present in address bar on suite subdomain
   useEffect(() => {
