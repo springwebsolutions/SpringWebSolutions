@@ -117,22 +117,42 @@ export const JobListings: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Location Filter */}
+                {/* Location Filter: Open LinkedIn / Indeed Style Input */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">City / Region</label>
-                  <select
-                    value={selectedCity}
-                    onChange={(e) => setSelectedCity(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl bg-[#080b14] border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
-                  >
-                    <option value="all">All Cities &amp; Regions</option>
-                    <option value="Udumalpet">Udumalpet &amp; Local Area</option>
-                    <option value="Coimbatore">Coimbatore</option>
-                    <option value="Tiruppur">Tiruppur</option>
-                    <option value="Tamil Nadu">Tamil Nadu State</option>
-                    <option value="India">India National</option>
-                    <option value="United States">International / Remote</option>
-                  </select>
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">City, State or Country</label>
+                  <div className="relative">
+                    <MapPin size={15} className="absolute left-3.5 top-3.5 text-emerald-400" />
+                    <input
+                      type="text"
+                      value={selectedCity === 'all' ? '' : selectedCity}
+                      onChange={(e) => setSelectedCity(e.target.value || 'all')}
+                      placeholder="e.g. Chennai, Mumbai, London, Remote..."
+                      className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium"
+                    />
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                    {[
+                      { label: 'All', val: 'all' },
+                      { label: 'India', val: 'India' },
+                      { label: 'Tamil Nadu', val: 'Tamil Nadu' },
+                      { label: 'Chennai', val: 'Chennai' },
+                      { label: 'Bengaluru', val: 'Bengaluru' },
+                      { label: 'Remote', val: 'Remote' }
+                    ].map((chip, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedCity(chip.val)}
+                        className={`px-2 py-0.5 rounded text-[10px] font-semibold border transition-all cursor-pointer ${
+                          selectedCity.toLowerCase() === chip.val.toLowerCase()
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                            : 'bg-white/5 text-slate-400 hover:text-white border-white/10'
+                        }`}
+                      >
+                        {chip.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Job Type Filter */}

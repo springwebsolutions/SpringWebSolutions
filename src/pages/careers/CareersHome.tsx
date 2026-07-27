@@ -16,6 +16,7 @@ export const CareersHome: React.FC = () => {
   // Search & Filter state
   const [keyword, setKeyword] = useState('')
   const [selectedLocation, setSelectedLocation] = useState('all')
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false)
   const [isWfhOnly, setIsWfhOnly] = useState(false)
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export const CareersHome: React.FC = () => {
     e.preventDefault()
     const queryParams = new URLSearchParams()
     if (keyword) queryParams.set('q', keyword)
-    if (selectedLocation !== 'all') queryParams.set('loc', selectedLocation)
+    if (selectedLocation && selectedLocation !== 'all') queryParams.set('loc', selectedLocation)
     if (isWfhOnly) queryParams.set('wfh', 'true')
     navigate(`/jobs?${queryParams.toString()}`)
   }
@@ -105,25 +106,48 @@ export const CareersHome: React.FC = () => {
                   />
                 </div>
 
-                {/* Location Filter */}
+                {/* Location Filter: Open LinkedIn/Indeed Style Search */}
                 <div className="md:col-span-4 relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
-                    <MapPin size={18} />
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none z-10">
+                    <MapPin size={18} className="text-emerald-400" />
                   </span>
-                  <select
-                    value={selectedLocation}
+                  <input
+                    type="text"
+                    value={selectedLocation === 'all' ? '' : selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[#080b14] border border-white/10 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
-                  >
-                    <option value="all">All India &amp; Global Locations</option>
-                    <option value="India">All-India National</option>
-                    <option value="Tamil Nadu">Tamil Nadu Statewide</option>
-                    <option value="Chennai">Chennai Metro</option>
-                    <option value="Bengaluru">Bengaluru / Bangalore</option>
-                    <option value="Coimbatore">Coimbatore &amp; Tiruppur</option>
-                    <option value="Udumalpet">Udumalpet &amp; Local TN</option>
-                    <option value="United States">International Remote</option>
-                  </select>
+                    onFocus={() => setLocationDropdownOpen(true)}
+                    onBlur={() => setTimeout(() => setLocationDropdownOpen(false), 200)}
+                    placeholder="City, state, country or 'Remote'..."
+                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
+                  />
+
+                  {/* Autocomplete Suggestions Dropdown */}
+                  {locationDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl bg-[#080b14] border border-white/15 shadow-2xl z-50 space-y-1 backdrop-blur-2xl">
+                      <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Popular Quick Suggestions</div>
+                      {[
+                        { label: 'All Locations (Global)', val: 'all' },
+                        { label: 'Pan-India National', val: 'India' },
+                        { label: 'Tamil Nadu Statewide', val: 'Tamil Nadu' },
+                        { label: 'Chennai Metro', val: 'Chennai' },
+                        { label: 'Bengaluru / Bangalore', val: 'Bengaluru' },
+                        { label: 'Coimbatore & Tiruppur', val: 'Coimbatore' },
+                        { label: 'Udumalpet & Local TN', val: 'Udumalpet' },
+                        { label: '100% Work From Home (WFH)', val: 'Remote' },
+                        { label: 'International (US/EU/UAE)', val: 'International' }
+                      ].map((item, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onMouseDown={() => { setSelectedLocation(item.val); setLocationDropdownOpen(false) }}
+                          className="w-full text-left px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-between cursor-pointer"
+                        >
+                          <span>{item.label}</span>
+                          <span className="text-[10px] text-emerald-400 font-mono font-bold">Select</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Submit Search Button */}
