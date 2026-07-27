@@ -6,7 +6,7 @@ import { AdBanner } from '@/components/careers/AdBanner'
 import { Footer } from '@/components/layout/Footer'
 import {
   Search, MapPin, Briefcase, Filter, Laptop, ArrowRight,
-  Sparkles, CheckCircle2, ChevronRight, RefreshCw, Building2
+  Sparkles, CheckCircle2, ChevronRight, RefreshCw, Building2, LocateFixed, Loader2
 } from 'lucide-react'
 
 export const JobListings: React.FC = () => {
@@ -20,6 +20,33 @@ export const JobListings: React.FC = () => {
   const [selectedJobType, setSelectedJobType] = useState('all')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [isWfhOnly, setIsWfhOnly] = useState(searchParams.get('wfh') === 'true')
+  const [detectingGps, setDetectingGps] = useState(false)
+
+  const handleDetectGps = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!navigator.geolocation) return
+
+    setDetectingGps(true)
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords
+          const res = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          )
+          const data = await res.json()
+          const detectedCity = data.city || data.locality || data.principalSubdivision || 'Tamil Nadu'
+          setSelectedCity(detectedCity)
+        } catch (err) {
+          // Silent fallback
+        } finally {
+          setDetectingGps(false)
+        }
+      },
+      () => setDetectingGps(false),
+      { timeout: 10000 }
+    )
+  }
 
   useEffect(() => {
     fetchJobs()
@@ -117,9 +144,19 @@ export const JobListings: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Location Filter: Open LinkedIn / Indeed Style Input */}
+                {/* Location Filter: Open LinkedIn / Indeed Style Input with GPS */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">City, State or Country</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">City, State or Country</label>
+                    <button
+                      type="button"
+                      onClick={handleDetectGps}
+                      className="text-[10px] text-emerald-400 hover:text-emerald-300 font-mono flex items-center gap-1 cursor-pointer"
+                    >
+                      {detectingGps ? <Loader2 size={10} className="animate-spin" /> : <LocateFixed size={10} />}
+                      <span>GPS Detect</span>
+                    </button>
+                  </div>
                   <div className="relative">
                     <MapPin size={15} className="absolute left-3.5 top-3.5 text-emerald-400" />
                     <input
@@ -127,8 +164,16 @@ export const JobListings: React.FC = () => {
                       value={selectedCity === 'all' ? '' : selectedCity}
                       onChange={(e) => setSelectedCity(e.target.value || 'all')}
                       placeholder="e.g. Chennai, Mumbai, London, Remote..."
-                      className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium"
+                      className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium"
                     />
+                    <button
+                      type="button"
+                      onClick={handleDetectGps}
+                      title="Detect My Location"
+                      className="absolute right-2.5 top-2.5 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                    >
+                      {detectingGps ? <Loader2 size={14} className="animate-spin" /> : <LocateFixed size={14} />}
+                    </button>
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap pt-1">
                     {[

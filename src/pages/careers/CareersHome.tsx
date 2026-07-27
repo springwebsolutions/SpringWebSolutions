@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/Footer'
 import { POPULAR_INDIA_LOCATIONS } from '@/data/indiaLocations'
 import {
   Search, MapPin, Briefcase, Globe, Sparkles, Building2, CheckCircle2,
-  BookOpen, ArrowRight, Laptop, Filter, ChevronRight, Award, Zap
+  BookOpen, ArrowRight, Laptop, Filter, ChevronRight, Award, Zap, LocateFixed, Loader2
 } from 'lucide-react'
 
 export const CareersHome: React.FC = () => {
@@ -19,12 +19,53 @@ export const CareersHome: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState('all')
   const [locationDropdownOpen, setLocationDropdownOpen] = useState(false)
   const [isWfhOnly, setIsWfhOnly] = useState(false)
+  const [detectingGps, setDetectingGps] = useState(false)
+  const [gpsMessage, setGpsMessage] = useState<string | null>(null)
 
   useEffect(() => {
     fetchJobs()
     fetchGuides()
     document.title = 'Careers & Job Vacancies Vault | SpringWeb Solutions'
   }, [])
+
+  const handleDetectGps = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!navigator.geolocation) {
+      setGpsMessage('GPS is not supported on this browser.')
+      return
+    }
+
+    setDetectingGps(true)
+    setGpsMessage(null)
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords
+          const res = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          )
+          const data = await res.json()
+          const detectedCity = data.city || data.locality || data.principalSubdivision || 'Tamil Nadu'
+          setSelectedLocation(detectedCity)
+          setGpsMessage(`Location detected: ${detectedCity}`)
+          setTimeout(() => setGpsMessage(null), 3000)
+        } catch (err) {
+          setGpsMessage('Could not reverse geocode location. Please type manually.')
+        } finally {
+          setDetectingGps(false)
+        }
+      },
+      (error) => {
+        setDetectingGps(false)
+        setGpsMessage('GPS permission denied or unavailable.')
+        setTimeout(() => setGpsMessage(null), 3000)
+      },
+      { timeout: 10000, maximumAge: 60000 }
+    )
+  }
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -107,7 +148,7 @@ export const CareersHome: React.FC = () => {
                   />
                 </div>
 
-                {/* Location Filter: Open LinkedIn/Indeed Style Search */}
+                {/* Location Filter: Open LinkedIn/Indeed Style Search with GPS */}
                 <div className="md:col-span-4 relative">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none z-10">
                     <MapPin size={18} className="text-emerald-400" />
@@ -119,8 +160,22 @@ export const CareersHome: React.FC = () => {
                     onFocus={() => setLocationDropdownOpen(true)}
                     onBlur={() => setTimeout(() => setLocationDropdownOpen(false), 200)}
                     placeholder="City, state, country or 'Remote'..."
-                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
+                    className="w-full pl-11 pr-10 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500 font-medium"
                   />
+
+                  {/* GPS Target Button inside Input */}
+                  <button
+                    type="button"
+                    onClick={handleDetectGps}
+                    title="Detect My Current GPS Location"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer z-10"
+                  >
+                    {detectingGps ? (
+                      <Loader2 size={16} className="animate-spin text-emerald-400" />
+                    ) : (
+                      <LocateFixed size={16} className="hover:scale-110 transition-transform" />
+                    )}
+                  </button>
 
                   {/* Dynamic Real-Time Location Autocomplete Dropdown */}
                   {locationDropdownOpen && (
@@ -129,12 +184,25 @@ export const CareersHome: React.FC = () => {
                         <span>{selectedLocation && selectedLocation !== 'all' ? 'Matching Cities & States' : 'Popular Cities & Regions'}</span>
                         <span className="text-[9px] text-slate-400 font-mono">India &amp; Global</span>
                       </div>
+
+                      {/* GPS Detection Button inside Dropdown */}
+                      <button
+                        type="button"
+                        onMouseDown={handleDetectGps}
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all flex items-center justify-between cursor-pointer border border-emerald-500/30"
+                      >
+                        <div className="flex items-center gap-2">
+                          {detectingGps ? <Loader2 size={13} className="animate-spin" /> : <LocateFixed size={13} />}
+                          <span>Detect My Current GPS Location</span>
+                        </div>
+                        <span className="text-[9px] font-mono uppercase bg-emerald-500/20 px-1.5 py-0.5 rounded">GPS</span>
+                      </button>
                       
                       {/* Option for All Locations */}
                       <button
                         type="button"
                         onMouseDown={() => { setSelectedLocation('all'); setLocationDropdownOpen(false) }}
-                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center justify-between cursor-pointer border border-emerald-500/20"
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center justify-between cursor-pointer border border-white/5"
                       >
                         <span>All Locations (Global &amp; Pan-India)</span>
                         <span className="text-[10px] font-mono">Reset</span>
@@ -180,8 +248,8 @@ export const CareersHome: React.FC = () => {
 
               </div>
 
-              {/* Quick Filter Toggles */}
-              <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs text-slate-400">
+              {/* Quick Filter Toggles & GPS Status */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-white/5 text-xs text-slate-400">
                 <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
                   <input
                     type="checkbox"
@@ -192,9 +260,16 @@ export const CareersHome: React.FC = () => {
                   <span>Work From Home (WFH) &amp; 100% Remote Only</span>
                 </label>
 
-                <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-400">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
-                  <span>{activeJobs.length} Active Openings</span>
+                <div className="flex items-center gap-3">
+                  {gpsMessage && (
+                    <span className="text-[11px] font-mono text-emerald-400 font-semibold flex items-center gap-1">
+                      <LocateFixed size={12} /> {gpsMessage}
+                    </span>
+                  )}
+                  <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-400">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span>{activeJobs.length} Active Openings</span>
+                  </div>
                 </div>
               </div>
 
