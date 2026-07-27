@@ -16,6 +16,13 @@ import KBArticle from '@/pages/KBArticle'
 import SupportPortal from '@/pages/SupportPortal'
 import SupportTicketDetail from '@/pages/SupportTicketDetail'
 
+// Careers & Jobs Subdomain Portal
+import { CareersHome } from '@/pages/careers/CareersHome'
+import { JobListings } from '@/pages/careers/JobListings'
+import { JobDetail } from '@/pages/careers/JobDetail'
+import { CareerGuideListing } from '@/pages/careers/CareerGuideListing'
+import { CareerGuideDetail } from '@/pages/careers/CareerGuideDetail'
+
 import WhatsAppWidget from '@/components/ui/WhatsAppWidget'
 
 // SpringWeb Operations Suite Admin Views
@@ -30,6 +37,11 @@ import SiteSettings from '@/pages/admin/SiteSettings'
 import KBCMS from '@/pages/admin/KBCMS'
 import SupportManager from '@/pages/admin/SupportManager'
 import ContactSubmissions from '@/pages/admin/ContactSubmissions'
+
+// Careers & Ads Admin Consoles
+import { AdminJobPostings } from '@/pages/admin/AdminJobPostings'
+import { AdminCareerGuides } from '@/pages/admin/AdminCareerGuides'
+import { AdminAdManager } from '@/pages/admin/AdminAdManager'
 
 const ExternalRedirect: React.FC<{ to: string }> = ({ to }) => {
   useEffect(() => {
@@ -53,6 +65,7 @@ function App() {
 
   const hostname = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : ''
   const isSuiteDomain = hostname.startsWith('suite.')
+  const isCareersDomain = hostname.startsWith('careers.') || hostname.startsWith('jobs.')
 
   // Clean URL history if /admin is present in address bar on suite subdomain
   useEffect(() => {
@@ -61,6 +74,22 @@ function App() {
       window.history.replaceState(null, '', cleanPath)
     }
   }, [isSuiteDomain])
+
+  // ─── Subdomain Router for careers.springwebsolutions.in / jobs.springwebsolutions.in ───
+  if (isCareersDomain) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<CareersHome />} />
+          <Route path="/jobs" element={<JobListings />} />
+          <Route path="/jobs/:slug" element={<JobDetail />} />
+          <Route path="/career-guides" element={<CareerGuideListing />} />
+          <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    )
+  }
 
   // ─── Subdomain Router for suite.springwebsolutions.in ─────────────────────
   if (isSuiteDomain) {
@@ -78,6 +107,9 @@ function App() {
             <Route path="blog" element={<BlogCMS />} />
             <Route path="kb" element={<KBCMS />} />
             <Route path="marketplace" element={<MarketplaceCMS />} />
+            <Route path="jobs" element={<AdminJobPostings />} />
+            <Route path="career-guides" element={<AdminCareerGuides />} />
+            <Route path="ads" element={<AdminAdManager />} />
             <Route path="crm" element={<LeadCRM />} />
             <Route path="media" element={<MediaLibrary />} />
             <Route path="support" element={<SupportManager />} />
@@ -91,13 +123,13 @@ function App() {
   }
 
   const SectionRedirect: React.FC<{ targetId: string }> = ({ targetId }) => {
-  useEffect(() => {
-    window.location.href = `/#${targetId}`
-  }, [targetId])
-  return null
-}
+    useEffect(() => {
+      window.location.href = `/#${targetId}`
+    }, [targetId])
+    return null
+  }
 
-// Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
+  // Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
   return (
     <Router>
       <Routes>
@@ -106,6 +138,13 @@ function App() {
         <Route path="/about" element={<SectionRedirect targetId="about" />} />
         <Route path="/services" element={<SectionRedirect targetId="services" />} />
         <Route path="/contact" element={<Contact />} />
+
+        {/* Careers & Jobs Subdomain Portal Routes */}
+        <Route path="/careers" element={<CareersHome />} />
+        <Route path="/jobs" element={<JobListings />} />
+        <Route path="/jobs/:slug" element={<JobDetail />} />
+        <Route path="/career-guides" element={<CareerGuideListing />} />
+        <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
 
         {/* Blog System */}
         <Route path="/blog" element={<BlogListing />} />

@@ -6,7 +6,7 @@ import {
   LayoutDashboard, FileText, BookOpen, ShoppingBag, 
   Users, Image, Ticket, Settings, ArrowLeft, Loader2, 
   ShieldAlert, HelpCircle, ChevronRight, Bell, LogOut,
-  Zap, Globe, Menu, X, MessageSquare, Calendar
+  Zap, Globe, Menu, X, MessageSquare, Calendar, Briefcase, Megaphone
 } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
 
@@ -109,6 +109,14 @@ export const AdminLayout: React.FC = () => {
         { label: 'Knowledge Base', href: `${prefix}/kb`, icon: HelpCircle },
         { label: 'Marketplace', href: `${prefix}/marketplace`, icon: ShoppingBag },
         { label: 'Media Library', href: `${prefix}/media`, icon: Image },
+      ]
+    },
+    {
+      label: 'Careers & Ads Portal',
+      items: [
+        { label: 'Job Openings', href: `${prefix}/jobs`, icon: Briefcase },
+        { label: 'Educational Guides', href: `${prefix}/career-guides`, icon: BookOpen },
+        { label: 'Ad Slot Manager', href: `${prefix}/ads`, icon: Megaphone },
       ]
     },
     {

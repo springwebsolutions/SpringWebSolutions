@@ -1,0 +1,340 @@
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useCareersStore } from '@/stores/careersStore'
+import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { AdBanner } from '@/components/careers/AdBanner'
+import { Footer } from '@/components/layout/Footer'
+import {
+  Search, MapPin, Briefcase, Globe, Sparkles, Building2, CheckCircle2,
+  BookOpen, ArrowRight, Laptop, Filter, ChevronRight, Award, Zap
+} from 'lucide-react'
+
+export const CareersHome: React.FC = () => {
+  const navigate = useNavigate()
+  const { jobs, guides, fetchJobs, fetchGuides } = useCareersStore()
+
+  // Search & Filter state
+  const [keyword, setKeyword] = useState('')
+  const [selectedLocation, setSelectedLocation] = useState('all')
+  const [isWfhOnly, setIsWfhOnly] = useState(false)
+
+  useEffect(() => {
+    fetchJobs()
+    fetchGuides()
+    document.title = 'Careers & Job Vacancies Vault | SpringWeb Solutions'
+  }, [])
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const queryParams = new URLSearchParams()
+    if (keyword) queryParams.set('q', keyword)
+    if (selectedLocation !== 'all') queryParams.set('loc', selectedLocation)
+    if (isWfhOnly) queryParams.set('wfh', 'true')
+    navigate(`/jobs?${queryParams.toString()}`)
+  }
+
+  // Filter jobs for featured grid
+  const activeJobs = jobs.filter(j => j.status === 'active')
+  const featuredJobs = activeJobs.filter(j => j.featured).slice(0, 6)
+  const publishedGuides = guides.filter(g => g.status === 'published').slice(0, 3)
+
+  // Geographical Location Matrix
+  const locations = [
+    { name: 'Udumalpet & Local TN', count: activeJobs.filter(j => j.location_city === 'Udumalpet' || j.location_state === 'Tamil Nadu').length },
+    { name: 'Coimbatore & Tiruppur Tech Hub', count: activeJobs.filter(j => j.location_city === 'Coimbatore' || j.location_city === 'Tiruppur').length },
+    { name: 'National Openings (India)', count: activeJobs.filter(j => j.location_country === 'India').length },
+    { name: 'International & US/EU Remote', count: activeJobs.filter(j => j.location_country !== 'India' || j.is_remote).length },
+    { name: 'Remote / Work From Home (WFH)', count: activeJobs.filter(j => j.is_wfh || j.is_remote).length }
+  ]
+
+  const nicheCategories = [
+    { name: 'Software & Web Engineering', icon: Laptop, color: 'emerald' },
+    { name: 'Mobile App Development (Android/iOS)', icon: Briefcase, color: 'blue' },
+    { name: 'Windows Desktop Software', icon: Building2, color: 'indigo' },
+    { name: 'Technical SEO & Digital Growth', icon: Zap, color: 'purple' },
+    { name: 'Business Automation & Data', icon: Award, color: 'teal' }
+  ]
+
+  return (
+    <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans transition-colors duration-300">
+      <CareersNavbar />
+
+      <main className="flex-grow">
+        
+        {/* Header Leaderboard Ad Banner Zone */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6">
+          <AdBanner zoneId="header_leaderboard" />
+        </div>
+
+        {/* Hero Section */}
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10 relative z-10">
+            
+            <div className="text-center max-w-4xl mx-auto space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest font-display">
+                <Sparkles size={14} /> Global &amp; Local Careers Engine
+              </div>
+
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight font-display uppercase leading-tight">
+                Discover Career Vacancies, <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400">
+                  Local, Remote &amp; Global Opportunities
+                </span>
+              </h1>
+
+              <p className="text-slate-400 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
+                Browse active job openings in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, All-India, and high-paying International Remote/WFH contracts. Supported by educational career guides &amp; skill roadmaps.
+              </p>
+            </div>
+
+            {/* Main Search Bar Card */}
+            <form onSubmit={handleSearchSubmit} className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                
+                {/* Keyword Search Input */}
+                <div className="md:col-span-5 relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                    <Search size={18} />
+                  </span>
+                  <input
+                    type="text"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    placeholder="Job title, skills (e.g. React, Kotlin, C#, SEO)..."
+                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+
+                {/* Location Filter */}
+                <div className="md:col-span-4 relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                    <MapPin size={18} />
+                  </span>
+                  <select
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[#080b14] border border-white/10 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+                  >
+                    <option value="all">All Locations (Global &amp; Local)</option>
+                    <option value="Udumalpet">Udumalpet &amp; Local Area</option>
+                    <option value="Coimbatore">Coimbatore &amp; Tiruppur</option>
+                    <option value="Tamil Nadu">Tamil Nadu State</option>
+                    <option value="India">All India National</option>
+                    <option value="United States">International / Remote</option>
+                  </select>
+                </div>
+
+                {/* Submit Search Button */}
+                <div className="md:col-span-3">
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>Search Jobs</span>
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
+
+              </div>
+
+              {/* Quick Filter Toggles */}
+              <div className="flex items-center justify-between pt-3 border-t border-white/5 text-xs text-slate-400">
+                <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={isWfhOnly}
+                    onChange={(e) => setIsWfhOnly(e.target.checked)}
+                    className="h-4 w-4 rounded bg-white/10 border-white/20 text-emerald-500 focus:ring-0 cursor-pointer"
+                  />
+                  <span>Work From Home (WFH) &amp; 100% Remote Only</span>
+                </label>
+
+                <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-400">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  <span>{activeJobs.length} Active Openings</span>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+        </section>
+
+        {/* Location Hierarchy Explorer Section */}
+        <section className="py-12 border-y border-white/5 bg-[#060810]">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <h2 className="text-xl font-bold font-display text-white uppercase tracking-tight">
+                Explore Vacancies by Location &amp; Region
+              </h2>
+              <p className="text-xs text-slate-400 font-light">
+                Find opportunities tailored to your city, state, country, or preferred work style.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {locations.map((loc, idx) => (
+                <Link
+                  key={idx}
+                  to={`/jobs?loc=${encodeURIComponent(loc.name.split(' ')[0])}`}
+                  className="p-5 rounded-2xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:-translate-y-1 transition-all group space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <MapPin size={16} className="text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      {loc.count} Jobs
+                    </span>
+                  </div>
+                  <div className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors line-clamp-1">
+                    {loc.name}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Jobs Section */}
+        <section className="py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 border-b border-white/5 pb-6">
+              <div>
+                <div className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-display mb-1">
+                  Verified Opportunities
+                </div>
+                <h2 className="text-3xl font-extrabold font-display text-white uppercase">
+                  Featured Job Openings
+                </h2>
+              </div>
+              <Link to="/jobs" className="btn-secondary text-xs flex items-center gap-1.5">
+                <span>View All {activeJobs.length} Jobs</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {featuredJobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="p-6 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 space-y-5 flex flex-col justify-between group"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 p-2 flex items-center justify-center font-bold text-emerald-400">
+                          {job.company_name.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="text-xs text-slate-400 font-medium">{job.company_name}</div>
+                          <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
+                            {job.title}
+                          </h3>
+                        </div>
+                      </div>
+                      
+                      {job.is_wfh && (
+                        <span className="px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 whitespace-nowrap">
+                          <Laptop size={11} /> WFH / Remote
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-light">
+                      {job.description}
+                    </p>
+                  </div>
+
+                  <div className="space-y-4 pt-4 border-t border-white/5">
+                    <div className="flex items-center justify-between text-xs text-slate-400 flex-wrap gap-2">
+                      <span className="flex items-center gap-1">
+                        <MapPin size={13} className="text-emerald-400" />
+                        <span>{job.location_city}, {job.location_country}</span>
+                      </span>
+                      <span className="font-mono font-bold text-emerald-400">
+                        {job.salary_range}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-1 rounded-md bg-white/5 text-[11px] text-slate-300 border border-white/10">
+                        {job.job_type}
+                      </span>
+
+                      <Link
+                        to={`/jobs/${job.slug}`}
+                        className="px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold transition-all flex items-center gap-1"
+                      >
+                        <span>Apply &amp; Details</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* In-Feed Ad Banner Zone */}
+            <AdBanner zoneId="in_feed_banner" />
+
+          </div>
+        </section>
+
+        {/* Educational Career Guides Section */}
+        <section className="py-20 bg-[#060810] border-t border-white/5">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 border-b border-white/5 pb-6">
+              <div>
+                <div className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-display mb-1">
+                  Skill Building &amp; Exam Roadmaps
+                </div>
+                <h2 className="text-3xl font-extrabold font-display text-white uppercase">
+                  Educational Career Guides
+                </h2>
+              </div>
+              <Link to="/career-guides" className="btn-secondary text-xs flex items-center gap-1.5">
+                <span>View All Articles</span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {publishedGuides.map((guide) => (
+                <Link
+                  key={guide.id}
+                  to={`/career-guides/${guide.slug}`}
+                  className="rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:-translate-y-1 transition-all overflow-hidden flex flex-col justify-between group"
+                >
+                  <div className="p-6 space-y-4">
+                    <div className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider w-max">
+                      {guide.category}
+                    </div>
+                    <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors line-clamp-2">
+                      {guide.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 font-light leading-relaxed line-clamp-3">
+                      {guide.excerpt}
+                    </p>
+                  </div>
+
+                  <div className="p-6 pt-0 flex items-center justify-between text-xs text-slate-500 border-t border-white/5 mt-4">
+                    <span>By {guide.author}</span>
+                    <span className="text-emerald-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                      <span>Read Guide</span>
+                      <ArrowRight size={12} />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
