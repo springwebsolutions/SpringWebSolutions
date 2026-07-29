@@ -484,9 +484,25 @@ const DEFAULT_SITE_CONFIG = {
   }
 }
 
+const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): SectionData[] => {
+  const defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
+  if (!defaultSections.length) return dbSections || []
+
+  const dbTypes = new Set((dbSections || []).map(s => s.type))
+  const merged = [...(dbSections || [])]
+
+  defaultSections.forEach(defSec => {
+    if (!dbTypes.has(defSec.type)) {
+      merged.push(defSec)
+    }
+  })
+
+  return merged.sort((a, b) => a.display_order - b.display_order)
+}
+
 export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   currentPage: initialPageData ? initialPageData.page : null,
-  currentSections: initialPageData ? initialPageData.sections : [],
+  currentSections: initialPageData ? mergeSectionsWithDefaults(initialSlug, initialPageData.sections) : [],
   pages: Object.values(initialCache).map(item => item.page),
   siteConfig: (() => {
     try {
@@ -523,9 +539,10 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
 
     // If cached data is present, immediately serve it without setting loading: true
     if (cache[targetSlug]) {
+      const mergedCacheSections = mergeSectionsWithDefaults(targetSlug, cache[targetSlug].sections)
       set({
         currentPage: cache[targetSlug].page,
-        currentSections: cache[targetSlug].sections,
+        currentSections: mergedCacheSections,
         loading: false
       })
 
@@ -544,9 +561,11 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
             .eq('page_id', page.id)
             .order('display_order', { ascending: true })
 
+          const mergedSections = mergeSectionsWithDefaults(targetSlug, sections || [])
+
           const updatedCache = {
             ...get().pageCache,
-            [targetSlug]: { page, sections: sections || [] }
+            [targetSlug]: { page, sections: mergedSections }
           }
           
           try {
@@ -557,7 +576,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
             pageCache: updatedCache,
             ...(get().currentPage?.slug === targetSlug ? {
               currentPage: page,
-              currentSections: sections || []
+              currentSections: mergedSections
             } : {})
           })
         }
@@ -587,9 +606,11 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
 
         if (secErr) throw secErr
 
+        const mergedSections = mergeSectionsWithDefaults(targetSlug, sections || [])
+
         const updatedCache = {
           ...get().pageCache,
-          [targetSlug]: { page, sections: sections || [] }
+          [targetSlug]: { page, sections: mergedSections }
         }
 
         try {
@@ -598,7 +619,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
 
         set({
           currentPage: page,
-          currentSections: sections || [],
+          currentSections: mergedSections,
           pageCache: updatedCache
         })
       }
