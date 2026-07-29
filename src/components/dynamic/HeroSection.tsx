@@ -57,7 +57,7 @@ const TypewriterText: React.FC = () => {
   )
 }
 
-/* ── Animated Particle Network Canvas ── */
+/* ── Interactive Mouse-Magnetic Constellation & 3D Wave Canvas ── */
 const ParticleCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -73,32 +73,93 @@ const ParticleCanvas: React.FC = () => {
     canvas.width = W
     canvas.height = H
 
-    const NUM = 65
-    type Pt = { x: number; y: number; vx: number; vy: number; r: number; color: string }
+    // Mouse tracking for magnetic constellation & spotlight
+    let mouse = { x: -1000, y: -1000, active: false }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      mouse.x = e.clientX - rect.left
+      mouse.y = e.clientY - rect.top
+      mouse.active = true
+    }
+
+    const handleMouseLeave = () => {
+      mouse.active = false
+    }
+
+    const parent = canvas.parentElement
+    if (parent) {
+      parent.addEventListener('mousemove', handleMouseMove)
+      parent.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    const NUM = 75
+    type Pt = { x: number; y: number; vx: number; vy: number; r: number; color: string; origX: number; origY: number }
     const colors = ['rgba(16,185,129,', 'rgba(99,102,241,', 'rgba(45,212,191,', 'rgba(59,130,246,']
 
-    const pts: Pt[] = Array.from({ length: NUM }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      r: Math.random() * 2.2 + 1,
-      color: colors[Math.floor(Math.random() * colors.length)]
-    }))
+    const pts: Pt[] = Array.from({ length: NUM }, () => {
+      const rx = Math.random() * W
+      const ry = Math.random() * H
+      return {
+        x: rx,
+        y: ry,
+        origX: rx,
+        origY: ry,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        r: Math.random() * 2.5 + 1.2,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      }
+    })
 
-    const MAX_DIST = 160
+    const MAX_DIST = 175
+    const MOUSE_MAGNET_DIST = 220
+    let time = 0
 
     const draw = () => {
+      time += 0.02
       ctx.clearRect(0, 0, W, H)
 
-      // Draw connections
+      // 1. Draw 3D-perspective wave grid lines at bottom
+      const gridY = H * 0.65
+      ctx.beginPath()
+      ctx.strokeStyle = 'rgba(16,185,129,0.06)'
+      ctx.lineWidth = 1
+      for (let i = 0; i <= 14; i++) {
+        const y = gridY + Math.pow(i / 14, 1.8) * (H - gridY)
+        const wave = Math.sin(time + i * 0.3) * 6
+        ctx.moveTo(0, y + wave)
+        ctx.lineTo(W, y + wave)
+      }
+      for (let j = 0; j <= 20; j++) {
+        const xPercent = j / 20
+        const topX = W * 0.5 + (xPercent - 0.5) * W * 0.3
+        const botX = W * 0.5 + (xPercent - 0.5) * W * 1.4
+        ctx.moveTo(topX, gridY)
+        ctx.lineTo(botX, H)
+      }
+      ctx.stroke()
+
+      // 2. Mouse Glow Spotlight
+      if (mouse.active) {
+        const spotGrad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 250)
+        spotGrad.addColorStop(0, 'rgba(16,185,129,0.14)')
+        spotGrad.addColorStop(0.5, 'rgba(99,102,241,0.06)')
+        spotGrad.addColorStop(1, 'transparent')
+        ctx.fillStyle = spotGrad
+        ctx.beginPath()
+        ctx.arc(mouse.x, mouse.y, 250, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // 3. Node Connections
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
           const dx = pts[i].x - pts[j].x
           const dy = pts[i].y - pts[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
           if (dist < MAX_DIST) {
-            const alpha = (1 - dist / MAX_DIST) * 0.32
+            const alpha = (1 - dist / MAX_DIST) * 0.35
             ctx.beginPath()
             ctx.strokeStyle = `rgba(16,185,129,${alpha})`
             ctx.lineWidth = 0.9
@@ -109,16 +170,38 @@ const ParticleCanvas: React.FC = () => {
         }
       }
 
-      // Draw nodes
+      // 4. Mouse Magnetic Pull & Connections to Mouse
       for (const p of pts) {
+        if (mouse.active) {
+          const mdx = mouse.x - p.x
+          const mdy = mouse.y - p.y
+          const mdist = Math.sqrt(mdx * mdx + mdy * mdy)
+          if (mdist < MOUSE_MAGNET_DIST) {
+            const pullForce = (1 - mdist / MOUSE_MAGNET_DIST) * 1.5
+            p.x += (mdx / mdist) * pullForce
+            p.y += (mdy / mdist) * pullForce
+
+            // Magnetic line to mouse
+            const mAlpha = (1 - mdist / MOUSE_MAGNET_DIST) * 0.45
+            ctx.beginPath()
+            ctx.strokeStyle = `rgba(52,211,153,${mAlpha})`
+            ctx.lineWidth = 1.2
+            ctx.moveTo(p.x, p.y)
+            ctx.lineTo(mouse.x, mouse.y)
+            ctx.stroke()
+          }
+        }
+
+        // Render Particle Node
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.color + '0.85)'
-        ctx.shadowBlur = 10
-        ctx.shadowColor = p.color + '0.6)'
+        ctx.fillStyle = p.color + '0.9)'
+        ctx.shadowBlur = 12
+        ctx.shadowColor = p.color + '0.7)'
         ctx.fill()
         ctx.shadowBlur = 0
 
+        // Physics velocity step
         p.x += p.vx
         p.y += p.vy
         if (p.x < 0 || p.x > W) p.vx *= -1
@@ -141,13 +224,17 @@ const ParticleCanvas: React.FC = () => {
     return () => {
       cancelAnimationFrame(animId)
       window.removeEventListener('resize', onResize)
+      if (parent) {
+        parent.removeEventListener('mousemove', handleMouseMove)
+        parent.removeEventListener('mouseleave', handleMouseLeave)
+      }
     }
   }, [])
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-75 z-[2]"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-85 z-[2]"
       aria-hidden="true"
     />
   )
@@ -228,6 +315,28 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
       {/* ── Fine Dot Grid Overlay ── */}
       <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none opacity-100" />
+
+      {/* ── Floating Tech Badges in Background Space for 3D Depth ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-[3] hidden lg:block">
+        <div className="absolute top-[18%] left-[4%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold shadow-xl shadow-emerald-500/10 backdrop-blur-md animate-float-gentle">
+          &lt;React 19 /&gt;
+        </div>
+        <div className="absolute top-[28%] right-[5%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-indigo-500/30 text-indigo-300 text-[11px] font-mono font-bold shadow-xl shadow-indigo-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-2s]">
+          &lt;Next.js 15 /&gt;
+        </div>
+        <div className="absolute top-[58%] left-[3%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-teal-500/30 text-teal-300 text-[11px] font-mono font-bold shadow-xl shadow-teal-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-3.5s]">
+          Kotlin Native
+        </div>
+        <div className="absolute top-[68%] right-[4%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold shadow-xl shadow-emerald-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-1.5s]">
+          WinUI 3 &amp; WPF
+        </div>
+        <div className="absolute bottom-[12%] left-[8%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-indigo-500/30 text-indigo-400 text-[11px] font-mono font-bold shadow-xl shadow-indigo-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-4s]">
+          Supabase SQL
+        </div>
+        <div className="absolute bottom-[16%] right-[8%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-teal-500/30 text-teal-300 text-[11px] font-mono font-bold shadow-xl shadow-teal-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-2.5s]">
+          WhatsApp CRM
+        </div>
+      </div>
 
       {/* ── Content Container: Forced Brilliant White Text Across All Modes ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
