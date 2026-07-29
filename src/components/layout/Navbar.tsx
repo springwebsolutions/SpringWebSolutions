@@ -12,8 +12,16 @@ export const Navbar: React.FC = () => {
   const { user, profile, hasRole, signOut } = useAuthStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  const [isScrolled, setIsScrolled] = useState(false)
+
   useEffect(() => {
     fetchSettings()
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // Close mobile menu on Escape key
@@ -106,7 +114,11 @@ export const Navbar: React.FC = () => {
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/60 dark:bg-[#040509]/60 light:bg-white/75 border-white/10 light:border-slate-200/80 backdrop-blur-xl transition-all duration-300 shadow-lg shadow-black/20">
+    <nav className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+      isScrolled
+        ? 'bg-[#040509]/95 dark:bg-[#040509]/95 light:bg-white/95 border-emerald-500/30 light:border-slate-300 backdrop-blur-2xl shadow-xl shadow-black/40 py-0.5'
+        : 'bg-[#040509]/75 dark:bg-[#040509]/75 light:bg-white/80 border-white/10 light:border-slate-200 backdrop-blur-xl py-1.5 shadow-md'
+    }`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
