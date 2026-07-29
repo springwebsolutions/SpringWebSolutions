@@ -3,8 +3,29 @@ import { usePageBuilderStore, type PageData, type SectionData } from '@/stores/p
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { 
   FileText, Edit, Eye, EyeOff, ArrowUp, ArrowDown, 
-  Save, CheckCircle, AlertCircle, Loader2, Plus, Trash2, Globe, Sparkles
+  Save, CheckCircle, AlertCircle, Loader2, Plus, Trash2, Globe, Sparkles, RefreshCw
 } from 'lucide-react'
+
+// Human-friendly names for each section type
+const SECTION_LABELS: Record<string, string> = {
+  hero: 'Hero Header',
+  stats: 'About / Company Overview',
+  about: 'About / Company Overview',
+  about_summary: 'About Summary',
+  company_overview: 'Company Overview',
+  services: 'Services Grid',
+  services_summary: 'Services Grid',
+  pricing: 'Pricing Plans',
+  pricing_summary: 'Pricing Plans',
+  pricing_table: 'Pricing Table',
+  case_studies: 'Case Studies',
+  comparison: 'Comparison Table',
+  faq: 'FAQ Section',
+  tech_stack: 'Tech Stack',
+  team: 'Team Section',
+  cta: 'Call to Action',
+  testimonials_summary: 'Testimonials',
+}
 
 export const ContentManager: React.FC = () => {
   const { 
@@ -29,6 +50,10 @@ export const ContentManager: React.FC = () => {
   const [saveLoading, setSaveLoading] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  // Per-section toggle loading state
+  const [togglingId, setTogglingId] = useState<string | null>(null)
+  const [toggleError, setToggleError] = useState<string | null>(null)
+
   // SEO Editing State
   const [seoTitle, setSeoTitle] = useState('')
   const [seoDesc, setSeoDesc] = useState('')
@@ -38,7 +63,7 @@ export const ContentManager: React.FC = () => {
 
   // Add Section Modal State
   const [showAddModal, setShowAddModal] = useState(false)
-  const [newSectionType, setNewSectionType] = useState('hero')
+  const [newSectionType, setNewSectionType] = useState('services_summary')
   const [addLoading, setAddLoading] = useState(false)
 
   useEffect(() => {
@@ -48,6 +73,7 @@ export const ContentManager: React.FC = () => {
   useEffect(() => {
     fetchPageData(selectedPage)
     setEditingSection(null)
+    setToggleError(null)
   }, [selectedPage])
 
   useEffect(() => {
@@ -130,6 +156,18 @@ export const ContentManager: React.FC = () => {
     }
   }
 
+  const handleToggle = async (sec: SectionData) => {
+    setTogglingId(sec.id)
+    setToggleError(null)
+    try {
+      await toggleSectionActive(sec.id, !sec.is_active)
+    } catch (err: any) {
+      setToggleError(`Toggle failed: ${err?.message || 'Unknown error'}`)
+    } finally {
+      setTogglingId(null)
+    }
+  }
+
   const handleAddSectionSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!currentPage) return
@@ -144,13 +182,6 @@ export const ContentManager: React.FC = () => {
         cta_primary_href: "/contact",
         cta_secondary_text: "Learn More",
         cta_secondary_href: "/services"
-      }
-    } else if (newSectionType === 'stats') {
-      defaultContent = {
-        items: [
-          { value: "100+", label: "Happy Clients" },
-          { value: "99.9%", label: "Uptime Rate" }
-        ]
       }
     } else if (newSectionType === 'services_summary') {
       defaultContent = {
@@ -193,6 +224,18 @@ export const ContentManager: React.FC = () => {
         cta_secondary_text: "View Work",
         cta_secondary_href: "/blog"
       }
+    } else if (newSectionType === 'team') {
+      defaultContent = {
+        title: "The Team Behind the Engineering",
+        subtitle: "Meet the engineers, architects, and designers who build your platform.",
+        members: []
+      }
+    } else if (newSectionType === 'pricing_summary') {
+      defaultContent = {
+        title: "Transparent Pricing",
+        subtitle: "Choose the plan that fits your business.",
+        plans: []
+      }
     } else {
       defaultContent = {
         title: "Custom Section Title",
@@ -216,9 +259,18 @@ export const ContentManager: React.FC = () => {
       {/* Page Selector & Layout Controls */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
         
-        {/* Page selector side panel (Col: 3) */}
+        {/* Page selector side panel */}
         <div className="w-full md:w-64 glass-panel p-6 rounded-2xl border border-white/5 space-y-4 shrink-0">
-          <h3 className="font-display font-bold text-white text-sm">Site Pages</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="font-display font-bold text-white text-sm">Site Pages</h3>
+            <button
+              onClick={() => fetchPageData(selectedPage)}
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
+              title="Refresh page data"
+            >
+              <RefreshCw size={12} />
+            </button>
+          </div>
           <div className="space-y-1.5">
             {pages.map(p => (
               <button
@@ -310,7 +362,7 @@ export const ContentManager: React.FC = () => {
                 <h3 className="font-display text-lg font-bold text-white tracking-tight">
                   Page Layout Sections: {currentPage?.title}
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">Configure, reorder, edit content, toggle visibility, or add new sections.</p>
+                <p className="text-xs text-slate-400 mt-1">Toggle visibility, reorder, edit content, or add new sections. Changes sync to the live site.</p>
               </div>
 
               <button
@@ -322,6 +374,15 @@ export const ContentManager: React.FC = () => {
               </button>
             </div>
 
+            {/* Toggle error banner */}
+            {toggleError && (
+              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+                <AlertCircle size={14} />
+                <span>{toggleError}</span>
+                <button onClick={() => setToggleError(null)} className="ml-auto text-rose-400 hover:text-white">✕</button>
+              </div>
+            )}
+
             <div className="divide-y divide-white/5 space-y-3">
               {currentSections.length === 0 ? (
                 <div className="text-center py-10 text-slate-500 text-sm">
@@ -332,14 +393,20 @@ export const ContentManager: React.FC = () => {
                   <div key={sec.id} className="pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 first:pt-0">
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
-                        <span className="font-bold text-white text-sm capitalize">{sec.type.replace('_', ' ')} Section</span>
+                        <span className="font-bold text-white text-sm">
+                          {SECTION_LABELS[sec.type] || sec.type.replace(/_/g, ' ')}
+                        </span>
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                          sec.is_active ? 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20' : 'bg-white/5 text-slate-500'
+                          sec.is_active
+                            ? 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20'
+                            : 'bg-white/5 text-slate-500 border border-white/5'
                         }`}>
-                          {sec.is_active ? 'Active' : 'Disabled'}
+                          {sec.is_active ? '● Active' : '○ Hidden'}
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500">Order Position: {sec.display_order + 1}</div>
+                      <div className="text-xs text-slate-500 font-mono">
+                        type: {sec.type} &nbsp;·&nbsp; order: #{sec.display_order + 1}
+                      </div>
                     </div>
 
                     {/* Actions Toolbar */}
@@ -360,19 +427,32 @@ export const ContentManager: React.FC = () => {
                       >
                         <ArrowDown size={14} />
                       </button>
+
+                      {/* Toggle visibility button with loading state */}
                       <button
-                        onClick={() => toggleSectionActive(sec.id, !sec.is_active)}
-                        className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 transition-all cursor-pointer"
-                        title={sec.is_active ? 'Disable Section' : 'Enable Section'}
+                        onClick={() => handleToggle(sec)}
+                        disabled={togglingId === sec.id}
+                        className={`p-2 rounded-lg transition-all cursor-pointer ${
+                          sec.is_active
+                            ? 'bg-brand-emerald/10 hover:bg-brand-emerald/20 text-brand-emerald'
+                            : 'bg-white/5 hover:bg-white/10 text-slate-400'
+                        } disabled:opacity-60`}
+                        title={sec.is_active ? 'Click to Hide Section' : 'Click to Show Section'}
                       >
-                        {sec.is_active ? <Eye size={14} className="text-brand-emerald" /> : <EyeOff size={14} />}
+                        {togglingId === sec.id
+                          ? <Loader2 size={14} className="animate-spin" />
+                          : sec.is_active
+                            ? <Eye size={14} />
+                            : <EyeOff size={14} />
+                        }
                       </button>
+
                       <button
                         onClick={() => handleEditClick(sec)}
                         className="btn-primary py-1.5 px-3 flex items-center gap-1 text-xs cursor-pointer"
                       >
                         <Edit size={12} />
-                        <span>Edit Content</span>
+                        <span>Edit</span>
                       </button>
                       <button
                         onClick={() => handleDelete(sec.id)}
@@ -408,13 +488,13 @@ export const ContentManager: React.FC = () => {
                     className="w-full px-4 py-2.5 rounded-lg bg-slate-900 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald"
                   >
                     <option value="hero">Hero Header Section</option>
-                    <option value="stats">Stats Counter Grid</option>
-                    <option value="services_summary">Services &amp; Features Grid</option>
+                    <option value="services_summary">Services & Features Grid</option>
                     <option value="tech_stack">Tech Stack Ecosystem Grid</option>
-                    <option value="case_studies">Case Studies &amp; Success Stories</option>
+                    <option value="case_studies">Case Studies & Success Stories</option>
                     <option value="comparison">Why Choose Us / Comparison Table</option>
                     <option value="faq">Frequently Asked Questions (FAQ)</option>
-                    <option value="pricing_summary">Pricing &amp; Package Plans</option>
+                    <option value="pricing_summary">Pricing & Package Plans</option>
+                    <option value="team">Team Members Section</option>
                     <option value="cta">Call to Action Banner</option>
                   </select>
                 </div>
@@ -437,9 +517,9 @@ export const ContentManager: React.FC = () => {
                 <div>
                   <h4 className="font-display font-bold text-white text-base capitalize flex items-center gap-2">
                     <Edit size={16} className="text-brand-emerald" />
-                    <span>Edit Section Content: {editingSection.type.replace('_', ' ')}</span>
+                    <span>Edit: {SECTION_LABELS[editingSection.type] || editingSection.type.replace(/_/g, ' ')}</span>
                   </h4>
-                  <p className="text-xs text-slate-400 mt-1">Modify structural texts and items below. Click save to commit updates to database.</p>
+                  <p className="text-xs text-slate-400 mt-1">Modify texts and items below. Click save to commit to database.</p>
                 </div>
                 <button
                   onClick={() => setEditingSection(null)}
@@ -465,7 +545,7 @@ export const ContentManager: React.FC = () => {
                     return (
                       <div key={key} className="space-y-1.5">
                         <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider capitalize">
-                          {key.replace('_', ' ')}
+                          {key.replace(/_/g, ' ')}
                         </label>
                         {val.length > 80 ? (
                           <textarea
@@ -490,7 +570,7 @@ export const ContentManager: React.FC = () => {
                     return (
                       <div key={key} className="space-y-2 border-t border-white/5 pt-4">
                         <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider capitalize flex items-center justify-between">
-                          <span>{key.replace('_', ' ')} (Items Data)</span>
+                          <span>{key.replace(/_/g, ' ')} (Items Data)</span>
                           <span className="text-[10px] text-slate-500 font-mono">JSON/List Object</span>
                         </label>
                         <textarea

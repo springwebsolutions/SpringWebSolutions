@@ -790,40 +790,60 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
       set({ currentSections: sections })
     }
 
-    if (!isSupabaseConfigured || !curPage) return
+    if (!isSupabaseConfigured) return
 
     try {
       const targetSec = sections.find(s => s.id === sectionId)
       if (!targetSec) return
 
-      // CRITICAL: Look up existing section by the REAL page_id UUID + section type
-      // Default sections have hardcoded IDs (e.g. 'home-case-studies') with fake page_ids.
-      // We must look up by type to find the actual Supabase row and update it correctly.
+      // ALWAYS fetch the real page from Supabase by SLUG.
+      // curPage.id may be a stale default ID (e.g. 'default-home-id') if the
+      // cache was served before the background revalidation completed.
+      const pageSlug = get().currentPage?.slug || 'home'
+      const { data: realPage } = await supabase
+        .from('pages')
+        .select('id, slug')
+        .eq('slug', pageSlug)
+        .maybeSingle()
+
+      if (!realPage?.id) {
+        console.warn(`toggleSectionActive: page "${pageSlug}" not found in Supabase. Cannot persist toggle.`)
+        return
+      }
+
+      // If curPage still has a default ID, patch it with the real one now
+      if (get().currentPage?.id !== realPage.id) {
+        set({ currentPage: { ...get().currentPage!, id: realPage.id } })
+      }
+
+      // Find the existing section row in Supabase by real page_id + section type
       const { data: existingRow } = await supabase
         .from('sections')
         .select('id')
-        .eq('page_id', curPage.id)
+        .eq('page_id', realPage.id)
         .eq('type', targetSec.type)
         .maybeSingle()
 
       if (existingRow?.id) {
         // Update the real Supabase row
-        await supabase
+        const { error } = await supabase
           .from('sections')
           .update({ is_active: isActive, updated_at: new Date().toISOString() })
           .eq('id', existingRow.id)
+        if (error) console.error('toggleSectionActive update error:', error)
       } else {
-        // Section not in DB yet — insert it with the real page_id UUID
-        await supabase
+        // Section not in DB yet — insert with the real page UUID
+        const { error } = await supabase
           .from('sections')
           .insert({
-            page_id: curPage.id,
+            page_id: realPage.id,
             type: targetSec.type,
             content: targetSec.content || {},
             styling: targetSec.styling || {},
             display_order: targetSec.display_order || 0,
             is_active: isActive
           })
+        if (error) console.error('toggleSectionActive insert error:', error)
       }
     } catch (err) {
       console.error('Error toggling section in Supabase:', err)
