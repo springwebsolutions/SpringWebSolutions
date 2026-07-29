@@ -251,26 +251,26 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   } = content
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] border-b border-white/10 transition-colors duration-300 hero-dark-banner">
+    <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/10 light:border-slate-200 transition-colors duration-300 hero-banner">
 
       {/* ── Premium Multi-Layer Animated Background System ── */}
       <AnimatedBackground accent="emerald" particleCount={24} beams geoShapes />
 
       {/* ── High-Tech Radiant Aurora Mesh Overlay ── */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/20 via-transparent to-indigo-950/40 pointer-events-none z-[1]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/15 via-transparent to-transparent pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/20 dark:from-emerald-900/20 light:from-emerald-200/30 via-transparent to-indigo-950/40 dark:to-indigo-950/40 light:to-indigo-100/30 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/15 dark:from-emerald-500/15 light:from-emerald-400/10 via-transparent to-transparent pointer-events-none z-[1]" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
 
       {/* ── Layered Animated Gradient Orbs ── */}
-      <div className="absolute -top-40 -left-40 w-[32rem] h-[32rem] rounded-full bg-emerald-500/25 filter blur-[140px] pointer-events-none animate-orb-1 z-[1]" />
-      <div className="absolute top-1/3 -right-40 w-[32rem] h-[32rem] rounded-full bg-indigo-600/25 filter blur-[140px] pointer-events-none animate-orb-2 z-[1]" />
-      <div className="absolute bottom-0 left-1/4 w-80 h-80 rounded-full bg-teal-500/20 filter blur-[110px] pointer-events-none animate-pulse-slow z-[1]" />
+      <div className="absolute -top-40 -left-40 w-[32rem] h-[32rem] rounded-full bg-emerald-500/25 dark:bg-emerald-500/25 light:bg-emerald-400/15 filter blur-[140px] pointer-events-none animate-orb-1 z-[1]" />
+      <div className="absolute top-1/3 -right-40 w-[32rem] h-[32rem] rounded-full bg-indigo-600/25 dark:bg-indigo-600/25 light:bg-indigo-400/15 filter blur-[140px] pointer-events-none animate-orb-2 z-[1]" />
+      <div className="absolute bottom-0 left-1/4 w-80 h-80 rounded-full bg-teal-500/20 dark:bg-teal-500/20 light:bg-teal-400/15 filter blur-[110px] pointer-events-none animate-pulse-slow z-[1]" />
 
       {/* ── Animated SVG Circuit Lines ── */}
       <svg
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-10"
+        className="absolute inset-0 w-full h-full pointer-events-none opacity-10 dark:opacity-10 light:opacity-20"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid slice"
@@ -314,44 +314,44 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
       </svg>
 
       {/* ── Fine Dot Grid Overlay ── */}
-      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none opacity-100" />
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] light:bg-[radial-gradient(rgba(15,23,42,0.05)_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)] pointer-events-none opacity-100" />
 
       {/* ── Floating Tech Badges in Background Space for 3D Depth ── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-[3] hidden lg:block">
-        <div className="absolute top-[18%] left-[4%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold shadow-xl shadow-emerald-500/10 backdrop-blur-md animate-float-gentle">
+        <div className="absolute top-[18%] left-[4%] px-3.5 py-1.5 rounded-full bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border border-emerald-500/30 light:border-emerald-500/40 text-emerald-400 light:text-emerald-700 text-[11px] font-mono font-bold shadow-xl light:shadow-md shadow-emerald-500/10 backdrop-blur-md animate-float-gentle">
           &lt;React 19 /&gt;
         </div>
-        <div className="absolute top-[28%] right-[5%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-indigo-500/30 text-indigo-300 text-[11px] font-mono font-bold shadow-xl shadow-indigo-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-2s]">
+        <div className="absolute top-[28%] right-[5%] px-3.5 py-1.5 rounded-full bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border border-indigo-500/30 light:border-indigo-500/40 text-indigo-300 light:text-indigo-700 text-[11px] font-mono font-bold shadow-xl light:shadow-md shadow-indigo-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-2s]">
           &lt;Next.js 15 /&gt;
         </div>
-        <div className="absolute top-[58%] left-[3%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-teal-500/30 text-teal-300 text-[11px] font-mono font-bold shadow-xl shadow-teal-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-3.5s]">
+        <div className="absolute top-[58%] left-[3%] px-3.5 py-1.5 rounded-full bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border border-teal-500/30 light:border-teal-500/40 text-teal-300 light:text-teal-700 text-[11px] font-mono font-bold shadow-xl light:shadow-md shadow-teal-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-3.5s]">
           Kotlin Native
         </div>
-        <div className="absolute top-[68%] right-[4%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold shadow-xl shadow-emerald-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-1.5s]">
+        <div className="absolute top-[68%] right-[4%] px-3.5 py-1.5 rounded-full bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border border-emerald-500/30 light:border-emerald-500/40 text-emerald-400 light:text-emerald-700 text-[11px] font-mono font-bold shadow-xl light:shadow-md shadow-emerald-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-1.5s]">
           WinUI 3 &amp; WPF
         </div>
-        <div className="absolute bottom-[12%] left-[8%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-indigo-500/30 text-indigo-400 text-[11px] font-mono font-bold shadow-xl shadow-indigo-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-4s]">
+        <div className="absolute bottom-[12%] left-[8%] px-3.5 py-1.5 rounded-full bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border border-indigo-500/30 light:border-indigo-500/40 text-indigo-400 light:text-indigo-700 text-[11px] font-mono font-bold shadow-xl light:shadow-md shadow-indigo-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-4s]">
           Supabase SQL
         </div>
-        <div className="absolute bottom-[16%] right-[8%] px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-teal-500/30 text-teal-300 text-[11px] font-mono font-bold shadow-xl shadow-teal-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-2.5s]">
+        <div className="absolute bottom-[16%] right-[8%] px-3.5 py-1.5 rounded-full bg-white/[0.04] dark:bg-white/[0.04] light:bg-white border border-teal-500/30 light:border-teal-500/40 text-teal-300 light:text-teal-700 text-[11px] font-mono font-bold shadow-xl light:shadow-md shadow-teal-500/10 backdrop-blur-md animate-float-gentle [animation-delay:-2.5s]">
           WhatsApp CRM
         </div>
       </div>
 
-      {/* ── Content Container: Forced Brilliant White Text Across All Modes ── */}
+      {/* ── Content Container ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 text-center">
         
         {/* Brand Title Block */}
         <div className="space-y-4 max-w-4xl mx-auto">
-          {/* Badge: Dark glass capsule */}
-          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#060913]/90 border border-emerald-500/40 text-emerald-400 text-xs font-extrabold uppercase tracking-widest font-display shadow-2xl backdrop-blur-md">
-            <Sparkles size={14} className="text-emerald-400 animate-spin-slow" /> Official Web Engineering &amp; Automation Agency
+          {/* Badge: Glass capsule */}
+          <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#060913]/90 dark:bg-[#060913]/90 light:bg-white border border-emerald-500/40 light:border-emerald-500/30 text-emerald-400 light:text-emerald-700 text-xs font-extrabold uppercase tracking-widest font-display shadow-2xl light:shadow-md backdrop-blur-md">
+            <Sparkles size={14} className="text-emerald-400 light:text-emerald-600 animate-spin-slow" /> Official Web Engineering &amp; Automation Agency
           </div>
 
-          {/* H1 Title: Pure White with Strong Drop Shadow */}
-          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display !text-white leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)]">
+          {/* H1 Title */}
+          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] light:drop-shadow-none">
             Spring Web{' '}
-            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
+            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] light:drop-shadow-none">
               Solutions
             </span>
           </h1>
@@ -360,14 +360,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         {/* Sub-Headline & Description */}
         <div className="max-w-3xl mx-auto space-y-6">
           {/* H2 Headline */}
-          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold !text-white font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+          <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-white dark:text-white light:text-slate-900 font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] light:drop-shadow-none">
             Helping Businesses Grow Through{' '}
             <br className="hidden sm:inline" />
             <TypewriterText />
           </h2>
 
-          {/* Hero Subtitle Paragraph: Clean borderless floating text */}
-          <p className="hero-p-enter max-w-2xl mx-auto text-base sm:text-lg !text-slate-200 font-sans font-normal leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+          {/* Hero Subtitle Paragraph */}
+          <p className="hero-p-enter max-w-2xl mx-auto text-base sm:text-lg text-slate-200 dark:text-slate-200 light:text-slate-600 font-sans font-normal leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] light:drop-shadow-none">
             {subheadline}
           </p>
 
@@ -383,7 +383,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             
             <Link
               to={cta_secondary_href || '/#services'}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 bg-white/10 hover:bg-white/20 !text-white border border-white/20 backdrop-blur-md rounded-xl transition-all shadow-xl"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 bg-white/10 dark:bg-white/10 light:bg-slate-100 hover:bg-white/20 light:hover:bg-slate-200 text-white dark:text-white light:text-slate-800 border border-white/20 light:border-slate-300 backdrop-blur-md rounded-xl transition-all shadow-xl light:shadow-sm"
             >
               <span>{cta_secondary_text || 'Explore Services'}</span>
               <ArrowUpRight size={16} className="opacity-70 group-hover:opacity-100 transition-all" />
@@ -393,17 +393,17 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
         {/* Stats Terminal Card */}
         <div className="hero-terminal-enter max-w-4xl mx-auto pt-4">
-          <div className="hero-terminal-box rounded-3xl border p-4 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
+          <div className="hero-terminal-box rounded-3xl border border-white/15 dark:border-white/15 light:border-slate-200 bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white p-4 sm:p-6 shadow-2xl light:shadow-xl backdrop-blur-xl space-y-4">
             
             {/* Terminal Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs text-slate-400">
+            <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-3 text-xs text-slate-400 light:text-slate-500">
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
                 <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
-                <span className="ml-2 font-mono text-[11px] !text-slate-300 font-semibold">springweb-architecture-v3.ts</span>
+                <span className="ml-2 font-mono text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700 font-semibold">springweb-architecture-v3.ts</span>
               </div>
-              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-400">
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-400 light:text-emerald-600">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -414,32 +414,32 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/15 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider font-display">
+              <div className="p-4 rounded-2xl bg-white/[0.06] dark:bg-white/[0.06] light:bg-slate-50 border border-white/15 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-400 light:text-emerald-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Award size={14} /> Completed Projects
                 </div>
-                <div className="text-2xl sm:text-3xl font-black !text-white font-display">3</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">3</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.06] border border-white/15 space-y-1">
-                <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
+              <div className="p-4 rounded-2xl bg-white/[0.06] dark:bg-white/[0.06] light:bg-slate-50 border border-white/15 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-indigo-400 light:text-indigo-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <CheckCircle2 size={14} /> Sprint Delivery
                 </div>
-                <div className="text-2xl sm:text-3xl font-black !text-white font-display">100%</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">100%</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1">
-                <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider font-display">
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/15 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-400 light:text-emerald-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <Zap size={14} /> PageSpeed
                 </div>
-                <div className="text-2xl sm:text-3xl font-black !text-white font-display">&lt; 1s Load</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">&lt; 1s Load</div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1">
-                <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
+              <div className="p-4 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] light:bg-slate-50 border border-white/15 light:border-slate-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-teal-400 light:text-teal-600 text-[11px] font-bold uppercase tracking-wider font-display">
                   <ShieldCheck size={14} /> Uptime SLA
                 </div>
-                <div className="text-2xl sm:text-3xl font-black !text-white font-display">99.9%</div>
+                <div className="text-2xl sm:text-3xl font-black text-white dark:text-white light:text-slate-900 font-display">99.9%</div>
               </div>
             </div>
 
