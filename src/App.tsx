@@ -49,16 +49,6 @@ import { AdminApplications } from '@/pages/admin/AdminApplications'
 import { LeadAnalytics } from '@/pages/admin/LeadAnalytics'
 import { SystemHealth } from '@/pages/admin/SystemHealth'
 
-const ExternalRedirect: React.FC<{ to: string }> = ({ to }) => {
-  useEffect(() => {
-    window.location.href = to
-  }, [to])
-  return (
-    <div className="flex h-screen w-screen items-center justify-center bg-[#040509] text-white text-xs font-mono">
-      Redirecting to SpringWeb Operations Suite…
-    </div>
-  )
-}
 
 function App() {
   const { initialize } = useAuthStore()
@@ -175,9 +165,7 @@ function App() {
         {/* Public Client Auth */}
         <Route path="/login" element={<Login />} />
         
-        {/* Main Domain /admin or /admin/* -> Redirect to suite subdomain */}
-        <Route path="/admin" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
-        <Route path="/admin/*" element={<ExternalRedirect to="https://suite.springwebsolutions.in/" />} />
+
 
         {/* Catch All - Redirect to Homepage */}
         <Route path="*" element={<Navigate to="/" replace />} />
