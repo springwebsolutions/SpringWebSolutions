@@ -162,7 +162,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
 
               {/* Vector Illustration Side */}
               <div className="flex-1 w-full flex items-center justify-center">
-                <div className="relative w-full max-w-lg aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 border border-white/10 p-6 flex items-center justify-center group hover:border-blue-500/40 transition-all duration-500 shadow-2xl">
+                <div className="relative w-full max-w-lg aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 dark:bg-white/5 light:bg-slate-100/90 border border-white/10 dark:border-white/10 light:border-slate-200 p-6 flex items-center justify-center group hover:border-blue-500/40 transition-all duration-500 shadow-2xl light:shadow-lg">
                   <img
                     src={service.image}
                     alt={service.title}

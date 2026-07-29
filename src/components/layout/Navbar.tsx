@@ -38,36 +38,43 @@ export const Navbar: React.FC = () => {
   }
 
   const handleNavClick = (e: React.MouseEvent, href: string, label: string) => {
-    // Contact link should ALWAYS navigate directly to /contact page
-    if (label.toLowerCase() === 'contact' || href === '/contact') {
+    const lowerLabel = (label || '').toLowerCase()
+    const lowerHref = (href || '').toLowerCase()
+
+    // Direct page navigation for standalone pages
+    if (
+      lowerLabel === 'contact' || lowerHref === '/contact' ||
+      lowerLabel === 'marketplace' || lowerHref === '/marketplace' ||
+      lowerLabel === 'blog' || lowerHref === '/blog' ||
+      lowerLabel === 'support' || lowerHref === '/support' ||
+      lowerLabel === 'kb' || lowerHref === '/kb'
+    ) {
       setMobileMenuOpen(false)
       return
     }
 
     const isHomePage = location.pathname === '/' || location.pathname === ''
-    const scrollTargetId = label.toLowerCase() === 'home' ? 'home'
-      : label.toLowerCase() === 'about' ? 'about'
-      : label.toLowerCase() === 'services' ? 'services'
+    const scrollTargetId = (lowerLabel === 'home' || lowerHref === '/') ? 'home'
+      : (lowerLabel === 'about' || lowerHref === '/about') ? 'about'
+      : (lowerLabel === 'services' || lowerHref === '/services') ? 'services'
       : null
 
     if (scrollTargetId) {
       if (isHomePage) {
-        e.preventDefault()
         const targetEl = document.getElementById(scrollTargetId)
         if (targetEl) {
+          e.preventDefault()
           targetEl.scrollIntoView({ behavior: 'smooth' })
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' })
         }
       } else {
         e.preventDefault()
-        navigate('/')
+        navigate(`/#${scrollTargetId}`)
         setTimeout(() => {
           const targetEl = document.getElementById(scrollTargetId)
           if (targetEl) {
             targetEl.scrollIntoView({ behavior: 'smooth' })
           }
-        }, 300)
+        }, 150)
       }
     }
     setMobileMenuOpen(false)

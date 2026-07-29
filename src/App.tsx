@@ -143,8 +143,8 @@ function App() {
       <Routes>
         {/* Public Website Routes */}
         <Route path="/" element={<DynamicPage />} />
-        <Route path="/about" element={<SectionRedirect targetId="about" />} />
-        <Route path="/services" element={<SectionRedirect targetId="services" />} />
+        <Route path="/about" element={<DynamicPage />} />
+        <Route path="/services" element={<DynamicPage />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Careers & Jobs Subdomain Portal Routes */}
