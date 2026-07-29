@@ -32,69 +32,76 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
   const title = content?.title || 'Engineered Services'
   const subtitle = content?.subtitle || 'Full-spectrum software engineering across web, mobile apps, Windows desktop, and automated cloud systems.'
 
-  const defaultServices: ServiceItem[] = [
+  const detailedServices = [
     {
-      title: 'Website Development',
-      desc: 'High-speed corporate sites, portfolio layouts, landing channels, and WooCommerce/Shopify architectures.',
+      title: 'Web Design & Development',
+      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
+      image: '/web_dev_vector.png',
+      imageLeft: false,
+      features: [
+        'Responsive Design',
+        'UI / UX Design',
+        'Mobile App Development',
+        'Laravel & Node Development',
+        'React Development',
+        'Angular & Vue Development'
+      ],
       href: '/services'
     },
     {
-      title: 'Custom Software Development',
-      desc: 'Proprietary CRM, ERP, client dashboards, inventory managers, and custom SaaS infrastructures.',
+      title: 'Digital Marketing & Growth',
+      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
+      image: '/digital_marketing_vector.png',
+      imageLeft: true,
+      features: [
+        'SEO Marketing',
+        'Email Marketing',
+        'Facebook Marketing',
+        'Data Scraping',
+        'Social Marketing',
+        'YouTube Marketing'
+      ],
       href: '/services'
     },
     {
-      title: 'Android & Mobile App Development',
-      desc: 'Native Android (Kotlin) & cross-platform iOS mobile apps with offline sync, push notifications & Play Store deployment.',
+      title: 'Cloud Storage & Infrastructure',
+      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
+      image: '/cloud_storage_vector.png',
+      imageLeft: false,
+      features: [
+        'Cloud Database',
+        'Hybrid Cloud',
+        'Email Servers',
+        'Website Hosting',
+        'File Storage',
+        'Backup Systems'
+      ],
       href: '/services'
     },
     {
-      title: 'Windows Desktop App Development',
-      desc: 'High-performance C# .NET, WinUI 3 & WPF desktop software applications for POS, billing & offline system management.',
-      href: '/services'
-    },
-    {
-      title: 'Business Automation',
-      desc: 'Custom workflow automations, WhatsApp notifications integrations, reporting logs, and API syncs.',
-      href: '/services'
-    },
-    {
-      title: 'Technical SEO',
-      desc: 'Semantic markup mapping, Core Web Vitals optimizations, keyword targets, and ranking audits.',
+      title: 'SEO Consultancy & Analytics',
+      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
+      image: '/seo_analytics_vector.png',
+      imageLeft: true,
+      features: [
+        'Content Marketing',
+        'SEO Optimization',
+        'Social Marketing',
+        'Keyword Strategy',
+        'Core Web Vitals',
+        'Analytics Tracking'
+      ],
       href: '/services'
     }
   ]
 
-  let services = defaultServices
-  if (content?.items && Array.isArray(content.items) && content.items.length > 0) {
-    const itemTitles = content.items.map((i: any) => (i.title || '').toLowerCase())
-    const hasAndroid = itemTitles.some((t: string) => t.includes('android') || t.includes('mobile') || t.includes('app'))
-    const hasWindows = itemTitles.some((t: string) => t.includes('windows') || t.includes('desktop'))
-
-    services = [...content.items]
-    if (!hasAndroid) {
-      services.push({
-        title: 'Android & Mobile App Development',
-        desc: 'Native Android (Kotlin) & cross-platform iOS mobile apps with offline sync, push notifications & Play Store deployment.',
-        href: '/services'
-      })
-    }
-    if (!hasWindows) {
-      services.push({
-        title: 'Windows Desktop App Development',
-        desc: 'High-performance C# .NET, WinUI 3 & WPF desktop software applications for POS, billing & offline system management.',
-        href: '/services'
-      })
-    }
-  }
-
   return (
     <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24">
         
-        {/* Title Block: Centered Header */}
+        {/* Title Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight uppercase">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight uppercase">
             {title}
           </h2>
           {subtitle && (
@@ -104,45 +111,69 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
           )}
         </div>
 
-        {/* Grid panel: 3-Column layout on large screens */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-          {services.map((service, idx) => (
+        {/* Detailed Service Rows (Inspired by Futureva Technologies) */}
+        <div className="space-y-24">
+          {detailedServices.map((service, idx) => (
             <div
               key={idx}
-              className="relative overflow-hidden p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 light:shadow-sm flex flex-col justify-between hover:-translate-y-2 hover:border-emerald-500/50 hover:shadow-2xl hover:shadow-emerald-500/15 transition-all duration-300 group animate-fade-in-up"
-              style={{ animationDelay: `${(idx + 1) * 100}ms` }}
+              className={`flex flex-col lg:flex-row items-center gap-12 lg:gap-16 ${
+                service.imageLeft ? 'lg:flex-row-reverse' : ''
+              }`}
             >
-              {/* Top Accent Glowing Beam Line */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              <div className="space-y-6">
-                <div className="h-12 w-12 rounded-xl bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 light:border-slate-200 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/30 transition-all duration-300 shadow-md">
-                  {getServiceIcon(service.title)}
-                </div>
-                
-                <div className="space-y-3">
-                  <h3 className="font-display text-2xl font-bold text-white dark:text-white light:text-slate-900 group-hover:text-emerald-400 light:group-hover:text-emerald-600 transition-colors">
+              {/* Text & Features Side */}
+              <div className="flex-1 space-y-8">
+                <div className="space-y-4">
+                  <h3 className="text-3xl sm:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display">
                     {service.title}
                   </h3>
-                  
-                  <p className="text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed">
-                    {service.desc}
+                  <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed">
+                    {service.subtitle}
                   </p>
+                </div>
+
+                {/* Features Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {service.features.map((feat, fIdx) => (
+                    <div
+                      key={fIdx}
+                      className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 shadow-sm"
+                    >
+                      <div className="h-6 w-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-xs font-bold text-slate-200 dark:text-slate-200 light:text-slate-800">
+                        {feat}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-2">
+                  <Link
+                    to={service.href}
+                    className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-lg shadow-blue-600/30 hover:scale-105"
+                  >
+                    <span>Read More</span>
+                  </Link>
                 </div>
               </div>
 
-              <div className="pt-8">
-                <Link
-                  to={service.href || '/services'}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-500 hover:text-emerald-400 transition-colors"
-                >
-                  <span>Learn More</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-                </Link>
+              {/* Vector Illustration Side */}
+              <div className="flex-1 w-full flex items-center justify-center">
+                <div className="relative w-full max-w-lg aspect-[4/3] rounded-3xl overflow-hidden bg-white/5 border border-white/10 p-6 flex items-center justify-center group hover:border-blue-500/40 transition-all duration-500 shadow-2xl">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   )
