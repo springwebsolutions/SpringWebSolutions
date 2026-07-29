@@ -148,7 +148,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
         display_order: 5,
-        is_active: false
+        is_active: true
       },
       {
         id: 'home-comparison',
@@ -772,12 +772,29 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
     if (!isSupabaseConfigured) return
 
     try {
-      const { error } = await supabase
-        .from('sections')
-        .update({ is_active: isActive, updated_at: new Date().toISOString() })
-        .eq('id', sectionId)
+      const targetSec = sections.find(s => s.id === sectionId)
+      if (targetSec) {
+        const payload = {
+          id: targetSec.id,
+          page_id: targetSec.page_id || (curPage?.id || 'default-home-id'),
+          type: targetSec.type,
+          content: targetSec.content || {},
+          styling: targetSec.styling || {},
+          display_order: targetSec.display_order || 0,
+          is_active: isActive,
+          updated_at: new Date().toISOString()
+        }
+        const { error } = await supabase
+          .from('sections')
+          .upsert(payload, { onConflict: 'id' })
 
-      if (error) console.error('Supabase toggle error:', error)
+        if (error) {
+          await supabase
+            .from('sections')
+            .update({ is_active: isActive, updated_at: new Date().toISOString() })
+            .eq('id', sectionId)
+        }
+      }
     } catch (err) {
       console.error('Error toggling section in Supabase:', err)
     }
