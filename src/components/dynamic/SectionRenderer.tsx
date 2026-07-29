@@ -27,8 +27,11 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'hero':
               return <div id="home" key={sec.id}><HeroSection content={sec.content} styling={sec.styling} /></div>
             case 'stats':
+            case 'about':
             case 'about_summary':
+            case 'company_overview':
               return <div id="about" key={sec.id}><AboutSection content={sec.content} styling={sec.styling} /></div>
+            case 'services':
             case 'services_summary':
               return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
             case 'pricing':
@@ -40,21 +43,16 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'comparison':
               return <div id="comparison" key={sec.id}><ComparisonTable content={sec.content} styling={sec.styling} /></div>
             case 'team':
-              return <div id="about" key={sec.id}><TeamSection content={sec.content} styling={sec.styling} /></div>
+              return <div id="about-team" key={sec.id}><TeamSection content={sec.content} styling={sec.styling} /></div>
             case 'faq':
               return <div id="faq" key={sec.id}><FaqSection content={sec.content} styling={sec.styling} /></div>
             case 'tech_stack':
               return <div id="tech" key={sec.id}><TechStack content={sec.content} styling={sec.styling} /></div>
             case 'cta':
-              return null
             case 'testimonials_summary':
               return null
             default:
-              return (
-                <div key={sec.id} className="py-8 text-center text-xs text-slate-500 border border-dashed border-white/5 my-4 rounded-xl">
-                  Dynamic Component (Type: {sec.type}) editable in Admin Content Panel.
-                </div>
-              )
+              return null
           }
         })}
     </>
