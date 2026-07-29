@@ -1,5 +1,6 @@
 import React from 'react'
 import { Code2, Cpu } from 'lucide-react'
+import AnimatedBackground from '../ui/AnimatedBackground'
 
 interface TechCategory {
   name: string
@@ -43,7 +44,8 @@ export const TechStack: React.FC<TechStackProps> = ({ content }) => {
 
   return (
     <section className="py-20 bg-[#060810] dark:bg-[#060810] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+      <AnimatedBackground accent="teal" scanLine grid particleCount={16} />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
         
         {/* Title Block: Centered Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">

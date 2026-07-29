@@ -763,4 +763,65 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+/* ─── Global Section Background Animations ─── */
 
+/* Floating particle drift */
+@keyframes particleDrift {
+  0%   { transform: translate(0, 0) scale(1);   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate(var(--dx, 40px), var(--dy, -80px)) scale(0.6); opacity: 0; }
+}
+
+/* Large ambient orb pulse & drift */
+@keyframes orbDrift1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(40px, -30px) scale(1.1); }
+  66%     { transform: translate(-20px, 20px) scale(0.95); }
+}
+@keyframes orbDrift2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(-50px, 25px) scale(1.12); }
+  70%     { transform: translate(30px, -15px) scale(0.9); }
+}
+@keyframes orbDrift3 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(20px, 40px) scale(1.08); }
+}
+
+/* Mesh grid shimmer */
+@keyframes gridShimmer {
+  0%   { opacity: 0.03; }
+  50%  { opacity: 0.07; }
+  100% { opacity: 0.03; }
+}
+
+/* Floating dot twinkle */
+@keyframes dotTwinkle {
+  0%,100% { opacity: 0.12; transform: scale(1); }
+  50%     { opacity: 0.5;  transform: scale(1.4); }
+}
+
+/* Scan-line sweep */
+@keyframes scanLine {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.animate-orb-drift-1 { animation: orbDrift1 18s ease-in-out infinite; }
+.animate-orb-drift-2 { animation: orbDrift2 22s ease-in-out infinite; }
+.animate-orb-drift-3 { animation: orbDrift3 14s ease-in-out infinite; }
+.animate-grid-shimmer { animation: gridShimmer 6s ease-in-out infinite; }
+.animate-dot-twinkle  { animation: dotTwinkle 3s ease-in-out infinite; }
+.animate-scan-line    { animation: scanLine 8s linear infinite; }
+
+/* Particle class helpers */
+.bg-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleDrift var(--dur, 8s) ease-out infinite;
+  animation-delay: var(--delay, 0s);
+}

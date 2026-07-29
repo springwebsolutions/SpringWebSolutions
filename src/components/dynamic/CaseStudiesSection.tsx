@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ArrowRight, CheckCircle, TrendingUp, Zap, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import AnimatedBackground from '../ui/AnimatedBackground'
 
 interface CaseStudy {
   id: string
@@ -107,7 +108,8 @@ export const CaseStudiesSection: React.FC<{ content?: any; styling?: any }> = ({
 
   return (
     <section className="py-20 bg-[#040509] dark:bg-[#040509] light:bg-white text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
+      <AnimatedBackground accent="emerald" grid particleCount={14} />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
         
         {/* Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">

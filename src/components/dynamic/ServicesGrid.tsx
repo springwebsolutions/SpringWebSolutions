@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Globe, Cpu, Smartphone, Monitor, Activity, Layers } from 'lucide-react'
+import AnimatedBackground from '../ui/AnimatedBackground'
 
 interface ServiceItem {
   title: string
@@ -96,8 +97,9 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
   ]
 
   return (
-    <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24">
+    <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
+      <AnimatedBackground accent="indigo" grid particleCount={20} />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24 relative z-10">
         
         {/* Title Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
