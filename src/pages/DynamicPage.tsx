@@ -72,6 +72,34 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
     return merged.sort((a, b) => a.display_order - b.display_order)
   }
 
+  if (cleanSlug === 'services') {
+    const defaultServicesSections: Array<{ id: string; type: SectionData['type']; display_order: number }> = [
+      { id: 'services-hero', type: 'hero', display_order: 0 },
+      { id: 'services-grid', type: 'services_summary', display_order: 1 },
+      { id: 'services-tech', type: 'tech_stack', display_order: 2 },
+      { id: 'services-faq', type: 'faq', display_order: 3 }
+    ]
+
+    const existingTypes = new Set((fetchedSections || []).map(s => s.type))
+    const merged = [...(fetchedSections || [])]
+
+    defaultServicesSections.forEach(def => {
+      if (!existingTypes.has(def.type)) {
+        merged.push({
+          id: def.id,
+          page_id: 'default-services-id',
+          type: def.type,
+          content: {},
+          styling: { padding_top: 'py-16', padding_bottom: 'py-16' },
+          display_order: def.display_order,
+          is_active: true
+        })
+      }
+    })
+
+    return merged.sort((a, b) => a.display_order - b.display_order)
+  }
+
   return fetchedSections || []
 }
 
@@ -111,18 +139,21 @@ export const DynamicPage: React.FC = () => {
   }, [pageSlug, currentPage])
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      if (isSupabaseConfigured) {
-        try {
-          const { data } = await supabase.rpc('has_super_admin')
-          setHasSuperAdmin(!!data)
-        } catch (e) {
-          setHasSuperAdmin(false)
-        }
+    if (!loading) {
+      const hash = window.location.hash.replace('#', '')
+      if (hash) {
+        setTimeout(() => {
+          const targetEl = document.getElementById(hash)
+          if (targetEl) {
+            const navOffset = 70
+            const elementPosition = targetEl.getBoundingClientRect().top
+            const offsetPosition = elementPosition + window.pageYOffset - navOffset
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+          }
+        }, 200)
       }
     }
-    checkAdmin()
-  }, [])
+  }, [loading, pageSlug])
 
   // Render Supabase Connection Guide if credentials are missing
   if (!isSupabaseConfigured) {

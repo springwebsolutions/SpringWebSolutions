@@ -74,6 +74,20 @@ export const Navbar: React.FC = () => {
     }
   }, [location.pathname])
 
+  const scrollToTarget = (id: string) => {
+    const targetEl = document.getElementById(id)
+    if (targetEl) {
+      const navOffset = 70
+      const elementPosition = targetEl.getBoundingClientRect().top
+      const offsetPosition = elementPosition + window.pageYOffset - navOffset
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      })
+    }
+  }
+
   const handleNavClick = (e: React.MouseEvent, href: string, label: string) => {
     const lowerLabel = (label || '').toLowerCase()
     const lowerHref = (href || '').toLowerCase()
@@ -98,20 +112,14 @@ export const Navbar: React.FC = () => {
 
     if (scrollTargetId) {
       if (isHomePage) {
-        const targetEl = document.getElementById(scrollTargetId)
-        if (targetEl) {
-          e.preventDefault()
-          targetEl.scrollIntoView({ behavior: 'smooth' })
-        }
+        e.preventDefault()
+        scrollToTarget(scrollTargetId)
       } else {
         e.preventDefault()
-        navigate(`/#${scrollTargetId}`)
+        navigate('/')
         setTimeout(() => {
-          const targetEl = document.getElementById(scrollTargetId)
-          if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth' })
-          }
-        }, 150)
+          scrollToTarget(scrollTargetId)
+        }, 200)
       }
     }
     setMobileMenuOpen(false)

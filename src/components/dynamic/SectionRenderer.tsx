@@ -1,5 +1,6 @@
 import React from 'react'
 import { HeroSection } from './HeroSection'
+import { AboutSection } from './AboutSection'
 import { StatsSection } from './StatsSection'
 import { ServicesGrid } from './ServicesGrid'
 import { PricingSection } from './PricingSection'
@@ -26,7 +27,8 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'hero':
               return <div id="home" key={sec.id}><HeroSection content={sec.content} styling={sec.styling} /></div>
             case 'stats':
-              return <div id="about" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
+            case 'about_summary':
+              return <div id="about" key={sec.id}><AboutSection content={sec.content} styling={sec.styling} /></div>
             case 'services_summary':
               return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
             case 'pricing':
