@@ -148,7 +148,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
         display_order: 5,
-        is_active: true
+        is_active: false
       },
       {
         id: 'home-comparison',
@@ -730,33 +730,35 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   },
 
   toggleSectionActive: async (sectionId, isActive) => {
+    const sections = get().currentSections.map(s =>
+      s.id === sectionId ? { ...s, is_active: isActive } : s
+    )
+
+    const curPage = get().currentPage
+    if (curPage) {
+      const updatedCache = {
+        ...get().pageCache,
+        [curPage.slug]: { page: curPage, sections }
+      }
+      try {
+        localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache))
+      } catch (e) {}
+      set({ currentSections: sections, pageCache: updatedCache })
+    } else {
+      set({ currentSections: sections })
+    }
+
     if (!isSupabaseConfigured) return
+
     try {
       const { error } = await supabase
         .from('sections')
         .update({ is_active: isActive, updated_at: new Date().toISOString() })
         .eq('id', sectionId)
 
-      if (error) throw error
-
-      const sections = get().currentSections.map(s =>
-        s.id === sectionId ? { ...s, is_active: isActive } : s
-      )
-
-      const curPage = get().currentPage
-      if (curPage) {
-        const updatedCache = {
-          ...get().pageCache,
-          [curPage.slug]: { page: curPage, sections }
-        }
-        try { localStorage.setItem('page_builder_cache', JSON.stringify(updatedCache)) } catch (e) {}
-        set({ currentSections: sections, pageCache: updatedCache })
-      } else {
-        set({ currentSections: sections })
-      }
+      if (error) console.error('Supabase toggle error:', error)
     } catch (err) {
-      console.error('Error toggling section:', err)
-      throw err
+      console.error('Error toggling section in Supabase:', err)
     }
   },
 

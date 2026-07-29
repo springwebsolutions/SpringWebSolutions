@@ -17,9 +17,8 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
       { id: 'home-stats', type: 'stats', display_order: 1 },
       { id: 'home-services', type: 'services_summary', display_order: 2 },
       { id: 'home-tech', type: 'tech_stack', display_order: 3 },
-      { id: 'home-case-studies', type: 'case_studies', display_order: 4 },
-      { id: 'home-comparison', type: 'comparison', display_order: 5 },
-      { id: 'home-faq', type: 'faq', display_order: 6 }
+      { id: 'home-comparison', type: 'comparison', display_order: 4 },
+      { id: 'home-faq', type: 'faq', display_order: 5 }
     ]
 
     const filteredFetched = (fetchedSections || []).filter(s => s.type !== 'stats' && s.type !== 'team' && s.type !== 'cta')
