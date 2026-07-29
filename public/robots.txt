@@ -6,4 +6,9 @@ Disallow: /setup/
 Disallow: /login
 Disallow: /api/
 
+User-agent: Googlebot-Image
+Allow: /logo-emblem.png
+Allow: /favicon.png
+Allow: /favicon.ico
+
 Sitemap: https://www.springwebsolutions.in/sitemap.xml
