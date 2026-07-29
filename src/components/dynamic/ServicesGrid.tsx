@@ -34,62 +34,62 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
 
   const detailedServices = [
     {
-      title: 'Web Design & Development',
-      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
+      title: 'Website & Web App Development',
+      subtitle: 'High-speed corporate sites, custom React & Next.js applications, e-commerce storefronts, and conversion-focused landing channels built for maximum performance.',
       image: '/web_dev_vector.png',
       imageLeft: false,
       features: [
-        'Responsive Design',
-        'UI / UX Design',
-        'Mobile App Development',
-        'Laravel & Node Development',
-        'React Development',
-        'Angular & Vue Development'
+        'Custom React & Next.js Apps',
+        'E-Commerce & Storefronts',
+        'UI / UX & Responsive Design',
+        'High-Speed Corporate Sites',
+        'Conversion Landing Channels',
+        'REST API & Backend Integration'
       ],
       href: '/services'
     },
     {
-      title: 'Digital Marketing & Growth',
-      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
-      image: '/digital_marketing_vector.png',
+      title: 'Custom Software & SaaS Platforms',
+      subtitle: 'Proprietary ERPs, CRMs, client portals, inventory management systems, and scalable cloud SaaS software tailored precisely to your operational workflow.',
+      image: '/cloud_storage_vector.png',
       imageLeft: true,
       features: [
-        'SEO Marketing',
-        'Email Marketing',
-        'Facebook Marketing',
-        'Data Scraping',
-        'Social Marketing',
-        'YouTube Marketing'
+        'Proprietary SaaS Systems',
+        'ERP & Operations Software',
+        'Custom CRM & Client Portals',
+        'Inventory & Billing Software',
+        'Database & Analytics Dashboards',
+        'Cloud Microservices'
       ],
       href: '/services'
     },
     {
-      title: 'Cloud Storage & Infrastructure',
-      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
-      image: '/cloud_storage_vector.png',
+      title: 'Android & Native Mobile App Development',
+      subtitle: 'Native Android (Kotlin) and mobile applications with offline sync, push notifications, secure local storage, and full Play Store deployment.',
+      image: '/digital_marketing_vector.png',
       imageLeft: false,
       features: [
-        'Cloud Database',
-        'Hybrid Cloud',
-        'Email Servers',
-        'Website Hosting',
-        'File Storage',
-        'Backup Systems'
+        'Native Android (Kotlin) Apps',
+        'iOS & Cross-Platform Mobile',
+        'Offline Synchronization',
+        'Play Store Deployment',
+        'Push Notifications & FCM',
+        'Payment Gateway Integrations'
       ],
       href: '/services'
     },
     {
-      title: 'SEO Consultancy & Analytics',
-      subtitle: 'We believe brand interaction is key to communication. Real innovations and positive customer experience are the heart of success.',
+      title: 'Technical SEO & Search Growth',
+      subtitle: 'Semantic JSON-LD schema markup, Core Web Vitals speed optimization, site audits, and search engine index management for long-term organic ranking.',
       image: '/seo_analytics_vector.png',
       imageLeft: true,
       features: [
-        'Content Marketing',
-        'SEO Optimization',
-        'Social Marketing',
-        'Keyword Strategy',
-        'Core Web Vitals',
-        'Analytics Tracking'
+        'Semantic Schema & Rich Snippets',
+        'Core Web Vitals Optimization',
+        'Technical SEO Code Audits',
+        'Google Indexing Setup',
+        'Keyword Architecture',
+        'Conversion Rate Tuning'
       ],
       href: '/services'
     }
