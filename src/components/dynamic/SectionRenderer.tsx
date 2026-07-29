@@ -27,6 +27,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'hero':
               return <div id="home" key={sec.id}><HeroSection content={sec.content} styling={sec.styling} /></div>
             case 'stats':
+              return <div id="stats" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
             case 'about':
             case 'about_summary':
             case 'company_overview':
@@ -47,9 +48,9 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'tech_stack':
               return <div id="tech" key={sec.id}><TechStack content={sec.content} styling={sec.styling} /></div>
             case 'team':
+              return <div id="team" key={sec.id}><TeamSection content={sec.content} styling={sec.styling} /></div>
             case 'cta':
-            case 'testimonials_summary':
-              return null
+              return <div id="cta" key={sec.id}><CtaSection content={sec.content} styling={sec.styling} /></div>
             default:
               return null
           }
