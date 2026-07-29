@@ -1,7 +1,6 @@
 import React from 'react'
 import { HeroSection } from './HeroSection'
 import { AboutSection } from './AboutSection'
-import { StatsSection } from './StatsSection'
 import { ServicesGrid } from './ServicesGrid'
 import { PricingSection } from './PricingSection'
 import { TechStack } from './TechStack'
@@ -27,16 +26,12 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'hero':
               return <div id="home" key={sec.id}><HeroSection content={sec.content} styling={sec.styling} /></div>
 
-            // 'stats' renders the About section (company overview pillars) — original design
+            // 'stats' / 'about' types all render the About section (company overview pillars)
             case 'stats':
             case 'about':
             case 'about_summary':
             case 'company_overview':
               return <div id="about" key={sec.id}><AboutSection content={sec.content} styling={sec.styling} /></div>
-
-            // 'stats_counter' renders the numeric stats strip
-            case 'stats_counter':
-              return <div id="stats" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
 
             case 'services':
             case 'services_summary':

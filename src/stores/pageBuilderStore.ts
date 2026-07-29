@@ -75,22 +75,6 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         is_active: true
       },
       {
-        id: 'home-stats',
-        page_id: 'default-home-id',
-        type: 'stats',
-        content: {
-          items: [
-            { value: "3", label: "Completed Projects" },
-            { value: "100%", label: "Sprint Delivery Rate" },
-            { value: "< 1s", label: "Average Page Load Speed" },
-            { value: "99.9%", label: "Uptime SLA Guarantee" }
-          ]
-        },
-        styling: { padding_top: "py-10", padding_bottom: "py-10" },
-        display_order: 1,
-        is_active: false
-      },
-      {
         id: 'home-services',
         page_id: 'default-home-id',
         type: 'services_summary',
@@ -174,22 +158,6 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         display_order: 7,
         is_active: true
       },
-      {
-        id: 'home-cta',
-        page_id: 'default-home-id',
-        type: 'cta',
-        content: {
-          title: "Accelerate Your Digital Transformation Today",
-          subtitle: "Book a technical analysis with our solution engineers. We will review your processes, current website, or software idea and provide a concrete action checklist.",
-          cta_primary_text: "Request Consultation",
-          cta_primary_href: "/contact",
-          cta_secondary_text: "Explore Services",
-          cta_secondary_href: "/services"
-        },
-        styling: { padding_top: "py-20", padding_bottom: "py-20" },
-        display_order: 8,
-        is_active: true
-      }
     ]
   },
   about: {
