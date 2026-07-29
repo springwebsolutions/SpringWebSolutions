@@ -484,20 +484,51 @@ const DEFAULT_SITE_CONFIG = {
   }
 }
 
+export const getSharedSectionStates = (): Record<string, boolean> => {
+  try {
+    if (typeof document === 'undefined') return {}
+    const match = document.cookie.match(/(?:^|; )sws_section_states=([^;]*)/)
+    if (match && match[1]) {
+      return JSON.parse(decodeURIComponent(match[1])) || {}
+    }
+  } catch (e) {}
+  return {}
+}
+
+export const setSharedSectionState = (sectionId: string, isActive: boolean) => {
+  try {
+    const existing = getSharedSectionStates()
+    existing[sectionId] = isActive
+    const jsonStr = encodeURIComponent(JSON.stringify(existing))
+    const isProd = typeof window !== 'undefined' && window.location.hostname.includes('springwebsolutions.in')
+    const domainPart = isProd ? '; Domain=.springwebsolutions.in' : ''
+    document.cookie = `sws_section_states=${jsonStr}; Path=/${domainPart}; Max-Age=31536000; SameSite=Lax`
+  } catch (e) {}
+}
+
 const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): SectionData[] => {
   const defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
-  if (!defaultSections.length) return dbSections || []
+  const sharedStates = getSharedSectionStates()
 
   const dbTypes = new Set((dbSections || []).map(s => s.type))
   const merged = [...(dbSections || [])]
 
-  defaultSections.forEach(defSec => {
-    if (!dbTypes.has(defSec.type)) {
-      merged.push(defSec)
+  if (defaultSections.length) {
+    defaultSections.forEach(defSec => {
+      if (!dbTypes.has(defSec.type)) {
+        merged.push(defSec)
+      }
+    })
+  }
+
+  const finalSections = merged.map(sec => {
+    if (typeof sharedStates[sec.id] === 'boolean') {
+      return { ...sec, is_active: sharedStates[sec.id] }
     }
+    return sec
   })
 
-  return merged.sort((a, b) => a.display_order - b.display_order)
+  return finalSections.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
 }
 
 export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
@@ -751,6 +782,8 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   },
 
   toggleSectionActive: async (sectionId, isActive) => {
+    setSharedSectionState(sectionId, isActive)
+
     const sections = get().currentSections.map(s =>
       s.id === sectionId ? { ...s, is_active: isActive } : s
     )
