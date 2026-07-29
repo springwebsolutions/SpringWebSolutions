@@ -165,12 +165,12 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   return (
     <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] border-b border-white/10 transition-colors duration-300 hero-dark-banner">
 
-      {/* ── High-Tech Hero Background Image & Overlay (Vivid 75% Opacity, NEVER CHANGED) ── */}
+      {/* ── High-Tech Hero Background Image & Overlay (Vivid 90% Opacity) ── */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-75 pointer-events-none transition-opacity duration-500 scale-105 contrast-110 brightness-105"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-90 pointer-events-none transition-opacity duration-500 scale-105 contrast-125 brightness-110"
         style={{ backgroundImage: `url('/hero-bg.png')` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/70 via-[#040509]/45 to-[#040509]/95 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/40 via-transparent to-[#040509]/80 pointer-events-none" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
