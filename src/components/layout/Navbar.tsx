@@ -12,16 +12,8 @@ export const Navbar: React.FC = () => {
   const { user, profile, hasRole, signOut } = useAuthStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const [isScrolled, setIsScrolled] = useState(false)
-
   useEffect(() => {
     fetchSettings()
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // Close mobile menu on Escape key
@@ -44,6 +36,33 @@ export const Navbar: React.FC = () => {
     navigate('/')
     setMobileMenuOpen(false)
   }
+
+  const [activeSection, setActiveSection] = useState<string>('home')
+
+  // ─── ScrollSpy IntersectionObserver ─────────────────────────────────────
+  useEffect(() => {
+    const sectionIds = ['home', 'about', 'services', 'marketplace', 'blog', 'contact']
+    const handleIntersect: IntersectionObserverCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id)
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(handleIntersect, {
+      root: null,
+      rootMargin: '-20% 0px -40% 0px',
+      threshold: 0.2
+    })
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [location.pathname])
 
   const handleNavClick = (e: React.MouseEvent, href: string, label: string) => {
     const lowerLabel = (label || '').toLowerCase()
@@ -90,8 +109,8 @@ export const Navbar: React.FC = () => {
 
   const rawLinks = navigation?.header_menu || [
     { label: 'Home', href: '/' },
-    { label: 'Services', href: '/services' },
     { label: 'About', href: '/about' },
+    { label: 'Services', href: '/services' },
     { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: '/kb' },
@@ -114,11 +133,7 @@ export const Navbar: React.FC = () => {
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
   return (
-    <nav className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
-      isScrolled
-        ? 'bg-[#040509]/95 dark:bg-[#040509]/95 light:bg-white/95 border-emerald-500/30 light:border-slate-300 backdrop-blur-2xl shadow-xl shadow-black/40 py-0.5'
-        : 'bg-[#040509]/75 dark:bg-[#040509]/75 light:bg-white/80 border-white/10 light:border-slate-200 backdrop-blur-xl py-1.5 shadow-md'
-    }`}>
+    <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/90 dark:bg-[#040509]/90 light:bg-white/90 border-white/10 light:border-slate-200 backdrop-blur-xl transition-all duration-300 shadow-xl shadow-black/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
@@ -131,16 +146,25 @@ export const Navbar: React.FC = () => {
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center space-x-1">
             {headerLinks.map((link: any, idx: number) => {
-              const isActive = location.pathname === link.href ||
+              const lowerLabel = (link.label || '').toLowerCase()
+              const lowerHref = (link.href || '').toLowerCase()
+
+              const isSectionActive = activeSection === lowerLabel ||
+                (activeSection === 'home' && (lowerLabel === 'home' || lowerHref === '/')) ||
+                (activeSection === 'about' && (lowerLabel === 'about' || lowerHref === '/about')) ||
+                (activeSection === 'services' && (lowerLabel === 'services' || lowerHref === '/services'))
+
+              const isActive = isSectionActive || location.pathname === link.href ||
                 (link.href !== '/' && location.pathname.startsWith(link.href))
+
               return (
                 <Link
                   key={idx}
                   to={link.href}
                   onClick={(e) => handleNavClick(e, link.href, link.label)}
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors font-sans ${
+                  className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all font-display ${
                     isActive
-                      ? 'text-emerald-500 bg-emerald-500/10 dark:text-emerald-400 light:text-emerald-600'
+                      ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 shadow-lg shadow-emerald-500/10'
                       : 'text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-700 light:hover:text-emerald-600'
                   }`}
                 >

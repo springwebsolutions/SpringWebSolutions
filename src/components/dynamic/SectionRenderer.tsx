@@ -26,7 +26,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'hero':
               return <div id="home" key={sec.id}><HeroSection content={sec.content} styling={sec.styling} /></div>
             case 'stats':
-              return <div id="stats" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
+              return <div id="about" key={sec.id}><StatsSection content={sec.content} styling={sec.styling} /></div>
             case 'services_summary':
               return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
             case 'pricing':

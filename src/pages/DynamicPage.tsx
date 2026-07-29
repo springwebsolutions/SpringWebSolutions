@@ -14,12 +14,12 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
   if (cleanSlug === 'home') {
     const defaultHomeSections: Array<{ id: string; type: SectionData['type']; display_order: number }> = [
       { id: 'home-hero', type: 'hero', display_order: 0 },
-      { id: 'home-team', type: 'team', display_order: 1 },
       { id: 'home-services', type: 'services_summary', display_order: 2 },
       { id: 'home-tech', type: 'tech_stack', display_order: 3 },
       { id: 'home-case-studies', type: 'case_studies', display_order: 4 },
       { id: 'home-comparison', type: 'comparison', display_order: 5 },
-      { id: 'home-faq', type: 'faq', display_order: 6 }
+      { id: 'home-team', type: 'team', display_order: 6 },
+      { id: 'home-faq', type: 'faq', display_order: 7 }
     ]
 
     const filteredFetched = (fetchedSections || []).filter(s => s.type !== 'stats' && s.type !== 'cta')
@@ -40,16 +40,7 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
       }
     })
 
-    return merged.map(s => {
-      if (s.type === 'hero') return { ...s, display_order: 0 }
-      if (s.type === 'team') return { ...s, display_order: 1 }
-      if (s.type === 'services_summary') return { ...s, display_order: 2 }
-      if (s.type === 'tech_stack') return { ...s, display_order: 3 }
-      if (s.type === 'case_studies') return { ...s, display_order: 4 }
-      if (s.type === 'comparison') return { ...s, display_order: 5 }
-      if (s.type === 'faq') return { ...s, display_order: 6 }
-      return s
-    }).sort((a, b) => a.display_order - b.display_order)
+    return merged.sort((a, b) => a.display_order - b.display_order)
   }
 
   if (cleanSlug === 'about') {
