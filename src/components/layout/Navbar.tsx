@@ -39,29 +39,39 @@ export const Navbar: React.FC = () => {
 
   const [activeSection, setActiveSection] = useState<string>('home')
 
-  // ─── ScrollSpy IntersectionObserver ─────────────────────────────────────
+  // ─── ScrollSpy Window Scroll Listener ────────────────────────────────────
   useEffect(() => {
-    const sectionIds = ['home', 'about', 'services', 'marketplace', 'blog', 'contact']
-    const handleIntersect: IntersectionObserverCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id)
+    const handleScroll = () => {
+      const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname === '/about' || location.pathname === '/services'
+      if (!isHomePage) return
+
+      const scrollPos = window.scrollY + 180
+      const sectionIds = ['home', 'about', 'services', 'marketplace', 'blog', 'contact']
+      let current = 'home'
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id)
+        if (el) {
+          const top = el.offsetTop
+          const height = el.offsetHeight
+          if (scrollPos >= top && scrollPos < top + height) {
+            current = id
+            break
+          }
         }
-      })
+      }
+
+      setActiveSection(current)
     }
 
-    const observer = new IntersectionObserver(handleIntersect, {
-      root: null,
-      rootMargin: '-20% 0px -40% 0px',
-      threshold: 0.2
-    })
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    const timer = setTimeout(handleScroll, 400) // Delayed run for async dynamic sections
 
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      clearTimeout(timer)
+    }
   }, [location.pathname])
 
   const handleNavClick = (e: React.MouseEvent, href: string, label: string) => {
@@ -80,7 +90,7 @@ export const Navbar: React.FC = () => {
       return
     }
 
-    const isHomePage = location.pathname === '/' || location.pathname === ''
+    const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname === '/about' || location.pathname === '/services'
     const scrollTargetId = (lowerLabel === 'home' || lowerHref === '/') ? 'home'
       : (lowerLabel === 'about' || lowerHref === '/about') ? 'about'
       : (lowerLabel === 'services' || lowerHref === '/services') ? 'services'
@@ -109,8 +119,8 @@ export const Navbar: React.FC = () => {
 
   const rawLinks = navigation?.header_menu || [
     { label: 'Home', href: '/' },
-    { label: 'Services', href: '/services' },
     { label: 'About', href: '/about' },
+    { label: 'Services', href: '/services' },
     { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: '/kb' },
@@ -148,14 +158,17 @@ export const Navbar: React.FC = () => {
             {headerLinks.map((link: any, idx: number) => {
               const lowerLabel = (link.label || '').toLowerCase()
               const lowerHref = (link.href || '').toLowerCase()
+              const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname === '/about' || location.pathname === '/services'
 
-              const isSectionActive = activeSection === lowerLabel ||
-                (activeSection === 'home' && (lowerLabel === 'home' || lowerHref === '/')) ||
-                (activeSection === 'about' && (lowerLabel === 'about' || lowerHref === '/about')) ||
-                (activeSection === 'services' && (lowerLabel === 'services' || lowerHref === '/services'))
-
-              const isActive = isSectionActive || location.pathname === link.href ||
-                (link.href !== '/' && location.pathname.startsWith(link.href))
+              let isActive = false
+              if (isHomePage) {
+                if (activeSection === 'home' && (lowerLabel === 'home' || lowerHref === '/')) isActive = true
+                else if (activeSection === 'about' && (lowerLabel === 'about' || lowerHref === '/about')) isActive = true
+                else if (activeSection === 'services' && (lowerLabel === 'services' || lowerHref === '/services')) isActive = true
+                else if (activeSection === lowerLabel) isActive = true
+              } else {
+                isActive = location.pathname === link.href || (link.href !== '/' && location.pathname.startsWith(link.href))
+              }
 
               return (
                 <Link
@@ -164,7 +177,7 @@ export const Navbar: React.FC = () => {
                   onClick={(e) => handleNavClick(e, link.href, link.label)}
                   className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all font-display ${
                     isActive
-                      ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 shadow-lg shadow-emerald-500/10'
+                      ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 shadow-lg shadow-emerald-500/20'
                       : 'text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-700 light:hover:text-emerald-600'
                   }`}
                 >

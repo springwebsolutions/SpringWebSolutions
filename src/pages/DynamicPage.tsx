@@ -14,8 +14,8 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
   if (cleanSlug === 'home') {
     const defaultHomeSections: Array<{ id: string; type: SectionData['type']; display_order: number }> = [
       { id: 'home-hero', type: 'hero', display_order: 0 },
-      { id: 'home-services', type: 'services_summary', display_order: 1 },
-      { id: 'home-stats', type: 'stats', display_order: 2 },
+      { id: 'home-stats', type: 'stats', display_order: 1 },
+      { id: 'home-services', type: 'services_summary', display_order: 2 },
       { id: 'home-tech', type: 'tech_stack', display_order: 3 },
       { id: 'home-case-studies', type: 'case_studies', display_order: 4 },
       { id: 'home-comparison', type: 'comparison', display_order: 5 },
