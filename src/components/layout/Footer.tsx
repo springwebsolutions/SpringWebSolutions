@@ -33,6 +33,7 @@ export const Footer: React.FC = () => {
       heading: 'Company & Support',
       links: [
         { label: 'About SpringWeb Solutions', href: '/#about' },
+        { label: 'Portfolio & Showcase', href: '/portfolio' },
         { label: 'Why Choose Us', href: '/#comparison' },
         { label: 'Case Studies', href: '/#case-studies' },
         { label: 'Contact Us', href: '/contact' },

@@ -102,6 +102,7 @@ export const Navbar: React.FC = () => {
 
     // Direct page navigation for standalone pages
     if (
+      lowerLabel === 'portfolio' || lowerHref === '/portfolio' ||
       lowerLabel === 'contact' || lowerHref === '/contact' ||
       lowerLabel === 'marketplace' || lowerHref === '/marketplace' ||
       lowerLabel === 'blog' || lowerHref === '/blog' ||
@@ -137,6 +138,7 @@ export const Navbar: React.FC = () => {
     { label: 'Home', href: '/' },
     { label: 'About', href: '/about' },
     { label: 'Services', href: '/services' },
+    { label: 'Portfolio', href: '/portfolio' },
     { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: '/kb' },
