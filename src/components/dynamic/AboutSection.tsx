@@ -58,13 +58,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
     }
   ]
 
-  const metrics = [
-    { label: 'Completed Projects', value: '100+' },
-    { label: 'Uptime SLA Guarantee', value: '99.9%' },
-    { label: 'Average PageSpeed Score', value: '98/100' },
-    { label: 'Client Rating', value: '4.9 / 5' }
-  ]
-
   return (
     <section id="about" className="py-24 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       {/* Background Ambient Radial Glows */}
@@ -137,20 +130,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
               </div>
             )
           })}
-        </div>
-
-        {/* Live Metrics Counter Bar */}
-        <div className="p-8 rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 light:border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-6 text-center shadow-xl">
-          {metrics.map((m, idx) => (
-            <div key={idx} className="space-y-1">
-              <div className="text-2xl sm:text-4xl font-extrabold font-mono text-emerald-400">
-                {m.value}
-              </div>
-              <div className="text-xs font-medium text-slate-400 light:text-slate-600 uppercase tracking-wider">
-                {m.label}
-              </div>
-            </div>
-          ))}
         </div>
 
       </div>
