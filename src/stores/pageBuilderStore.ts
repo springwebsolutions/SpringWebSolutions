@@ -822,31 +822,40 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
       set({ currentSections: sections })
     }
 
-    if (!isSupabaseConfigured) return
+    if (!isSupabaseConfigured || !curPage) return
 
     try {
       const targetSec = sections.find(s => s.id === sectionId)
-      if (targetSec) {
-        const payload = {
-          id: targetSec.id,
-          page_id: targetSec.page_id || (curPage?.id || 'default-home-id'),
-          type: targetSec.type,
-          content: targetSec.content || {},
-          styling: targetSec.styling || {},
-          display_order: targetSec.display_order || 0,
-          is_active: isActive,
-          updated_at: new Date().toISOString()
-        }
-        const { error } = await supabase
-          .from('sections')
-          .upsert(payload, { onConflict: 'id' })
+      if (!targetSec) return
 
-        if (error) {
-          await supabase
-            .from('sections')
-            .update({ is_active: isActive, updated_at: new Date().toISOString() })
-            .eq('id', sectionId)
-        }
+      // CRITICAL: Look up existing section by the REAL page_id UUID + section type
+      // Default sections have hardcoded IDs (e.g. 'home-case-studies') with fake page_ids.
+      // We must look up by type to find the actual Supabase row and update it correctly.
+      const { data: existingRow } = await supabase
+        .from('sections')
+        .select('id')
+        .eq('page_id', curPage.id)
+        .eq('type', targetSec.type)
+        .maybeSingle()
+
+      if (existingRow?.id) {
+        // Update the real Supabase row
+        await supabase
+          .from('sections')
+          .update({ is_active: isActive, updated_at: new Date().toISOString() })
+          .eq('id', existingRow.id)
+      } else {
+        // Section not in DB yet — insert it with the real page_id UUID
+        await supabase
+          .from('sections')
+          .insert({
+            page_id: curPage.id,
+            type: targetSec.type,
+            content: targetSec.content || {},
+            styling: targetSec.styling || {},
+            display_order: targetSec.display_order || 0,
+            is_active: isActive
+          })
       }
     } catch (err) {
       console.error('Error toggling section in Supabase:', err)
