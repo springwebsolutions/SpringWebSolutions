@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CareersSeo } from '@/components/seo/CareersSeo'
 import { BookOpen, Sparkles, ArrowRight, User } from 'lucide-react'
 
 export const CareerGuideListing: React.FC = () => {
@@ -11,13 +12,17 @@ export const CareerGuideListing: React.FC = () => {
 
   useEffect(() => {
     fetchGuides()
-    document.title = 'Educational Career Guides & Exam Roadmaps | SpringWeb Solutions'
   }, [])
 
   const publishedGuides = guides.filter(g => g.status === 'published')
 
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans">
+      <CareersSeo 
+        title="Educational Career Guides & Technical Interview Roadmaps | SpringWeb Careers"
+        description="Free educational guides, technical interview roadmaps, resume building tips, and remote salary calculators for software developers and tech aspirants."
+        canonicalUrl="https://careers.springwebsolutions.in/career-guides"
+      />
       <CareersNavbar />
 
       <main className="flex-grow py-12">

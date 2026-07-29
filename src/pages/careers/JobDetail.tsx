@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CareersSeo } from '@/components/seo/CareersSeo'
 import {
   MapPin, Briefcase, Building2, CheckCircle2, Laptop, ArrowLeft,
   Share2, Mail, ExternalLink, Calendar, Award
@@ -83,8 +84,48 @@ export const JobDetail: React.FC = () => {
     }, 2500)
   }
 
+  const jobPostingSchema = job ? {
+    '@context': 'https://schema.org/',
+    '@type': 'JobPosting',
+    'title': job.title,
+    'description': job.description,
+    'identifier': {
+      '@type': 'PropertyValue',
+      'name': job.company_name,
+      'value': job.id
+    },
+    'datePosted': job.created_at,
+    'employmentType': job.job_type.toUpperCase().replace('-', '_'),
+    'hiringOrganization': {
+      '@type': 'Organization',
+      'name': job.company_name,
+      'sameAs': 'https://careers.springwebsolutions.in',
+      'logo': 'https://careers.springwebsolutions.in/logo-emblem.png'
+    },
+    'jobLocation': {
+      '@type': 'Place',
+      'address': {
+        '@type': 'PostalAddress',
+        'addressLocality': job.location_city,
+        'addressRegion': job.location_state,
+        'addressCountry': job.location_country
+      }
+    },
+    'applicantLocationRequirements': {
+      '@type': 'Country',
+      'name': job.location_country
+    },
+    'jobLocationType': job.is_wfh || job.is_remote ? 'TELECOMMUTE' : undefined
+  } : undefined
+
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans">
+      <CareersSeo 
+        title={`${job.title} | ${job.company_name} | SpringWeb Careers`}
+        description={`${job.title} vacancy at ${job.company_name} in ${job.location_city}, ${job.location_state}. Package: ${job.salary_range}. Work mode: ${job.is_wfh ? '100% WFH' : 'On-Site'}.`}
+        canonicalUrl={`https://careers.springwebsolutions.in/jobs/${job.slug}`}
+        schemaJson={jobPostingSchema}
+      />
       <CareersNavbar />
 
       <main className="flex-grow py-12">

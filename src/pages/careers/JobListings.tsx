@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CareersSeo } from '@/components/seo/CareersSeo'
 import {
   Search, MapPin, Briefcase, Filter, Laptop, ArrowRight,
   Sparkles, CheckCircle2, ChevronRight, RefreshCw, Building2, LocateFixed, Loader2
@@ -90,6 +91,11 @@ export const JobListings: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans transition-colors duration-300">
+      <CareersSeo 
+        title="Search All Job Vacancies & Remote Roles | SpringWeb Careers"
+        description="Filter and search software engineering, native mobile app, desktop development, and SEO job vacancies across Tamil Nadu, Pan-India Metros, and International WFH."
+        canonicalUrl="https://careers.springwebsolutions.in/jobs"
+      />
       <CareersNavbar />
 
       <main className="flex-grow py-12">

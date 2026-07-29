@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CareersSeo } from '@/components/seo/CareersSeo'
 import { BookOpen, ArrowLeft, Calendar, User, Tag } from 'lucide-react'
 
 export const CareerGuideDetail: React.FC = () => {
@@ -40,8 +41,34 @@ export const CareerGuideDetail: React.FC = () => {
     )
   }
 
+  const articleSchema = guide ? {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    'headline': guide.title,
+    'description': guide.excerpt || guide.content.substring(0, 160),
+    'author': {
+      '@type': 'Person',
+      'name': guide.author || 'SpringWeb Career Experts'
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'SpringWeb Solutions',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://careers.springwebsolutions.in/logo-emblem.png'
+      }
+    },
+    'datePublished': guide.created_at
+  } : undefined
+
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans">
+      <CareersSeo 
+        title={`${guide.title} | Educational Guide | SpringWeb Careers`}
+        description={guide.excerpt || guide.content.substring(0, 160)}
+        canonicalUrl={`https://careers.springwebsolutions.in/career-guides/${guide.slug}`}
+        schemaJson={articleSchema}
+      />
       <CareersNavbar />
 
       <main className="flex-grow py-12">

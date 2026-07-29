@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CareersSeo } from '@/components/seo/CareersSeo'
 import { POPULAR_INDIA_LOCATIONS } from '@/data/indiaLocations'
 import {
   Search, MapPin, Briefcase, Globe, Sparkles, Building2, CheckCircle2,
@@ -100,6 +101,7 @@ export const CareersHome: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans transition-colors duration-300">
+      <CareersSeo />
       <CareersNavbar />
 
       <main className="flex-grow">
@@ -311,6 +313,109 @@ export const CareersHome: React.FC = () => {
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Practice Areas & Visual Showcase Section (Inspired by Futureva & Control N IT Showcases) */}
+        <section className="py-16 bg-gradient-to-b from-[#060810] to-[#040509]">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <div className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-display">
+                Engineering &amp; Technology Domains
+              </div>
+              <h2 className="text-3xl font-extrabold font-display text-white uppercase">
+                Active Hiring Practice Areas
+              </h2>
+              <p className="text-xs text-slate-400 font-light">
+                Discover vacancies in specialized tech stacks across Web Engineering, Native Mobile Apps, Desktop Suites, and SEO.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="group rounded-3xl bg-[#080b14] border border-white/10 overflow-hidden hover:border-emerald-500/40 transition-all duration-300 shadow-xl">
+                <div className="h-44 overflow-hidden relative">
+                  <img 
+                    src="/software-engineering.png" 
+                    alt="Full-Stack Web Engineering" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent"></div>
+                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase font-mono">
+                    React &amp; Node
+                  </span>
+                </div>
+                <div className="p-6 space-y-2">
+                  <h3 className="text-base font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
+                    Full-Stack Web Engineering
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    Enterprise SaaS platforms, React/Next.js frontends, Node.js REST microservices, and cloud databases.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=Software" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                      <span>Explore Web Engineering Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group rounded-3xl bg-[#080b14] border border-white/10 overflow-hidden hover:border-blue-500/40 transition-all duration-300 shadow-xl">
+                <div className="h-44 overflow-hidden relative">
+                  <img 
+                    src="/app-dev.png" 
+                    alt="Native Android & iOS Apps" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent"></div>
+                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-400 text-[10px] font-bold uppercase font-mono">
+                    Kotlin &amp; Flutter
+                  </span>
+                </div>
+                <div className="p-6 space-y-2">
+                  <h3 className="text-base font-bold text-white font-display group-hover:text-blue-400 transition-colors">
+                    Mobile App Development
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    Native Kotlin Android apps, iOS Swift mobile clients, and cross-platform Flutter applications.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=Android" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                      <span>Explore Mobile Developer Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="group rounded-3xl bg-[#080b14] border border-white/10 overflow-hidden hover:border-purple-500/40 transition-all duration-300 shadow-xl">
+                <div className="h-44 overflow-hidden relative">
+                  <img 
+                    src="/windows-dev.png" 
+                    alt="Windows Desktop Software & SEO" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent"></div>
+                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-purple-500/20 backdrop-blur-md border border-purple-500/30 text-purple-400 text-[10px] font-bold uppercase font-mono">
+                    .NET &amp; SEO
+                  </span>
+                </div>
+                <div className="p-6 space-y-2">
+                  <h3 className="text-base font-bold text-white font-display group-hover:text-purple-400 transition-colors">
+                    Desktop &amp; Growth Engineering
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    C# .NET WPF desktop applications, automated POS solutions, technical SEO, and analytics suites.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=Desktop" className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1">
+                      <span>Explore Desktop &amp; SEO Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
