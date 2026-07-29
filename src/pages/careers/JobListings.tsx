@@ -275,16 +275,25 @@ export const JobListings: React.FC = () => {
                       className="p-6 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all space-y-4 group"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-bold text-emerald-400">{job.company_name}</span>
-                            <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">
-                              {job.niche_category}
-                            </span>
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center font-bold text-emerald-400 shrink-0">
+                            {job.company_logo ? (
+                              <img src={job.company_logo} alt={job.company_name} className="h-full w-full object-contain" />
+                            ) : (
+                              job.company_name.charAt(0)
+                            )}
                           </div>
-                          <h2 className="text-xl font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
-                            {job.title}
-                          </h2>
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs font-bold text-emerald-400">{job.company_name}</span>
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">
+                                {job.niche_category}
+                              </span>
+                            </div>
+                            <h2 className="text-xl font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
+                              {job.title}
+                            </h2>
+                          </div>
                         </div>
 
                         {job.is_wfh && (

@@ -317,7 +317,7 @@ export const CareersHome: React.FC = () => {
           </div>
         </section>
 
-        {/* Practice Areas & Visual Showcase Section (Inspired by Futureva & Control N IT Showcases) */}
+        {/* Practice Areas & Tech Stack Showcase Section */}
         <section className="py-16 bg-gradient-to-b from-[#060810] to-[#040509]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
             <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -328,25 +328,22 @@ export const CareersHome: React.FC = () => {
                 Active Hiring Practice Areas
               </h2>
               <p className="text-xs text-slate-400 font-light">
-                Discover vacancies in specialized tech stacks across Web Engineering, Native Mobile Apps, Desktop Suites, and SEO.
+                Discover vacancies across specialized tech stacks with verified employer logo tags.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="group rounded-3xl bg-[#080b14] border border-white/10 overflow-hidden hover:border-emerald-500/40 transition-all duration-300 shadow-xl">
-                <div className="h-44 overflow-hidden relative">
-                  <img 
-                    src="/software-engineering.png" 
-                    alt="Full-Stack Web Engineering" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent"></div>
-                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase font-mono">
+              <div className="group p-8 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-xl space-y-5">
+                <div className="flex items-center justify-between">
+                  <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-2.5 flex items-center justify-center text-emerald-400">
+                    <Laptop size={24} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase font-mono">
                     React &amp; Node
                   </span>
                 </div>
-                <div className="p-6 space-y-2">
-                  <h3 className="text-base font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
                     Full-Stack Web Engineering
                   </h3>
                   <p className="text-xs text-slate-400 font-light leading-relaxed">
@@ -361,20 +358,17 @@ export const CareersHome: React.FC = () => {
                 </div>
               </div>
 
-              <div className="group rounded-3xl bg-[#080b14] border border-white/10 overflow-hidden hover:border-blue-500/40 transition-all duration-300 shadow-xl">
-                <div className="h-44 overflow-hidden relative">
-                  <img 
-                    src="/app-dev.png" 
-                    alt="Native Android & iOS Apps" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent"></div>
-                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-400 text-[10px] font-bold uppercase font-mono">
+              <div className="group p-8 rounded-3xl bg-[#080b14] border border-white/10 hover:border-blue-500/40 transition-all duration-300 shadow-xl space-y-5">
+                <div className="flex items-center justify-between">
+                  <div className="h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 p-2.5 flex items-center justify-center text-blue-400">
+                    <Briefcase size={24} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase font-mono">
                     Kotlin &amp; Flutter
                   </span>
                 </div>
-                <div className="p-6 space-y-2">
-                  <h3 className="text-base font-bold text-white font-display group-hover:text-blue-400 transition-colors">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-blue-400 transition-colors">
                     Mobile App Development
                   </h3>
                   <p className="text-xs text-slate-400 font-light leading-relaxed">
@@ -389,20 +383,17 @@ export const CareersHome: React.FC = () => {
                 </div>
               </div>
 
-              <div className="group rounded-3xl bg-[#080b14] border border-white/10 overflow-hidden hover:border-purple-500/40 transition-all duration-300 shadow-xl">
-                <div className="h-44 overflow-hidden relative">
-                  <img 
-                    src="/windows-dev.png" 
-                    alt="Windows Desktop Software & SEO" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent"></div>
-                  <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-purple-500/20 backdrop-blur-md border border-purple-500/30 text-purple-400 text-[10px] font-bold uppercase font-mono">
+              <div className="group p-8 rounded-3xl bg-[#080b14] border border-white/10 hover:border-purple-500/40 transition-all duration-300 shadow-xl space-y-5">
+                <div className="flex items-center justify-between">
+                  <div className="h-12 w-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 p-2.5 flex items-center justify-center text-purple-400">
+                    <Building2 size={24} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase font-mono">
                     .NET &amp; SEO
                   </span>
                 </div>
-                <div className="p-6 space-y-2">
-                  <h3 className="text-base font-bold text-white font-display group-hover:text-purple-400 transition-colors">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-purple-400 transition-colors">
                     Desktop &amp; Growth Engineering
                   </h3>
                   <p className="text-xs text-slate-400 font-light leading-relaxed">
@@ -448,8 +439,12 @@ export const CareersHome: React.FC = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 p-2 flex items-center justify-center font-bold text-emerald-400">
-                          {job.company_name.charAt(0)}
+                        <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center font-bold text-emerald-400 shrink-0">
+                          {job.company_logo ? (
+                            <img src={job.company_logo} alt={job.company_name} className="h-full w-full object-contain" />
+                          ) : (
+                            job.company_name.charAt(0)
+                          )}
                         </div>
                         <div>
                           <div className="text-xs text-slate-400 font-medium">{job.company_name}</div>
