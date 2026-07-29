@@ -41,11 +41,13 @@ export const Navbar: React.FC = () => {
 
   // ─── ScrollSpy Window Scroll Listener ────────────────────────────────────
   useEffect(() => {
-    const handleScroll = () => {
+    let rafId: number | null = null
+
+    const computeActive = () => {
       const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname === '/about' || location.pathname === '/services'
       if (!isHomePage) return
 
-      const scrollPos = window.scrollY + 180
+      const scrollPos = window.scrollY + 140
       const sectionIds = ['home', 'about', 'services', 'marketplace', 'blog', 'contact']
       let current = 'home'
 
@@ -64,12 +66,18 @@ export const Navbar: React.FC = () => {
       setActiveSection(current)
     }
 
+    const handleScroll = () => {
+      if (rafId !== null) cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(computeActive)
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    const timer = setTimeout(handleScroll, 400) // Delayed run for async dynamic sections
+    computeActive()
+    const timer = setTimeout(computeActive, 400)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      if (rafId !== null) cancelAnimationFrame(rafId)
       clearTimeout(timer)
     }
   }, [location.pathname])
@@ -183,13 +191,31 @@ export const Navbar: React.FC = () => {
                   key={idx}
                   to={link.href}
                   onClick={(e) => handleNavClick(e, link.href, link.label)}
-                  className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all font-display ${
-                    isActive
-                      ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 shadow-lg shadow-emerald-500/20'
-                      : 'text-slate-300 hover:text-white dark:text-slate-300 dark:hover:text-white light:text-slate-700 light:hover:text-emerald-600'
-                  }`}
+                  className="relative px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display"
+                  style={{
+                    color: isActive ? 'rgb(52,211,153)' : '',
+                    transition: 'color 0.3s ease',
+                  }}
                 >
-                  {link.label}
+                  {/* Emerald active box — fades in/out independently via opacity */}
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: '0.75rem',
+                      border: '1px solid rgba(16,185,129,0.4)',
+                      background: 'rgba(16,185,129,0.12)',
+                      boxShadow: '0 4px 24px 0 rgba(16,185,129,0.15)',
+                      opacity: isActive ? 1 : 0,
+                      transition: 'opacity 0.35s ease',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                  {/* Label — inherits color from parent Link */}
+                  <span className={`relative z-10 ${isActive ? '' : 'text-slate-300 dark:text-slate-300 light:text-slate-700'}`}>
+                    {link.label}
+                  </span>
                 </Link>
               )
             })}
