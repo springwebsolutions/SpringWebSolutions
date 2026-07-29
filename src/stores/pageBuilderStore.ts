@@ -492,17 +492,29 @@ export const getSharedSectionStates = (): Record<string, boolean> => {
       return JSON.parse(decodeURIComponent(match[1])) || {}
     }
   } catch (e) {}
+  // Also check localStorage as fallback
+  try {
+    const saved = localStorage.getItem('sws_section_states')
+    if (saved) return JSON.parse(saved) || {}
+  } catch (e) {}
   return {}
 }
 
-export const setSharedSectionState = (sectionId: string, isActive: boolean) => {
+// Key is "pageSlug:sectionType" for cross-subdomain compatibility
+export const setSharedSectionState = (sectionId: string, isActive: boolean, sectionType?: string, pageSlug?: string) => {
   try {
     const existing = getSharedSectionStates()
+    // Store by both ID and type (type is stable across environments)
     existing[sectionId] = isActive
+    if (sectionType && pageSlug) {
+      existing[`${pageSlug}:${sectionType}`] = isActive
+    }
     const jsonStr = encodeURIComponent(JSON.stringify(existing))
     const isProd = typeof window !== 'undefined' && window.location.hostname.includes('springwebsolutions.in')
     const domainPart = isProd ? '; Domain=.springwebsolutions.in' : ''
     document.cookie = `sws_section_states=${jsonStr}; Path=/${domainPart}; Max-Age=31536000; SameSite=Lax`
+    // Also write to localStorage for same-domain reads
+    localStorage.setItem('sws_section_states', JSON.stringify(existing))
   } catch (e) {}
 }
 
@@ -510,20 +522,26 @@ const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): Sec
   const defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
   const sharedStates = getSharedSectionStates()
 
-  const dbTypes = new Set((dbSections || []).map(s => s.type))
-  const merged = [...(dbSections || [])]
+  const dbTypeMap = new Map((dbSections || []).map(s => [s.type, s]))
+  const merged: SectionData[] = [...(dbSections || [])]
 
   if (defaultSections.length) {
     defaultSections.forEach(defSec => {
-      if (!dbTypes.has(defSec.type)) {
+      if (!dbTypeMap.has(defSec.type)) {
         merged.push(defSec)
       }
     })
   }
 
   const finalSections = merged.map(sec => {
-    if (typeof sharedStates[sec.id] === 'boolean') {
-      return { ...sec, is_active: sharedStates[sec.id] }
+    // Check by section ID first (same domain), then by type:slug key (cross-domain)
+    const byId = sharedStates[sec.id]
+    const byType = sharedStates[`${slug}:${sec.type}`]
+    if (typeof byId === 'boolean') {
+      return { ...sec, is_active: byId }
+    }
+    if (typeof byType === 'boolean') {
+      return { ...sec, is_active: byType }
     }
     return sec
   })
@@ -782,7 +800,9 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   },
 
   toggleSectionActive: async (sectionId, isActive) => {
-    setSharedSectionState(sectionId, isActive)
+    const curPageSlug = get().currentPage?.slug || 'home'
+    const targetSecForType = get().currentSections.find(s => s.id === sectionId)
+    setSharedSectionState(sectionId, isActive, targetSecForType?.type, curPageSlug)
 
     const sections = get().currentSections.map(s =>
       s.id === sectionId ? { ...s, is_active: isActive } : s
