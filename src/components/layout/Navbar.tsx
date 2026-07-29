@@ -109,8 +109,8 @@ export const Navbar: React.FC = () => {
 
   const rawLinks = navigation?.header_menu || [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
     { label: 'Services', href: '/services' },
+    { label: 'About', href: '/about' },
     { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: '/kb' },
