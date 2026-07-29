@@ -160,6 +160,30 @@ export const ContentManager: React.FC = () => {
           { title: "Service Feature", desc: "Detailed description of feature.", href: "/services" }
         ]
       }
+    } else if (newSectionType === 'case_studies') {
+      defaultContent = {
+        title: "Engineering Transformation Case Studies",
+        subtitle: "Explore real-world technical transformations where custom software and high-speed web engineering delivered measurable business results."
+      }
+    } else if (newSectionType === 'comparison') {
+      defaultContent = {
+        title: "Why Choose Spring Web Solutions?",
+        subtitle: "See how our high-performance engineering standards compare against traditional freelance work and generic template agencies."
+      }
+    } else if (newSectionType === 'faq') {
+      defaultContent = {
+        title: "Frequently Asked Questions",
+        subtitle: "Everything you need to know about our web engineering process, code ownership, timelines, and technical standards."
+      }
+    } else if (newSectionType === 'tech_stack') {
+      defaultContent = {
+        title: "Our Engineering Ecosystem",
+        subtitle: "We use modern, reliable, and secure tools to build platforms that do not go offline or suffer from bloat.",
+        categories: [
+          { name: "Frontend", items: ["React", "TypeScript", "Tailwind CSS", "Vite", "Next.js"] },
+          { name: "Backend & Database", items: ["Node.js", "PostgreSQL", "Supabase"] }
+        ]
+      }
     } else if (newSectionType === 'cta') {
       defaultContent = {
         title: "Ready to Accelerate Growth?",
@@ -385,9 +409,12 @@ export const ContentManager: React.FC = () => {
                   >
                     <option value="hero">Hero Header Section</option>
                     <option value="stats">Stats Counter Grid</option>
-                    <option value="services_summary">Services & Features Grid</option>
-                    <option value="testimonials_summary">Client Testimonials Carousel</option>
+                    <option value="services_summary">Services &amp; Features Grid</option>
                     <option value="tech_stack">Tech Stack Ecosystem Grid</option>
+                    <option value="case_studies">Case Studies &amp; Success Stories</option>
+                    <option value="comparison">Why Choose Us / Comparison Table</option>
+                    <option value="faq">Frequently Asked Questions (FAQ)</option>
+                    <option value="pricing_summary">Pricing &amp; Package Plans</option>
                     <option value="cta">Call to Action Banner</option>
                   </select>
                 </div>
