@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Sparkles, Zap, CheckCircle2, ShieldCheck, Award } from 'lucide-react'
+import AnimatedBackground from '../ui/AnimatedBackground'
 
 interface HeroProps {
   content: {
@@ -72,20 +73,20 @@ const ParticleCanvas: React.FC = () => {
     canvas.width = W
     canvas.height = H
 
-    const NUM = 55
+    const NUM = 65
     type Pt = { x: number; y: number; vx: number; vy: number; r: number; color: string }
-    const colors = ['rgba(16,185,129,', 'rgba(99,102,241,', 'rgba(45,212,191,']
+    const colors = ['rgba(16,185,129,', 'rgba(99,102,241,', 'rgba(45,212,191,', 'rgba(59,130,246,']
 
     const pts: Pt[] = Array.from({ length: NUM }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.45,
-      vy: (Math.random() - 0.5) * 0.45,
-      r: Math.random() * 2 + 1,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 2.2 + 1,
       color: colors[Math.floor(Math.random() * colors.length)]
     }))
 
-    const MAX_DIST = 145
+    const MAX_DIST = 160
 
     const draw = () => {
       ctx.clearRect(0, 0, W, H)
@@ -97,10 +98,10 @@ const ParticleCanvas: React.FC = () => {
           const dy = pts[i].y - pts[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
           if (dist < MAX_DIST) {
-            const alpha = (1 - dist / MAX_DIST) * 0.28
+            const alpha = (1 - dist / MAX_DIST) * 0.32
             ctx.beginPath()
             ctx.strokeStyle = `rgba(16,185,129,${alpha})`
-            ctx.lineWidth = 0.8
+            ctx.lineWidth = 0.9
             ctx.moveTo(pts[i].x, pts[i].y)
             ctx.lineTo(pts[j].x, pts[j].y)
             ctx.stroke()
@@ -112,9 +113,9 @@ const ParticleCanvas: React.FC = () => {
       for (const p of pts) {
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.color + '0.75)'
-        ctx.shadowBlur = 8
-        ctx.shadowColor = p.color + '0.5)'
+        ctx.fillStyle = p.color + '0.85)'
+        ctx.shadowBlur = 10
+        ctx.shadowColor = p.color + '0.6)'
         ctx.fill()
         ctx.shadowBlur = 0
 
@@ -146,7 +147,7 @@ const ParticleCanvas: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-60"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-75 z-[2]"
       aria-hidden="true"
     />
   )
@@ -165,20 +166,20 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
   return (
     <section className="relative overflow-hidden py-20 lg:py-28 flex items-center bg-[#040509] border-b border-white/10 transition-colors duration-300 hero-dark-banner">
 
-      {/* ── High-Tech Hero Background Image & Overlay (Vivid 90% Opacity) ── */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-90 pointer-events-none transition-opacity duration-500 scale-105 contrast-125 brightness-110"
-        style={{ backgroundImage: `url('/hero-bg.png')` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#040509]/40 via-transparent to-[#040509]/80 pointer-events-none" />
+      {/* ── Premium Multi-Layer Animated Background System ── */}
+      <AnimatedBackground accent="emerald" particleCount={24} beams geoShapes />
+
+      {/* ── High-Tech Radiant Aurora Mesh Overlay ── */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/20 via-transparent to-indigo-950/40 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/15 via-transparent to-transparent pointer-events-none z-[1]" />
 
       {/* ── Particle Network Background ── */}
       <ParticleCanvas />
 
       {/* ── Layered Animated Gradient Orbs ── */}
-      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/20 filter blur-[130px] pointer-events-none animate-orb-1" />
-      <div className="absolute top-1/3 -right-40 w-[28rem] h-[28rem] rounded-full bg-indigo-600/20 filter blur-[130px] pointer-events-none animate-orb-2" />
-      <div className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full bg-teal-500/15 filter blur-[100px] pointer-events-none animate-pulse-slow" />
+      <div className="absolute -top-40 -left-40 w-[32rem] h-[32rem] rounded-full bg-emerald-500/25 filter blur-[140px] pointer-events-none animate-orb-1 z-[1]" />
+      <div className="absolute top-1/3 -right-40 w-[32rem] h-[32rem] rounded-full bg-indigo-600/25 filter blur-[140px] pointer-events-none animate-orb-2 z-[1]" />
+      <div className="absolute bottom-0 left-1/4 w-80 h-80 rounded-full bg-teal-500/20 filter blur-[110px] pointer-events-none animate-pulse-slow z-[1]" />
 
       {/* ── Animated SVG Circuit Lines ── */}
       <svg
