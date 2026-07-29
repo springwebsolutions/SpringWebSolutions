@@ -61,7 +61,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
 
   return (
     <section id="about" className="py-24 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
-      <AnimatedBackground accent="emerald" scanLine grid particleCount={22} />
+      <AnimatedBackground accent="emerald" particleCount={22} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
         

@@ -98,7 +98,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
 
   return (
     <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
-      <AnimatedBackground accent="indigo" grid particleCount={20} />
+      <AnimatedBackground accent="indigo" particleCount={20} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24 relative z-10">
         
         {/* Title Block */}

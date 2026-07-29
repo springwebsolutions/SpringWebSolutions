@@ -53,7 +53,7 @@ export const ComparisonTable: React.FC<{ content?: any; styling?: any }> = ({ co
 
   return (
     <section className="py-20 bg-[#060810] dark:bg-[#060810] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
-      <AnimatedBackground accent="blue" scanLine grid particleCount={12} />
+      <AnimatedBackground accent="blue" particleCount={12} />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
         
         {/* Header */}
