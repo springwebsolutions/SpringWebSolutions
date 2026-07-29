@@ -1,48 +1,60 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { ShieldCheck, Award, Zap, Users, ArrowRight, CheckCircle2, Cpu, Globe, MapPin, Code2, Server, Check } from 'lucide-react'
+import { ShieldCheck, Cpu, Award, Terminal, Smartphone, Monitor, MapPin, Code2, Check, Zap, Globe } from 'lucide-react'
 
 interface AboutSectionProps {
   content?: {
     title?: string
     subtitle?: string
-    description?: string
   }
   styling?: any
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
-  const title = content?.title || 'Engineering Enterprise Software & High-Speed Web Ecosystems'
-  const subtitle = content?.subtitle || 'SpringWeb Solutions is a premier technology agency based in Udumalpet, Tamil Nadu. We specialize in building custom web applications, native Android software, Windows desktop suites, and automated CRM workflows that save hundreds of manual hours.'
+  const title = content?.title || "ABOUT SPRINGWEB SOLUTIONS & OUR ENGINEERING ARCHITECTURE"
+  const subtitle = content?.subtitle || "SpringWeb Solutions is a solution engineering agency based in Udumalpet, Tamil Nadu, India. We build high-speed web applications, native Android mobile apps, Windows desktop software, and automated lead CRM ecosystems for global businesses."
 
   const pillars = [
     {
-      num: '01',
-      title: 'Enterprise Code Architecture',
-      desc: 'Engineered using React 19, Next.js 15, Kotlin, and C# .NET to deliver sub-second page loads, offline resiliency, and bank-grade encryption.',
-      icon: Cpu,
-      highlights: ['React 19 & Next.js 15', 'Native Kotlin Android Apps', 'TypeScript & C# .NET']
+      title: "Full-Stack Web Engineering",
+      role: "Architecture & Frontend Performance",
+      desc: "Specializing in high-speed React, Vite, Next.js, and TypeScript architectures that deliver sub-second response times and 100/100 Core Web Vitals scores.",
+      icon: Terminal,
+      skills: ["React 19", "Next.js 15", "TypeScript", "Tailwind CSS"]
     },
     {
-      num: '02',
-      title: 'Automated Operations & Lead CRMs',
-      desc: 'Instant WhatsApp lead alerts, automated client follow-up sequences, and custom API webhooks that eliminate repetitive manual data entry.',
+      title: "Android & Mobile App Development",
+      role: "Native & Cross-Platform Mobile",
+      desc: "High-performance native Android apps (Kotlin) & cross-platform iOS applications engineered for speed, offline synchronization, push notifications, and Google Play Store deployment.",
+      icon: Smartphone,
+      skills: ["Kotlin", "Android SDK", "Flutter", "Play Store API"]
+    },
+    {
+      title: "Windows Desktop Application Engineering",
+      role: "Native Windows Software",
+      desc: "Robust Windows desktop applications built with C# .NET, WPF, WinUI 3, and Electron. Integrated with local hardware, database sync, offline execution, and single-click MSI installers.",
+      icon: Monitor,
+      skills: ["C# .NET", "WinUI 3", "WPF", "MSI Installer"]
+    },
+    {
+      title: "Custom CRM & Automated Workflows",
+      role: "Backend & Lead Automation",
+      desc: "Building proprietary business databases, Supabase/PostgreSQL integrations, real-time inventory systems, instant WhatsApp lead webhooks, and automated CRM pipelines.",
       icon: Zap,
-      highlights: ['WhatsApp Cloud API', 'Custom ERP & CRM Suites', 'Automated Lead Routing']
+      skills: ["WhatsApp API", "Supabase", "PostgreSQL", "Node.js"]
     },
     {
-      num: '03',
-      title: 'Technical SEO & Search Dominance',
-      desc: 'Structured JSON-LD schema markup, Google Jobs integration, semantic HTML5, and 100/100 Core Web Vitals score for rank #1 search snippets.',
-      icon: Globe,
-      highlights: ['Google Structured Schema', 'Core Web Vitals 100/100', 'Canonical SEO Indexing']
+      title: "Enterprise Software Architecture",
+      role: "Multi-Platform Cloud Integration",
+      desc: "Unified software ecosystems connecting web portals, mobile apps, and Windows desktop clients to a single cloud database with microservices and automated API pipelines.",
+      icon: Cpu,
+      skills: ["REST APIs", "Microservices", "Cloud Backups", "Data Encryption"]
     },
     {
-      num: '04',
-      title: '99.9% Uptime & 24/7 SLA Guarantee',
-      desc: 'Dedicated cloud monitoring, automated daily backups, rapid incident response, and continuous maintenance for enterprise peace of mind.',
+      title: "Technical SEO & Search Dominance",
+      role: "Organic Indexing & Growth",
+      desc: "Structuring JSON-LD schema markups, canonical architecture, Google Search Console indexing, and local search visibility for Indian and global brands.",
       icon: ShieldCheck,
-      highlights: ['99.9% SLA Guarantee', 'Monitored Cloud Servers', 'Daily Database Backups']
+      skills: ["Structured Schema", "Core Web Vitals", "Google Indexing", "Local SEO"]
     }
   ]
 
@@ -50,33 +62,32 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
     { label: 'Completed Projects', value: '100+' },
     { label: 'Uptime SLA Guarantee', value: '99.9%' },
     { label: 'Average PageSpeed Score', value: '98/100' },
-    { label: 'Client Satisfaction Rating', value: '4.9 / 5' }
+    { label: 'Client Rating', value: '4.9 / 5' }
   ]
 
   return (
-    <section id="about" className="py-24 relative bg-[#040509] dark:bg-[#040509] light:bg-slate-100 border-b border-white/5 light:border-slate-200 transition-colors duration-300">
-      {/* Ambient Radial Gradient Glows */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 rounded-full bg-emerald-500/10 filter blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-cyan-500/10 filter blur-[130px] pointer-events-none" />
+    <section id="about" className="py-24 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
+      {/* Background Ambient Radial Glows */}
+      <div className="absolute top-1/3 left-0 w-96 h-96 rounded-full bg-emerald-500/10 filter blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-indigo-500/10 filter blur-[140px] pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
         
         {/* Header Block */}
-        <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-display">
-            <Award size={14} />
-            <span>Official Web Engineering &amp; Automation Agency</span>
+        <div className="text-center space-y-4 max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest font-display">
+            <Award size={14} /> ABOUT SPRINGWEB SOLUTIONS
           </div>
           
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight font-display text-white dark:text-white light:text-slate-900 uppercase leading-tight">
             {title}
           </h2>
           
-          <p className="text-base sm:text-lg text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed max-w-3xl mx-auto">
             {subtitle}
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 light:text-slate-600">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-slate-400 light:text-slate-600">
             <span className="flex items-center gap-1.5">
               <MapPin size={14} className="text-emerald-400" />
               <span>Udumalpet, Tamil Nadu, India</span>
@@ -89,43 +100,39 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
           </div>
         </div>
 
-        {/* 4 Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* 6-Pillars Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {pillars.map((pillar, idx) => {
             const Icon = pillar.icon
             return (
               <div
                 key={idx}
-                className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 hover:border-emerald-500/40 transition-all duration-300 space-y-6 group shadow-xl light:shadow-md"
+                className="p-8 rounded-3xl bg-[#080b14] dark:bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 light:shadow-sm hover:border-emerald-500/40 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 space-y-6 flex flex-col justify-between group"
               >
-                <div className="flex items-center justify-between">
+                <div className="space-y-4">
                   <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
                     <Icon size={24} />
                   </div>
-                  <span className="text-xs font-mono font-bold text-slate-500 light:text-slate-400">
-                    {pillar.num}
-                  </span>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-white dark:text-white light:text-slate-900 font-display group-hover:text-emerald-400 transition-colors">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed">
+                  <div>
+                    <h3 className="text-xl font-bold text-white dark:text-white light:text-slate-900 font-display group-hover:text-emerald-400 transition-colors">
+                      {pillar.title}
+                    </h3>
+                    <div className="text-xs font-semibold text-emerald-400 mt-1">{pillar.role}</div>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 leading-relaxed font-sans font-light">
                     {pillar.desc}
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-white/5 light:border-slate-100 flex flex-wrap gap-2">
-                  {pillar.highlights.map((h, hIdx) => (
-                    <span
-                      key={hIdx}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 light:bg-slate-100 text-[11px] font-mono text-slate-300 light:text-slate-700"
-                    >
-                      <Check size={12} className="text-emerald-400" />
-                      <span>{h}</span>
-                    </span>
-                  ))}
+                <div className="pt-4 border-t border-white/5 light:border-slate-200 space-y-2">
+                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Core Technologies:</span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {pillar.skills.map((s, i) => (
+                      <span key={i} className="px-2.5 py-1 rounded-lg bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 light:border-slate-200 text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-700 hover:border-emerald-500/40 hover:text-emerald-400 transition-all duration-200 cursor-default font-mono">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             )
@@ -150,5 +157,4 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
     </section>
   )
 }
-
 export default AboutSection
