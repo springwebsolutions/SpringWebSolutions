@@ -88,7 +88,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         },
         styling: { padding_top: "py-10", padding_bottom: "py-10" },
         display_order: 1,
-        is_active: true
+        is_active: false
       },
       {
         id: 'home-services',
