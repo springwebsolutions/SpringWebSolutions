@@ -107,8 +107,6 @@ export const AdminLayout: React.FC = () => {
       items: [
         { label: 'Website CMS', href: `${prefix}/content`, icon: Globe },
         { label: 'Blog CMS', href: `${prefix}/blog`, icon: BookOpen },
-        { label: 'Knowledge Base', href: `${prefix}/kb`, icon: HelpCircle },
-        { label: 'Marketplace', href: `${prefix}/marketplace`, icon: ShoppingBag },
         { label: 'Media Library', href: `${prefix}/media`, icon: Image },
       ]
     },
@@ -117,6 +115,7 @@ export const AdminLayout: React.FC = () => {
       items: [
         { label: 'Job Openings', href: `${prefix}/jobs`, icon: Briefcase },
         { label: 'Candidate Applications', href: `${prefix}/job-applications`, icon: UserCheck },
+        { label: 'Knowledge Base', href: `${prefix}/kb`, icon: HelpCircle },
         { label: 'Educational Guides', href: `${prefix}/career-guides`, icon: BookOpen },
         { label: 'Ad Slot Manager', href: `${prefix}/ads`, icon: Megaphone },
       ]
