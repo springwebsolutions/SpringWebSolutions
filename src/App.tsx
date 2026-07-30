@@ -50,6 +50,23 @@ import { LeadAnalytics } from '@/pages/admin/LeadAnalytics'
 import { SystemHealth } from '@/pages/admin/SystemHealth'
 
 
+const CareersKBRedirect: React.FC = () => {
+  useEffect(() => {
+    const isProd = typeof window !== 'undefined' && window.location.hostname.includes('springwebsolutions.in')
+    const path = window.location.pathname + window.location.search
+    if (isProd) {
+      window.location.href = `https://careers.springwebsolutions.in${path}`
+    } else {
+      window.location.href = `https://careers.springwebsolutions.in${path}`
+    }
+  }, [])
+  return (
+    <div className="flex h-screen w-screen items-center justify-center bg-[#040509] text-white text-xs font-mono">
+      Redirecting to Knowledge Base on SpringWeb Careers…
+    </div>
+  )
+}
+
 function App() {
   const { initialize } = useAuthStore()
   const { prefetchAllPages } = usePageBuilderStore()
@@ -81,6 +98,13 @@ function App() {
           <Route path="/jobs/:slug" element={<JobDetail />} />
           <Route path="/career-guides" element={<CareerGuideListing />} />
           <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
+
+          {/* Knowledge Base moved to Careers domain */}
+          <Route path="/kb" element={<KBListing />} />
+          <Route path="/kb/:slug" element={<KBArticle />} />
+          <Route path="/guides" element={<KBListing />} />
+          <Route path="/guides/:slug" element={<KBArticle />} />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
@@ -150,9 +174,9 @@ function App() {
         <Route path="/blog" element={<BlogListing />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
 
-        {/* Knowledge Base */}
-        <Route path="/kb" element={<KBListing />} />
-        <Route path="/kb/:slug" element={<KBArticle />} />
+        {/* Knowledge Base -> Redirects to careers subdomain */}
+        <Route path="/kb" element={<CareersKBRedirect />} />
+        <Route path="/kb/*" element={<CareersKBRedirect />} />
 
         {/* Support Desk */}
         <Route path="/support" element={<SupportPortal />} />
@@ -164,8 +188,6 @@ function App() {
 
         {/* Public Client Auth */}
         <Route path="/login" element={<Login />} />
-        
-
 
         {/* Catch All - Redirect to Homepage */}
         <Route path="*" element={<Navigate to="/" replace />} />

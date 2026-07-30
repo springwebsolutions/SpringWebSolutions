@@ -141,7 +141,7 @@ export const Navbar: React.FC = () => {
     { label: 'Portfolio', href: '/portfolio' },
     { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
-    { label: 'KB', href: '/kb' },
+    { label: 'KB', href: 'https://careers.springwebsolutions.in/kb' },
     { label: 'Support', href: '/support' },
     { label: 'Contact', href: '/contact' }
   ]
@@ -186,6 +186,18 @@ export const Navbar: React.FC = () => {
                 else if (activeSection === lowerLabel) isActive = true
               } else {
                 isActive = location.pathname === link.href || (link.href !== '/' && location.pathname.startsWith(link.href))
+              }
+
+              if (link.href.startsWith('http')) {
+                return (
+                  <a
+                    key={idx}
+                    href={link.href}
+                    className="relative px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display text-slate-300 dark:text-slate-300 light:text-slate-700 hover:text-emerald-400 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                )
               }
 
               return (
@@ -292,6 +304,18 @@ export const Navbar: React.FC = () => {
         <div className="md:hidden border-b border-white/10 light:border-slate-200 bg-[#040509]/98 light:bg-white backdrop-blur-xl p-4 space-y-3 shadow-2xl">
           <div className="space-y-1">
             {headerLinks.map((link: any, idx: number) => {
+              if (link.href.startsWith('http')) {
+                return (
+                  <a
+                    key={idx}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2.5 text-base font-medium rounded-lg transition-colors text-slate-300 hover:text-white hover:bg-white/5 light:text-slate-700 light:hover:bg-slate-100"
+                  >
+                    {link.label}
+                  </a>
+                )
+              }
               const isActive = location.pathname === link.href ||
                 (link.href !== '/' && location.pathname.startsWith(link.href))
               return (

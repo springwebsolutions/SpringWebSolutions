@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Briefcase, BookOpen, Search, ArrowUpRight, Sparkles, Building2 } from 'lucide-react'
+import { Briefcase, BookOpen, Search, ArrowUpRight, Sparkles, Building2, HelpCircle } from 'lucide-react'
 
 export const CareersNavbar: React.FC = () => {
   const location = useLocation()
@@ -54,6 +54,18 @@ export const CareersNavbar: React.FC = () => {
           >
             <BookOpen size={14} />
             <span>Educational Guides</span>
+          </Link>
+
+          <Link
+            to="/kb"
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              path.startsWith('/kb')
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <HelpCircle size={14} />
+            <span>Knowledge Base</span>
           </Link>
         </nav>
 

@@ -23,8 +23,7 @@ export const Footer: React.FC = () => {
       heading: 'Ecosystem & Marketplace',
       links: [
         { label: 'Digital Marketplace & Software', href: '/marketplace' },
-        { label: 'Engineering Blog & Articles', href: '/blog' },
-        { label: 'Knowledge Base & Guides', href: '/kb' },
+        { label: 'Knowledge Base & Guides', href: 'https://careers.springwebsolutions.in/kb' },
         { label: 'Careers & Vacancies', href: '/careers' },
         { label: 'Client Support Portal', href: '/support' }
       ]
