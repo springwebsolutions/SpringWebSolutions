@@ -69,7 +69,7 @@ export const ContentManager: React.FC = () => {
   const [addLoading, setAddLoading] = useState(false)
 
   // Pages shown in sidebar — Home first, then alphabetical, exclude pages without dedicated UI routes
-  const SIDEBAR_PAGE_SLUGS = ['home', 'about', 'services']
+  const SIDEBAR_PAGE_SLUGS = ['home', 'about', 'services', 'portfolio']
   const sidebarPages = SIDEBAR_PAGE_SLUGS
     .map(slug => pages.find(p => p.slug === slug))
     .filter(Boolean) as typeof pages

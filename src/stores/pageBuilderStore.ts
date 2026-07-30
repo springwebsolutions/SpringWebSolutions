@@ -241,6 +241,18 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
       }
     ]
   },
+  portfolio: {
+    page: {
+      id: 'default-portfolio-id',
+      title: 'Portfolio',
+      slug: 'portfolio',
+      seo_title: 'Software Portfolio & Work Showcase | Spring Web Solutions',
+      seo_description: 'Explore live platforms, event venues, e-commerce storefronts, and enterprise SaaS suites engineered by Spring Web Solutions.',
+      seo_keywords: 'software portfolio, web app case studies, custom CRM portfolio, Udumalpet software',
+      is_published: true
+    },
+    sections: []
+  },
   services: {
     page: {
       id: 'default-services-id',
