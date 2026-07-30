@@ -139,7 +139,6 @@ export const Navbar: React.FC = () => {
     { label: 'About', href: '/about' },
     { label: 'Services', href: '/services' },
     { label: 'Portfolio', href: '/portfolio' },
-    { label: 'Marketplace', href: '/marketplace' },
     { label: 'Blog', href: '/blog' },
     { label: 'KB', href: 'https://careers.springwebsolutions.in/kb' },
     { label: 'Support', href: '/support' },
@@ -152,9 +151,11 @@ export const Navbar: React.FC = () => {
     return (
       href !== '/downloads' && 
       href !== '/pricing' && 
+      href !== '/marketplace' &&
       label !== 'downloads' && 
       label !== 'pricing' &&
-      label !== 'download center'
+      label !== 'download center' &&
+      label !== 'marketplace'
     )
   })
 
