@@ -843,7 +843,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
         // Direct UPDATE — the fastest and most reliable path
         const { error } = await supabase
           .from('sections')
-          .update({ is_active: isActive, updated_at: new Date().toISOString() })
+          .update({ is_active: isActive })
           .eq('id', sectionId)
         if (error) throw error
       } else {
@@ -866,7 +866,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
         if (existingRow?.id) {
           const { error } = await supabase
             .from('sections')
-            .update({ is_active: isActive, updated_at: new Date().toISOString() })
+            .update({ is_active: isActive })
             .eq('id', existingRow.id)
           if (error) throw error
           // Patch the local section id to the real UUID for future direct updates
