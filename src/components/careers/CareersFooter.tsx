@@ -136,7 +136,7 @@ export const CareersFooter: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 4: Educational Guides & Main Agency */}
+          {/* Column 4: Educational Guides & Knowledge Base */}
           <div className="space-y-4">
             <h4 className="font-bold text-white font-display text-sm uppercase tracking-wider text-[11px] border-b border-white/5 pb-2">
               Career Resources
@@ -145,6 +145,11 @@ export const CareersFooter: React.FC = () => {
               <li>
                 <Link to="/career-guides" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
                   <BookOpen size={12} className="text-emerald-400" /> Educational Career Guides
+                </Link>
+              </li>
+              <li>
+                <Link to="/kb" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-semibold text-emerald-400">
+                  <Zap size={12} className="text-emerald-400" /> Knowledge Base &amp; Docs
                 </Link>
               </li>
               <li>
@@ -157,7 +162,7 @@ export const CareersFooter: React.FC = () => {
                   href="https://www.springwebsolutions.in/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="hover:text-emerald-400 transition-colors flex items-center gap-1 text-emerald-400 font-bold"
+                  className="hover:text-emerald-400 transition-colors flex items-center gap-1 text-emerald-400 font-bold pt-1"
                 >
                   <span>Main Agency Website</span>
                   <ExternalLink size={11} />
@@ -177,6 +182,7 @@ export const CareersFooter: React.FC = () => {
           <div className="flex items-center gap-6">
             <Link to="/jobs" className="hover:text-slate-300 transition-colors">All Vacancies</Link>
             <Link to="/career-guides" className="hover:text-slate-300 transition-colors">Career Guides</Link>
+            <Link to="/kb" className="hover:text-slate-300 transition-colors">Knowledge Base</Link>
             <a href="mailto:careers@springwebsolutions.in" className="hover:text-slate-300 transition-colors">Support &amp; Feedback</a>
           </div>
         </div>
