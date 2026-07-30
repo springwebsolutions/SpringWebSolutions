@@ -68,7 +68,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
   const subtitle = content?.subtitle || 'Six clear steps from first conversation to launched product — and everything in between.'
 
   return (
-    <section className="py-20 bg-[#040509] border-b border-white/10 relative overflow-hidden">
+    <section className="py-20 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/10 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       {/* Background ambient */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -76,16 +76,16 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
 
         {/* Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-widest font-display">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-600 text-xs font-bold uppercase tracking-widest font-display">
             <CheckCircle2 size={13} /> How We Work
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white uppercase tracking-tight font-display leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white dark:text-white light:text-slate-900 uppercase tracking-tight font-display leading-tight">
             {title.split(' ').slice(0, -2).join(' ')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600">
               {title.split(' ').slice(-2).join(' ')}
             </span>
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base font-sans font-light leading-relaxed">
+          <p className="text-slate-400 dark:text-slate-400 light:text-slate-600 text-sm sm:text-base font-sans font-light leading-relaxed">
             {subtitle}
           </p>
         </div>
@@ -97,10 +97,10 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
             return (
               <div
                 key={step.number}
-                className="group relative rounded-3xl bg-[#06080f] border border-white/8 p-7 space-y-5 hover:border-white/20 transition-all duration-300 hover:-translate-y-1"
+                className="group relative rounded-3xl bg-[#06080f] dark:bg-[#06080f] light:bg-white border border-white/8 light:border-slate-200 p-7 space-y-5 hover:border-white/20 light:hover:border-slate-300 light:shadow-sm light:hover:shadow-md transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Step number watermark */}
-                <div className="absolute top-5 right-6 text-5xl font-black text-white/4 font-display select-none">
+                <div className="absolute top-5 right-6 text-5xl font-black text-white/4 dark:text-white/4 light:text-slate-900/5 font-display select-none">
                   {step.number}
                 </div>
 
@@ -111,11 +111,11 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
 
                 {/* Title */}
                 <div className="space-y-2">
-                  <h3 className={`text-base font-bold text-white font-display group-hover:${step.color} transition-colors`}>
+                  <h3 className={`text-base font-bold text-white dark:text-white light:text-slate-900 font-display transition-colors`}>
                     <span className={`${step.color} font-mono text-xs mr-2 opacity-70`}>{step.number}</span>
                     {step.title}
                   </h3>
-                  <p className="text-xs text-slate-400 font-sans font-light leading-relaxed">
+                  <p className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
@@ -123,7 +123,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
                 {/* Bullets */}
                 <ul className="space-y-1.5">
                   {step.bullets.map((b) => (
-                    <li key={b} className="flex items-center gap-2 text-xs text-slate-300 font-sans">
+                    <li key={b} className="flex items-center gap-2 text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 font-sans">
                       <CheckCircle2 size={12} className={step.color} />
                       {b}
                     </li>
@@ -138,7 +138,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
         <div className="text-center pt-4">
           <a
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-semibold hover:bg-emerald-500/20 transition-all font-display"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-50 light:border-emerald-200 text-sm font-semibold hover:bg-emerald-500/20 light:hover:bg-emerald-100 transition-all font-display"
           >
             Start Your Project Discovery <ArrowRight size={16} />
           </a>
