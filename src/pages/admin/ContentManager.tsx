@@ -272,49 +272,54 @@ export const ContentManager: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       
-      {/* Page Selector & Layout Controls */}
-      <div className="flex flex-col md:flex-row gap-6 items-start">
-        
-        {/* Page selector side panel */}
-        <div className="w-full md:w-64 glass-panel p-6 rounded-2xl border border-white/5 space-y-4 shrink-0">
-          <div className="flex items-center justify-between">
-            <h3 className="font-display font-bold text-white text-sm">Site Pages</h3>
-            <button
-              onClick={() => fetchPageData(selectedPage)}
-              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer"
-              title="Refresh page data"
-            >
-              <RefreshCw size={12} />
-            </button>
+      {/* ── Top Horizontal Page Selector Bar ── */}
+      <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+            <Globe size={18} />
           </div>
-          <div className="space-y-1.5">
-            {sidebarPages.map(p => (
-              <button
-                key={p.id}
-                onClick={() => setSelectedPage(p.slug)}
-                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all text-left cursor-pointer ${
-                  selectedPage === p.slug
-                    ? 'bg-brand-emerald/10 text-brand-emerald font-bold border border-brand-emerald/20'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <FileText size={16} />
-                  <span>{p.title}</span>
-                </span>
-                <span className="text-[10px] text-slate-500 font-mono">/{p.slug}</span>
-              </button>
-            ))}
+          <div>
+            <h3 className="font-display font-bold text-white text-sm leading-tight">Website Pages CMS</h3>
+            <p className="text-[11px] text-slate-400 font-light">Select a site page below to edit its SEO metadata, section visibility, and live layout content.</p>
           </div>
         </div>
 
-        {/* Dynamic Section Manager & SEO Config */}
-        <div className="flex-grow w-full space-y-6">
-          
-          {/* SEO Metadata Editor Card */}
-          <form onSubmit={handleSaveSEO} className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/5 space-y-5">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          {sidebarPages.map(p => (
+            <button
+              key={p.id}
+              onClick={() => setSelectedPage(p.slug)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold font-display uppercase tracking-wider transition-all duration-200 cursor-pointer ${
+                selectedPage === p.slug
+                  ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 scale-105'
+                  : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 hover:border-emerald-500/30'
+              }`}
+            >
+              <FileText size={14} />
+              <span>{p.title}</span>
+              <span className={`text-[10px] font-mono font-normal opacity-75 ${selectedPage === p.slug ? 'text-slate-900' : 'text-slate-400'}`}>
+                /{p.slug}
+              </span>
+            </button>
+          ))}
+
+          <button
+            onClick={() => fetchPageData(selectedPage)}
+            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all cursor-pointer ml-auto md:ml-1"
+            title="Refresh Page Data"
+          >
+            <RefreshCw size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Main Full-Width Content Area ── */}
+      <div className="w-full space-y-6">
+        
+        {/* SEO Metadata Editor Card */}
+        <form onSubmit={handleSaveSEO} className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/5 space-y-5">
             <div className="flex items-center justify-between border-b border-white/5 pb-4">
               <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
                 <Globe size={18} className="text-brand-emerald" />
@@ -627,7 +632,6 @@ export const ContentManager: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
 
     </div>
   )
