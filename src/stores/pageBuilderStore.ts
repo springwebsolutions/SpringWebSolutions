@@ -502,9 +502,11 @@ const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): Sec
   const defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
   const sharedStates = getSharedSectionStates()
 
+  // Build map of DB sections by type (Supabase rows take priority)
   const dbTypeMap = new Map((dbSections || []).map(s => [s.type, s]))
   const merged: SectionData[] = [...(dbSections || [])]
 
+  // Add default sections whose type is NOT already in the DB rows
   if (defaultSections.length) {
     defaultSections.forEach(defSec => {
       if (!dbTypeMap.has(defSec.type)) {
@@ -513,20 +515,26 @@ const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): Sec
     })
   }
 
-  const finalSections = merged.map(sec => {
-    // Check by section ID first (same domain), then by type:slug key (cross-domain)
+  // Apply cookie/localStorage overrides (cross-subdomain toggle states)
+  const withOverrides = merged.map(sec => {
     const byId = sharedStates[sec.id]
     const byType = sharedStates[`${slug}:${sec.type}`]
-    if (typeof byId === 'boolean') {
-      return { ...sec, is_active: byId }
-    }
-    if (typeof byType === 'boolean') {
-      return { ...sec, is_active: byType }
-    }
+    if (typeof byId === 'boolean') return { ...sec, is_active: byId }
+    if (typeof byType === 'boolean') return { ...sec, is_active: byType }
     return sec
   })
 
-  return finalSections.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+  // DEDUPLICATE by type — keep only the first occurrence of each type.
+  // This prevents double rendering when Supabase has multiple rows of the
+  // same type (e.g., from a double-seed) or when cache + DB both contribute.
+  const seenTypes = new Set<string>()
+  const deduped = withOverrides.filter(sec => {
+    if (seenTypes.has(sec.type)) return false
+    seenTypes.add(sec.type)
+    return true
+  })
+
+  return deduped.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
 }
 
 export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
