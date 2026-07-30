@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
+import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { CareersFooter } from '@/components/careers/CareersFooter'
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer'
 import { ArrowLeft, BookOpen, Calendar, HelpCircle, Loader2, AlertCircle } from 'lucide-react'
 
@@ -81,7 +81,7 @@ export const KBArticle: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
-      <Navbar />
+      <CareersNavbar />
 
       <main className="flex-grow py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
@@ -182,7 +182,7 @@ export const KBArticle: React.FC = () => {
         </div>
       </main>
 
-      <Footer />
+      <CareersFooter />
     </div>
   )
 }

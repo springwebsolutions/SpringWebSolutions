@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
+import { CareersNavbar } from '@/components/careers/CareersNavbar'
+import { CareersFooter } from '@/components/careers/CareersFooter'
 import { Search, BookOpen, ChevronRight, HelpCircle, FileText, Loader2 } from 'lucide-react'
 
 interface KBCategory {
@@ -73,7 +73,7 @@ export const KBListing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
-      <Navbar />
+      <CareersNavbar />
 
       <main className="flex-grow py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
@@ -235,7 +235,7 @@ export const KBListing: React.FC = () => {
         </div>
       </main>
 
-      <Footer />
+      <CareersFooter />
     </div>
   )
 }
