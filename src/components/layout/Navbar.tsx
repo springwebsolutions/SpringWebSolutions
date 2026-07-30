@@ -134,18 +134,21 @@ export const Navbar: React.FC = () => {
     setMobileMenuOpen(false)
   }
 
-  const rawLinks = navigation?.header_menu || [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Services', href: '/services' },
-    { label: 'Portfolio', href: '/portfolio' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'KB', href: 'https://careers.springwebsolutions.in/kb' },
-    { label: 'Support', href: '/support' },
-    { label: 'Contact', href: '/contact' }
-  ]
+  const baseLinks = (navigation?.header_menu && Array.isArray(navigation.header_menu) && navigation.header_menu.length > 0)
+    ? navigation.header_menu
+    : [
+        { label: 'Home', href: '/' },
+        { label: 'About', href: '/about' },
+        { label: 'Services', href: '/services' },
+        { label: 'Portfolio', href: '/portfolio' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'KB', href: 'https://careers.springwebsolutions.in/kb' },
+        { label: 'Support', href: '/support' },
+        { label: 'Contact', href: '/contact' }
+      ]
 
-  const headerLinks = rawLinks.filter((link: any) => {
+  // Filter out unwanted links (Marketplace, Downloads, Pricing)
+  const filteredBaseLinks = baseLinks.filter((link: any) => {
     const href = (link.href || '').toLowerCase()
     const label = (link.label || '').toLowerCase()
     return (
@@ -158,6 +161,18 @@ export const Navbar: React.FC = () => {
       label !== 'marketplace'
     )
   })
+
+  // Ensure Portfolio is ALWAYS in headerLinks even if DB navigation settings omitted it
+  const hasPortfolio = filteredBaseLinks.some((l: any) => (l.href || '').toLowerCase() === '/portfolio' || (l.label || '').toLowerCase() === 'portfolio')
+  const headerLinks = hasPortfolio 
+    ? filteredBaseLinks 
+    : (() => {
+        const servicesIdx = filteredBaseLinks.findIndex((l: any) => (l.href || '').toLowerCase() === '/services' || (l.label || '').toLowerCase() === 'services')
+        const insertIdx = servicesIdx !== -1 ? servicesIdx + 1 : 3
+        const list = [...filteredBaseLinks]
+        list.splice(insertIdx, 0, { label: 'Portfolio', href: '/portfolio' })
+        return list
+      })()
 
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
