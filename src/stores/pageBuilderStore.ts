@@ -93,6 +93,18 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
         is_active: true
       },
       {
+        id: 'home-process',
+        page_id: 'default-home-id',
+        type: 'process',
+        content: {
+          title: 'Our Transparent Engineering Process',
+          subtitle: 'Six clear steps from first conversation to launched product — and everything in between.'
+        },
+        styling: { padding_top: 'py-20', padding_bottom: 'py-20' },
+        display_order: 3,
+        is_active: true
+      },
+      {
         id: 'home-testimonials',
         page_id: 'default-home-id',
         type: 'testimonials_summary',
@@ -102,7 +114,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           items: []
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 3,
+        display_order: 4,
         is_active: false
       },
       {
@@ -119,7 +131,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           ]
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 4,
+        display_order: 5,
         is_active: true
       },
       {
@@ -131,7 +143,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           subtitle: "Explore real-world technical transformations where custom software and high-speed web engineering delivered measurable business results."
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 5,
+        display_order: 6,
         is_active: true
       },
       {
@@ -143,7 +155,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           subtitle: "See how our high-performance engineering standards compare against traditional freelance work and generic template agencies."
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 6,
+        display_order: 7,
         is_active: true
       },
       {
@@ -155,7 +167,7 @@ const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionDat
           subtitle: "Everything you need to know about our web engineering process, code ownership, timelines, and technical standards."
         },
         styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 7,
+        display_order: 8,
         is_active: true
       },
     ]

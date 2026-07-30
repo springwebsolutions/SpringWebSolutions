@@ -22,6 +22,8 @@ const SECTION_LABELS: Record<string, string> = {
   comparison: 'Comparison Table',
   faq: 'FAQ Section',
   tech_stack: 'Tech Stack',
+  process: 'Engineering Process',
+  process_steps: 'Engineering Process',
   team: 'Team Section',
   cta: 'Call to Action',
   testimonials_summary: 'Testimonials',
@@ -65,6 +67,12 @@ export const ContentManager: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [newSectionType, setNewSectionType] = useState('services_summary')
   const [addLoading, setAddLoading] = useState(false)
+
+  // Pages shown in sidebar — Home first, then alphabetical, exclude pages without dedicated UI routes
+  const SIDEBAR_PAGE_SLUGS = ['home', 'about', 'services']
+  const sidebarPages = SIDEBAR_PAGE_SLUGS
+    .map(slug => pages.find(p => p.slug === slug))
+    .filter(Boolean) as typeof pages
 
   useEffect(() => {
     fetchPages()
@@ -224,6 +232,11 @@ export const ContentManager: React.FC = () => {
         cta_secondary_text: "View Work",
         cta_secondary_href: "/blog"
       }
+    } else if (newSectionType === 'process') {
+      defaultContent = {
+        title: 'Our Transparent Engineering Process',
+        subtitle: 'Six clear steps from first conversation to launched product — and everything in between.'
+      }
     } else if (newSectionType === 'team') {
       defaultContent = {
         title: "The Team Behind the Engineering",
@@ -272,7 +285,7 @@ export const ContentManager: React.FC = () => {
             </button>
           </div>
           <div className="space-y-1.5">
-            {pages.map(p => (
+            {sidebarPages.map(p => (
               <button
                 key={p.id}
                 onClick={() => setSelectedPage(p.slug)}
@@ -489,6 +502,7 @@ export const ContentManager: React.FC = () => {
                   >
                     <option value="hero">Hero Header Section</option>
                     <option value="services_summary">Services & Features Grid</option>
+                    <option value="process">Engineering Process Steps</option>
                     <option value="tech_stack">Tech Stack Ecosystem Grid</option>
                     <option value="case_studies">Case Studies & Success Stories</option>
                     <option value="comparison">Why Choose Us / Comparison Table</option>

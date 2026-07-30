@@ -2,6 +2,7 @@ import React from 'react'
 import { HeroSection } from './HeroSection'
 import { AboutSection } from './AboutSection'
 import { ServicesGrid } from './ServicesGrid'
+import { ProcessSection } from './ProcessSection'
 import { PricingSection } from './PricingSection'
 import { TechStack } from './TechStack'
 import { CtaSection } from './CtaSection'
@@ -36,6 +37,10 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'services':
             case 'services_summary':
               return <div id="services" key={sec.id}><ServicesGrid content={sec.content} styling={sec.styling} /></div>
+
+            case 'process':
+            case 'process_steps':
+              return <div id="process" key={sec.id}><ProcessSection content={sec.content} styling={sec.styling} /></div>
 
             case 'pricing':
             case 'pricing_summary':
