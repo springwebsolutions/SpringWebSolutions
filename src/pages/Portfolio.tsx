@@ -43,7 +43,7 @@ interface PortfolioItem {
 
 const portfolioData: PortfolioItem[] = [
   {
-    id: 'industrial-erp-crm',
+    id: 'sri-lakshmi-tex-mills-erp',
     title: 'Manufacturing ERP & Cloud Inventory Suite',
     category: 'saas',
     categoryLabel: 'Custom SaaS & ERP',
@@ -53,13 +53,13 @@ const portfolioData: PortfolioItem[] = [
     description: 'A multi-department enterprise resource planning system connecting floor managers, raw material inventory, dispatch logistics, and accounts to a unified PostgreSQL database with sub-second response times.',
     image: '/cloud_storage_vector.png',
     metrics: ['12 Hrs/Wk Saved Per Manager', '0 Data Re-entry Errors', '99.99% Database SLA'],
-    techStack: ['React 19', 'TypeScript', 'Node.js', 'Supabase SQL', 'WhatsApp Webhooks'],
+    techStack: ['React', 'TypeScript', 'Node.js', 'Supabase SQL', 'WhatsApp Webhooks'],
     features: [
       'Real-time barcode inventory scanning',
       'Instant WhatsApp dispatch webhooks',
       'Role-based multi-user permissions',
       'Automated PDF invoice generation',
-      'Offline-first offline fallback cache'
+      'Offline-first fallback cache'
     ],
     challenge: 'The client relied on manual paper logbooks for raw material tracking, causing 12+ hours per week in data re-entry waste and frequent stock count mismatches.',
     solution: 'Engineered a custom cloud ERP with mobile barcode scanning, automated SQL transaction validation, and real-time lead/dispatch webhooks.',
@@ -70,111 +70,84 @@ const portfolioData: PortfolioItem[] = [
     ]
   },
   {
-    id: 'nextjs-ecommerce-portal',
-    title: 'High-Speed B2B E-Commerce & Distribution Portal',
+    id: 'happyranks-seo-platform',
+    title: 'HappyRanks — SEO Analytics & Rank Engineering Portal',
+    category: 'seo',
+    categoryLabel: 'Technical SEO & Analytics',
+    client: 'HappyRanks Digital',
+    location: 'Global',
+    summary: 'High-performance rank tracking platform with automated schema mapping, keyword search intent audits, and sub-second SERP reporting.',
+    description: 'Engineered a semantic SEO tracking & audit engine providing real-time ranking metrics, automated JSON-LD schema generation, and Core Web Vitals diagnostic reports.',
+    image: '/digital_marketing_vector.png',
+    metrics: ['+240% Organic Keyword Coverage', '0.4s Audit Latency', '100% Schema Validation'],
+    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'PostgreSQL'],
+    features: [
+      'Automated JSON-LD Schema generator',
+      'Real-time rank tracking & SERP metrics',
+      'Core Web Vitals diagnostic engine',
+      'Keyword intent mapping & content scoring',
+      'Custom PDF client reporting exporter'
+    ],
+    challenge: 'Managing manual SEO rank audits across hundreds of keywords resulted in delayed client reporting and untracked search schema errors.',
+    solution: 'Built an automated rank engineering suite that continuously audits search schema, computes Core Web Vitals benchmarks, and compiles executive performance reports.',
+    results: [
+      'Automated 95% of weekly rank auditing workflows',
+      'Increased client search impression index by 240%',
+      'Achieved 100% valid schema markups across all monitored client assets'
+    ]
+  },
+  {
+    id: 'futureva-tech-corporate-platform',
+    title: 'Futureva Technologies — Corporate Cloud & Web Platform',
     category: 'web',
     categoryLabel: 'Web App Engineering',
-    client: 'Apex Industrial Tools',
-    location: 'Coimbatore, India',
-    summary: 'Ultra-fast Next.js 15 e-commerce storefront with custom product configurator, instant search indexing, and Razorpay payment gateways.',
-    description: 'Engineered for sub-second page loads and 100/100 Core Web Vitals. Features instant client quote requests, tiered B2B wholesale pricing, and automated inventory sync.',
-    image: '/web_dev_vector.png',
-    metrics: ['98/100 Core Web Vitals', '0.6s Page Load Time', '3.4x Conversion Growth'],
-    techStack: ['Next.js 15', 'React 19', 'Tailwind CSS', 'Razorpay API', 'Algolia Search'],
+    client: 'Futureva Technologies',
+    location: 'India & International',
+    summary: 'Ultra-fast corporate web platform engineered with modern glassmorphism UI, sub-second page speeds, and technical service showcases.',
+    description: 'Designed and engineered a high-converting digital platform showcasing cloud engineering, SEO consultancy, and custom software solutions with 99+ Google PageSpeed performance.',
+    image: '/custom_software_suite.png',
+    metrics: ['99/100 Core Web Vitals', '0.5s Page Load Time', '+180% Lead Inquiries'],
+    techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Framer Motion'],
     features: [
       'Sub-second page response guarantee',
-      'Custom 3D product spec configurator',
-      'Tiered bulk wholesale pricing engine',
-      'Instant schema markup for Google Search',
-      'Automated order confirmation SMS & Email'
+      'Interactive service & solution configurators',
+      'Custom dark-mode glassmorphic design system',
+      'Built-in technical SEO & schema mapping',
+      'Responsive lead capture & CRM synchronization'
     ],
-    challenge: 'Previous legacy WordPress site loaded in 5.8 seconds, causing massive bounce rates and customer frustration during bulk ordering.',
-    solution: 'Rebuilt the frontend using Next.js 15 App Router with server-side rendering, CDN edge caching, and lightweight Tailwind styling.',
+    challenge: 'Previous legacy corporate website suffered from bloat, slow mobile rendering, and low conversion rates on technical service pages.',
+    solution: 'Re-engineered the platform using lightweight React, Vite, and Tailwind CSS with optimized micro-animations and zero unnecessary dependencies.',
     results: [
-      'Page speed improved from 5.8s to 0.6s',
-      '340% increase in organic online B2B quote submissions',
-      'Achieved 100/100 Performance & SEO scores on Google PageSpeed Insights'
+      'Page speed improved from 4.2s to 0.5s',
+      '180% increase in inbound qualified client inquiries',
+      'Achieved top performance scores on Google PageSpeed Insights'
     ]
   },
   {
-    id: 'android-logistics-app',
-    title: 'Native Android Fleet & Logistics Tracker',
-    category: 'mobile',
-    categoryLabel: 'Native Mobile App',
-    client: 'Veloce Logistics India',
-    location: 'Tamil Nadu, India',
-    summary: 'Native Kotlin Android application with offline GPS logging, push dispatch alerts, and Play Store deployment.',
-    description: 'Built for field drivers operating in low-connectivity industrial zones. Automatically caches trip data locally and syncs with central cloud servers upon reconnecting.',
-    image: '/digital_marketing_vector.png',
-    metrics: ['100% Offline Data Sync', 'Play Store Verified', '4.9/5 Driver Satisfaction'],
-    techStack: ['Kotlin', 'Android SDK', 'Room DB', 'Firebase FCM', 'REST Webhooks'],
+    id: 'springweb-operations-suite',
+    title: 'SpringWeb Operations Suite — Custom CMS & CRM Portal',
+    category: 'saas',
+    categoryLabel: 'Custom SaaS & CRM',
+    client: 'Spring Web Solutions Internal',
+    location: 'India',
+    summary: 'Centralized administrative control suite featuring visual page layout management, CRM lead pipeline tracking, and live job application portals.',
+    description: 'A bespoke multi-tenant administrative engine allowing instant page layout editing, section reordering, dynamic SEO updates, and lead management with role-based auth.',
+    image: '/hero_bg_springweb.png',
+    metrics: ['0ms Page Builder Latency', 'Multi-Tenant Auth', 'Integrated Lead Pipeline'],
+    techStack: ['React', 'TypeScript', 'Supabase Auth & RLS', 'Zustand', 'Tailwind CSS'],
     features: [
-      'Offline-first Room database sync',
-      'Real-time GPS route tracking',
-      'Instant push dispatch notifications',
-      'Digital signature proof-of-delivery',
-      'Optimized battery & background usage'
+      'Visual section drag-and-toggle page builder',
+      'Real-time CRM lead status pipeline',
+      'Job postings & candidate application reviewer',
+      'Blog & Knowledge Base CMS publishing suite',
+      'Role-based granular access control (RLS)'
     ],
-    challenge: 'Field drivers frequently lost network connectivity in remote routes, leading to lost delivery statuses and customer dispute delays.',
-    solution: 'Developed a high-performance native Kotlin app with Room local database caching and background background job queuing.',
+    challenge: 'Managing client website content, job postings, and lead submissions across multiple tools created fragmented data and slow update cycles.',
+    solution: 'Architected a unified custom Operations Suite providing single-pane-of-glass management for content, CRM, career portals, and analytics.',
     results: [
-      'Zero delivery log data loss across 50,000+ completed trips',
-      'Real-time SMS updates sent to end clients upon delivery',
-      'Seamless Play Store deployment & automated background updates'
-    ]
-  },
-  {
-    id: 'windows-billing-desktop-suite',
-    title: 'Windows Desktop Billing & Hardware Terminal',
-    category: 'desktop',
-    categoryLabel: 'Windows Desktop Software',
-    client: 'Kovai Retail Superstores',
-    location: 'Tamil Nadu, India',
-    summary: 'Native C# WinUI 3 desktop application with thermal barcode printer integration, offline execution, and single-click MSI installation.',
-    description: 'High-speed desktop checkout software built to process 50+ items per minute. Integrates directly with POS cash drawers, weight scales, and local SQLite databases.',
-    image: '/seo_analytics_vector.png',
-    metrics: ['< 50ms Barcode Scan Speed', '100% Offline Capability', 'Single-Click MSI Installer'],
-    techStack: ['C# .NET 8', 'WinUI 3', 'SQLite', 'ESC/POS Thermal API', 'MSI Builder'],
-    features: [
-      'High-speed ESC/POS thermal printing',
-      'Direct USB & Serial hardware sync',
-      'Zero cloud dependency offline mode',
-      'Daily automated encrypted database backup',
-      'Single-click MSI enterprise installer'
-    ],
-    challenge: 'Existing web-based billing software crashed whenever internet connectivity dropped, halting supermarket checkout lines.',
-    solution: 'Engineered a standalone C# WinUI 3 desktop application operating directly on local hardware with cloud sync when online.',
-    results: [
-      '100% uptime regardless of internet outages',
-      'Checkout speed increased by 300% per customer counter',
-      'Single-click enterprise installer deployed across 24 terminal PCs'
-    ]
-  },
-  {
-    id: 'technical-seo-schema-engine',
-    title: 'Enterprise Technical SEO & Structured Indexing',
-    category: 'seo',
-    categoryLabel: 'Technical SEO & Indexing',
-    client: 'Global Health Care Tech',
-    location: 'Global',
-    summary: 'Automated JSON-LD schema markup, canonical URL architecture, Core Web Vitals optimization, and Google Search Console indexing.',
-    description: 'A comprehensive technical SEO engineering overhaul restructuring multi-lingual web portals for instant indexing, rich snippet eligibility, and top SERP visibility.',
-    image: '/cloud_storage_vector.png',
-    metrics: ['+220% Organic Traffic', '100% Rich Snippet Indexing', 'Top 3 SERP Rankings'],
-    techStack: ['JSON-LD Schema', 'Google Search Console', 'Core Web Vitals', 'Next.js SSG'],
-    features: [
-      'Custom JSON-LD schema generation',
-      'Canonical URL & sitemap architecture',
-      'Instant Google Indexing API integration',
-      'Core Web Vitals LCP/CLS optimization',
-      'Automated 404 & redirect monitoring'
-    ],
-    challenge: 'The portal had thousands of pages unindexed by Google due to dynamic JavaScript rendering bloat and missing schema markups.',
-    solution: 'Implemented static site generation (SSG) with structured JSON-LD schema, automated XML sitemaps, and speed optimization.',
-    results: [
-      '220% increase in organic search traffic within 90 days',
-      'Achieved Rich Snippet star ratings in Google search results',
-      '100% index coverage verified in Google Search Console'
+      'Enabled 0ms instant content updates across client sites',
+      'Centralized all lead management into a single real-time CRM dashboard',
+      'Streamlined candidate recruitment and application processing'
     ]
   }
 ]
