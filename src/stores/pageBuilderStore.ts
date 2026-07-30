@@ -551,8 +551,41 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   fetchPageData: async (slug: string) => {
     if (!isSupabaseConfigured) return
 
-    const cache = get().pageCache
     const targetSlug = slug || 'home'
+    const cache = get().pageCache
+
+    // Helper: ensure every default section for a page has a real Supabase row.
+    // This is the KEY to making toggle work — after seeding, every section has
+    // a real UUID so toggleSectionActive can simply UPDATE by that ID.
+    const seedPageSections = async (pageId: string, pageSlug: string, existingSections: any[]) => {
+      const defaults = DEFAULT_PAGES_CACHE[pageSlug]?.sections || []
+      if (!defaults.length) return existingSections
+
+      const existingTypes = new Set(existingSections.map((s: any) => s.type))
+      const missing = defaults.filter(d => !existingTypes.has(d.type))
+      if (!missing.length) return existingSections
+
+      const toInsert = missing.map((d, idx) => ({
+        page_id: pageId,
+        type: d.type,
+        content: d.content || {},
+        styling: d.styling || {},
+        display_order: d.display_order ?? (existingSections.length + idx),
+        is_active: d.is_active ?? true
+      }))
+
+      const { data: inserted, error } = await supabase
+        .from('sections')
+        .insert(toInsert)
+        .select()
+
+      if (error) {
+        console.warn('seedPageSections insert error:', error)
+        return existingSections
+      }
+
+      return [...existingSections, ...(inserted || [])]
+    }
 
     // If cached data is present, immediately serve it without setting loading: true
     if (cache[targetSlug]) {
@@ -572,19 +605,21 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
           .single()
 
         if (page) {
-          const { data: sections } = await supabase
+          const { data: rawSections } = await supabase
             .from('sections')
             .select('*')
             .eq('page_id', page.id)
             .order('display_order', { ascending: true })
 
-          const mergedSections = mergeSectionsWithDefaults(targetSlug, sections || [])
+          // Seed any missing default sections into Supabase
+          const seededSections = await seedPageSections(page.id, targetSlug, rawSections || [])
+          const mergedSections = mergeSectionsWithDefaults(targetSlug, seededSections)
 
           const updatedCache = {
             ...get().pageCache,
             [targetSlug]: { page, sections: mergedSections }
           }
-          
+
           try {
             localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache))
           } catch (e) {}
@@ -615,7 +650,7 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
       if (pageErr) throw pageErr
 
       if (page) {
-        const { data: sections, error: secErr } = await supabase
+        const { data: rawSections, error: secErr } = await supabase
           .from('sections')
           .select('*')
           .eq('page_id', page.id)
@@ -623,7 +658,9 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
 
         if (secErr) throw secErr
 
-        const mergedSections = mergeSectionsWithDefaults(targetSlug, sections || [])
+        // Seed any missing default sections into Supabase
+        const seededSections = await seedPageSections(page.id, targetSlug, rawSections || [])
+        const mergedSections = mergeSectionsWithDefaults(targetSlug, seededSections)
 
         const updatedCache = {
           ...get().pageCache,
@@ -768,23 +805,24 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   },
 
   toggleSectionActive: async (sectionId, isActive) => {
+    // 1. Update cookie + localStorage immediately for cross-subdomain sync
     const curPageSlug = get().currentPage?.slug || 'home'
-    const targetSecForType = get().currentSections.find(s => s.id === sectionId)
-    setSharedSectionState(sectionId, isActive, targetSecForType?.type, curPageSlug)
+    const targetSec = get().currentSections.find(s => s.id === sectionId)
+    if (targetSec) {
+      setSharedSectionState(sectionId, isActive, targetSec.type, curPageSlug)
+    }
 
+    // 2. Update local store state instantly so UI reflects change
     const sections = get().currentSections.map(s =>
       s.id === sectionId ? { ...s, is_active: isActive } : s
     )
-
     const curPage = get().currentPage
     if (curPage) {
       const updatedCache = {
         ...get().pageCache,
         [curPage.slug]: { page: curPage, sections }
       }
-      try {
-        localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache))
-      } catch (e) {}
+      try { localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache)) } catch (e) {}
       set({ currentSections: sections, pageCache: updatedCache })
     } else {
       set({ currentSections: sections })
@@ -792,61 +830,76 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
 
     if (!isSupabaseConfigured) return
 
+    // 3. Persist to Supabase.
+    // After seedPageSections runs in fetchPageData, every section in currentSections
+    // has a real Supabase UUID as its id. So we can just UPDATE directly by id.
     try {
-      const targetSec = sections.find(s => s.id === sectionId)
-      if (!targetSec) return
+      if (!targetSec) throw new Error('Section not found')
 
-      // ALWAYS fetch the real page from Supabase by SLUG.
-      // curPage.id may be a stale default ID (e.g. 'default-home-id') if the
-      // cache was served before the background revalidation completed.
-      const pageSlug = get().currentPage?.slug || 'home'
-      const { data: realPage } = await supabase
-        .from('pages')
-        .select('id, slug')
-        .eq('slug', pageSlug)
-        .maybeSingle()
+      // Check if this is a real UUID (36 chars) or a hardcoded default ID
+      const isRealUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(sectionId)
 
-      if (!realPage?.id) {
-        console.warn(`toggleSectionActive: page "${pageSlug}" not found in Supabase. Cannot persist toggle.`)
-        return
-      }
-
-      // If curPage still has a default ID, patch it with the real one now
-      if (get().currentPage?.id !== realPage.id) {
-        set({ currentPage: { ...get().currentPage!, id: realPage.id } })
-      }
-
-      // Find the existing section row in Supabase by real page_id + section type
-      const { data: existingRow } = await supabase
-        .from('sections')
-        .select('id')
-        .eq('page_id', realPage.id)
-        .eq('type', targetSec.type)
-        .maybeSingle()
-
-      if (existingRow?.id) {
-        // Update the real Supabase row
+      if (isRealUUID) {
+        // Direct UPDATE — the fastest and most reliable path
         const { error } = await supabase
           .from('sections')
           .update({ is_active: isActive, updated_at: new Date().toISOString() })
-          .eq('id', existingRow.id)
-        if (error) console.error('toggleSectionActive update error:', error)
+          .eq('id', sectionId)
+        if (error) throw error
       } else {
-        // Section not in DB yet — insert with the real page UUID
-        const { error } = await supabase
+        // Fallback for un-seeded sections: look up by page slug + type, then update or insert
+        const { data: realPage } = await supabase
+          .from('pages')
+          .select('id')
+          .eq('slug', curPageSlug)
+          .maybeSingle()
+
+        if (!realPage?.id) throw new Error(`Page "${curPageSlug}" not found in Supabase`)
+
+        const { data: existingRow } = await supabase
           .from('sections')
-          .insert({
-            page_id: realPage.id,
-            type: targetSec.type,
-            content: targetSec.content || {},
-            styling: targetSec.styling || {},
-            display_order: targetSec.display_order || 0,
-            is_active: isActive
-          })
-        if (error) console.error('toggleSectionActive insert error:', error)
+          .select('id')
+          .eq('page_id', realPage.id)
+          .eq('type', targetSec.type)
+          .maybeSingle()
+
+        if (existingRow?.id) {
+          const { error } = await supabase
+            .from('sections')
+            .update({ is_active: isActive, updated_at: new Date().toISOString() })
+            .eq('id', existingRow.id)
+          if (error) throw error
+          // Patch the local section id to the real UUID for future direct updates
+          const patchedSections = get().currentSections.map(s =>
+            s.id === sectionId ? { ...s, id: existingRow.id, is_active: isActive } : s
+          )
+          set({ currentSections: patchedSections })
+        } else {
+          const { data: inserted, error } = await supabase
+            .from('sections')
+            .insert({
+              page_id: realPage.id,
+              type: targetSec.type,
+              content: targetSec.content || {},
+              styling: targetSec.styling || {},
+              display_order: targetSec.display_order || 0,
+              is_active: isActive
+            })
+            .select('id')
+            .single()
+          if (error) throw error
+          // Patch local id to real UUID
+          if (inserted?.id) {
+            const patchedSections = get().currentSections.map(s =>
+              s.id === sectionId ? { ...s, id: inserted.id, is_active: isActive } : s
+            )
+            set({ currentSections: patchedSections })
+          }
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error toggling section in Supabase:', err)
+      throw err
     }
   },
 

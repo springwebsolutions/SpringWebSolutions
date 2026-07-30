@@ -57,9 +57,6 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
             case 'team':
               return <div id="team" key={sec.id}><TeamSection content={sec.content} styling={sec.styling} /></div>
 
-            case 'cta':
-              return <div id="cta" key={sec.id}><CtaSection content={sec.content} styling={sec.styling} /></div>
-
             default:
               return null
           }
