@@ -594,17 +594,24 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
         is_active: d.is_active ?? true
       }))
 
-      const { data: inserted, error } = await supabase
+      // Use INSERT ... ON CONFLICT DO NOTHING if possible, otherwise plain insert
+      // Either way, re-fetch after insert to return the authoritative deduplicated list
+      await supabase.from('sections').insert(toInsert)
+
+      // Always re-fetch the full sections list to return deduplicated real data
+      const { data: freshSections } = await supabase
         .from('sections')
-        .insert(toInsert)
-        .select()
+        .select('*')
+        .eq('page_id', pageId)
+        .order('display_order', { ascending: true })
 
-      if (error) {
-        console.warn('seedPageSections insert error:', error)
-        return existingSections
-      }
-
-      return [...existingSections, ...(inserted || [])]
+      // Deduplicate by type in-memory (keep first occurrence per type)
+      const seenTypes = new Set<string>()
+      return (freshSections || []).filter((s: any) => {
+        if (seenTypes.has(s.type)) return false
+        seenTypes.add(s.type)
+        return true
+      })
     }
 
     // If cached data is present, immediately serve it without setting loading: true
