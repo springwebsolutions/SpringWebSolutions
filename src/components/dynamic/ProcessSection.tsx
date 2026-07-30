@@ -1,7 +1,8 @@
 import React from 'react'
 import { Search, PenTool, Code2, TestTube2, Rocket, HeartHandshake, ArrowRight, CheckCircle2 } from 'lucide-react'
+import AnimatedBackground from '../ui/AnimatedBackground'
 
-const STEPS = [
+const DEFAULT_STEPS = [
   {
     number: '01',
     icon: Search,
@@ -58,24 +59,46 @@ const STEPS = [
   }
 ]
 
+const ICON_MAP: Record<string, any> = {
+  Search,
+  PenTool,
+  Code2,
+  TestTube2,
+  Rocket,
+  HeartHandshake
+}
+
 interface ProcessSectionProps {
   content?: any
   styling?: any
 }
 
-export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling }) => {
+export const ProcessSection: React.FC<ProcessSectionProps> = ({ content }) => {
   const title = content?.title || 'Our Transparent Engineering Process'
   const subtitle = content?.subtitle || 'Six clear steps from first conversation to launched product — and everything in between.'
 
+  // Allow custom steps from CMS or fallback to defaults
+  const stepsList = (content?.steps && Array.isArray(content.steps) && content.steps.length > 0)
+    ? content.steps.map((s: any, i: number) => ({
+        number: s.number || `0${i + 1}`,
+        icon: (typeof s.icon === 'string' && ICON_MAP[s.icon]) ? ICON_MAP[s.icon] : DEFAULT_STEPS[i % DEFAULT_STEPS.length].icon,
+        title: s.title || DEFAULT_STEPS[i % DEFAULT_STEPS.length].title,
+        color: s.color || DEFAULT_STEPS[i % DEFAULT_STEPS.length].color,
+        bg: s.bg || DEFAULT_STEPS[i % DEFAULT_STEPS.length].bg,
+        desc: s.desc || DEFAULT_STEPS[i % DEFAULT_STEPS.length].desc,
+        bullets: s.bullets || DEFAULT_STEPS[i % DEFAULT_STEPS.length].bullets
+      }))
+    : DEFAULT_STEPS
+
   return (
     <section className="py-20 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-b border-white/10 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
-      {/* Background ambient */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Animated micro-particles background */}
+      <AnimatedBackground accent="emerald" particleCount={18} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
 
         {/* Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
+        <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-600 text-xs font-bold uppercase tracking-widest font-display">
             <CheckCircle2 size={13} /> How We Work
           </div>
@@ -92,12 +115,12 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
 
         {/* Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {STEPS.map((step) => {
+          {stepsList.map((step: any) => {
             const Icon = step.icon
             return (
               <div
                 key={step.number}
-                className="group relative rounded-3xl bg-[#06080f] dark:bg-[#06080f] light:bg-white border border-white/8 light:border-slate-200 p-7 space-y-5 hover:border-white/20 light:hover:border-slate-300 light:shadow-sm light:hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                className="group relative rounded-3xl bg-[#06080f] dark:bg-[#06080f] light:bg-white border border-white/8 light:border-slate-200 p-7 space-y-5 hover:border-emerald-500/40 light:hover:border-emerald-500/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10 light:shadow-sm light:hover:shadow-lg transition-all duration-300"
               >
                 {/* Step number watermark */}
                 <div className="absolute top-5 right-6 text-5xl font-black text-white/4 dark:text-white/4 light:text-slate-900/5 font-display select-none">
@@ -105,13 +128,13 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
                 </div>
 
                 {/* Icon */}
-                <div className={`h-11 w-11 rounded-2xl ${step.bg} border flex items-center justify-center ${step.color} shrink-0`}>
+                <div className={`h-11 w-11 rounded-2xl ${step.bg} border flex items-center justify-center ${step.color} shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                   <Icon size={20} />
                 </div>
 
                 {/* Title */}
                 <div className="space-y-2">
-                  <h3 className={`text-base font-bold text-white dark:text-white light:text-slate-900 font-display transition-colors`}>
+                  <h3 className="text-base font-bold text-white dark:text-white light:text-slate-900 font-display transition-colors">
                     <span className={`${step.color} font-mono text-xs mr-2 opacity-70`}>{step.number}</span>
                     {step.title}
                   </h3>
@@ -122,10 +145,10 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
 
                 {/* Bullets */}
                 <ul className="space-y-1.5">
-                  {step.bullets.map((b) => (
+                  {step.bullets.map((b: string) => (
                     <li key={b} className="flex items-center gap-2 text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 font-sans">
-                      <CheckCircle2 size={12} className={step.color} />
-                      {b}
+                      <CheckCircle2 size={12} className={`${step.color} shrink-0`} />
+                      <span>{b}</span>
                     </li>
                   ))}
                 </ul>
@@ -138,7 +161,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content, styling
         <div className="text-center pt-4">
           <a
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-50 light:border-emerald-200 text-sm font-semibold hover:bg-emerald-500/20 light:hover:bg-emerald-100 transition-all font-display"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-50 light:border-emerald-200 text-sm font-semibold hover:bg-emerald-500/20 light:hover:bg-emerald-100 hover:scale-105 transition-all font-display shadow-lg shadow-emerald-500/10"
           >
             Start Your Project Discovery <ArrowRight size={16} />
           </a>
