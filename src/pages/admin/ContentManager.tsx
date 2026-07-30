@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { usePageBuilderStore, type PageData, type SectionData } from '@/stores/pageBuilderStore'
+import { usePageBuilderStore, DEFAULT_PAGES_CACHE, type PageData, type SectionData } from '@/stores/pageBuilderStore'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { 
   FileText, Edit, Eye, EyeOff, ArrowUp, ArrowDown, 
@@ -71,7 +71,12 @@ export const ContentManager: React.FC = () => {
   // Pages shown in sidebar — Home first, then alphabetical, exclude pages without dedicated UI routes
   const SIDEBAR_PAGE_SLUGS = ['home', 'about', 'services', 'portfolio']
   const sidebarPages = SIDEBAR_PAGE_SLUGS
-    .map(slug => pages.find(p => p.slug === slug))
+    .map(slug => {
+      const found = pages.find(p => p.slug === slug)
+      if (found) return found
+      const cacheEntry = (DEFAULT_PAGES_CACHE as any)[slug]
+      return cacheEntry ? cacheEntry.page : null
+    })
     .filter(Boolean) as typeof pages
 
   useEffect(() => {

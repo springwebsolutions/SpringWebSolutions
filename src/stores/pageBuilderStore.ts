@@ -46,7 +46,7 @@ interface PageBuilderState {
 }
 
 // Fallback seed data for immediate 0ms initial render without network delay
-const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionData[] }> = {
+export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: SectionData[] }> = {
   home: {
     page: {
       id: 'default-home-id',
@@ -755,13 +755,24 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
   },
 
   fetchPages: async () => {
-    if (!isSupabaseConfigured) return
+    const defaultPages = Object.values(DEFAULT_PAGES_CACHE).map(item => item.page)
+    if (!isSupabaseConfigured) {
+      set({ pages: defaultPages })
+      return
+    }
     try {
       const { data, error } = await supabase.from('pages').select('*')
       if (error) throw error
-      set({ pages: data || [] })
+
+      // Merge DB pages with default pages cache so all pages (home, about, services, portfolio) are always available
+      const dbSlugSet = new Set((data || []).map((p: any) => p.slug))
+      const missingDefaults = defaultPages.filter(p => !dbSlugSet.has(p.slug))
+      const mergedPages = [...(data || []), ...missingDefaults]
+
+      set({ pages: mergedPages })
     } catch (err) {
       console.error('Error fetching pages:', err)
+      set({ pages: defaultPages })
     }
   },
 
