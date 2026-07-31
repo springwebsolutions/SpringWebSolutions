@@ -274,45 +274,59 @@ export const ContentManager: React.FC = () => {
   return (
     <div className="space-y-6">
       
-      {/* ── Top Horizontal Page Selector Bar ── */}
-      <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      {/* ── Top Sleek Horizontal Page Control Bar ── */}
+      <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/8 bg-[#070a12]/90 backdrop-blur-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-xl">
+        
+        {/* Left Info Header */}
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-            <Globe size={18} />
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
+            <Globe size={20} />
           </div>
           <div>
-            <h3 className="font-display font-bold text-white text-sm leading-tight">Website Pages CMS</h3>
-            <p className="text-[11px] text-slate-400 font-light">Select a site page below to edit its SEO metadata, section visibility, and live layout content.</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-display font-extrabold text-white text-base tracking-tight">Website Pages CMS</h3>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold uppercase">
+                Active: {currentPage?.title || 'Home'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-light mt-0.5">Select a page tab to manage its SEO meta descriptions, keyword targets, and live section layout.</p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          {sidebarPages.map(p => (
-            <button
-              key={p.id}
-              onClick={() => setSelectedPage(p.slug)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold font-display uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                selectedPage === p.slug
-                  ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 scale-105'
-                  : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 hover:border-emerald-500/30'
-              }`}
-            >
-              <FileText size={14} />
-              <span>{p.title}</span>
-              <span className={`text-[10px] font-mono font-normal opacity-75 ${selectedPage === p.slug ? 'text-slate-900' : 'text-slate-400'}`}>
-                /{p.slug}
-              </span>
-            </button>
-          ))}
+        {/* Right Segmented Control Tab Bar */}
+        <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-[#04050a] border border-white/10 overflow-x-auto shrink-0 scrollbar-none">
+          {sidebarPages.map(p => {
+            const isSelected = selectedPage === p.slug
+            return (
+              <button
+                key={p.id}
+                onClick={() => setSelectedPage(p.slug)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold font-display transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                  isSelected
+                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25 font-bold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
+                }`}
+              >
+                <FileText size={14} className={isSelected ? 'text-slate-950' : 'text-slate-400'} />
+                <span>{p.title}</span>
+                <span className={`text-[10px] font-mono font-normal ${isSelected ? 'text-slate-900/80 font-semibold' : 'text-slate-500'}`}>
+                  /{p.slug}
+                </span>
+              </button>
+            )
+          })}
+
+          <div className="h-5 w-[1px] bg-white/10 mx-1 shrink-0" />
 
           <button
             onClick={() => fetchPageData(selectedPage)}
-            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all cursor-pointer ml-auto md:ml-1"
-            title="Refresh Page Data"
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0"
+            title="Refresh page content"
           >
             <RefreshCw size={14} />
           </button>
         </div>
+
       </div>
 
       {/* ── Main Full-Width Content Area ── */}
