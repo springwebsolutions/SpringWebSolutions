@@ -123,7 +123,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               .select('roles(name)')
               .eq('user_id', user.id)
 
-            const roles = userRolesData ? userRolesData.map((ur: any) => ur.roles.name) : []
+            const roles = userRolesData ? userRolesData.map((ur: any) => ur.roles?.name || '').filter(Boolean) : []
             set({ roles })
           }
         } catch (err) {

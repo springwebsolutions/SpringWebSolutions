@@ -83,6 +83,16 @@ export async function sendResendEmail(
   }
 }
 
+function escapeHtml(str?: string): string {
+  if (!str) return ''
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
 /**
  * Generate clean HTML template for New Lead Inquiry Notification
  */
@@ -94,6 +104,13 @@ export function buildLeadNotificationHTML(lead: {
   budget_range?: string
   message?: string
 }): string {
+  const safeName = escapeHtml(lead.full_name)
+  const safeEmail = escapeHtml(lead.email)
+  const safePhone = escapeHtml(lead.phone || 'N/A')
+  const safeInterest = escapeHtml(lead.service_interest || 'General')
+  const safeBudget = escapeHtml(lead.budget_range || 'N/A')
+  const safeMsg = escapeHtml(lead.message || 'No additional message provided.')
+
   return `
     <div style="font-family: Arial, sans-serif; background-color: #070a13; color: #f8fafc; padding: 32px; border-radius: 16px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1);">
       <div style="margin-bottom: 24px; text-align: center;">
@@ -102,16 +119,16 @@ export function buildLeadNotificationHTML(lead: {
       </div>
       
       <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
-        <p style="margin: 8px 0;"><strong>Client Name:</strong> ${lead.full_name}</p>
-        <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:${lead.email}" style="color: #10b981;">${lead.email}</a></p>
-        <p style="margin: 8px 0;"><strong>Phone:</strong> ${lead.phone || 'N/A'}</p>
-        <p style="margin: 8px 0;"><strong>Service Interest:</strong> ${lead.service_interest || 'General'}</p>
-        <p style="margin: 8px 0;"><strong>Budget Range:</strong> ${lead.budget_range || 'N/A'}</p>
+        <p style="margin: 8px 0;"><strong>Client Name:</strong> ${safeName}</p>
+        <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #10b981;">${safeEmail}</a></p>
+        <p style="margin: 8px 0;"><strong>Phone:</strong> ${safePhone}</p>
+        <p style="margin: 8px 0;"><strong>Service Interest:</strong> ${safeInterest}</p>
+        <p style="margin: 8px 0;"><strong>Budget Range:</strong> ${safeBudget}</p>
       </div>
 
       <div style="margin-top: 20px; padding: 16px; background: rgba(16,185,129,0.05); border-left: 4px solid #10b981; border-radius: 4px;">
         <p style="margin: 0; font-weight: bold; color: #10b981;">Inquiry Message:</p>
-        <p style="margin-top: 8px; color: #cbd5e1; white-space: pre-wrap;">${lead.message || 'No additional message provided.'}</p>
+        <p style="margin-top: 8px; color: #cbd5e1; white-space: pre-wrap;">${safeMsg}</p>
       </div>
 
       <div style="margin-top: 28px; text-align: center; font-size: 12px; color: #64748b;">

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
+import { Loader2 } from 'lucide-react'
 
 // Public Website Pages
 import DynamicPage from '@/pages/DynamicPage'
@@ -26,29 +27,37 @@ import { CareerGuideDetail } from '@/pages/careers/CareerGuideDetail'
 
 import WhatsAppWidget from '@/components/ui/WhatsAppWidget'
 
-// SpringWeb Operations Suite Admin Views
+// SpringWeb Operations Suite Admin Views (Lazy Loaded for Bundle Optimization)
 import { AdminLayout } from '@/components/layout/AdminLayout'
-import Dashboard from '@/pages/admin/Dashboard'
-import ContentManager from '@/pages/admin/ContentManager'
-import BlogCMS from '@/pages/admin/BlogCMS'
-import MarketplaceCMS from '@/pages/admin/MarketplaceCMS'
-import LeadCRM from '@/pages/admin/LeadCRM'
-import MediaLibrary from '@/pages/admin/MediaLibrary'
-import SiteSettings from '@/pages/admin/SiteSettings'
-import KBCMS from '@/pages/admin/KBCMS'
-import SupportManager from '@/pages/admin/SupportManager'
-import ContactSubmissions from '@/pages/admin/ContactSubmissions'
+const Dashboard = lazy(() => import('@/pages/admin/Dashboard'))
+const ContentManager = lazy(() => import('@/pages/admin/ContentManager'))
+const BlogCMS = lazy(() => import('@/pages/admin/BlogCMS'))
+const MarketplaceCMS = lazy(() => import('@/pages/admin/MarketplaceCMS'))
+const LeadCRM = lazy(() => import('@/pages/admin/LeadCRM'))
+const MediaLibrary = lazy(() => import('@/pages/admin/MediaLibrary'))
+const SiteSettings = lazy(() => import('@/pages/admin/SiteSettings'))
+const KBCMS = lazy(() => import('@/pages/admin/KBCMS'))
+const SupportManager = lazy(() => import('@/pages/admin/SupportManager'))
+const ContactSubmissions = lazy(() => import('@/pages/admin/ContactSubmissions'))
 
 // Careers & Ads Admin Consoles
-import { AdminJobPostings } from '@/pages/admin/AdminJobPostings'
-import { AdminCareerGuides } from '@/pages/admin/AdminCareerGuides'
-import { AdminAdManager } from '@/pages/admin/AdminAdManager'
+const AdminJobPostings = lazy(() => import('@/pages/admin/AdminJobPostings').then(m => ({ default: m.AdminJobPostings })))
+const AdminCareerGuides = lazy(() => import('@/pages/admin/AdminCareerGuides').then(m => ({ default: m.AdminCareerGuides })))
+const AdminAdManager = lazy(() => import('@/pages/admin/AdminAdManager').then(m => ({ default: m.AdminAdManager })))
 
 // Enterprise Operations Consoles
-import { AdminApplications } from '@/pages/admin/AdminApplications'
-import { LeadAnalytics } from '@/pages/admin/LeadAnalytics'
-import { SystemHealth } from '@/pages/admin/SystemHealth'
+const AdminApplications = lazy(() => import('@/pages/admin/AdminApplications').then(m => ({ default: m.AdminApplications })))
+const LeadAnalytics = lazy(() => import('@/pages/admin/LeadAnalytics').then(m => ({ default: m.LeadAnalytics })))
+const SystemHealth = lazy(() => import('@/pages/admin/SystemHealth').then(m => ({ default: m.SystemHealth })))
 
+const AdminLoader: React.FC = () => (
+  <div className="flex h-64 w-full items-center justify-center">
+    <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono">
+      <Loader2 className="animate-spin" size={18} />
+      <span>Loading Module…</span>
+    </div>
+  </div>
+)
 
 const CareersKBRedirect: React.FC = () => {
   useEffect(() => {
@@ -115,32 +124,34 @@ function App() {
   if (isSuiteDomain) {
     return (
       <Router>
-        <Routes>
-          {/* Explicitly strip /admin or /admin/* on subdomain and force clean root URL */}
-          <Route path="/admin" element={<Navigate to="/" replace />} />
-          <Route path="/admin/*" element={<Navigate to="/" replace />} />
+        <Suspense fallback={<AdminLoader />}>
+          <Routes>
+            {/* Explicitly strip /admin or /admin/* on subdomain and force clean root URL */}
+            <Route path="/admin" element={<Navigate to="/" replace />} />
+            <Route path="/admin/*" element={<Navigate to="/" replace />} />
 
-          <Route path="/" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="content" element={<ContentManager />} />
-            <Route path="blog" element={<BlogCMS />} />
-            <Route path="kb" element={<KBCMS />} />
-            <Route path="marketplace" element={<MarketplaceCMS />} />
-            <Route path="jobs" element={<AdminJobPostings />} />
-            <Route path="job-applications" element={<AdminApplications />} />
-            <Route path="career-guides" element={<AdminCareerGuides />} />
-            <Route path="ads" element={<AdminAdManager />} />
-            <Route path="crm" element={<LeadCRM />} />
-            <Route path="analytics" element={<LeadAnalytics />} />
-            <Route path="media" element={<MediaLibrary />} />
-            <Route path="support" element={<SupportManager />} />
-            <Route path="contacts" element={<ContactSubmissions />} />
-            <Route path="health" element={<SystemHealth />} />
-            <Route path="settings" element={<SiteSettings />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Route>
-        </Routes>
+            <Route path="/" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="content" element={<ContentManager />} />
+              <Route path="blog" element={<BlogCMS />} />
+              <Route path="kb" element={<KBCMS />} />
+              <Route path="marketplace" element={<MarketplaceCMS />} />
+              <Route path="jobs" element={<AdminJobPostings />} />
+              <Route path="job-applications" element={<AdminApplications />} />
+              <Route path="career-guides" element={<AdminCareerGuides />} />
+              <Route path="ads" element={<AdminAdManager />} />
+              <Route path="crm" element={<LeadCRM />} />
+              <Route path="analytics" element={<LeadAnalytics />} />
+              <Route path="media" element={<MediaLibrary />} />
+              <Route path="support" element={<SupportManager />} />
+              <Route path="contacts" element={<ContactSubmissions />} />
+              <Route path="health" element={<SystemHealth />} />
+              <Route path="settings" element={<SiteSettings />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </Router>
     )
   }
