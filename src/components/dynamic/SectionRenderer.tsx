@@ -20,7 +20,7 @@ interface SectionRendererProps {
 export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) => {
   return (
     <>
-      {sections
+      {(sections || [])
         .filter(sec => sec.is_active)
         .map(sec => {
           switch (sec.type) {
