@@ -68,8 +68,8 @@ export const ContentManager: React.FC = () => {
   const [newSectionType, setNewSectionType] = useState('services_summary')
   const [addLoading, setAddLoading] = useState(false)
 
-  // Pages shown in sidebar — Home first, then alphabetical, exclude pages without dedicated UI routes
-  const SIDEBAR_PAGE_SLUGS = ['home', 'about', 'services', 'portfolio']
+  // Pages shown in sidebar/topbar tabs — Home, Portfolio, Blog, Marketplace
+  const SIDEBAR_PAGE_SLUGS = ['home', 'portfolio', 'blog', 'marketplace']
   const sidebarPages = SIDEBAR_PAGE_SLUGS
     .map(slug => {
       const found = pages.find(p => p.slug === slug)

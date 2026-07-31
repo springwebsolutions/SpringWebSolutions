@@ -253,6 +253,30 @@ export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: Sec
     },
     sections: []
   },
+  blog: {
+    page: {
+      id: 'default-blog-id',
+      title: 'Blog',
+      slug: 'blog',
+      seo_title: 'Engineering Insights & Tech Articles | Spring Web Solutions',
+      seo_description: 'Technical articles, software engineering guides, SEO strategies, and automation insights by Spring Web Solutions.',
+      seo_keywords: 'software blog, web development articles, tech insights',
+      is_published: true
+    },
+    sections: []
+  },
+  marketplace: {
+    page: {
+      id: 'default-marketplace-id',
+      title: 'Marketplace',
+      slug: 'marketplace',
+      seo_title: 'Software Templates & Web Tools | Spring Web Solutions Marketplace',
+      seo_description: 'Explore pre-built software templates, CRM integrations, and web automation tools engineered by Spring Web Solutions.',
+      seo_keywords: 'software marketplace, website templates, code tools',
+      is_published: true
+    },
+    sections: []
+  },
   services: {
     page: {
       id: 'default-services-id',
