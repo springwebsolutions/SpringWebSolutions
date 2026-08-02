@@ -1,0 +1,24 @@
+{
+  "name": "Spring Web Solutions",
+  "short_name": "SpringWeb",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-emblem.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-emblem.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#04050a",
+  "background_color": "#04050a",
+  "display": "standalone"
+}
