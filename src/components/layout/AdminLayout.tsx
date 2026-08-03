@@ -7,7 +7,7 @@ import {
   Users, Image, Ticket, Settings, ArrowLeft, Loader2, 
   ShieldAlert, HelpCircle, ChevronRight, Bell, LogOut,
   Zap, Globe, Menu, X, MessageSquare, Calendar, Briefcase, Megaphone,
-  TrendingUp, Activity, UserCheck
+  TrendingUp, Activity, UserCheck, Cpu
 } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
 
@@ -124,6 +124,7 @@ export const AdminLayout: React.FC = () => {
       label: 'Operations',
       items: [
         { label: 'Lead CRM', href: `${prefix}/crm`, icon: Users },
+        { label: 'Lead Gen System', href: `${prefix}/lead-gen`, icon: Cpu, badge: 'v1.1' },
         { label: 'Lead Analytics', href: `${prefix}/analytics`, icon: TrendingUp },
         { label: 'Support Desk', href: `${prefix}/support`, icon: Ticket },
         { label: 'Contact Submissions', href: `${prefix}/contacts`, icon: MessageSquare },

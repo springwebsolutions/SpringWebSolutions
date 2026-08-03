@@ -44,6 +44,7 @@ const ContactSubmissions = lazy(() => import('@/pages/admin/ContactSubmissions')
 const AdminJobPostings = lazy(() => import('@/pages/admin/AdminJobPostings').then(m => ({ default: m.AdminJobPostings })))
 const AdminCareerGuides = lazy(() => import('@/pages/admin/AdminCareerGuides').then(m => ({ default: m.AdminCareerGuides })))
 const AdminAdManager = lazy(() => import('@/pages/admin/AdminAdManager').then(m => ({ default: m.AdminAdManager })))
+const LeadGenSystem = lazy(() => import('@/pages/admin/LeadGenSystem').then(m => ({ default: m.LeadGenSystem })))
 
 // Enterprise Operations Consoles
 const AdminApplications = lazy(() => import('@/pages/admin/AdminApplications').then(m => ({ default: m.AdminApplications })))
@@ -142,6 +143,7 @@ function App() {
               <Route path="career-guides" element={<AdminCareerGuides />} />
               <Route path="ads" element={<AdminAdManager />} />
               <Route path="crm" element={<LeadCRM />} />
+              <Route path="lead-gen" element={<LeadGenSystem />} />
               <Route path="analytics" element={<LeadAnalytics />} />
               <Route path="media" element={<MediaLibrary />} />
               <Route path="support" element={<SupportManager />} />
