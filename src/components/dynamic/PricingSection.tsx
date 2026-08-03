@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, Zap, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react'
+import { displayRazorpayCheckout } from '@/lib/razorpayService'
 
 interface PricingPlan {
   name: string
@@ -145,7 +146,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                 </div>
               </div>
 
-              <div className="pt-8">
+              <div className="pt-8 space-y-2">
                 <Link
                   to={plan.ctaHref}
                   className={`w-full py-3 px-6 rounded-xl font-semibold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
@@ -157,6 +158,22 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                   <span>{plan.ctaText}</span>
                   <ArrowRight size={14} />
                 </Link>
+
+                <button
+                  onClick={() => {
+                    const cleanPrice = parseInt(plan.price.replace(/[^0-9]/g, ''), 10) || 5000
+                    displayRazorpayCheckout({
+                      amountInRupees: cleanPrice,
+                      productName: `${plan.name} Plan Deposit`,
+                      productDescription: `Spring Web Solutions — ${plan.name}`,
+                      notes: { planName: plan.name }
+                    })
+                  }}
+                  className="w-full py-2 px-4 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                >
+                  <span>Pay Now via Razorpay</span>
+                  <span className="font-mono opacity-80">({plan.price})</span>
+                </button>
               </div>
             </div>
           ))}
