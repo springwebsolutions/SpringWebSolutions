@@ -352,31 +352,15 @@ export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: Sec
     },
     sections: [
       {
-        id: 'plans-hero',
-        page_id: 'default-plans-id',
-        type: 'hero',
-        content: {
-          headline: "Transparent & Scalable Pricing Plans",
-          subheadline: "Choose from our starter setups, dedicated custom software packages, or Razorpay direct deposit options.",
-          cta_primary_text: "Choose Plan",
-          cta_primary_href: "#pricing",
-          cta_secondary_text: "Request Custom Quote",
-          cta_secondary_href: "/contact"
-        },
-        styling: { padding_top: "py-24", padding_bottom: "py-20" },
-        display_order: 0,
-        is_active: true
-      },
-      {
         id: 'plans-pricing',
         page_id: 'default-plans-id',
         type: 'pricing_summary',
         content: {
-          title: "Pricing Plans & Razorpay Deposit",
-          subtitle: "Select a package designed for your current growth stage, or make a direct deposit via Razorpay."
+          title: "Transparent & Scalable Investment Plans",
+          subtitle: "Select a package engineered for your current growth stage, or initiate a direct milestone deposit via Razorpay."
         },
-        styling: { id: "pricing", padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 1,
+        styling: { id: "pricing", padding_top: "py-12", padding_bottom: "py-16" },
+        display_order: 0,
         is_active: true
       }
     ]
@@ -393,35 +377,15 @@ export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: Sec
     },
     sections: [
       {
-        id: 'pricing-hero',
+        id: 'pricing-summary-sec',
         page_id: 'default-pricing-id',
-        type: 'hero',
+        type: 'pricing_summary',
         content: {
-          headline: "Flexible Solutions for Any Stage of Growth",
-          subheadline: "Choose from our starter setups, dedicated custom software project packages, or ongoing maintenance support contracts designed to keep your servers secure.",
-          cta_primary_text: "Contact Solutions Engineer",
-          cta_primary_href: "/contact",
-          cta_secondary_text: "Read FAQs",
-          cta_secondary_href: "/kb"
+          title: "Transparent & Scalable Pricing Plans",
+          subtitle: "Flexible Starter, Professional, and Enterprise custom software engineering packages."
         },
-        styling: { padding_top: "py-24", padding_bottom: "py-20" },
+        styling: { padding_top: "py-12", padding_bottom: "py-16" },
         display_order: 0,
-        is_active: true
-      },
-      {
-        id: 'pricing-stats',
-        page_id: 'default-pricing-id',
-        type: 'stats',
-        content: {
-          items: [
-            { value: "100%", label: "No Lock-ins" },
-            { value: "Scope", label: "Clear Deadlines" },
-            { value: "99.9%", label: "Uptime Guarantee" },
-            { value: "SLA", label: "Dedicated Support" }
-          ]
-        },
-        styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 1,
         is_active: true
       },
       {
@@ -437,7 +401,7 @@ export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: Sec
           cta_secondary_href: "/services"
         },
         styling: { padding_top: "py-20", padding_bottom: "py-20" },
-        display_order: 2,
+        display_order: 1,
         is_active: true
       }
     ]

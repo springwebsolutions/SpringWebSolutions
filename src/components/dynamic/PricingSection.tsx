@@ -24,45 +24,45 @@ interface PricingSectionProps {
 }
 
 export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
-  const title = content?.title || "Transparent & Scalable Pricing Plans"
-  const subtitle = content?.subtitle || "Choose a package designed for your current scale, or request a custom software quotation for bespoke enterprise requirements."
+  const title = content?.title || "Transparent & Scalable Investment Plans"
+  const subtitle = content?.subtitle || "Choose a package designed for your current scale, or initiate a direct milestone deposit via Razorpay."
 
   const defaultPlans: PricingPlan[] = [
     {
       name: "Starter Business",
-      tagline: "Essential digital presence for startups & local businesses.",
+      tagline: "Essential high-speed digital presence for startups & local brands.",
       price: "₹14,999",
       period: "one-time",
       features: [
         "High-Speed Responsive Website",
-        "Modern Glassmorphic / Dark UI",
+        "Modern Glassmorphic Dark UI",
         "Mobile-First Touch Optimization",
         "On-Page Technical SEO Setup",
         "Contact & Lead Capture Form",
-        "1 Month Free Technical Support"
+        "1 Month Free Technical SLA Support"
       ],
       ctaText: "Choose Starter",
       ctaHref: "/contact?plan=starter"
     },
     {
       name: "Professional Growth",
-      tagline: "Full-scale corporate platform & lead generation engine.",
+      tagline: "Full-scale corporate platform, CMS & lead automation engine.",
       price: "₹39,999",
       period: "one-time",
       isPopular: true,
       features: [
         "Everything in Starter Plan",
         "Custom Dynamic CMS & Admin Panel",
-        "Blog & Knowledge Base Integration",
+        "Blog & Knowledge Base System",
         "WhatsApp & Email API Automations",
-        "Advanced SEO & Speed Optimization",
+        "Advanced SEO & Speed Tuning",
         "3 Months Priority Support SLA"
       ],
       ctaText: "Start Professional",
       ctaHref: "/contact?plan=professional"
     },
     {
-      name: "Enterprise & Custom Software",
+      name: "Enterprise Software",
       tagline: "Bespoke SaaS, ERP, CRM, and automated workflow engines.",
       price: "Custom Quote",
       period: "based on scope",
@@ -70,7 +70,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
         "Custom React / Node / Python Stack",
         "Dedicated Supabase / Postgres DB",
         "Role-Based Access & Security Audit",
-        "Custom API & Webhook Infrastructure",
+        "Custom API & Webhook Architecture",
         "Scalable Cloud Deployment (Vercel/AWS)",
         "Dedicated Account Lead & 24/7 SLA"
       ],
@@ -82,19 +82,24 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
   const plans = content?.plans || defaultPlans
 
   return (
-    <section id="pricing" className="py-20 relative bg-[#06080f] border-b border-white/5 transition-colors duration-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
+    <section id="pricing" className="py-24 relative bg-[#04060c] border-b border-white/5 transition-colors duration-300 overflow-hidden">
+      {/* Background Glow Orbs */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-teal-500/10 blur-[120px] pointer-events-none rounded-full" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
         
         {/* Title Block */}
         <div className="text-center max-w-3xl mx-auto space-y-4 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-indigo/10 border border-brand-indigo/20 text-brand-indigo text-xs font-bold uppercase tracking-wider">
-            <Zap size={13} strokeWidth={2.5} />
-            <span>Investment Plans</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider shadow-sm">
+            <Sparkles size={14} className="text-emerald-400" />
+            <span>Transparent Investment Plans</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight uppercase">
             {title}
           </h2>
-          <p className="text-base text-slate-400 font-sans font-light leading-relaxed max-w-2xl mx-auto">
+
+          <p className="text-sm sm:text-base text-slate-400 font-sans font-light leading-relaxed max-w-2xl mx-auto">
             {subtitle}
           </p>
         </div>
@@ -106,27 +111,27 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
               key={idx}
               className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 ${
                 plan.isPopular
-                  ? 'bg-gradient-to-b from-brand-indigo/15 via-[#0b101d] to-[#06080f] border-2 border-brand-indigo shadow-2xl shadow-brand-indigo/10 -translate-y-2'
-                  : 'glass-panel border border-white/5 hover:border-white/15'
+                  ? 'bg-gradient-to-b from-emerald-500/15 via-[#080d18] to-[#04060c] border-2 border-emerald-500 shadow-2xl shadow-emerald-950/40 -translate-y-2'
+                  : 'glass-panel border border-white/10 hover:border-white/20 bg-white/[0.02]'
               }`}
             >
               {plan.isPopular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-brand-indigo text-white text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1 shadow-md">
-                  <Sparkles size={12} />
-                  Most Popular
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1 shadow-lg shadow-emerald-500/30">
+                  <Zap size={12} />
+                  <span>Most Popular</span>
                 </div>
               )}
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="font-display text-xl font-bold text-white">{plan.name}</h3>
-                  <p className="text-xs text-slate-400 mt-1 min-h-[32px]">{plan.tagline}</p>
+                  <h3 className="font-display text-2xl font-bold text-white tracking-tight">{plan.name}</h3>
+                  <p className="text-xs text-slate-400 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
                 </div>
 
-                <div className="py-2 border-y border-white/5">
+                <div className="py-3 border-y border-white/10">
                   <div className="flex items-baseline gap-1">
-                    <span className="font-display text-3xl sm:text-4xl font-extrabold text-white">{plan.price}</span>
-                    {plan.period && <span className="text-xs text-slate-500 font-medium">/{plan.period}</span>}
+                    <span className="font-display text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{plan.price}</span>
+                    {plan.period && <span className="text-xs text-slate-400 font-medium">/{plan.period}</span>}
                   </div>
                 </div>
 
@@ -136,7 +141,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                   <ul className="space-y-2.5">
                     {plan.features.map((feat, fIdx) => (
                       <li key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-snug">
-                        <span className="h-4 w-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="h-4 w-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 mt-0.5">
                           <Check size={10} className="text-emerald-400" strokeWidth={3} />
                         </span>
                         <span>{feat}</span>
@@ -146,12 +151,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                 </div>
               </div>
 
-              <div className="pt-8 space-y-2">
+              <div className="pt-8 space-y-3">
                 <Link
                   to={plan.ctaHref}
-                  className={`w-full py-3 px-6 rounded-xl font-semibold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`w-full py-3 px-6 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     plan.isPopular
-                      ? 'bg-brand-emerald hover:bg-brand-emerald-hover text-white shadow-lg shadow-brand-emerald/20'
+                      ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20'
                       : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white'
                   }`}
                 >
@@ -169,9 +174,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                       notes: { planName: plan.name }
                     })
                   }}
-                  className="w-full py-2 px-4 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
-                  <span>Pay Now via Razorpay</span>
+                  <span>Pay Deposit via Razorpay</span>
                   <span className="font-mono opacity-80">({plan.price})</span>
                 </button>
               </div>
@@ -179,18 +184,18 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
           ))}
         </div>
 
-        {/* Bottom SLA guarantee bar */}
-        <div className="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-              <ShieldCheck className="text-emerald-400" size={20} />
+        {/* Bottom SLA & Trust guarantee bar */}
+        <div className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left bg-white/[0.02]">
+          <div className="flex items-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              <ShieldCheck className="text-emerald-400" size={24} />
             </div>
             <div>
-              <div className="text-sm font-bold text-white">Need custom milestone payments or SLA retainer?</div>
-              <div className="text-xs text-slate-400">We offer flexible milestone-based contracts and monthly maintenance retainers.</div>
+              <div className="text-sm font-bold text-white">100% Code Ownership &bull; Zero Monthly Lock-ins</div>
+              <div className="text-xs text-slate-400">All repositories, database assets, and SSL keys belong 100% to your company.</div>
             </div>
           </div>
-          <Link to="/contact" className="btn-secondary text-xs shrink-0">
+          <Link to="/contact" className="btn-secondary text-xs shrink-0 py-2.5 px-5">
             Talk to Solutions Architect
           </Link>
         </div>
