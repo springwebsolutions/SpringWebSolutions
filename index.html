@@ -56,87 +56,163 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- JSON-LD Structured Data Schema (LocalBusiness & Organization) -->
+    <!-- AEO & Voice Search Optimization Meta Tags -->
+    <meta name="ai-site-verification" content="springwebsolutions-aeo-verified" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <!-- JSON-LD Multi-Schema Graph (AEO, FAQ, LocalBusiness & Voice Search) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Spring Web Solutions",
-      "url": "https://www.springwebsolutions.in",
-      "logo": "https://www.springwebsolutions.in/logo-emblem.png",
-      "image": "https://www.springwebsolutions.in/logo-emblem.png",
-      "description": "Spring Web Solutions is a premier technology agency in Udumalpet, Tamil Nadu, India. We engineer web applications, native Android & iOS mobile apps, Windows desktop software, custom ERP/CRM systems, technical SEO, and business automation.",
-      "disambiguatingDescription": "Spring Web Solutions is an independent technology agency based in Udumalpet, Tamil Nadu, India, specializing in web development, mobile app engineering, and desktop software solution design.",
-      "telephone": "+91-80126-22119",
-      "foundingLocation": {
-        "@type": "Place",
-        "name": "Udumalpet, Tamil Nadu, India"
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Udumalpet Main Road",
-        "addressLocality": "Udumalpet",
-        "addressRegion": "Tamil Nadu",
-        "postalCode": "642126",
-        "addressCountry": "IN"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 10.5847,
-        "longitude": 77.2472
-      },
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday"
-        ],
-        "opens": "09:00",
-        "closes": "19:00"
-      },
-      "sameAs": [
-        "https://github.com/springwebsolutions",
-        "https://www.linkedin.com/company/springwebsolutions"
-      ],
-      "areaServed": [
+      "@graph": [
         {
-          "@type": "AdministrativeArea",
-          "name": "Udumalpet"
+          "@type": "ProfessionalService",
+          "@id": "https://www.springwebsolutions.in/#organization",
+          "name": "Spring Web Solutions",
+          "url": "https://www.springwebsolutions.in",
+          "logo": "https://www.springwebsolutions.in/logo-emblem.png",
+          "image": "https://www.springwebsolutions.in/logo-emblem.png",
+          "description": "Spring Web Solutions is a premier technology engineering agency headquartered in Udumalpet, Tamil Nadu, India. Specializing in high-performance web applications, native Android & iOS mobile apps, C# Windows desktop software, custom CRM/ERP platforms, technical SEO, and business workflow automations.",
+          "disambiguatingDescription": "Spring Web Solutions is an independent software engineering agency in Udumalpet, Tamil Nadu, India, providing enterprise web development, mobile applications, Windows desktop software, and business automation.",
+          "telephone": "+91-80126-22119",
+          "email": "solutionsspringweb@gmail.com",
+          "priceRange": "$$",
+          "currenciesAccepted": "INR, USD, EUR",
+          "paymentAccepted": "Cash, Credit Card, Bank Transfer, UPI",
+          "foundingLocation": {
+            "@type": "Place",
+            "name": "Udumalpet, Tamil Nadu, India"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Udumalpet Main Road",
+            "addressLocality": "Udumalpet",
+            "addressRegion": "Tamil Nadu",
+            "postalCode": "642126",
+            "addressCountry": "IN"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 10.5847,
+            "longitude": 77.2472
+          },
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "09:00",
+            "closes": "19:00"
+          },
+          "sameAs": [
+            "https://github.com/springwebsolutions",
+            "https://www.linkedin.com/company/springwebsolutions"
+          ],
+          "areaServed": [
+            { "@type": "AdministrativeArea", "name": "Udumalpet" },
+            { "@type": "AdministrativeArea", "name": "Tiruppur" },
+            { "@type": "AdministrativeArea", "name": "Coimbatore" },
+            { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+            { "@type": "Country", "name": "India" },
+            { "@type": "Country", "name": "Worldwide" }
+          ],
+          "knowsAbout": [
+            "Web Development & React Engineering",
+            "Android Mobile App Development (Kotlin & Flutter)",
+            "iOS App Development",
+            "Windows Desktop Application Engineering (C# .NET)",
+            "Custom Enterprise CRM & ERP Systems",
+            "Technical SEO & Search Dominance",
+            "Business Workflow & WhatsApp Automation",
+            "Cloud Infrastructure & API Syncing"
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Spring Web Solutions Engineering Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Web Application & Website Engineering",
+                  "description": "Custom responsive corporate websites, web portals, e-commerce platforms, and Next.js/Vite frontend architectures."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Native Android & iOS Mobile App Development",
+                  "description": "High-performance cross-platform Flutter and native Android mobile apps integrated with push notifications and Supabase backends."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Windows Desktop Software Development",
+                  "description": "Enterprise C# .NET and WinUI 3 desktop applications for inventory management, billing, and offline-first business operations."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Business Process & WhatsApp Automation",
+                  "description": "Custom API integrations, WhatsApp lead response bots, automated PDF reporting, and CRM lead pipelines."
+                }
+              }
+            ]
+          }
         },
         {
-          "@type": "AdministrativeArea",
-          "name": "Tiruppur"
+          "@type": "WebSite",
+          "@id": "https://www.springwebsolutions.in/#website",
+          "url": "https://www.springwebsolutions.in",
+          "name": "Spring Web Solutions",
+          "publisher": { "@id": "https://www.springwebsolutions.in/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.springwebsolutions.in/blog?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
         },
         {
-          "@type": "AdministrativeArea",
-          "name": "Coimbatore"
-        },
-        {
-          "@type": "AdministrativeArea",
-          "name": "Tamil Nadu"
-        },
-        {
-          "@type": "Country",
-          "name": "India"
-        },
-        {
-          "@type": "Country",
-          "name": "Worldwide"
+          "@type": "FAQPage",
+          "@id": "https://www.springwebsolutions.in/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What services does Spring Web Solutions provide in Udumalpet, Tamil Nadu?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Spring Web Solutions provides full-stack web application development, native Android and iOS mobile app engineering, C# .NET Windows desktop software creation, custom CRM and ERP business systems, technical SEO optimization, and WhatsApp automated workflow integrations."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does Spring Web Solutions build custom business software and web apps?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We follow a 4-step engineering process: 1. Discovery & Architecture Blueprinting, 2. Agile UI/UX & Code Development, 3. Performance & Security QA Testing, and 4. Cloud Deployment with 24/7 Monitoring."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Spring Web Solutions offer software services for clients outside Udumalpet?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, Spring Web Solutions serves clients across Tamil Nadu (Chennai, Coimbatore, Tiruppur, Salem, Trichy), all states in India, and international clients in the US, Europe, and the Middle East."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I request a project quotation from Spring Web Solutions?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can request a free project consultation by submitting our online discovery form at springwebsolutions.in/contact or by messaging our team directly on WhatsApp at +91 80126 22119."
+              }
+            }
+          ]
         }
-      ],
-      "knowsAbout": [
-        "Web Development & Frontend Engineering",
-        "Android App Development (Kotlin & Flutter)",
-        "iOS Mobile App Development",
-        "Windows Desktop Application Engineering (C# .NET & WinUI 3)",
-        "Custom Software & CRM/ERP Engineering",
-        "Technical SEO & Search Dominance",
-        "Business Automation & WhatsApp Integrations",
-        "SaaS Product Infrastructure"
       ]
     }
     </script>

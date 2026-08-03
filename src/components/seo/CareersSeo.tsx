@@ -80,23 +80,45 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
     setLink('shortcut icon', '/logo-emblem.png')
     setLink('apple-touch-icon', '/logo-emblem.png', '180x180')
 
-    // 7. Inject JSON-LD Schema
+    // 7. Inject JSON-LD AEO Schema Graph
     const defaultSchema = {
       '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      'name': 'SpringWeb Careers Vault',
-      'url': 'https://careers.springwebsolutions.in',
-      'description': description,
-      'publisher': {
-        '@type': 'Organization',
-        'name': 'SpringWeb Solutions',
-        'logo': ogImage
-      },
-      'potentialAction': {
-        '@type': 'SearchAction',
-        'target': 'https://careers.springwebsolutions.in/jobs?q={search_term_string}',
-        'query-input': 'required name=search_term_string'
-      }
+      '@graph': [
+        {
+          '@type': 'WebSite',
+          '@id': 'https://careers.springwebsolutions.in/#website',
+          'name': 'SpringWeb Careers & Education Hub',
+          'url': 'https://careers.springwebsolutions.in',
+          'description': description,
+          'publisher': {
+            '@type': 'Organization',
+            'name': 'Spring Web Solutions',
+            'logo': ogImage,
+            'url': 'https://www.springwebsolutions.in'
+          },
+          'potentialAction': {
+            '@type': 'SearchAction',
+            'target': 'https://careers.springwebsolutions.in/jobs?q={search_term_string}',
+            'query-input': 'required name=search_term_string'
+          }
+        },
+        {
+          '@type': 'EducationalOrganization',
+          '@id': 'https://careers.springwebsolutions.in/#organization',
+          'name': 'SpringWeb Tech Academy & Careers',
+          'url': 'https://careers.springwebsolutions.in',
+          'parentOrganization': {
+            '@type': 'Organization',
+            'name': 'Spring Web Solutions'
+          },
+          'knowsAbout': [
+            'Software Engineering Careers',
+            'Full Stack Web Development Roadmaps',
+            'Android & iOS Mobile App Tutorials',
+            'Interview Preparation & Coding Guides'
+          ]
+        }
+      ]
     }
 
     const finalSchema = schemaJson || defaultSchema
