@@ -534,7 +534,16 @@ const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): Sec
     cleanedDbSections = cleanedDbSections.filter(s => s.type !== 'pricing_summary' && s.type !== 'pricing_table')
   }
 
-  const defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
+  // Strictly remove hero section from plans and pricing pages
+  if (slug === 'plans' || slug === 'pricing') {
+    cleanedDbSections = cleanedDbSections.filter(s => s.type !== 'hero')
+  }
+
+  let defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
+  if (slug === 'plans' || slug === 'pricing') {
+    defaultSections = defaultSections.filter(s => s.type !== 'hero')
+  }
+
   const sharedStates = getSharedSectionStates()
 
   // Build map of DB sections by type (Supabase rows take priority)

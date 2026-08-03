@@ -8,8 +8,12 @@ import { Footer } from '@/components/layout/Footer'
 import { ShieldAlert, Database, Terminal, ArrowRight, Loader2 } from 'lucide-react'
 
 // Helper to guarantee section order and layout consistency
-const ensureFullSections = (_slug: string, fetchedSections: SectionData[]): SectionData[] => {
-  return (fetchedSections || []).sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+const ensureFullSections = (slug: string, fetchedSections: SectionData[]): SectionData[] => {
+  let list = fetchedSections || []
+  if (slug === 'plans' || slug === 'pricing') {
+    list = list.filter(s => s.type !== 'hero')
+  }
+  return list.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
 }
 
 export const DynamicPage: React.FC = () => {
