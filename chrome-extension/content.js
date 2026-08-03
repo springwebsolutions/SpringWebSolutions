@@ -1,15 +1,17 @@
 /**
- * SpringWeb Instant Lead Scraper - Ultimate Google Maps & Search Scraper
- * Extracts Name, Phone (+91/Local/Landline/Mobile), Email, Website, Category, Address,
- * Rating, and Reviews from DOM feed cards, data attributes, and active detail pane.
+ * SpringWeb Instant Lead Scraper - Google Maps & Detail Pane Deep Scraper
+ * Accurately extracts Name, Phone (from Detail Pane .CsEnBe, .Io6YTe, button[aria-label^="Phone:"], a[href^="tel:"]),
+ * Email, Website, Category, Address, Rating, and Reviews.
  */
 
 (() => {
   // Listen for extraction commands
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'SCRAPE_MAPS_LEADS') {
-      const results = extractGoogleMapsLeads()
-      sendResponse({ status: 'success', count: results.length, data: results })
+      scrapeWithDeepDetailScan().then(results => {
+        sendResponse({ status: 'success', count: results.length, data: results })
+      })
+      return true // Async response
     } else if (request.action === 'AUTO_SCROLL_FEED') {
       autoScrollAndExtract(request.maxScrolls || 12, sendResponse)
       return true // Async response
@@ -23,18 +25,18 @@
   const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g
 
   /**
-   * Powerful Phone Number Extractor
-   * Matches Indian Mobiles (+91 98948 05812 / 09894805812 / 9894805812)
-   * and Landlines (04252 220123 / 044 24341234)
+   * Phone Number Extractor
+   * Handles Indian formats: 073730 76003, 076039 53987, 090951 90555, +91 98948 05812, 04252 220123
    */
   function extractPhoneFromText(text) {
     if (!text) return null
-    // Replace non-breaking spaces with normal spaces
+    // Clean string & replace non-breaking spaces
     const cleanStr = text.replace(/[\u00a0\u1680\u180e\u2000-\u200b\u202f\u205f\u3000]/g, ' ')
 
     const patterns = [
       /(?:\+?91[\s.-]?)?[6-9]\d{4}[\s.-]?\d{5}/g,              // +91 98948 05812 or 98948 05812
-      /0\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}/g,                // 098948 05812 or 04252 220 123
+      /0\d{4}[\s.-]?\d{5,6}/g,                                // 073730 76003 or 076039 53987 or 090951 90555
+      /0\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}/g,                // 04252 220 123 landlines
       /(?:\+?91[\s.-]?)?\d{3,5}[\s.-]?\d{3,5}[\s.-]?\d{3,5}/g  // Generic grouped numbers
     ]
 
@@ -44,7 +46,6 @@
         for (const m of matches) {
           const digits = m.replace(/[^0-9]/g, '')
           if (digits.length >= 10 && digits.length <= 12) {
-            // Exclude common non-phone number strings (e.g. zip codes, timestamps)
             if (digits.startsWith('6') || digits.startsWith('7') || digits.startsWith('8') || digits.startsWith('9') || digits.startsWith('0') || digits.startsWith('91')) {
               if (digits.length === 10) return '+91 ' + digits.slice(0, 5) + ' ' + digits.slice(5)
               if (digits.length === 11 && digits.startsWith('0')) return '+91 ' + digits.slice(1, 6) + ' ' + digits.slice(6)
@@ -59,94 +60,95 @@
     return null
   }
 
+  async function scrapeWithDeepDetailScan() {
+    const leads = extractGoogleMapsLeads()
+
+    // If leads are missing phone numbers, perform automated click sequence to fetch detail pane phone numbers
+    for (let i = 0; i < Math.min(leads.length, 12); i++) {
+      if (!leads[i].phone) {
+        const itemEl = leads[i]._domElement
+        if (itemEl) {
+          const clickTarget = itemEl.querySelector('a.hfpxzc, a[href*="/maps/place"], .qBF1Pd')
+          if (clickTarget) {
+            try {
+              clickTarget.click()
+              await new Promise(r => setTimeout(r, 400)) // Pause for Google Maps Detail Pane to update
+
+              // Extract from active detail pane
+              const activePhone = getDetailPanePhone()
+              const activeWebsite = getDetailPaneWebsite()
+              const activeAddress = getDetailPaneAddress()
+
+              if (activePhone) leads[i].phone = activePhone
+              if (activeWebsite && !leads[i].website) leads[i].website = activeWebsite
+              if (activeAddress && (!leads[i].address || leads[i].address.length < 5)) leads[i].address = activeAddress
+            } catch (e) {}
+          }
+        }
+      }
+    }
+
+    // Clean internal DOM reference before returning payload
+    return leads.map(({ _domElement, ...rest }) => rest)
+  }
+
   function extractGoogleMapsLeads() {
     const leads = []
     const seenNames = new Set()
 
-    // Selector strategies for feed items & search cards
     const feedItems = document.querySelectorAll(
-      'div[role="feed"] > div, .Nv2pk, .hfjdbl, div[data-result-index], a[href*="/maps/place"], .Vkpfe'
+      'div[role="feed"] > div, .Nv2pk, .hfjdbl, div[data-result-index], a[href*="/maps/place"]'
     )
 
     feedItems.forEach((item, idx) => {
       try {
         // 1. Business Name
-        const nameEl = item.querySelector('.qBF1Pd, .fontHeadlineSmall, .section-result-title, h3, a[href*="/maps/place"], .OSrAfe')
+        const nameEl = item.querySelector('.qBF1Pd, .fontHeadlineSmall, .section-result-title, h3, a[href*="/maps/place"]')
         const name = nameEl ? nameEl.textContent.trim() : ''
 
         if (!name || name.length < 2 || seenNames.has(name.toLowerCase())) return
         seenNames.add(name.toLowerCase())
 
-        // 2. Extract Phone Number from 5 Different Layers
+        // 2. Extract Phone from Feed DOM Signals
         let phone = null
 
-        // Layer A: href="tel:..."
+        // Signal A: href="tel:..."
         const telLink = item.querySelector('a[href^="tel:"]')
-        if (telLink) {
-          phone = extractPhoneFromText(telLink.getAttribute('href'))
-        }
+        if (telLink) phone = extractPhoneFromText(telLink.getAttribute('href'))
 
-        // Layer B: data-item-id containing phone/tel (Google Maps data attribute)
+        // Signal B: aria-label containing Phone/Call
         if (!phone) {
-          const dataPhoneEl = item.querySelector('[data-item-id*="phone"], [data-item-id*="tel"]')
-          if (dataPhoneEl) {
-            const attrVal = dataPhoneEl.getAttribute('data-item-id') || ''
-            phone = extractPhoneFromText(attrVal)
-          }
-        }
-
-        // Layer C: aria-label or data-tooltip attributes
-        if (!phone) {
-          const phoneElements = item.querySelectorAll('[aria-label*="Phone"], [aria-label*="phone"], [aria-label*="Call"], [aria-label*="call"], [data-tooltip*="phone"], [aria-label*="+91"], [aria-label*="042"], [aria-label*="09"]')
-          phoneElements.forEach(el => {
-            if (!phone) {
-              const label = el.getAttribute('aria-label') || el.getAttribute('data-tooltip') || el.innerText || ''
-              phone = extractPhoneFromText(label)
-            }
+          const phoneEls = item.querySelectorAll('button[aria-label*="Phone"], button[aria-label*="phone"], button[aria-label*="Call"], [data-tooltip*="phone"]')
+          phoneEls.forEach(el => {
+            if (!phone) phone = extractPhoneFromText(el.getAttribute('aria-label') || el.getAttribute('data-tooltip') || el.innerText)
           })
         }
 
-        // Layer D: Line-by-line innerText parsing
-        if (!phone) {
-          const lines = (item.innerText || item.textContent || '').split('\n')
-          for (const line of lines) {
-            const found = extractPhoneFromText(line)
-            if (found) {
-              phone = found
-              break
-            }
-          }
-        }
-
-        // Layer E: Full text regex scan
+        // Signal C: Full Text Parsing
         if (!phone) {
           phone = extractPhoneFromText(item.innerText || item.textContent || '')
         }
 
-        // 3. Extract Email Address
+        // 3. Email
         let email = null
         const mailtoLink = item.querySelector('a[href^="mailto:"]')
-        if (mailtoLink) {
-          email = mailtoLink.getAttribute('href').replace(/^mailto:/i, '').split('?')[0].trim()
-        }
+        if (mailtoLink) email = mailtoLink.getAttribute('href').replace(/^mailto:/i, '').split('?')[0].trim()
         if (!email) {
-          const textMatches = (item.innerText || '').match(EMAIL_REGEX)
-          if (textMatches && textMatches.length > 0) {
-            email = textMatches[0]
-          }
+          const emailMatches = (item.innerText || '').match(EMAIL_REGEX)
+          if (emailMatches) email = emailMatches[0]
         }
 
-        // 4. Rating & Reviews Count
-        const ratingEl = item.querySelector('.MW450e, .fontBodyMedium span[role="img"], .cards-rating-score, .zTIq1c')
+        // 4. Rating & Reviews
+        const ratingEl = item.querySelector('.MW450e, .fontBodyMedium span[role="img"], .cards-rating-score')
         const ratingText = ratingEl ? ratingEl.textContent.trim() : ''
         const rating = parseFloat(ratingText) || 4.5
 
-        const reviewsEl = item.querySelector('.UY7F9, .fontBodyMedium span:nth-child(2), .section-result-num-ratings, .RhR3fd')
+        const reviewsEl = item.querySelector('.UY7F9, .fontBodyMedium span:nth-child(2), .section-result-num-ratings')
         const reviewsText = reviewsEl ? reviewsEl.textContent.replace(/[^0-9]/g, '') : ''
         const reviews_count = parseInt(reviewsText, 10) || 15
 
         // 5. Category & Address
-        const detailsContainer = item.querySelectorAll('.W4Efsd, .fontBodyMedium, .rllt9l')
+        const detailsContainer = item.querySelectorAll('.W4Efsd, .fontBodyMedium')
         let category = 'General Business'
         let address = ''
 
@@ -154,23 +156,19 @@
           const text = detail.textContent.trim()
           if (text.includes('·')) {
             const parts = text.split('·')
-            if (parts[0] && parts[0].length < 35 && !category.includes('General')) {
-              category = parts[0].trim()
-            }
-            if (parts[1] && !address) {
-              address = parts[1].trim()
-            }
+            if (parts[0] && parts[0].length < 35 && !category.includes('General')) category = parts[0].trim()
+            if (parts[1] && !address) address = parts[1].trim()
           }
         })
 
-        // 6. Website Link
+        // 6. Website
         const websiteEl = item.querySelector('a[data-value="Website"], a[href^="http"]:not([href*="google.com"])')
         let website = websiteEl ? websiteEl.getAttribute('href') : null
         if (website && website.includes('google.com/url?q=')) {
           try {
             const urlParams = new URLSearchParams(website.split('?')[1])
             website = urlParams.get('q') || website
-          } catch(e) {}
+          } catch (e) {}
         }
 
         // 7. Location Context
@@ -202,64 +200,80 @@
           country: 'India',
           rating,
           reviews_count,
-          source: 'Google Maps Extension Scraper'
+          source: 'Google Maps Extension Scraper',
+          _domElement: item
         })
-      } catch (err) {
-        // Skip anomaly card
-      }
+      } catch (err) {}
     })
-
-    // Also check currently opened Detail Pane
-    const activeDetail = extractActiveDetailPane()
-    if (activeDetail && activeDetail.name && !seenNames.has(activeDetail.name.toLowerCase())) {
-      leads.unshift(activeDetail)
-    }
 
     return leads
   }
 
+  // Extractors for Active Detail Pane
+  function getDetailPanePhone() {
+    // Exact Google Maps detail pane phone selectors discovered via DOM analysis
+    // <button aria-label="Phone: 073730 76003 "> or <div class="Io6YTe fontBodyMedium">073730 76003</div> or <a href="tel:07373076003">
+    const phoneBtn = document.querySelector(
+      'button[aria-label*="Phone:"], button[aria-label*="Phone"], button[aria-label*="phone"], a[href^="tel:"], button[data-tooltip*="phone"], .CsEnBe'
+    )
+    if (phoneBtn) {
+      const text = phoneBtn.getAttribute('aria-label') || phoneBtn.getAttribute('data-tooltip') || phoneBtn.innerText || ''
+      const phone = extractPhoneFromText(text)
+      if (phone) return phone
+    }
+
+    // Class .Io6YTe contains visible phone text inside detail pane
+    const ioTextEls = document.querySelectorAll('.Io6YTe')
+    for (const el of ioTextEls) {
+      const found = extractPhoneFromText(el.innerText || el.textContent)
+      if (found) return found
+    }
+
+    const detailPane = document.querySelector('div[role="main"], div[tabindex="-1"], .DUwDvf')
+    if (detailPane) {
+      return extractPhoneFromText(detailPane.innerText || detailPane.textContent || '')
+    }
+
+    return null
+  }
+
+  function getDetailPaneWebsite() {
+    const webEl = document.querySelector(
+      'a[data-tooltip*="website"], a[data-tooltip*="Website"], a[aria-label*="website"], a[aria-label*="Website"], a[href^="http"]:not([href*="google.com"])'
+    )
+    return webEl ? webBtnHref(webEl) : null
+  }
+
+  function webBtnHref(el) {
+    let href = el.getAttribute('href') || ''
+    if (href.includes('google.com/url?q=')) {
+      try {
+        const urlParams = new URLSearchParams(href.split('?')[1])
+        return urlParams.get('q') || href
+      } catch (e) {}
+    }
+    return href
+  }
+
+  function getDetailPaneAddress() {
+    const addrBtn = document.querySelector('button[data-tooltip*="address"], button[aria-label*="Address"], button[aria-label*="address"]')
+    return addrBtn ? (addrBtn.getAttribute('aria-label') || addrBtn.innerText).replace(/^Address:\s*/i, '').trim() : ''
+  }
+
   function extractActiveDetailPane() {
     try {
-      const detailPane = document.querySelector('div[role="main"], div[tabindex="-1"], .DUwDvf')
-      if (!detailPane) return null
-
-      const nameEl = detailPane.querySelector('h1, .DUwDvf, .fontHeadlineLarge')
+      const nameEl = document.querySelector('h1, .DUwDvf, .fontHeadlineLarge')
       const name = nameEl ? nameEl.textContent.trim() : ''
       if (!name) return null
-
-      // Phone in detail pane
-      let phone = null
-      const phoneBtn = detailPane.querySelector('button[data-tooltip*="phone"], button[data-tooltip*="Phone"], button[aria-label*="Phone"], button[aria-label*="phone"], button[aria-label*="Call"], [data-item-id*="phone"]')
-      if (phoneBtn) {
-        const text = phoneBtn.getAttribute('aria-label') || phoneBtn.getAttribute('data-tooltip') || phoneBtn.getAttribute('data-item-id') || phoneBtn.innerText || ''
-        phone = extractPhoneFromText(text)
-      }
-
-      if (!phone) {
-        phone = extractPhoneFromText(detailPane.innerText || detailPane.textContent || '')
-      }
-
-      // Email in detail pane
-      let email = null
-      const emailMatches = (detailPane.innerText || '').match(EMAIL_REGEX)
-      if (emailMatches) email = emailMatches[0]
-
-      // Website in detail pane
-      const webBtn = detailPane.querySelector('a[data-tooltip*="website"], a[data-tooltip*="Website"], a[aria-label*="website"], a[href^="http"]:not([href*="google.com"])')
-      let website = webBtn ? webBtn.getAttribute('href') : null
-
-      // Address
-      const addrBtn = detailPane.querySelector('button[data-tooltip*="address"], button[aria-label*="Address"]')
-      const address = addrBtn ? (addrBtn.getAttribute('aria-label') || addrBtn.innerText).replace(/^Address:\s*/i, '').trim() : ''
 
       return {
         id: `ext-detail-${Date.now()}`,
         name,
         category: 'Business',
-        phone: phone || null,
-        email: email || null,
-        website: website || null,
-        address: address || 'Tamil Nadu',
+        phone: getDetailPanePhone(),
+        email: null,
+        website: getDetailPaneWebsite(),
+        address: getDetailPaneAddress() || 'Tamil Nadu',
         city: 'Udumalpet',
         district: 'Tiruppur',
         state: 'Tamil Nadu',
@@ -281,13 +295,13 @@
     }
 
     let scrollsDone = 0
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       feed.scrollTop += 800
       scrollsDone++
 
       if (scrollsDone >= maxScrolls) {
         clearInterval(interval)
-        const leads = extractGoogleMapsLeads()
+        const leads = await scrapeWithDeepDetailScan()
         sendResponse({ status: 'success', count: leads.length, data: leads })
       }
     }, 500)
