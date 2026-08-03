@@ -1,7 +1,7 @@
 /**
- * SpringWeb Instant Lead Scraper - Enhanced Google Maps Scraper
- * Extracts Name, Phone (+91/Local/Tel links), Email (mailto/text), Website, Category, Address,
- * Rating, and Reviews from both feed list cards and active detail pane.
+ * SpringWeb Instant Lead Scraper - Ultimate Google Maps & Search Scraper
+ * Extracts Name, Phone (+91/Local/Landline/Mobile), Email, Website, Category, Address,
+ * Rating, and Reviews from DOM feed cards, data attributes, and active detail pane.
  */
 
 (() => {
@@ -19,75 +19,108 @@
     }
   })
 
-  // Comprehensive Regex Patterns
-  const PHONE_REGEX = /(?:\+?91[\s.-]?)?(?:\(?0?\d{2,5}\)?[\s.-]?)?\d{3,5}[\s.-]?\d{3,5}/g
+  // Email Pattern
   const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g
 
-  function cleanPhoneText(raw) {
-    if (!raw) return null
-    // Remove "Phone: ", "Call ", "tel:", non-digit/plus chars
-    let cleaned = raw.replace(/^tel:/i, '').replace(/^call/i, '').replace(/[^0-9+]/g, '')
-    if (cleaned.startsWith('91') && cleaned.length === 12) {
-      cleaned = '+' + cleaned
-    } else if (cleaned.length === 10) {
-      cleaned = '+91' + cleaned
+  /**
+   * Powerful Phone Number Extractor
+   * Matches Indian Mobiles (+91 98948 05812 / 09894805812 / 9894805812)
+   * and Landlines (04252 220123 / 044 24341234)
+   */
+  function extractPhoneFromText(text) {
+    if (!text) return null
+    // Replace non-breaking spaces with normal spaces
+    const cleanStr = text.replace(/[\u00a0\u1680\u180e\u2000-\u200b\u202f\u205f\u3000]/g, ' ')
+
+    const patterns = [
+      /(?:\+?91[\s.-]?)?[6-9]\d{4}[\s.-]?\d{5}/g,              // +91 98948 05812 or 98948 05812
+      /0\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}/g,                // 098948 05812 or 04252 220 123
+      /(?:\+?91[\s.-]?)?\d{3,5}[\s.-]?\d{3,5}[\s.-]?\d{3,5}/g  // Generic grouped numbers
+    ]
+
+    for (const pattern of patterns) {
+      const matches = cleanStr.match(pattern)
+      if (matches) {
+        for (const m of matches) {
+          const digits = m.replace(/[^0-9]/g, '')
+          if (digits.length >= 10 && digits.length <= 12) {
+            // Exclude common non-phone number strings (e.g. zip codes, timestamps)
+            if (digits.startsWith('6') || digits.startsWith('7') || digits.startsWith('8') || digits.startsWith('9') || digits.startsWith('0') || digits.startsWith('91')) {
+              if (digits.length === 10) return '+91 ' + digits.slice(0, 5) + ' ' + digits.slice(5)
+              if (digits.length === 11 && digits.startsWith('0')) return '+91 ' + digits.slice(1, 6) + ' ' + digits.slice(6)
+              if (digits.length === 12 && digits.startsWith('91')) return '+' + digits.slice(0, 2) + ' ' + digits.slice(2, 7) + ' ' + digits.slice(7)
+              return m.trim()
+            }
+          }
+        }
+      }
     }
-    return cleaned.length >= 8 ? cleaned : null
+
+    return null
   }
 
   function extractGoogleMapsLeads() {
     const leads = []
     const seenNames = new Set()
 
-    // Selector strategies for feed items
+    // Selector strategies for feed items & search cards
     const feedItems = document.querySelectorAll(
-      'div[role="feed"] > div, .Nv2pk, .hfjdbl, div[data-result-index], a[href*="/maps/place"]'
+      'div[role="feed"] > div, .Nv2pk, .hfjdbl, div[data-result-index], a[href*="/maps/place"], .Vkpfe'
     )
 
     feedItems.forEach((item, idx) => {
       try {
         // 1. Business Name
-        const nameEl = item.querySelector('.qBF1Pd, .fontHeadlineSmall, .section-result-title, h3, a[href*="/maps/place"]')
+        const nameEl = item.querySelector('.qBF1Pd, .fontHeadlineSmall, .section-result-title, h3, a[href*="/maps/place"], .OSrAfe')
         const name = nameEl ? nameEl.textContent.trim() : ''
 
         if (!name || name.length < 2 || seenNames.has(name.toLowerCase())) return
         seenNames.add(name.toLowerCase())
 
-        // 2. Extract Phone Number from multiple DOM signals
+        // 2. Extract Phone Number from 5 Different Layers
         let phone = null
 
-        // Signal A: tel: links
+        // Layer A: href="tel:..."
         const telLink = item.querySelector('a[href^="tel:"]')
         if (telLink) {
-          phone = cleanPhoneText(telLink.getAttribute('href'))
+          phone = extractPhoneFromText(telLink.getAttribute('href'))
         }
 
-        // Signal B: aria-label containing phone/call
+        // Layer B: data-item-id containing phone/tel (Google Maps data attribute)
         if (!phone) {
-          const phoneButtons = item.querySelectorAll('button[aria-label*="Phone"], button[aria-label*="phone"], button[aria-label*="Call"], button[aria-label*="call"], button[data-tooltip*="phone"]')
-          phoneButtons.forEach(btn => {
-            const label = btn.getAttribute('aria-label') || btn.getAttribute('data-tooltip') || ''
-            const match = label.match(PHONE_REGEX)
-            if (match && !phone) {
-              phone = cleanPhoneText(match[0])
+          const dataPhoneEl = item.querySelector('[data-item-id*="phone"], [data-item-id*="tel"]')
+          if (dataPhoneEl) {
+            const attrVal = dataPhoneEl.getAttribute('data-item-id') || ''
+            phone = extractPhoneFromText(attrVal)
+          }
+        }
+
+        // Layer C: aria-label or data-tooltip attributes
+        if (!phone) {
+          const phoneElements = item.querySelectorAll('[aria-label*="Phone"], [aria-label*="phone"], [aria-label*="Call"], [aria-label*="call"], [data-tooltip*="phone"], [aria-label*="+91"], [aria-label*="042"], [aria-label*="09"]')
+          phoneElements.forEach(el => {
+            if (!phone) {
+              const label = el.getAttribute('aria-label') || el.getAttribute('data-tooltip') || el.innerText || ''
+              phone = extractPhoneFromText(label)
             }
           })
         }
 
-        // Signal C: Full Text Nodes & Regex scan across card text
+        // Layer D: Line-by-line innerText parsing
         if (!phone) {
-          const fullText = item.innerText || item.textContent || ''
-          const matches = fullText.match(PHONE_REGEX)
-          if (matches && matches.length > 0) {
-            // Find first match with >= 10 digits
-            for (const m of matches) {
-              const digitsOnly = m.replace(/[^0-9]/g, '')
-              if (digitsOnly.length >= 10 && digitsOnly.length <= 13) {
-                phone = cleanPhoneText(m)
-                break
-              }
+          const lines = (item.innerText || item.textContent || '').split('\n')
+          for (const line of lines) {
+            const found = extractPhoneFromText(line)
+            if (found) {
+              phone = found
+              break
             }
           }
+        }
+
+        // Layer E: Full text regex scan
+        if (!phone) {
+          phone = extractPhoneFromText(item.innerText || item.textContent || '')
         }
 
         // 3. Extract Email Address
@@ -104,16 +137,16 @@
         }
 
         // 4. Rating & Reviews Count
-        const ratingEl = item.querySelector('.MW450e, .fontBodyMedium span[role="img"], .cards-rating-score')
+        const ratingEl = item.querySelector('.MW450e, .fontBodyMedium span[role="img"], .cards-rating-score, .zTIq1c')
         const ratingText = ratingEl ? ratingEl.textContent.trim() : ''
         const rating = parseFloat(ratingText) || 4.5
 
-        const reviewsEl = item.querySelector('.UY7F9, .fontBodyMedium span:nth-child(2), .section-result-num-ratings')
+        const reviewsEl = item.querySelector('.UY7F9, .fontBodyMedium span:nth-child(2), .section-result-num-ratings, .RhR3fd')
         const reviewsText = reviewsEl ? reviewsEl.textContent.replace(/[^0-9]/g, '') : ''
         const reviews_count = parseInt(reviewsText, 10) || 15
 
         // 5. Category & Address
-        const detailsContainer = item.querySelectorAll('.W4Efsd, .fontBodyMedium')
+        const detailsContainer = item.querySelectorAll('.W4Efsd, .fontBodyMedium, .rllt9l')
         let category = 'General Business'
         let address = ''
 
@@ -140,7 +173,7 @@
           } catch(e) {}
         }
 
-        // 7. Location context (City/State)
+        // 7. Location Context
         const searchInput = document.querySelector('#searchboxinput, input[name="q"]')
         const searchVal = searchInput ? searchInput.value : document.title
 
@@ -172,7 +205,7 @@
           source: 'Google Maps Extension Scraper'
         })
       } catch (err) {
-        // Skip anomaly item
+        // Skip anomaly card
       }
     })
 
@@ -185,7 +218,6 @@
     return leads
   }
 
-  // Extract from Google Maps Active Right/Left Detail Pane
   function extractActiveDetailPane() {
     try {
       const detailPane = document.querySelector('div[role="main"], div[tabindex="-1"], .DUwDvf')
@@ -197,24 +229,14 @@
 
       // Phone in detail pane
       let phone = null
-      const phoneBtn = detailPane.querySelector('button[data-tooltip*="phone"], button[data-tooltip*="Phone"], button[aria-label*="Phone"], button[aria-label*="phone"], button[aria-label*="Call"]')
+      const phoneBtn = detailPane.querySelector('button[data-tooltip*="phone"], button[data-tooltip*="Phone"], button[aria-label*="Phone"], button[aria-label*="phone"], button[aria-label*="Call"], [data-item-id*="phone"]')
       if (phoneBtn) {
-        const text = phoneBtn.getAttribute('aria-label') || phoneBtn.getAttribute('data-tooltip') || phoneBtn.innerText || ''
-        const match = text.match(PHONE_REGEX)
-        if (match) phone = cleanPhoneText(match[0])
+        const text = phoneBtn.getAttribute('aria-label') || phoneBtn.getAttribute('data-tooltip') || phoneBtn.getAttribute('data-item-id') || phoneBtn.innerText || ''
+        phone = extractPhoneFromText(text)
       }
 
       if (!phone) {
-        const matches = (detailPane.innerText || '').match(PHONE_REGEX)
-        if (matches) {
-          for (const m of matches) {
-            const digits = m.replace(/[^0-9]/g, '')
-            if (digits.length >= 10 && digits.length <= 13) {
-              phone = cleanPhoneText(m)
-              break
-            }
-          }
-        }
+        phone = extractPhoneFromText(detailPane.innerText || detailPane.textContent || '')
       }
 
       // Email in detail pane
