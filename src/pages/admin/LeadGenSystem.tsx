@@ -36,7 +36,7 @@ export const LeadGenSystem: React.FC = () => {
   } = useLeadGenStore()
 
   // Navigation tab state
-  const [activeTab, setActiveTab] = useState<'overview' | 'finder' | 'database' | 'audit' | 'outreach' | 'backup'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'extension' | 'finder' | 'database' | 'audit' | 'outreach' | 'backup'>('overview')
 
   // Search & Filter state for Database tab
   const [searchTerm, setSearchTerm] = useState('')
@@ -265,6 +265,7 @@ export const LeadGenSystem: React.FC = () => {
       <div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-2">
         {[
           { id: 'overview', label: 'Dashboard & AI Budget', icon: BarChart2 },
+          { id: 'extension', label: 'Chrome Extension Scraper', icon: Cpu, badge: 'Live Sync' },
           { id: 'finder', label: 'Lead Finder (Maps & Jobs)', icon: Search },
           { id: 'database', label: `Lead Database (${businesses.length})`, icon: Database },
           { id: 'audit', label: 'Website Audit & Scoring', icon: Globe },
@@ -473,6 +474,134 @@ export const LeadGenSystem: React.FC = () => {
                   )}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB: CHROME EXTENSION SCRAPER & REAL-TIME SYNC */}
+      {activeTab === 'extension' && (
+        <div className="space-y-8 animate-fade-in">
+          {/* Extension Header Banner */}
+          <div className="glass-panel p-8 rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-black space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase">
+                  <CheckCircle2 size={14} />
+                  <span>Real-Time Google Maps Scraper Ready</span>
+                </div>
+                <h2 className="text-2xl font-bold text-white font-display uppercase tracking-tight">
+                  SpringWeb Instant Lead Scraper Extension (v1.1)
+                </h2>
+                <p className="text-xs text-slate-400 leading-relaxed max-w-2xl">
+                  Scrape business leads directly from any Google Maps search results in real time. Automatically normalizes phone numbers, calculates lead scores, and syncs clean leads live into this Admin Panel.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <a
+                  href="/chrome-extension/manifest.json"
+                  target="_blank"
+                  download="manifest.json"
+                  className="w-full sm:w-auto px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-emerald-500/20"
+                >
+                  <Download size={16} />
+                  <span>Extension Location: /chrome-extension</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/10">
+              <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                <div className="text-xs font-bold text-slate-400 uppercase">Real-Time Webhook Endpoint</div>
+                <div className="text-xs font-mono text-emerald-400 truncate">https://www.springwebsolutions.in/api/lead-sync</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                <div className="text-xs font-bold text-slate-400 uppercase">Target Search Engine</div>
+                <div className="text-xs font-semibold text-white">Google Maps &amp; Local Pack Search</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                <div className="text-xs font-bold text-slate-400 uppercase">Phone Deduplication Engine</div>
+                <div className="text-xs font-semibold text-emerald-400">normalized_phone (10-Digit Primary Key)</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Installation Instructions */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-7 glass-panel p-6 rounded-2xl border border-white/10 bg-white/5 space-y-6">
+              <h3 className="font-bold text-white text-lg font-display">1-Minute Chrome Extension Installation Guide</h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-black/40 border border-white/10">
+                  <div className="h-7 w-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">1</div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Open Chrome Extensions Manager</div>
+                    <div className="text-xs text-slate-400 mt-0.5">Open Google Chrome and navigate to <code className="text-emerald-400 bg-white/5 px-1 py-0.5 rounded">chrome://extensions</code> in your address bar.</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-black/40 border border-white/10">
+                  <div className="h-7 w-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">2</div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Enable Developer Mode</div>
+                    <div className="text-xs text-slate-400 mt-0.5">Toggle the <strong className="text-white">Developer mode</strong> switch in the top-right corner of the Chrome page.</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-black/40 border border-white/10">
+                  <div className="h-7 w-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 font-bold text-xs flex items-center justify-center shrink-0">3</div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Load Unpacked Extension Folder</div>
+                    <div className="text-xs text-slate-400 mt-0.5">Click <strong className="text-white">Load unpacked</strong> button and select the workspace folder: <code className="text-emerald-400 bg-white/5 px-1 py-0.5 rounded">.../SpringWeb Solutions/chrome-extension</code></div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-black/40 border border-white/10">
+                  <div className="h-7 w-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center justify-center shrink-0">4</div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Scrape &amp; Sync in Real Time!</div>
+                    <div className="text-xs text-slate-400 mt-0.5">Open any Google Maps search (e.g. <em>Hotels in Udumalpet</em>) and click the extension icon to scrape and sync!</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Scraped Live Leads Stream */}
+            <div className="lg:col-span-5 glass-panel p-6 rounded-2xl border border-white/10 bg-white/5 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-white text-base font-display">Live Synced Leads Stream</h3>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  {businesses.filter(b => b.source.includes('Extension')).length} Extension Leads
+                </span>
+              </div>
+
+              <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+                {businesses.filter(b => b.source.includes('Extension')).length === 0 ? (
+                  <div className="text-center py-12 space-y-2">
+                    <Cpu size={32} className="mx-auto text-slate-600 animate-pulse" />
+                    <div className="text-xs font-semibold text-slate-300">Waiting for live extension sync...</div>
+                    <div className="text-[11px] text-slate-500 max-w-xs mx-auto">Use the Chrome extension on google.com/maps to instantly stream clean leads into this console.</div>
+                  </div>
+                ) : (
+                  businesses.filter(b => b.source.includes('Extension')).map(lead => (
+                    <div key={lead.id} className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-bold text-white">{lead.name}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">📍 {lead.city}, {lead.state} &bull; 📞 {lead.phone || 'No Phone'}</div>
+                      </div>
+                      <div className="text-right">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          {lead.lead_score} pts
+                        </span>
+                        <div className="text-[9px] text-slate-500 mt-1">{new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
         </div>

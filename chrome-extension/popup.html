@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpringWeb Instant Lead Scraper</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div className="app-container">
+    <!-- Header -->
+    <header className="header">
+      <div className="brand">
+        <div className="logo-icon">🟢</div>
+        <div>
+          <h1>SpringWeb Scraper</h1>
+          <span className="subtitle">Real-Time Google Maps Lead Engine</span>
+        </div>
+      </div>
+      <div className="status-badge" id="statusBadge">Connected</div>
+    </header>
+
+    <!-- Controls & Trigger Actions -->
+    <main className="content">
+      <div className="action-card">
+        <button id="btnScrapePage" className="btn btn-primary">
+          <span className="icon">⚡</span>
+          <span>Scrape Current Maps Page</span>
+        </button>
+
+        <button id="btnAutoScroll" className="btn btn-secondary">
+          <span className="icon">🔄</span>
+          <span>Auto-Scroll &amp; Scrape Next 50</span>
+        </button>
+      </div>
+
+      <!-- Live Counters -->
+      <div className="metrics-grid">
+        <div className="metric">
+          <span className="value" id="valFound">0</span>
+          <span className="label">Found</span>
+        </div>
+        <div className="metric">
+          <span className="value" id="valCleaned">0</span>
+          <span className="label">Cleaned</span>
+        </div>
+        <div className="metric highlight">
+          <span className="value" id="valSynced">0</span>
+          <span className="label">Synced to Admin</span>
+        </div>
+      </div>
+
+      <!-- Real-Time Sync Action -->
+      <div className="sync-section">
+        <button id="btnSyncAdmin" className="btn btn-emerald" disabled>
+          <span className="icon">🚀</span>
+          <span>Sync All Cleaned Leads to Admin Panel</span>
+        </button>
+      </div>
+
+      <!-- Live Preview Table -->
+      <div className="preview-container">
+        <div className="table-header">
+          <span>Live Scraped Leads</span>
+          <span id="leadCountBadge" className="badge">0 leads</span>
+        </div>
+        <div className="table-wrapper" id="previewList">
+          <div className="empty-state">
+            <span className="empty-icon">📍</span>
+            <p>Open Google Maps search results (e.g. "Hotels in Udumalpet" or "Mills in Tiruppur") and click Scrape Current Page.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Bar -->
+      <footer className="footer-actions">
+        <button id="btnExportCsv" className="btn-text">Export CSV</button>
+        <button id="btnExportJson" className="btn-text">Export JSON</button>
+        <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" className="btn-text highlight">Open Admin Panel ↗</a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="cleaner.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
