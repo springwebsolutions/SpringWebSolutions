@@ -172,7 +172,7 @@ function App() {
         {/* Public Website Routes */}
         <Route path="/" element={<DynamicPage />} />
         <Route path="/about" element={<DynamicPage />} />
-        <Route path="/services" element={<DynamicPage />} />
+        <Route path="/services" element={<Navigate to="/#services" replace />} />
         <Route path="/plans" element={<DynamicPage />} />
         <Route path="/pricing" element={<DynamicPage />} />
         <Route path="/portfolio" element={<Portfolio />} />
