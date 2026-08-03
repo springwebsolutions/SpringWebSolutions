@@ -42,6 +42,8 @@ export const DynamicPage: React.FC = () => {
       document.title = 'About Us | Spring Web Solutions Engineering Team & Standards'
     } else if (pageSlug === 'services') {
       document.title = 'Our Services | Web Development, Android Apps, Windows Software & SEO'
+    } else if (pageSlug === 'plans' || pageSlug === 'pricing') {
+      document.title = 'Pricing Plans & Razorpay Checkout | Spring Web Solutions'
     } else if (currentPage?.title) {
       document.title = `${currentPage.title} | Spring Web Solutions`
     }
@@ -49,10 +51,10 @@ export const DynamicPage: React.FC = () => {
 
   useEffect(() => {
     if (!loading) {
-      const hash = window.location.hash.replace('#', '')
-      if (hash) {
+      const targetSectionId = (pageSlug === 'plans' || pageSlug === 'pricing') ? 'pricing' : window.location.hash.replace('#', '')
+      if (targetSectionId) {
         setTimeout(() => {
-          const targetEl = document.getElementById(hash)
+          const targetEl = document.getElementById(targetSectionId)
           if (targetEl) {
             const navOffset = 70
             const elementPosition = targetEl.getBoundingClientRect().top
@@ -109,7 +111,7 @@ export const DynamicPage: React.FC = () => {
           <div className="flex-grow flex items-center justify-center text-brand-emerald min-h-[300px] py-20">
             <Loader2 className="animate-spin" size={32} />
           </div>
-        ) : !currentPage && pageSlug !== 'home' && pageSlug !== 'about' && pageSlug !== 'services' ? (
+        ) : !currentPage && !['home', 'about', 'services', 'plans', 'pricing'].includes(pageSlug) ? (
           <div className="flex-grow flex flex-col items-center justify-center text-slate-800 dark:text-slate-200 px-4 py-16">
             <div className="p-8 rounded-none border border-grid glass-panel text-center max-w-md space-y-6 bg-brand-sand dark:bg-brand-dark">
               <ShieldAlert size={48} className="mx-auto text-brand-emerald" />
