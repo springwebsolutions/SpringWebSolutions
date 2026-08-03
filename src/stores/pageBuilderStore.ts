@@ -323,18 +323,6 @@ export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: Sec
         is_active: true
       },
       {
-        id: 'services-pricing',
-        page_id: 'default-services-id',
-        type: 'pricing_summary',
-        content: {
-          title: "Transparent & Scalable Pricing Plans",
-          subtitle: "Select a package designed for your current growth stage, or contact our engineers for bespoke enterprise software requirements."
-        },
-        styling: { padding_top: "py-16", padding_bottom: "py-16" },
-        display_order: 2,
-        is_active: true
-      },
-      {
         id: 'services-cta',
         page_id: 'default-services-id',
         type: 'cta',
@@ -347,7 +335,48 @@ export const DEFAULT_PAGES_CACHE: Record<string, { page: PageData; sections: Sec
           cta_secondary_href: "/blog"
         },
         styling: { padding_top: "py-20", padding_bottom: "py-20" },
-        display_order: 3,
+        display_order: 2,
+        is_active: true
+      }
+    ]
+  },
+  plans: {
+    page: {
+      id: 'default-plans-id',
+      title: 'Pricing Plans',
+      slug: 'plans',
+      seo_title: 'Pricing Plans & Razorpay Deposit | Spring Web Solutions',
+      seo_description: 'Transparent Pricing Plans & Razorpay Deposit Checkout for Starter, Professional, and Enterprise custom software.',
+      seo_keywords: 'software pricing, website packages, Razorpay deposit',
+      is_published: true
+    },
+    sections: [
+      {
+        id: 'plans-hero',
+        page_id: 'default-plans-id',
+        type: 'hero',
+        content: {
+          headline: "Transparent & Scalable Pricing Plans",
+          subheadline: "Choose from our starter setups, dedicated custom software packages, or Razorpay direct deposit options.",
+          cta_primary_text: "Choose Plan",
+          cta_primary_href: "#pricing",
+          cta_secondary_text: "Request Custom Quote",
+          cta_secondary_href: "/contact"
+        },
+        styling: { padding_top: "py-24", padding_bottom: "py-20" },
+        display_order: 0,
+        is_active: true
+      },
+      {
+        id: 'plans-pricing',
+        page_id: 'default-plans-id',
+        type: 'pricing_summary',
+        content: {
+          title: "Pricing Plans & Razorpay Deposit",
+          subtitle: "Select a package designed for your current growth stage, or make a direct deposit via Razorpay."
+        },
+        styling: { id: "pricing", padding_top: "py-16", padding_bottom: "py-16" },
+        display_order: 1,
         is_active: true
       }
     ]
@@ -535,12 +564,18 @@ export const setSharedSectionState = (sectionId: string, isActive: boolean, sect
 }
 
 const mergeSectionsWithDefaults = (slug: string, dbSections: SectionData[]): SectionData[] => {
+  let cleanedDbSections = dbSections || []
+  // Strictly remove pricing plans section from services, home, and about pages so they are hosted exclusively on /plans
+  if (slug === 'services' || slug === 'home' || slug === 'about') {
+    cleanedDbSections = cleanedDbSections.filter(s => s.type !== 'pricing_summary' && s.type !== 'pricing_table')
+  }
+
   const defaultSections = DEFAULT_PAGES_CACHE[slug]?.sections || []
   const sharedStates = getSharedSectionStates()
 
   // Build map of DB sections by type (Supabase rows take priority)
-  const dbTypeMap = new Map((dbSections || []).map(s => [s.type, s]))
-  const merged: SectionData[] = [...(dbSections || [])]
+  const dbTypeMap = new Map(cleanedDbSections.map(s => [s.type, s]))
+  const merged: SectionData[] = [...cleanedDbSections]
 
   // Add default sections whose type is NOT already in the DB rows
   if (defaultSections.length) {

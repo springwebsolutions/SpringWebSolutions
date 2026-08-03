@@ -68,8 +68,8 @@ export const ContentManager: React.FC = () => {
   const [newSectionType, setNewSectionType] = useState('services_summary')
   const [addLoading, setAddLoading] = useState(false)
 
-  // Pages shown in sidebar/topbar tabs — Home, Portfolio, Blog, Marketplace
-  const SIDEBAR_PAGE_SLUGS = ['home', 'portfolio', 'blog', 'marketplace']
+  // Pages shown in sidebar/topbar tabs — Home, Portfolio, Blog, Marketplace, Plans
+  const SIDEBAR_PAGE_SLUGS = ['home', 'portfolio', 'blog', 'marketplace', 'plans']
   const sidebarPages = SIDEBAR_PAGE_SLUGS
     .map(slug => {
       const found = pages.find(p => p.slug === slug)
