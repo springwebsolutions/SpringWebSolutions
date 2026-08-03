@@ -46,10 +46,10 @@ const AdminCareerGuides = lazy(() => import('@/pages/admin/AdminCareerGuides').t
 const AdminAdManager = lazy(() => import('@/pages/admin/AdminAdManager').then(m => ({ default: m.AdminAdManager })))
 const LeadGenSystem = lazy(() => import('@/pages/admin/LeadGenSystem').then(m => ({ default: m.LeadGenSystem })))
 
-// Enterprise Operations Consoles
 const AdminApplications = lazy(() => import('@/pages/admin/AdminApplications').then(m => ({ default: m.AdminApplications })))
 const LeadAnalytics = lazy(() => import('@/pages/admin/LeadAnalytics').then(m => ({ default: m.LeadAnalytics })))
 const SystemHealth = lazy(() => import('@/pages/admin/SystemHealth').then(m => ({ default: m.SystemHealth })))
+const Admin2FASetup = lazy(() => import('@/pages/admin/Admin2FASetup').then(m => ({ default: m.Admin2FASetup })))
 
 const AdminLoader: React.FC = () => (
   <div className="flex h-64 w-full items-center justify-center">
@@ -150,6 +150,7 @@ function App() {
               <Route path="contacts" element={<ContactSubmissions />} />
               <Route path="health" element={<SystemHealth />} />
               <Route path="settings" element={<SiteSettings />} />
+              <Route path="security/2fa" element={<Admin2FASetup />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>

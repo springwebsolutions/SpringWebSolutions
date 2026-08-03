@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { sendResendEmail, buildTestEmailHTML } from '@/lib/emailService'
+import { Link } from 'react-router-dom'
 import { 
   Settings, Save, Download, ShieldCheck, Mail, Send,
   Loader2, CheckCircle, AlertCircle, FileSpreadsheet, FileJson, Menu, Plus, Trash2, 
-  MessageSquare, Bot, ToggleLeft, ToggleRight, ExternalLink
+  MessageSquare, Bot, ToggleLeft, ToggleRight, ExternalLink, Shield, Smartphone, ChevronRight
 } from 'lucide-react'
 
 export const SiteSettings: React.FC = () => {
@@ -684,6 +685,38 @@ export const SiteSettings: React.FC = () => {
         <div className="pt-2 border-t border-white/5 flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
           <p className="text-xs text-slate-500">Widget toggle persistence is coming in the next release. Changes here are visual previews only.</p>
+        </div>
+      </div>
+
+      {/* Account Security & 2FA */}
+      <div className="bg-[#06080f] border border-white/10 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center gap-3 pb-3 border-b border-white/5">
+          <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+            <Shield size={18} className="text-emerald-400" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold text-white">Account Security &amp; 2FA</h2>
+            <p className="text-xs text-slate-500">Manage Two-Factor Authenticator security for your admin user</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/8">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <Smartphone size={16} className="text-emerald-400" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-white">Two-Factor Authentication (TOTP)</div>
+              <div className="text-xs text-slate-500">Protect your login with Google Authenticator or Authy</div>
+            </div>
+          </div>
+          <Link
+            to={isSuiteDomain ? '/security/2fa' : '/admin/security/2fa'}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 text-xs font-semibold transition-all"
+          >
+            <span>Configure 2FA</span>
+            <ChevronRight size={13} />
+          </Link>
         </div>
       </div>
 
