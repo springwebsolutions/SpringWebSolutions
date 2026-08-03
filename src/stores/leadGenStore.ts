@@ -178,8 +178,95 @@ interface LeadGenState {
   exportDatabaseBackup: (format: 'csv' | 'json') => void
 }
 
+export const DEFAULT_LEADS_SEED: BusinessLead[] = [
+  {
+    id: 'seed-lead-1',
+    name: 'Kirthi Senthil Mahal',
+    owner_name: 'Senthil Kumar',
+    category: 'Event Venue & Convention Hall',
+    phone: '+91 98948 05812',
+    normalized_phone: '9894805812',
+    email: 'kirthisenthilmahal@gmail.com',
+    whatsapp: '9894805812',
+    website: 'https://kirthisenthilmahal.com',
+    address: '11A, Kasturi Street, near Kuttal Thidal',
+    city: 'Udumalpet',
+    district: 'Tiruppur',
+    state: 'Tamil Nadu',
+    country: 'India',
+    rating: 4.8,
+    reviews_count: 36,
+    lead_score: 85,
+    priority: 'High',
+    source: 'Google Maps API Discovery',
+    dnc_flag: false,
+    duplicate_flag: false,
+    recommended_services: ['High-Speed Web Platform', 'WhatsApp Booking Automations', 'Local SEO'],
+    estimated_value_band: '₹100K - ₹250K+',
+    status: 'New',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: 'seed-lead-2',
+    name: 'Everest Group Enterprise',
+    owner_name: 'Rajesh Sharma',
+    category: 'Industrial Manufacturing & Exports',
+    phone: '+91 94432 11092',
+    normalized_phone: '9443211092',
+    email: 'contact@everestgroup.in',
+    whatsapp: '9443211092',
+    website: null,
+    address: 'Industrial Estate, Palani Road',
+    city: 'Udumalpet',
+    district: 'Tiruppur',
+    state: 'Tamil Nadu',
+    country: 'India',
+    rating: 4.6,
+    reviews_count: 18,
+    lead_score: 75,
+    priority: 'High',
+    source: 'Business Directory Scan',
+    dnc_flag: false,
+    duplicate_flag: false,
+    recommended_services: ['Custom ERP & CRM Suite', 'Website Development', 'API Automation'],
+    estimated_value_band: '₹100K - ₹250K+',
+    status: 'New',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: 'seed-lead-3',
+    name: 'Kongu Textiles & Spun Mills',
+    owner_name: 'P. Arumugam',
+    category: 'Textile Manufacturing',
+    phone: '+91 98421 88219',
+    normalized_phone: '9842188219',
+    email: 'info@kongutextiles.in',
+    whatsapp: '9842188219',
+    website: 'http://kongutextiles.demo',
+    address: 'Pollachi Road, SV Puram',
+    city: 'Coimbatore',
+    district: 'Coimbatore',
+    state: 'Tamil Nadu',
+    country: 'India',
+    rating: 4.4,
+    reviews_count: 24,
+    lead_score: 65,
+    priority: 'High',
+    source: 'Google Maps API',
+    dnc_flag: false,
+    duplicate_flag: false,
+    recommended_services: ['Inventory Management Software', 'Speed Optimization', 'SEO'],
+    estimated_value_band: '₹50K - ₹100K',
+    status: 'New',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+]
+
 export const useLeadGenStore = create<LeadGenState>((set, get) => ({
-  businesses: [],
+  businesses: DEFAULT_LEADS_SEED,
   audits: {},
   jobs: [],
   outreachLogs: [],
@@ -191,7 +278,10 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
   loading: false,
 
   fetchData: async () => {
-    if (!isSupabaseConfigured) return
+    if (!isSupabaseConfigured) {
+      set({ businesses: DEFAULT_LEADS_SEED })
+      return
+    }
     set({ loading: true })
     try {
       const [bizRes, jobsRes, aiRes, outreachRes] = await Promise.all([
@@ -201,7 +291,8 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         supabase.from('outreach').select('*').order('created_at', { ascending: false })
       ])
 
-      const businesses = (bizRes.data || []) as BusinessLead[]
+      const fetchedBiz = (bizRes.data || []) as BusinessLead[]
+      const businesses = fetchedBiz.length > 0 ? fetchedBiz : DEFAULT_LEADS_SEED
       const jobs = (jobsRes.data || []) as DiscoveryJob[]
       const aiUsageLogs = (aiRes.data || []) as AIUsageLog[]
       const outreachLogs = (outreachRes.data || []) as OutreachLog[]
@@ -397,7 +488,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
     const currentSpend = get().currentMonthAiSpendINR
     const budgetCap = get().monthlyBudgetCapINR
 
-    if (currentSpend + usage.estimated_cost_inr > budgetCap) {
+    if (budgetCap > 0 && currentSpend + usage.estimated_cost_inr > budgetCap) {
       alert(`⚠️ Monthly AI Hard Budget Cap Exceeded (Limit: ₹${budgetCap}). Further AI calls are blocked until next month.`)
       return false
     }
