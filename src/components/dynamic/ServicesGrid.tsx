@@ -35,37 +35,37 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
 
   const detailedServices = [
     {
-      title: '1. Website Development (Local -> State -> National -> Global)',
+      title: 'Website & Web App Development',
       subtitle: 'High-speed corporate websites, React & Next.js web applications, e-commerce storefronts, and conversion portals for businesses in Udumalpet, Tamil Nadu, India, and worldwide.',
       image: '/web_dev_vector.png',
       imageLeft: false,
       features: [
-        'Local Udumalpet & Tiruppur Web Sites',
-        'Statewide Tamil Nadu Enterprise Portals',
-        'Pan-India E-Commerce & Next.js Apps',
-        'International Web Application Development',
-        'UI / UX & Mobile Responsive Design',
-        'High-Speed Core Web Vitals Performance'
+        'Custom Web Applications & Portals',
+        'E-Commerce & Storefront Solutions',
+        'UI / UX & Responsive Mobile Design',
+        'High-Speed Core Web Vitals Performance',
+        'REST API & Backend Database Sync',
+        'Statewide & Global Scaling Architecture'
       ],
       href: '/contact'
     },
     {
-      title: '2. Custom ERP & CRM Systems (Local -> State -> National -> Global)',
+      title: 'Custom ERP & CRM Systems',
       subtitle: 'Tailor-made Enterprise Resource Planning (ERP) and Customer Relationship Management (CRM) software for inventory tracking, automated billing, client lead pipelines, and real-time WhatsApp analytics.',
       image: '/cloud_storage_vector.png',
       imageLeft: true,
       features: [
         'Custom CRM & Client Portal Software',
-        'ERP Operations & Billing Systems',
+        'ERP Operations & Automated Billing',
         'Inventory & Stock Management Tools',
         'WhatsApp Automated Notification Bots',
-        'Local Udumalpet & TN Business Dashboards',
+        'Business Intelligence & Analytics Dashboards',
         'Global Multi-Currency & Cloud Infrastructure'
       ],
       href: '/contact'
     },
     {
-      title: '3. Mobile & Desktop App Development (Local -> State -> National -> Global)',
+      title: 'Android, iOS & Windows App Development',
       subtitle: 'Native Android mobile apps (Kotlin/Flutter), iOS applications, and high-speed C# .NET Windows desktop software built for offline reliability, billing, and retail operations.',
       image: '/digital_marketing_vector.png',
       imageLeft: false,
@@ -80,7 +80,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
       href: '/contact'
     },
     {
-      title: '4. Technical SEO & Search Dominance (Local -> State -> National -> Global)',
+      title: 'Technical SEO & Search Dominance',
       subtitle: 'Semantic JSON-LD schema markup, AEO answer engine optimization, Core Web Vitals speed tuning, and search index management for long-term organic rankings.',
       image: '/seo_analytics_vector.png',
       imageLeft: true,
