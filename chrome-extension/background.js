@@ -1,5 +1,5 @@
 /**
- * SpringWeb Instant Lead Scraper v2.0 - Service Worker (Background)
+ * SpringWeb Instant Lead Scraper v2.1 - Service Worker (Background)
  * - Uses Supabase REST UPSERT with deduplication on normalized_phone
  * - Handles CORS for cross-origin Supabase calls from extension
  */
@@ -19,19 +19,29 @@ chrome.runtime.onInstalled.addListener(() => {
   console.log('[SpringWeb v2.0 Extension Installed]')
 })
 
+// Runtime settings cache (updated by popup Settings tab)
+let runtimeSupabaseUrl = ''
+let runtimeSupabaseKey = ''
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'SYNC_LEADS_TO_ADMIN') {
     syncLeadsToSupabase(request.leads)
       .then(res => sendResponse({ status: 'success', synced: res.synced, errors: res.errors }))
       .catch(err => sendResponse({ status: 'error', message: err.message }))
     return true // async
+
+  } else if (request.action === 'UPDATE_SETTINGS') {
+    // Live-update Supabase credentials without reloading extension
+    if (request.supabaseUrl) runtimeSupabaseUrl = request.supabaseUrl
+    if (request.supabaseKey) runtimeSupabaseKey = request.supabaseKey
+    sendResponse({ status: 'ok' })
   }
 })
 
 async function syncLeadsToSupabase(leads) {
   const store = await chrome.storage.local.get(['supabaseUrl', 'supabaseKey'])
-  const url   = (store.supabaseUrl || DEFAULT_SUPABASE_URL).trim().replace(/\/$/, '')
-  const key   = (store.supabaseKey || DEFAULT_SUPABASE_KEY).trim()
+  const url   = (runtimeSupabaseUrl || store.supabaseUrl || DEFAULT_SUPABASE_URL).trim().replace(/\/$/, '')
+  const key   = (runtimeSupabaseKey || store.supabaseKey || DEFAULT_SUPABASE_KEY).trim()
 
   if (!url || !key) {
     throw new Error('Supabase URL or Key missing. Check extension settings.')

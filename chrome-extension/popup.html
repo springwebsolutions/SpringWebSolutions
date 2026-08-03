@@ -3,110 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SpringWeb Instant Lead Scraper</title>
+  <title>SpringWeb Lead Scraper</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-container">
 
-    <!-- Header -->
+    <!-- ── Header ────────────────────────────────────────────────────── -->
     <header class="header">
       <div class="brand">
-        <img src="icons/icon48.png" alt="SpringWeb Logo" class="brand-logo">
+        <img src="icons/icon48.png" alt="Logo" class="brand-logo">
         <div>
           <h1>SpringWeb Scraper</h1>
-          <span class="subtitle">Google Maps Real-Time Lead Engine v2.0</span>
+          <span class="subtitle">Google Maps · Real-Time Lead Engine</span>
         </div>
       </div>
-      <div class="status-badge" id="statusBadge">Ready</div>
+      <div class="header-right">
+        <div class="version-badge">v2.1</div>
+      </div>
     </header>
 
-    <!-- Status Bar -->
+    <!-- ── Status Bar ─────────────────────────────────────────────────── -->
     <div class="status-bar" id="statusBar">
       Navigate to Google Maps, search for businesses, then scrape.
     </div>
 
-    <!-- Progress Bar -->
-    <div class="progress-bar" id="progressBar" style="display:none;">
+    <!-- ── Progress Bar ───────────────────────────────────────────────── -->
+    <div class="progress-wrap" id="progressBar" style="display:none">
       <div class="progress-fill" id="progressFill"></div>
+      <span class="progress-label" id="progressLabel">0 / 0</span>
     </div>
 
-    <!-- Main Content -->
-    <main class="content">
+    <!-- ── Tab Navigation ─────────────────────────────────────────────── -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="leads">📋 Leads</button>
+      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+    </nav>
+
+    <!-- ═══════════════════ TAB: LEADS ═══════════════════ -->
+    <div class="tab-panel active" id="tab-leads">
 
       <!-- Action Buttons -->
-      <div class="action-card">
+      <div class="action-row">
         <button id="btnScrapePage" class="btn btn-primary">
-          <span class="icon">⚡</span>
-          <span>Scrape Current Maps Page</span>
+          <span class="icon">⚡</span><span>Scrape Page</span>
         </button>
-
         <button id="btnAutoScroll" class="btn btn-secondary">
-          <span class="icon">🔄</span>
-          <span>Auto-Scroll &amp; Scrape More</span>
+          <span class="icon">🔄</span><span>Auto-Scroll</span>
+        </button>
+        <button id="btnStop" class="btn btn-danger" style="display:none">
+          <span class="icon">⏹</span><span>Stop</span>
         </button>
       </div>
 
-      <!-- Live Counters -->
+      <!-- Metrics -->
       <div class="metrics-grid">
         <div class="metric">
           <span class="value" id="valFound">0</span>
-          <span class="label">Found</span>
+          <span class="label">Total</span>
         </div>
-        <div class="metric">
+        <div class="metric green">
           <span class="value" id="valWithPhone">0</span>
-          <span class="label">With Phone</span>
+          <span class="label">📞 Phone</span>
         </div>
-        <div class="metric">
-          <span class="value" id="valCleaned">0</span>
-          <span class="label">Cleaned</span>
+        <div class="metric blue">
+          <span class="value" id="valWithWeb">0</span>
+          <span class="label">🌐 Web</span>
         </div>
         <div class="metric highlight">
           <span class="value" id="valSynced">0</span>
-          <span class="label">Synced</span>
+          <span class="label">☁️ Synced</span>
         </div>
       </div>
 
-      <!-- Sync Action -->
-      <div class="sync-section">
+      <!-- Filter Row -->
+      <div class="filter-row">
+        <label class="filter-chip">
+          <input type="checkbox" id="filterPhone"> 📞 Phone only
+        </label>
+        <label class="filter-chip">
+          <input type="checkbox" id="filterWeb"> 🌐 Web only
+        </label>
+        <button id="btnCopyAll" class="btn-text" title="Copy all phone numbers">📋 Copy Phones</button>
+      </div>
+
+      <!-- Sync + Export -->
+      <div class="action-row">
         <button id="btnSyncAdmin" class="btn btn-emerald" disabled>
-          <span class="icon">☁️</span>
-          <span>Sync to Admin Panel</span>
+          <span class="icon">☁️</span><span>Sync to Admin</span>
+        </button>
+        <button id="btnExportCsv" class="btn btn-ghost">
+          <span class="icon">📊</span><span>CSV</span>
+        </button>
+        <button id="btnExportJson" class="btn btn-ghost">
+          <span class="icon">📋</span><span>JSON</span>
         </button>
       </div>
 
-      <!-- Live Preview Table -->
+      <!-- Lead List -->
       <div class="preview-container">
         <div class="table-header">
-          <span>Live Scraped Leads</span>
+          <span id="leadCountBadge" class="badge">0 leads</span>
           <div class="table-header-right">
-            <span id="leadCountBadge" class="badge">0 leads</span>
+            <span id="filteredBadge" class="badge alt" style="display:none">0 shown</span>
             <button id="btnClear" class="btn-icon" title="Clear all leads">🗑️</button>
           </div>
         </div>
         <div class="table-wrapper" id="previewList">
           <div class="empty-state">
             <span class="empty-icon">📍</span>
-            <p>
-              Open <strong>Google Maps</strong>, search for local businesses<br>
+            <p>Open <strong>Google Maps</strong>, search for local businesses<br>
               (e.g. <em>"Textile Mills in Tiruppur"</em>) and click<br>
-              <strong>Scrape Current Maps Page</strong>.
-            </p>
+              <strong>⚡ Scrape Page</strong>.</p>
           </div>
         </div>
       </div>
 
-      <!-- Export Footer -->
+      <!-- Footer -->
       <footer class="footer-actions">
-        <button id="btnExportCsv" class="btn-text">📊 Export CSV</button>
-        <button id="btnExportJson" class="btn-text">📋 Export JSON</button>
         <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" class="btn-text highlight">
           🔗 Admin Panel ↗
         </a>
       </footer>
+    </div>
 
-    </main>
-  </div>
+    <!-- ═══════════════════ TAB: SETTINGS ═══════════════════ -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="settings-section">
+        <h3 class="settings-title">🔗 Supabase Connection</h3>
+        <p class="settings-hint">Your leads sync here in real time.</p>
+
+        <div class="field-group">
+          <label for="inputSupabaseUrl">Supabase Project URL</label>
+          <input type="url" id="inputSupabaseUrl" class="field-input"
+            placeholder="https://xxxx.supabase.co">
+        </div>
+
+        <div class="field-group">
+          <label for="inputSupabaseKey">Supabase Anon Key</label>
+          <input type="password" id="inputSupabaseKey" class="field-input"
+            placeholder="sb_publishable_...">
+          <button class="btn-text" id="btnToggleKey" style="margin-top:4px">👁 Show key</button>
+        </div>
+
+        <button id="btnSaveSettings" class="btn btn-primary" style="margin-top:8px">
+          <span class="icon">💾</span><span>Save Connection</span>
+        </button>
+        <div id="settingsSaveMsg" class="save-msg" style="display:none">✅ Saved!</div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="settings-title">⚙️ Scraping Options</h3>
+
+        <div class="field-group">
+          <label for="inputScrollCount">Auto-Scroll Iterations</label>
+          <input type="number" id="inputScrollCount" class="field-input" value="20" min="5" max="100">
+          <span class="field-hint">More scrolls = more businesses loaded</span>
+        </div>
+
+        <div class="field-group">
+          <label>
+            <input type="checkbox" id="chkNotify" checked>
+            Show notification when scraping completes
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="settings-title">📊 Session Stats</h3>
+        <div class="stat-row"><span>Total scraped</span><strong id="statTotal">0</strong></div>
+        <div class="stat-row"><span>Total synced</span><strong id="statSynced">0</strong></div>
+        <div class="stat-row"><span>Extension version</span><strong>v2.1.0</strong></div>
+      </div>
+    </div>
+
+  </div><!-- /.app-container -->
 
   <script src="cleaner.js"></script>
   <script src="popup.js"></script>
