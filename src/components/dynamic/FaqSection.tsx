@@ -10,43 +10,43 @@ interface FaqItem {
 
 const faqData: FaqItem[] = [
   {
-    question: "Do I get 100% full ownership of my website source code and database?",
-    answer: "Yes, 100%. Unlike typical agencies that keep your website locked inside proprietary closed systems with mandatory monthly hosting traps, Spring Web Solutions grants you total ownership of all code repositories, database instances, and domain assets. You are never locked in.",
+    question: "What website development services does Spring Web Solutions provide?",
+    answer: "Spring Web Solutions builds high-speed corporate websites, React & Next.js web applications, e-commerce storefronts, and conversion-focused portals for businesses locally in Udumalpet, Tiruppur & Coimbatore, statewide across Tamil Nadu, nationally in India, and internationally worldwide.",
     category: "general"
   },
   {
-    question: "How fast will my custom website or application load?",
-    answer: "Every platform we engineer is optimized to achieve sub-second (< 1.0 second) load times and top 95+ Core Web Vitals scores. We use modern frameworks like React, Vite, and Next.js combined with CDN caching and zero bloat.",
+    question: "How do your custom ERP and CRM systems help businesses streamline operations?",
+    answer: "Our custom ERP & CRM platforms integrate inventory management, automated billing, client lead tracking, automated PDF reporting, and WhatsApp notification bots into a unified dashboard tailored for local, national, and global business workflows.",
     category: "tech"
   },
   {
-    question: "What technology stack do you use for development?",
-    answer: "We select the optimal stack based on your project goals: React / Vite & Next.js for high-speed frontends; Node.js, Python, and Laravel for backend APIs; Supabase & PostgreSQL for enterprise databases; and WordPress / WooCommerce / Shopify for modular e-commerce.",
+    question: "What mobile and desktop app development services do you offer?",
+    answer: "We engineer native Android mobile apps (Kotlin/Flutter), iOS applications, and high-speed C# .NET Windows desktop software equipped with offline synchronization, local database storage, and Play Store publishing.",
     category: "tech"
   },
   {
-    question: "Can you build custom CRM, ERP, or internal management software?",
-    answer: "Yes. We specialize in custom business portals, CRM lead management tools, inventory ERPs, automated WhatsApp/email lead routing, and custom dashboard reporting tailored specifically to your company's operational workflow.",
+    question: "What is Spring Web Solutions' service and SEO priority hierarchy?",
+    answer: "Our service delivery and SEO priority flow is: 1. Local (Udumalpet, Tiruppur, Coimbatore), 2. State (Tamil Nadu), 3. National (Pan-India), and 4. International (Global/Worldwide).",
     category: "general"
   },
   {
-    question: "What is your project development timeline?",
-    answer: "Standard corporate websites and landing portals are delivered in 1 to 2 weeks. Custom CRM/ERP software applications and complex web platforms typically range between 2 to 4 weeks depending on feature scope and sprint iterations.",
+    question: "Do clients receive 100% full source code ownership?",
+    answer: "Yes, 100%. Spring Web Solutions grants complete ownership of all website code repositories, database instances, and domain assets without any mandatory hosting lock-in.",
     category: "pricing"
   },
   {
-    question: "Do you serve clients in Udumalpet, Tamil Nadu, and internationally?",
-    answer: "Yes! We provide both local in-person consultations in Udumalpet, Tiruppur, Coimbatore, and Tamil Nadu, as well as seamless remote collaboration for clients across India and internationally.",
-    category: "support"
-  },
-  {
-    question: "How do you handle Technical SEO and search ranking setup?",
-    answer: "Every site we build includes built-in Technical SEO: JSON-LD Schema markup, canonical tag structure, sitemap auto-generation, mobile responsive styling, and fast indexation setup on Google Search Console.",
+    question: "How fast do your engineered websites and web applications load?",
+    answer: "Every platform we build is optimized for sub-second (< 1.0 second) load times and top 95+ Core Web Vitals performance scores using Next.js/Vite and CDN caching.",
     category: "tech"
   },
   {
-    question: "What post-launch support and maintenance do you offer?",
-    answer: "We provide dedicated maintenance contracts, 99.9% uptime SLA guarantees, security patching, database backups, and direct technical support via our client portal and WhatsApp.",
+    question: "How does Answer Engine Optimization (AEO) help my business rank on AI search engines?",
+    answer: "Every site we deliver includes AEO multi-schema JSON-LD markup (FAQPage, ProfessionalService, OfferCatalog) formatted so AI engines like Google AI Overviews, ChatGPT Search, Perplexity, and Gemini extract and cite your business as the direct answer.",
+    category: "general"
+  },
+  {
+    question: "How can I request a project consultation or quote?",
+    answer: "Submit our discovery form at springwebsolutions.in/contact or message our technical team directly on WhatsApp at +91 80126 22119 for a fast consultation.",
     category: "support"
   }
 ]

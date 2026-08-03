@@ -35,64 +35,64 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
 
   const detailedServices = [
     {
-      title: 'Website & Web App Development',
-      subtitle: 'High-speed corporate sites, custom React & Next.js applications, e-commerce storefronts, and conversion-focused landing channels built for maximum performance.',
+      title: '1. Website Development (Local -> State -> National -> Global)',
+      subtitle: 'High-speed corporate websites, React & Next.js web applications, e-commerce storefronts, and conversion portals for businesses in Udumalpet, Tamil Nadu, India, and worldwide.',
       image: '/web_dev_vector.png',
       imageLeft: false,
       features: [
-        'Custom React & Next.js Apps',
-        'E-Commerce & Storefronts',
-        'UI / UX & Responsive Design',
-        'High-Speed Corporate Sites',
-        'Conversion Landing Channels',
-        'REST API & Backend Integration'
+        'Local Udumalpet & Tiruppur Web Sites',
+        'Statewide Tamil Nadu Enterprise Portals',
+        'Pan-India E-Commerce & Next.js Apps',
+        'International Web Application Development',
+        'UI / UX & Mobile Responsive Design',
+        'High-Speed Core Web Vitals Performance'
       ],
-      href: '/services'
+      href: '/contact'
     },
     {
-      title: 'Custom Software & SaaS Platforms',
-      subtitle: 'Proprietary ERPs, CRMs, client portals, inventory management systems, and scalable cloud SaaS software tailored precisely to your operational workflow.',
+      title: '2. Custom ERP & CRM Systems (Local -> State -> National -> Global)',
+      subtitle: 'Tailor-made Enterprise Resource Planning (ERP) and Customer Relationship Management (CRM) software for inventory tracking, automated billing, client lead pipelines, and real-time WhatsApp analytics.',
       image: '/cloud_storage_vector.png',
       imageLeft: true,
       features: [
-        'Proprietary SaaS Systems',
-        'ERP & Operations Software',
-        'Custom CRM & Client Portals',
-        'Inventory & Billing Software',
-        'Database & Analytics Dashboards',
-        'Cloud Microservices'
+        'Custom CRM & Client Portal Software',
+        'ERP Operations & Billing Systems',
+        'Inventory & Stock Management Tools',
+        'WhatsApp Automated Notification Bots',
+        'Local Udumalpet & TN Business Dashboards',
+        'Global Multi-Currency & Cloud Infrastructure'
       ],
-      href: '/services'
+      href: '/contact'
     },
     {
-      title: 'Android & Native Mobile App Development',
-      subtitle: 'Native Android (Kotlin) and mobile applications with offline sync, push notifications, secure local storage, and full Play Store deployment.',
+      title: '3. Mobile & Desktop App Development (Local -> State -> National -> Global)',
+      subtitle: 'Native Android mobile apps (Kotlin/Flutter), iOS applications, and high-speed C# .NET Windows desktop software built for offline reliability, billing, and retail operations.',
       image: '/digital_marketing_vector.png',
       imageLeft: false,
       features: [
-        'Native Android (Kotlin) Apps',
-        'iOS & Cross-Platform Mobile',
-        'Offline Synchronization',
-        'Play Store Deployment',
-        'Push Notifications & FCM',
-        'Payment Gateway Integrations'
+        'Native Android (Kotlin) App Development',
+        'iOS & Cross-Platform Flutter Mobile Apps',
+        'C# .NET & WinUI 3 Windows Desktop Apps',
+        'Offline Synchronization & Local Database',
+        'Google Play Store & App Store Publishing',
+        'Push Notifications & Payment Gateway Sync'
       ],
-      href: '/services'
+      href: '/contact'
     },
     {
-      title: 'Technical SEO & Search Growth',
-      subtitle: 'Semantic JSON-LD schema markup, Core Web Vitals speed optimization, site audits, and search engine index management for long-term organic ranking.',
+      title: '4. Technical SEO & Search Dominance (Local -> State -> National -> Global)',
+      subtitle: 'Semantic JSON-LD schema markup, AEO answer engine optimization, Core Web Vitals speed tuning, and search index management for long-term organic rankings.',
       image: '/seo_analytics_vector.png',
       imageLeft: true,
       features: [
-        'Semantic Schema & Rich Snippets',
-        'Core Web Vitals Optimization',
-        'Technical SEO Code Audits',
-        'Google Indexing Setup',
-        'Keyword Architecture',
-        'Conversion Rate Tuning'
+        'Local SEO (Udumalpet, Tiruppur, Coimbatore)',
+        'Statewide SEO Ranking (Tamil Nadu)',
+        'Pan-India & National SEO Campaigns',
+        'International & Global AEO Optimization',
+        'Semantic JSON-LD Rich Snippets',
+        'AI Search Engine (ChatGPT/Perplexity/Gemini) Indexing'
       ],
-      href: '/services'
+      href: '/contact'
     }
   ]
 
