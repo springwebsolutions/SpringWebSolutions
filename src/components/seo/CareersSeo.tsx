@@ -10,9 +10,9 @@ interface CareersSeoProps {
 }
 
 export const CareersSeo: React.FC<CareersSeoProps> = ({
-  title = 'Job Vacancies, Remote Openings & Educational Career Guides | SpringWeb Careers',
-  description = 'Explore verified software engineering, mobile app development, SEO, and remote job vacancies across Tamil Nadu, All-India Metros, and International WFH positions. Free educational career roadmaps and interview preparation guides.',
-  keywords = 'job vacancies, software engineer jobs, remote jobs India, Tamil Nadu tech jobs, Chennai software vacancies, React engineer jobs, Kotlin Android developer jobs, C# desktop jobs, technical interview guide',
+  title = 'Software Jobs in Udumalpet, Tamil Nadu, India & Remote | SpringWeb Careers',
+  description = 'Discover tech career vacancies and developer job openings in Udumalpet, Tiruppur & Coimbatore (Local), across Tamil Nadu (State), India (National), and Remote (International). Free educational engineering guides & interview roadmaps.',
+  keywords = 'software jobs Udumalpet, web developer jobs Udumalpet, IT career vacancies Udumalpet, software jobs Tiruppur, software company jobs Coimbatore, developer vacancies Tamil Nadu, Chennai tech jobs, software engineer jobs India, remote software jobs India, international remote developer vacancies, SpringWeb Careers',
   canonicalUrl = 'https://careers.springwebsolutions.in/',
   ogImage = 'https://careers.springwebsolutions.in/logo-emblem.png',
   schemaJson
@@ -48,39 +48,45 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
       element.setAttribute('href', href)
     }
 
-    // 2. Primary Meta Tags
+    // 2. Primary Meta Tags (Hierarchy: Local -> State -> National -> International)
     setMeta('description', description)
     setMeta('keywords', keywords)
+    setMeta('author', 'Spring Web Solutions')
     setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
 
-    // 3. Canonical Link
+    // 3. Local & Tiered Geo Meta Tags (Udumalpet -> Tamil Nadu -> India -> Global)
+    setMeta('geo.region', 'IN-TN')
+    setMeta('geo.placename', 'Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, India')
+    setMeta('geo.position', '10.5847;77.2472')
+    setMeta('ICBM', '10.5847, 77.2472')
+
+    // 4. Canonical Link
     setLink('canonical', canonicalUrl)
 
-    // 4. OpenGraph Social Sharing
+    // 5. OpenGraph Social Sharing
     setMeta('og:type', 'website', true)
     setMeta('og:title', title, true)
     setMeta('og:description', description, true)
     setMeta('og:url', canonicalUrl, true)
-    setMeta('og:site_name', 'SpringWeb Careers Vault', true)
+    setMeta('og:site_name', 'SpringWeb Careers Engine', true)
     setMeta('og:image', ogImage, true)
 
-    // 5. Twitter Cards
+    // 6. Twitter Cards
     setMeta('twitter:card', 'summary_large_image')
     setMeta('twitter:title', title)
     setMeta('twitter:description', description)
     setMeta('twitter:image', ogImage)
 
-    // 6. Favicons & Google Search Logo Tags
-    setLink('icon', '/favicon.ico', 'any')
-    setLink('icon', '/favicon.png', 'any', 'image/png')
-    setLink('icon', '/logo-emblem.png', '192x192', 'image/png')
-    setLink('icon', '/logo-emblem.png', '96x96', 'image/png')
-    setLink('icon', '/logo-emblem.png', '48x48', 'image/png')
-    setLink('icon', '/logo-emblem.png', '32x32', 'image/png')
-    setLink('shortcut icon', '/logo-emblem.png')
-    setLink('apple-touch-icon', '/logo-emblem.png', '180x180')
+    // 7. Favicons & Touch Icons (Google Search Engine Compliance)
+    setLink('icon', '/favicon.svg', undefined, 'image/svg+xml')
+    setLink('icon', '/favicon-48x48.png', '48x48', 'image/png')
+    setLink('icon', '/favicon-96x96.png', '96x96', 'image/png')
+    setLink('icon', '/favicon-192x192.png', '192x192', 'image/png')
+    setLink('icon', '/favicon-512x512.png', '512x512', 'image/png')
+    setLink('shortcut icon', '/favicon.ico')
+    setLink('apple-touch-icon', '/apple-touch-icon.png', '180x180')
 
-    // 7. Inject JSON-LD AEO Schema Graph
+    // 8. Inject JSON-LD AEO & Geo Schema Graph (Answer Engine Optimization)
     const defaultSchema = {
       '@context': 'https://schema.org',
       '@graph': [
@@ -107,6 +113,14 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
           '@id': 'https://careers.springwebsolutions.in/#organization',
           'name': 'SpringWeb Tech Academy & Careers',
           'url': 'https://careers.springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': '11A, Kasturi Street, near Kuttal Thidal',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN'
+          },
           'parentOrganization': {
             '@type': 'Organization',
             'name': 'Spring Web Solutions'
@@ -114,8 +128,38 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
           'knowsAbout': [
             'Software Engineering Careers',
             'Full Stack Web Development Roadmaps',
-            'Android & iOS Mobile App Tutorials',
-            'Interview Preparation & Coding Guides'
+            'Android & iOS Mobile App Engineering',
+            'Technical Interview Preparation & Guides'
+          ]
+        },
+        {
+          '@type': 'FAQPage',
+          '@id': 'https://careers.springwebsolutions.in/#aeo-faq',
+          'mainEntity': [
+            {
+              '@type': 'Question',
+              'name': 'What software engineering jobs are available at SpringWeb Solutions in Udumalpet, Tamil Nadu?',
+              'acceptedAnswer': {
+                '@type': 'Answer',
+                'text': 'SpringWeb Solutions offers software developer vacancies in Web Development (React/TypeScript), Custom ERP/CRM Engineering (Node.js/Supabase), Mobile App Development (Android/iOS), and Windows Desktop Software for candidates in Udumalpet, Tiruppur, Coimbatore, statewide across Tamil Nadu, nationally across India, and Global Remote.'
+              }
+            },
+            {
+              '@type': 'Question',
+              'name': 'Does SpringWeb Careers list remote software jobs for candidates across India and worldwide?',
+              'acceptedAnswer': {
+                '@type': 'Answer',
+                'text': 'Yes, SpringWeb Careers features both on-site developer positions at Headquarters in Udumalpet, Tamil Nadu, as well as remote software engineering vacancies open to candidates across India and internationally.'
+              }
+            },
+            {
+              '@type': 'Question',
+              'name': 'Where can I access free educational software engineering career guides and interview prep roadmaps?',
+              'acceptedAnswer': {
+                '@type': 'Answer',
+                'text': 'SpringWeb Careers Portal provides free educational guides, full-stack software developer roadmaps, and interview preparation resources at https://careers.springwebsolutions.in/career-guides.'
+              }
+            }
           ]
         }
       ]
