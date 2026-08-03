@@ -8,20 +8,32 @@
 </head>
 <body>
   <div class="app-container">
+
     <!-- Header -->
     <header class="header">
       <div class="brand">
         <img src="icons/icon48.png" alt="SpringWeb Logo" class="brand-logo">
         <div>
           <h1>SpringWeb Scraper</h1>
-          <span class="subtitle">Google Maps Real-Time Lead Engine</span>
+          <span class="subtitle">Google Maps Real-Time Lead Engine v2.0</span>
         </div>
       </div>
-      <div class="status-badge" id="statusBadge">Connected</div>
+      <div class="status-badge" id="statusBadge">Ready</div>
     </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+      Navigate to Google Maps, search for businesses, then scrape.
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar" style="display:none;">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
 
     <!-- Main Content -->
     <main class="content">
+
       <!-- Action Buttons -->
       <div class="action-card">
         <button id="btnScrapePage" class="btn btn-primary">
@@ -31,7 +43,7 @@
 
         <button id="btnAutoScroll" class="btn btn-secondary">
           <span class="icon">🔄</span>
-          <span>Auto-Scroll &amp; Scrape Next 50</span>
+          <span>Auto-Scroll &amp; Scrape More</span>
         </button>
       </div>
 
@@ -40,6 +52,10 @@
         <div class="metric">
           <span class="value" id="valFound">0</span>
           <span class="label">Found</span>
+        </div>
+        <div class="metric">
+          <span class="value" id="valWithPhone">0</span>
+          <span class="label">With Phone</span>
         </div>
         <div class="metric">
           <span class="value" id="valCleaned">0</span>
@@ -51,11 +67,11 @@
         </div>
       </div>
 
-      <!-- Real-Time Sync Action -->
+      <!-- Sync Action -->
       <div class="sync-section">
         <button id="btnSyncAdmin" class="btn btn-emerald" disabled>
-          <span class="icon">🚀</span>
-          <span>Sync All Cleaned Leads to Admin Panel</span>
+          <span class="icon">☁️</span>
+          <span>Sync to Admin Panel</span>
         </button>
       </div>
 
@@ -63,22 +79,32 @@
       <div class="preview-container">
         <div class="table-header">
           <span>Live Scraped Leads</span>
-          <span id="leadCountBadge" class="badge">0 leads</span>
+          <div class="table-header-right">
+            <span id="leadCountBadge" class="badge">0 leads</span>
+            <button id="btnClear" class="btn-icon" title="Clear all leads">🗑️</button>
+          </div>
         </div>
         <div class="table-wrapper" id="previewList">
           <div class="empty-state">
             <span class="empty-icon">📍</span>
-            <p>Open Google Maps search results (e.g. <em>"Hotels in Udumalpet"</em> or <em>"Mills in Tiruppur"</em>) and click <strong>Scrape Current Maps Page</strong>.</p>
+            <p>
+              Open <strong>Google Maps</strong>, search for local businesses<br>
+              (e.g. <em>"Textile Mills in Tiruppur"</em>) and click<br>
+              <strong>Scrape Current Maps Page</strong>.
+            </p>
           </div>
         </div>
       </div>
 
       <!-- Export Footer -->
       <footer class="footer-actions">
-        <button id="btnExportCsv" class="btn-text">Export CSV</button>
-        <button id="btnExportJson" class="btn-text">Export JSON</button>
-        <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" class="btn-text highlight">Admin Panel ↗</a>
+        <button id="btnExportCsv" class="btn-text">📊 Export CSV</button>
+        <button id="btnExportJson" class="btn-text">📋 Export JSON</button>
+        <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" class="btn-text highlight">
+          🔗 Admin Panel ↗
+        </a>
       </footer>
+
     </main>
   </div>
 

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "SpringWeb Instant Lead Scraper",
-  "version": "1.1.0",
-  "description": "Real-time Google Maps lead scraper, cleaner, and instant synchronizer for SpringWeb Lead Generation System Admin Panel.",
+  "version": "2.0.0",
+  "description": "Real-time Google Maps lead scraper with verified phone/email/website extraction, deduplication, and instant sync to SpringWeb Admin Panel.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -34,9 +34,7 @@
     {
       "matches": [
         "https://*.google.com/maps/*",
-        "https://*.google.co.in/maps/*",
-        "https://*.google.com/search*",
-        "https://*.google.co.in/search*"
+        "https://*.google.co.in/maps/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"
