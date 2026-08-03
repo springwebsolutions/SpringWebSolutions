@@ -6,8 +6,8 @@
 
 importScripts('cleaner.js')
 
-const DEFAULT_SUPABASE_URL = 'https://tdnvitjncffhjxspvpeb.supabase.co'
-const DEFAULT_SUPABASE_KEY = 'sb_publishable_8VjQZkKACmqT2P9B1C92mg_5aqGp6uX'
+const DEFAULT_SUPABASE_URL = ''
+const DEFAULT_SUPABASE_KEY = ''
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({

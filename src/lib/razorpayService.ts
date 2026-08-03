@@ -39,7 +39,7 @@ export const displayRazorpayCheckout = async (options: RazorpayOptions): Promise
     return
   }
 
-  const keyId = (import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TL9ayzhsxaOlAj').trim()
+  const keyId = (import.meta.env.VITE_RAZORPAY_KEY_ID || '').trim()
 
   try {
     // 1. Call Backend Order Creation Endpoint /api/create-order

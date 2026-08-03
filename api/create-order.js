@@ -19,8 +19,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
 
-  const keyId = (process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TL9ayzhsxaOlAj').trim();
-  const keySecret = (process.env.RAZORPAY_KEY_SECRET || 'EGzHhCwHqlry5CSmWWaj7ux1').trim();
+  const keyId = (process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '').trim();
+  const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim();
 
   if (!keyId || !keySecret) {
     return res.status(401).json({ error: 'Razorpay API credentials missing in server environment.' });
