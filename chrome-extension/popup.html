@@ -2,80 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpringWeb Instant Lead Scraper</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div className="app-container">
+  <div class="app-container">
     <!-- Header -->
-    <header className="header">
-      <div className="brand">
-        <div className="logo-icon">🟢</div>
+    <header class="header">
+      <div class="brand">
+        <img src="icons/icon48.png" alt="SpringWeb Logo" class="brand-logo">
         <div>
           <h1>SpringWeb Scraper</h1>
-          <span className="subtitle">Real-Time Google Maps Lead Engine</span>
+          <span class="subtitle">Google Maps Real-Time Lead Engine</span>
         </div>
       </div>
-      <div className="status-badge" id="statusBadge">Connected</div>
+      <div class="status-badge" id="statusBadge">Connected</div>
     </header>
 
-    <!-- Controls & Trigger Actions -->
-    <main className="content">
-      <div className="action-card">
-        <button id="btnScrapePage" className="btn btn-primary">
-          <span className="icon">⚡</span>
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Action Buttons -->
+      <div class="action-card">
+        <button id="btnScrapePage" class="btn btn-primary">
+          <span class="icon">⚡</span>
           <span>Scrape Current Maps Page</span>
         </button>
 
-        <button id="btnAutoScroll" className="btn btn-secondary">
-          <span className="icon">🔄</span>
+        <button id="btnAutoScroll" class="btn btn-secondary">
+          <span class="icon">🔄</span>
           <span>Auto-Scroll &amp; Scrape Next 50</span>
         </button>
       </div>
 
       <!-- Live Counters -->
-      <div className="metrics-grid">
-        <div className="metric">
-          <span className="value" id="valFound">0</span>
-          <span className="label">Found</span>
+      <div class="metrics-grid">
+        <div class="metric">
+          <span class="value" id="valFound">0</span>
+          <span class="label">Found</span>
         </div>
-        <div className="metric">
-          <span className="value" id="valCleaned">0</span>
-          <span className="label">Cleaned</span>
+        <div class="metric">
+          <span class="value" id="valCleaned">0</span>
+          <span class="label">Cleaned</span>
         </div>
-        <div className="metric highlight">
-          <span className="value" id="valSynced">0</span>
-          <span className="label">Synced to Admin</span>
+        <div class="metric highlight">
+          <span class="value" id="valSynced">0</span>
+          <span class="label">Synced</span>
         </div>
       </div>
 
       <!-- Real-Time Sync Action -->
-      <div className="sync-section">
-        <button id="btnSyncAdmin" className="btn btn-emerald" disabled>
-          <span className="icon">🚀</span>
+      <div class="sync-section">
+        <button id="btnSyncAdmin" class="btn btn-emerald" disabled>
+          <span class="icon">🚀</span>
           <span>Sync All Cleaned Leads to Admin Panel</span>
         </button>
       </div>
 
       <!-- Live Preview Table -->
-      <div className="preview-container">
-        <div className="table-header">
+      <div class="preview-container">
+        <div class="table-header">
           <span>Live Scraped Leads</span>
-          <span id="leadCountBadge" className="badge">0 leads</span>
+          <span id="leadCountBadge" class="badge">0 leads</span>
         </div>
-        <div className="table-wrapper" id="previewList">
-          <div className="empty-state">
-            <span className="empty-icon">📍</span>
-            <p>Open Google Maps search results (e.g. "Hotels in Udumalpet" or "Mills in Tiruppur") and click Scrape Current Page.</p>
+        <div class="table-wrapper" id="previewList">
+          <div class="empty-state">
+            <span class="empty-icon">📍</span>
+            <p>Open Google Maps search results (e.g. <em>"Hotels in Udumalpet"</em> or <em>"Mills in Tiruppur"</em>) and click <strong>Scrape Current Maps Page</strong>.</p>
           </div>
         </div>
       </div>
 
-      <!-- Export Bar -->
-      <footer className="footer-actions">
-        <button id="btnExportCsv" className="btn-text">Export CSV</button>
-        <button id="btnExportJson" className="btn-text">Export JSON</button>
-        <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" className="btn-text highlight">Open Admin Panel ↗</a>
+      <!-- Export Footer -->
+      <footer class="footer-actions">
+        <button id="btnExportCsv" class="btn-text">Export CSV</button>
+        <button id="btnExportJson" class="btn-text">Export JSON</button>
+        <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" class="btn-text highlight">Admin Panel ↗</a>
       </footer>
     </main>
   </div>
