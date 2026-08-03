@@ -132,12 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       leads.forEach((item) => {
         const cleaned = cleanAndScoreLead(item)
+        const phoneDisplay = cleaned.phone ? `📞 ${cleaned.phone}` : '❌ No Phone'
+        const emailDisplay = item.email ? `✉️ ${item.email}` : ''
+        const webDisplay = cleaned.website ? '🌐 Web' : ''
+
         const row = document.createElement('div')
         row.className = 'lead-item'
         row.innerHTML = `
           <div class="lead-info">
             <span class="lead-title">${cleaned.name}</span>
-            <span class="lead-meta">📍 ${cleaned.city}, ${cleaned.state} &bull; 📞 ${cleaned.phone || 'No Phone'}</span>
+            <span class="lead-meta">${phoneDisplay} ${emailDisplay ? '&bull; ' + emailDisplay : ''} ${webDisplay ? '&bull; ' + webDisplay : ''}</span>
           </div>
           <div class="score-badge">
             ${cleaned.lead_score} pts
