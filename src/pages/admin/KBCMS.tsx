@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { useForm } from 'react-hook-form'
@@ -261,9 +262,28 @@ export const KBCMS: React.FC = () => {
     setPreviewMode(false)
   }
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   return (
     <div className="space-y-6">
       
+      {/* Sub-Navigation Header Bar */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3 flex-wrap">
+        <Link
+          to={`${prefix}/kb`}
+          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all"
+        >
+          Knowledge Base ({articles.length})
+        </Link>
+        <Link
+          to={`${prefix}/career-guides`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Career Guides
+        </Link>
+      </div>
+
       {/* Header controls */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>

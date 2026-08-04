@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import type { JobPosting } from '@/stores/careersStore'
-import { Plus, Trash2, Edit2, CheckCircle2, MapPin, Laptop, Sparkles } from 'lucide-react'
+import { Plus, Trash2, Edit2, CheckCircle2, MapPin, Laptop, Sparkles, UserCheck, Briefcase } from 'lucide-react'
 
 export const AdminJobPostings: React.FC = () => {
   const { jobs, addJob, updateJob, deleteJob } = useCareersStore()
@@ -30,6 +31,9 @@ export const AdminJobPostings: React.FC = () => {
     status: 'active' as JobPosting['status'],
     featured: true
   })
+
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+  const prefix = isSuiteDomain ? '' : '/admin'
 
   const handleOpenAdd = () => {
     setEditingJob(null)
@@ -105,9 +109,25 @@ export const AdminJobPostings: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-6">
+      {/* Sub-Navigation Header Bar */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3 flex-wrap">
+        <Link
+          to={`${prefix}/jobs`}
+          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all"
+        >
+          Job Vacancies ({jobs.length})
+        </Link>
+        <Link
+          to={`${prefix}/job-applications`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Candidate Applications
+        </Link>
+      </div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
         <div>
           <h1 className="text-2xl font-black text-white font-display uppercase tracking-tight">
             Manage Job Vacancies &amp; Careers

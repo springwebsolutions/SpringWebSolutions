@@ -226,8 +226,32 @@ export const SiteSettings: React.FC = () => {
     }
   }
 
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      
+      {/* Sub-Navigation Header Bar */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3 flex-wrap">
+        <Link
+          to={`${prefix}/settings`}
+          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all"
+        >
+          Site Settings &amp; Configuration
+        </Link>
+        <Link
+          to={`${prefix}/security/2fa`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          2FA Security Assurance
+        </Link>
+        <Link
+          to={`${prefix}/health`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          System Telemetry &amp; Health
+        </Link>
+      </div>
 
       {/* Animated fixed-position toast notification */}
       {notification && (

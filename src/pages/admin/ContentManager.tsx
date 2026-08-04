@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { usePageBuilderStore, DEFAULT_PAGES_CACHE, type PageData, type SectionData } from '@/stores/pageBuilderStore'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { 
@@ -285,9 +286,40 @@ export const ContentManager: React.FC = () => {
     }
   }
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   return (
     <div className="space-y-6">
       
+      {/* Sub-Navigation Header Bar */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3 flex-wrap">
+        <Link
+          to={`${prefix}/content`}
+          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all"
+        >
+          Website Pages CMS
+        </Link>
+        <Link
+          to={`${prefix}/blog`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Blog CMS
+        </Link>
+        <Link
+          to={`${prefix}/marketplace`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Marketplace
+        </Link>
+        <Link
+          to={`${prefix}/media`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Media Library
+        </Link>
+      </div>
+
       {/* ── Top Sleek Horizontal Page Control Bar ── */}
       <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/8 bg-[#070a12]/90 backdrop-blur-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-xl">
         

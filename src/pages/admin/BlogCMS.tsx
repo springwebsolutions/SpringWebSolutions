@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { 
@@ -242,9 +243,40 @@ export const BlogCMS: React.FC = () => {
     )
   }
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   return (
     <div className="space-y-6">
       
+      {/* Sub-Navigation Header Bar */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3 flex-wrap">
+        <Link
+          to={`${prefix}/content`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Website Pages CMS
+        </Link>
+        <Link
+          to={`${prefix}/blog`}
+          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all"
+        >
+          Blog CMS
+        </Link>
+        <Link
+          to={`${prefix}/marketplace`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Marketplace
+        </Link>
+        <Link
+          to={`${prefix}/media`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Media Library
+        </Link>
+      </div>
+
       {isEditing ? (
         // EDIT / CREATE POST FORM VIEW
         <div className="space-y-6">
