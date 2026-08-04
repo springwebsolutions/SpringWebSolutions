@@ -39,6 +39,7 @@ export const displayRazorpayCheckout = async (options: RazorpayOptions): Promise
     return
   }
 
+  // Fetch production or environment Razorpay Key ID
   const keyId = (import.meta.env.VITE_RAZORPAY_KEY_ID || '').trim()
 
   try {
