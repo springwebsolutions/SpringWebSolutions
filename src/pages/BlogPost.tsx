@@ -102,6 +102,19 @@ All database backups, SSL certificates, domain names, and source repositories be
 
 ---
 
+## Frequently Asked Questions (FAQ)
+
+### What is included in the ₹15,000 website package by Spring Web Solutions?
+The ₹15,000 package includes a custom React/Next.js high-speed website, responsive touch design, technical SEO, sub-1.0 second page load performance, 100% full source code and database ownership, and 1 year domain and hosting.
+
+### Does Spring Web Solutions charge monthly subscription fees?
+No. Spring Web Solutions delivers 100% full source code and database ownership with zero recurring platform locks or monthly subscription fees.
+
+### Where is Spring Web Solutions located?
+Our primary engineering architects are based in **Udumalpet, Tamil Nadu**, serving clients across Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, and India.
+
+---
+
 ## First 15 Customers Only — Lock In Your Spot Today!
 
 Due to the intensive engineer allocation required for each client project, this promotional rate is strictly capped at **the first 15 bookings**.
@@ -174,6 +187,19 @@ No slow drag-and-drop builders. Every module is compiled with modern web framewo
 
 ### 3. Complete Ownership & Zero Vendor Lock-In
 All database backups, SSL certificates, custom domains, and source repositories belong 100% to your enterprise.
+
+---
+
+## Frequently Asked Questions (FAQ)
+
+### What is included in the $249 Global Website Package?
+The $249 Global package includes enterprise React/Next.js web application architecture, guaranteed sub-1.0 second load speed, technical SEO setup, JSON-LD Schema AEO optimization, 100% Git repository and database ownership, and 1 year domain and cloud hosting.
+
+### Are there any recurring platform fees for the $249 website package?
+No. You receive full GitHub source code repository access and complete database ownership without monthly software locks.
+
+### How does Spring Web Solutions guarantee sub-1.0 second load speeds?
+We engineer custom single-page and serverless web architecture on React & Next.js compiled at the edge with zero bloatware or heavy CMS plugins.
 
 ---
 
@@ -342,13 +368,120 @@ export const BlogPost: React.FC = () => {
     )
   }
 
+const generateJsonLd = (post: PostDetail) => {
+  const isIndia = post.slug.includes('india') || post.slug.includes('inr')
+  const isOffer = isIndia || post.slug.includes('global') || post.slug.includes('usd')
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    'mainEntityOfPage': {
+      '@type': 'WebPage',
+      '@id': `https://www.springwebsolutions.in/blog/${post.slug}`
+    },
+    'headline': post.title,
+    'description': post.seo_description || post.excerpt,
+    'image': post.featured_image ? `https://www.springwebsolutions.in${post.featured_image}` : 'https://www.springwebsolutions.in/logo-emblem.png',
+    'author': {
+      '@type': 'Organization',
+      'name': post.profiles?.full_name || 'Spring Web Engineering Team',
+      'url': 'https://www.springwebsolutions.in/'
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'Spring Web Solutions',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://www.springwebsolutions.in/logo-emblem.png'
+      }
+    },
+    'datePublished': post.published_at,
+    'dateModified': post.published_at
+  }
+
+  if (!isOffer) return articleSchema
+
+  const offerSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    'name': post.title,
+    'description': post.excerpt,
+    'image': `https://www.springwebsolutions.in${post.featured_image}`,
+    'brand': {
+      '@type': 'Brand',
+      'name': 'Spring Web Solutions'
+    },
+    'offers': {
+      '@type': 'Offer',
+      'url': `https://www.springwebsolutions.in/blog/${post.slug}`,
+      'priceCurrency': isIndia ? 'INR' : 'USD',
+      'price': isIndia ? '15000' : '249',
+      'priceValidUntil': '2026-12-31',
+      'itemCondition': 'https://schema.org/NewCondition',
+      'availability': 'https://schema.org/InStock',
+      'seller': {
+        '@type': 'Organization',
+        'name': 'Spring Web Solutions'
+      }
+    }
+  }
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': isIndia ? [
+      {
+        '@type': 'Question',
+        'name': 'What is included in the ₹15,000 website package by Spring Web Solutions?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': 'The ₹15,000 package includes a custom React/Next.js high-speed website, responsive touch design, technical SEO, sub-1.0 second page load performance, 100% full source code and database ownership, and 1 year domain and hosting.'
+        }
+      },
+      {
+        '@type': 'Question',
+        'name': 'Does Spring Web Solutions charge monthly subscription fees?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': 'No. Spring Web Solutions delivers 100% full source code and database ownership with zero recurring platform locks or monthly subscription fees.'
+        }
+      }
+    ] : [
+      {
+        '@type': 'Question',
+        'name': 'What is included in the $249 Global Website Package?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': 'The $249 Global package includes enterprise React/Next.js web application architecture, guaranteed sub-1.0 second load speed, technical SEO setup, JSON-LD Schema AEO optimization, 100% Git repository and database ownership, and 1 year domain and cloud hosting.'
+        }
+      },
+      {
+        '@type': 'Question',
+        'name': 'Are there any recurring platform fees for the $249 website package?',
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': 'No. You receive full GitHub source code repository access and complete database ownership without monthly software locks.'
+        }
+      }
+    ]
+  }
+
+  return [articleSchema, offerSchema, faqSchema]
+}
+
   return (
     <div className="min-h-screen page-bg flex flex-col relative">
       <SEOHead
         title={post.seo_title || `${post.title} | Spring Web Blog`}
         description={post.seo_description || post.excerpt}
+        keywords={isIndiaOffer 
+          ? 'website development Udumalpet, web design Tiruppur, custom software company Coimbatore, website package ₹15000 India, React NextJS web agency Tamil Nadu, Spring Web Solutions'
+          : 'custom business website development $249, full source code website agency, high speed React web application, AI search engine optimization AEO, Spring Web Solutions'
+        }
+        canonicalUrl={`https://www.springwebsolutions.in/blog/${post.slug}`}
         ogImage={displayImage}
         type="article"
+        jsonLd={generateJsonLd(post)}
       />
       
       {/* Scroll indicator progress bar */}

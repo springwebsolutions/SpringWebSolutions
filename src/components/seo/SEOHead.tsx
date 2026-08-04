@@ -7,6 +7,7 @@ export interface SEOHeadProps {
   canonicalUrl?: string
   ogImage?: string
   type?: string
+  jsonLd?: object | object[]
 }
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
@@ -15,7 +16,8 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   keywords = 'website development Udumalpet, custom ERP CRM software Udumalpet, app development Udumalpet, software company Coimbatore, web development company Tamil Nadu, custom CRM development India, software agency Udumalpet, Spring Web Solutions',
   canonicalUrl = typeof window !== 'undefined' ? window.location.href : 'https://www.springwebsolutions.in/',
   ogImage = 'https://www.springwebsolutions.in/logo-emblem.png',
-  type = 'website'
+  type = 'website',
+  jsonLd
 }) => {
   useEffect(() => {
     // 1. Title
@@ -70,7 +72,19 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setMeta('twitter:description', description)
     setMeta('twitter:image', ogImage)
 
-  }, [title, description, keywords, canonicalUrl, ogImage, type])
+    // 6. Dynamic JSON-LD Structured Data for Search Engine & AI Answer Engine Indexing
+    if (jsonLd) {
+      let script = document.getElementById('schema-ld-json') as HTMLScriptElement
+      if (!script) {
+        script = document.createElement('script')
+        script.id = 'schema-ld-json'
+        script.type = 'application/ld+json'
+        document.head.appendChild(script)
+      }
+      script.text = JSON.stringify(jsonLd)
+    }
+
+  }, [title, description, keywords, canonicalUrl, ogImage, type, jsonLd])
 
   return null
 }
