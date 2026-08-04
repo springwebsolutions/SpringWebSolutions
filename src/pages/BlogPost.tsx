@@ -303,9 +303,9 @@ export const BlogPost: React.FC = () => {
   const isGlobalOffer = post?.slug === 'limited-time-business-website-offer-global' || slug === 'limited-time-business-website-offer-global' || slug === 'exclusive-limited-time-business-package-usd'
   const isOfferPost = isIndiaOffer || isGlobalOffer
 
-  // Image display based on currencyMode
+  // Image display based on post region
   const displayImage = isOfferPost
-    ? (currencyMode === 'INR' ? '/offer-banner-inr.jpg' : '/offer-banner-usd.jpg')
+    ? (isIndiaOffer ? '/offer-banner-inr.jpg' : '/offer-banner-usd.jpg')
     : (post?.featured_image || '/offer-banner-inr.jpg')
 
   if (loading) {
