@@ -82,24 +82,24 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
   const plans = content?.plans || defaultPlans
 
   return (
-    <section id="pricing" className="py-24 relative bg-[#04060c] border-b border-white/5 transition-colors duration-300 overflow-hidden">
+    <section id="pricing" className="py-24 relative dark:bg-[#04060c] light:bg-slate-50 border-b dark:border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
       {/* Background Glow Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-teal-500/10 blur-[120px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-teal-500/10 blur-[120px] pointer-events-none rounded-full dark:opacity-100 light:opacity-30" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
         
         {/* Title Block */}
         <div className="text-center max-w-3xl mx-auto space-y-4 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider shadow-sm">
-            <Sparkles size={14} className="text-emerald-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full dark:bg-emerald-500/10 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 light:bg-emerald-100 light:border-emerald-300 text-xs font-bold uppercase tracking-wider shadow-sm">
+            <Sparkles size={14} className="text-emerald-600 dark:text-emerald-400" />
             <span>Transparent Investment Plans</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white font-display tracking-tight uppercase">
+          <h2 className="text-3xl sm:text-5xl font-extrabold dark:text-white light:text-slate-900 font-display tracking-tight uppercase">
             {title}
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-400 font-sans font-light leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
             {subtitle}
           </p>
         </div>
@@ -111,8 +111,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
               key={idx}
               className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 ${
                 plan.isPopular
-                  ? 'bg-gradient-to-b from-emerald-500/15 via-[#080d18] to-[#04060c] border-2 border-emerald-500 shadow-2xl shadow-emerald-950/40 -translate-y-2'
-                  : 'glass-panel border border-white/10 hover:border-white/20 bg-white/[0.02]'
+                  ? 'dark:bg-gradient-to-b dark:from-emerald-500/15 dark:via-[#080d18] dark:to-[#04060c] light:bg-gradient-to-b light:from-emerald-500/10 light:via-white light:to-emerald-50/40 border-2 border-emerald-500 shadow-2xl dark:shadow-emerald-950/40 light:shadow-emerald-500/10 -translate-y-2'
+                  : 'dark:glass-panel dark:border-white/10 dark:hover:border-white/20 dark:bg-white/[0.02] light:bg-white light:border-slate-200 light:hover:border-slate-300 light:shadow-lg light:hover:shadow-xl'
               }`}
             >
               {plan.isPopular && (
@@ -124,17 +124,17 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="font-display text-2xl font-bold text-white tracking-tight">{plan.name}</h3>
-                  <p className="text-xs text-slate-400 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
+                  <h3 className="font-display text-2xl font-bold dark:text-white light:text-slate-900 tracking-tight">{plan.name}</h3>
+                  <p className="text-xs dark:text-slate-400 light:text-slate-600 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
                 </div>
 
-                <div className="py-3 border-y border-white/10 space-y-1">
+                <div className="py-3 border-y dark:border-white/10 light:border-slate-200 space-y-1">
                   <div className="flex items-baseline gap-1">
-                    <span className="font-display text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{plan.price}</span>
-                    {plan.period && <span className="text-xs text-slate-400 font-medium">/{plan.period}</span>}
+                    <span className="font-display text-4xl sm:text-5xl font-extrabold dark:text-white light:text-slate-900 tracking-tight">{plan.price}</span>
+                    {plan.period && <span className="text-xs dark:text-slate-400 light:text-slate-500 font-medium">/{plan.period}</span>}
                   </div>
                   {plan.price !== "Custom Quote" && (
-                    <p className="text-[11px] text-amber-400/90 font-sans leading-tight pt-1">
+                    <p className="text-[11px] dark:text-amber-400/90 light:text-amber-700 font-sans leading-tight pt-1 font-medium">
                       * Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.
                     </p>
                   )}
@@ -142,12 +142,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
 
                 {/* Feature List */}
                 <div className="space-y-3 pt-2">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">What's included:</div>
+                  <div className="text-[11px] font-bold dark:text-slate-400 light:text-slate-500 uppercase tracking-wider">What's included:</div>
                   <ul className="space-y-2.5">
                     {plan.features.map((feat, fIdx) => (
-                      <li key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-snug">
-                        <span className="h-4 w-4 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 mt-0.5">
-                          <Check size={10} className="text-emerald-400" strokeWidth={3} />
+                      <li key={fIdx} className="flex items-start gap-2.5 text-xs dark:text-slate-300 light:text-slate-700 leading-snug">
+                        <span className="h-4 w-4 rounded-full dark:bg-emerald-500/20 dark:border-emerald-500/40 light:bg-emerald-100 light:border-emerald-300 flex items-center justify-center shrink-0 mt-0.5 border">
+                          <Check size={10} className="text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
                         </span>
                         <span>{feat}</span>
                       </li>
@@ -162,7 +162,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                   className={`w-full py-3 px-6 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     plan.isPopular
                       ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20'
-                      : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white'
+                      : 'dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-white light:bg-slate-100 light:hover:bg-slate-200 light:border-slate-300 light:text-slate-900 border'
                   }`}
                 >
                   <span>{plan.ctaText}</span>
@@ -179,7 +179,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                       notes: { planName: plan.name }
                     })
                   }}
-                  className="w-full py-2.5 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 dark:border-emerald-500/30 dark:text-emerald-400 light:bg-emerald-50 light:hover:bg-emerald-100 light:border-emerald-300 light:text-emerald-700 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border"
                 >
                   <span>Pay Deposit via Razorpay</span>
                   <span className="font-mono opacity-80">({plan.price})</span>
@@ -190,16 +190,16 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
         </div>
 
         {/* Bottom SLA & Trust guarantee bar */}
-        <div className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left bg-white/[0.02]">
+        <div className="p-6 rounded-2xl border dark:border-white/10 dark:bg-white/[0.02] light:border-slate-200 light:bg-white light:shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left transition-colors">
           <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-              <ShieldCheck className="text-emerald-400" size={24} />
+            <div className="h-12 w-12 rounded-xl dark:bg-emerald-500/10 dark:border-emerald-500/20 light:bg-emerald-100 light:border-emerald-200 flex items-center justify-center shrink-0 border">
+              <ShieldCheck className="text-emerald-600 dark:text-emerald-400" size={24} />
             </div>
             <div>
-              <div className="text-sm font-bold text-white">100% Code Ownership &bull; Zero Monthly Lock-ins</div>
-              <div className="text-xs text-slate-400">
+              <div className="text-sm font-bold dark:text-white light:text-slate-900">100% Code Ownership &bull; Zero Monthly Lock-ins</div>
+              <div className="text-xs dark:text-slate-400 light:text-slate-600">
                 All repositories, database assets, and SSL keys belong 100% to your company. 
-                <span className="text-amber-400/90 font-medium block mt-0.5">* Note: Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.</span>
+                <span className="dark:text-amber-400/90 light:text-amber-700 font-medium block mt-0.5">* Note: Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.</span>
               </div>
             </div>
           </div>
