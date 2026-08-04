@@ -21,6 +21,8 @@ interface KBArticle {
   created_at: string
 }
 
+import SEOHead from '@/components/seo/SEOHead'
+
 export const KBListing: React.FC = () => {
   const [categories, setCategories] = useState<KBCategory[]>([])
   const [articles, setArticles] = useState<KBArticle[]>([])
@@ -73,6 +75,10 @@ export const KBListing: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
+      <SEOHead
+        title="Knowledge Base & Technical Help Guides | Spring Web Solutions"
+        description="Explore documentation, setup guides, API tutorials, and technical troubleshooting articles for Spring Web Solutions platforms and digital products."
+      />
       <CareersNavbar />
 
       <main className="flex-grow py-16">

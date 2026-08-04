@@ -5,6 +5,7 @@ import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer'
 import { ArrowLeft, BookOpen, Calendar, HelpCircle, Loader2, AlertCircle } from 'lucide-react'
+import SEOHead from '@/components/seo/SEOHead'
 
 interface KBArticleDetail {
   id: string
@@ -109,6 +110,10 @@ export const KBArticle: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <SEOHead
+                title={article.seo_title || `${article.title} | Spring Web Help Center`}
+                description={article.seo_description || article.content.substring(0, 160).replace(/[#*`]/g, '')}
+              />
               
               {/* Left Column - Article Content */}
               <div className="lg:col-span-8 space-y-6">

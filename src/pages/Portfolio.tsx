@@ -23,6 +23,8 @@ import {
   ChevronRight
 } from 'lucide-react'
 
+import SEOHead from '@/components/seo/SEOHead'
+
 interface PortfolioItem {
   id: string
   title: string
@@ -139,6 +141,10 @@ export const Portfolio: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white transition-colors duration-300 flex flex-col">
+      <SEOHead
+        title="Client Portfolio & Web Engineering Case Studies | Spring Web Solutions"
+        description="Browse our portfolio of completed websites, enterprise ERP/CRM portals, e-commerce stores, and mobile applications developed for clients in Udumalpet, Tamil Nadu, India & worldwide."
+      />
       <Navbar />
 
       <main className="flex-1 relative overflow-hidden">

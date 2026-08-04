@@ -101,7 +101,10 @@ export const CareersHome: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans transition-colors duration-300">
-      <CareersSeo />
+      <CareersSeo
+        title="Careers & Job Openings Vault | SpringWeb Solutions (Udumalpet, Tamil Nadu & Remote)"
+        description="Discover tech career opportunities, developer job vacancies, and engineering internships in Udumalpet, Tamil Nadu, Pan-India, and Remote worldwide. Free career guides and interview prep."
+      />
       <CareersNavbar />
 
       <main className="flex-grow">

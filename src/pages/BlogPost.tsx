@@ -8,6 +8,7 @@ import {
   Calendar, Clock, User, ArrowLeft, Loader2, 
   Share2, MessageSquare, AlertCircle 
 } from 'lucide-react'
+import SEOHead from '@/components/seo/SEOHead'
 
 interface PostDetail {
   id: string
@@ -140,6 +141,12 @@ export const BlogPost: React.FC = () => {
 
   return (
     <div className="min-h-screen page-bg flex flex-col relative">
+      <SEOHead
+        title={post.seo_title || `${post.title} | Spring Web Blog`}
+        description={post.seo_description || post.excerpt}
+        ogImage={post.featured_image || 'https://www.springwebsolutions.in/logo-emblem.png'}
+        type="article"
+      />
       
       {/* Scroll indicator progress bar */}
       <div 

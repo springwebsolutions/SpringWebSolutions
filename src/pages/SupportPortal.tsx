@@ -12,6 +12,8 @@ import {
   Clock, ArrowRight, ShieldAlert, FileText, ChevronRight 
 } from 'lucide-react'
 
+import SEOHead from '@/components/seo/SEOHead'
+
 export const SupportPortal: React.FC = () => {
   const { user, profile, loading: authLoading } = useAuthStore()
   const navigate = useNavigate()
@@ -139,6 +141,10 @@ export const SupportPortal: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
+      <SEOHead
+        title="Customer Support Portal & Help Desk | Spring Web Solutions"
+        description="Get technical support, submit help desk tickets, check ticket status, and resolve issues for websites, ERP/CRM software, and mobile apps built by Spring Web Solutions."
+      />
       <Navbar />
 
       <main className="flex-grow py-16">

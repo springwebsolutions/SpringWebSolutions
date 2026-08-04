@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginData } from '@/lib/validation'
 import { KeyRound, Mail, Loader2, AlertCircle, ArrowLeft, User, UserPlus, CheckCircle } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
+import SEOHead from '@/components/seo/SEOHead'
 
 export const Login: React.FC = () => {
   const navigate = useNavigate()
@@ -128,6 +129,10 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col justify-center items-center px-4 text-slate-200 relative">
+      <SEOHead
+        title="Client Portal Sign In & Registration | Spring Web Solutions"
+        description="Sign in to your Spring Web Solutions client account to access active projects, manage support tickets, download licenses, and view invoices."
+      />
       {/* Decorative Glow Nodes */}
       <div className="glow-node glow-indigo -bottom-20 -left-20" />
       <div className="glow-node glow-emerald -top-20 -right-20" />

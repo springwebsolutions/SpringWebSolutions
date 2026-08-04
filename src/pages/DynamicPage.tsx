@@ -17,9 +17,9 @@ const ensureFullSections = (slug: string, fetchedSections: SectionData[]): Secti
 }
 
 export const DynamicPage: React.FC = () => {
-  const { slug } = useParams<{ slug?: string }>()
-  const navigate = useNavigate()
-  const pageSlug = slug || window.location.pathname.substring(1) || 'home'
+  const location = useLocation()
+  const path = location.pathname.replace('/', '')
+  const pageSlug = path === '' ? 'home' : path
   
   const { 
     currentPage, 
@@ -39,19 +39,39 @@ export const DynamicPage: React.FC = () => {
     }
   }, [pageSlug])
 
-  useEffect(() => {
+  // Get title and description per page
+  const getSeoData = () => {
     if (pageSlug === 'home') {
-      document.title = 'Spring Web Solutions | Web, Android, iOS & Windows Software Development Agency in Udumalpet, Tamil Nadu, India'
-    } else if (pageSlug === 'about') {
-      document.title = 'About Us | Spring Web Solutions Engineering Team & Standards'
-    } else if (pageSlug === 'services') {
-      document.title = 'Our Services | Web Development, Android Apps, Windows Software & SEO'
-    } else if (pageSlug === 'plans' || pageSlug === 'pricing') {
-      document.title = 'Pricing Plans & Razorpay Checkout | Spring Web Solutions'
-    } else if (currentPage?.title) {
-      document.title = `${currentPage.title} | Spring Web Solutions`
+      return {
+        title: 'Spring Web Solutions | Website Development, Custom ERP/CRM & App Engineering (Udumalpet, Tamil Nadu, India & Global)',
+        description: 'Spring Web Solutions provides high-performance website development, custom ERP & CRM software, and Android/iOS/Windows app development. Serving businesses locally in Udumalpet, Tiruppur & Coimbatore, statewide across Tamil Nadu, nationally across India, and internationally worldwide.'
+      }
     }
-  }, [pageSlug, currentPage])
+    if (pageSlug === 'about') {
+      return {
+        title: 'About Us | Spring Web Solutions Engineering Team & Standards (Udumalpet, Tamil Nadu)',
+        description: 'Learn about Spring Web Solutions, a premier software engineering agency based in Udumalpet, Tamil Nadu. Discover our mission, technical architecture standards, and dedicated development team.'
+      }
+    }
+    if (pageSlug === 'services') {
+      return {
+        title: 'Our Services | Web Development, Android & iOS Apps, ERP/CRM & Windows Software',
+        description: 'Explore Spring Web Solutions services: custom web application development, Android & iOS mobile apps, enterprise ERP & CRM software engineering, Windows desktop software, and technical SEO.'
+      }
+    }
+    if (pageSlug === 'plans' || pageSlug === 'pricing') {
+      return {
+        title: 'Pricing Plans & Software Development Packages | Spring Web Solutions',
+        description: 'View transparent pricing packages for website development, custom software engineering, ERP/CRM systems, and mobile apps by Spring Web Solutions. Request a custom quote today.'
+      }
+    }
+    return {
+      title: currentPage?.title ? `${currentPage.title} | Spring Web Solutions` : 'Spring Web Solutions | Digital Engineering Agency',
+      description: 'Spring Web Solutions builds high-performance web applications, enterprise ERP/CRM software, and mobile apps.'
+    }
+  }
+
+  const seoData = getSeoData()
 
   useEffect(() => {
     if (!loading) {
@@ -107,6 +127,7 @@ export const DynamicPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-brand-light dark:bg-brand-obsidian flex flex-col transition-colors duration-300">
+      <SEOHead title={seoData.title} description={seoData.description} />
       <Navbar />
       
       {/* Dynamic compiler compiling the dynamic layout grid sections */}

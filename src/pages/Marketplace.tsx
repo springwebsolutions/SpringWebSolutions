@@ -20,6 +20,8 @@ interface Product {
   documentation_url: string | null
 }
 
+import SEOHead from '@/components/seo/SEOHead'
+
 export const Marketplace: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user } = useAuthStore()
@@ -138,6 +140,10 @@ export const Marketplace: React.FC = () => {
 
   return (
     <div className="min-h-screen page-bg flex flex-col">
+      <SEOHead
+        title="Software Marketplace & Digital Product Store | Spring Web Solutions"
+        description="Explore and buy premium ready-to-deploy website templates, ERP & CRM modules, mobile app source codes, and automation tools built by Spring Web Solutions."
+      />
       <Navbar />
 
       <main className="flex-grow py-16">

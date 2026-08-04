@@ -11,6 +11,8 @@ import {
   CheckCircle, Loader2, AlertCircle, Clock, Sparkles, Headphones 
 } from 'lucide-react'
 
+import SEOHead from '@/components/seo/SEOHead'
+
 export const Contact: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -106,6 +108,10 @@ export const Contact: React.FC = () => {
 
   return (
     <div className="min-h-screen page-bg flex flex-col">
+      <SEOHead
+        title="Contact Us & Project Consultation | Spring Web Solutions (Udumalpet & Global)"
+        description="Get in touch with Spring Web Solutions for website engineering, custom ERP/CRM software, or mobile app development. Contact our headquarters in Udumalpet, Tamil Nadu or request a free quote online."
+      />
       <Navbar />
 
       <main className="flex-grow py-12 sm:py-20 relative overflow-hidden">

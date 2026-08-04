@@ -6,9 +6,10 @@ import { displayRazorpayCheckout } from '@/lib/razorpayService'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { 
-  ArrowLeft, Download, ShoppingBag, Eye, ExternalLink, 
-  BookOpen, History, Loader2, AlertCircle, CheckCircle 
+  ArrowLeft, Download, CheckCircle, Loader2, Sparkles, 
+  ExternalLink, FileText, ShoppingBag, ShieldCheck, Tag, Star
 } from 'lucide-react'
+import SEOHead from '@/components/seo/SEOHead'
 
 interface Screenshot {
   id: string
@@ -211,6 +212,11 @@ export const ProductDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
+      <SEOHead
+        title={product.seo_title || `${product.name} | Spring Web Marketplace`}
+        description={product.seo_description || product.short_description}
+        ogImage={product.product_screenshots?.[0]?.image_url || 'https://www.springwebsolutions.in/logo-emblem.png'}
+      />
       <Navbar />
 
       <main className="flex-grow py-12">
