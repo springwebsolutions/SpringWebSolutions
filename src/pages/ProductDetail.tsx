@@ -7,7 +7,8 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { 
   ArrowLeft, Download, CheckCircle, Loader2, Sparkles, 
-  ExternalLink, FileText, ShoppingBag, ShieldCheck, Tag, Star
+  ExternalLink, FileText, ShoppingBag, ShieldCheck, Tag, Star,
+  AlertCircle, BookOpen, History as HistoryIcon
 } from 'lucide-react'
 import SEOHead from '@/components/seo/SEOHead'
 
@@ -32,6 +33,7 @@ interface ProductDetailData {
   type: string
   status: string
   changelog: Array<{ version: string; date: string; changes: string[] }>
+  product_screenshots?: Screenshot[]
   seo_title: string | null
   seo_description: string | null
 }
@@ -368,7 +370,7 @@ export const ProductDetail: React.FC = () => {
               {activeTab === 'changelog' && (
                 <div className="space-y-6">
                   <h3 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2 light:text-slate-900">
-                    <History size={20} className="text-brand-emerald" />
+                    <HistoryIcon size={20} className="text-brand-emerald" />
                     <span>Version Releases</span>
                   </h3>
                   

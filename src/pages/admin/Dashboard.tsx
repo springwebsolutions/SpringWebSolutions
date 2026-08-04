@@ -531,14 +531,17 @@ export const Dashboard: React.FC = () => {
           ) : (
             <div className="space-y-1">
               {leads.slice(0, 6).map(lead => {
-                const statusStyle = {
-                  won:       'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-                  lost:      'bg-rose-500/10 text-rose-400 border-rose-500/20',
-                  new:       'bg-sky-500/10 text-sky-400 border-sky-500/20',
-                  contacted: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
-                  qualified: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-                  proposal:  'bg-orange-500/10 text-orange-400 border-orange-500/20',
-                }[lead.status || 'new'] || 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                const statusStyleMap: Record<string, string> = {
+                  won:           'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+                  lost:          'bg-rose-500/10 text-rose-400 border-rose-500/20',
+                  new:           'bg-sky-500/10 text-sky-400 border-sky-500/20',
+                  contacted:     'bg-violet-500/10 text-violet-400 border-violet-500/20',
+                  qualified:     'bg-amber-500/10 text-amber-400 border-amber-500/20',
+                  proposal:      'bg-orange-500/10 text-orange-400 border-orange-500/20',
+                  proposal_sent: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+                  negotiation:   'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+                }
+                const statusStyle = statusStyleMap[lead.status || 'new'] || 'bg-slate-500/10 text-slate-400 border-slate-500/20'
 
                 return (
                   <div key={lead.id} className="flex items-center gap-3 py-2 border-b border-white/[0.04] last:border-0 group hover:bg-white/[0.02] -mx-2 px-2 rounded-lg transition-colors">
