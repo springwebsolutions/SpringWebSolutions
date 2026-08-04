@@ -38,35 +38,35 @@ const detectInitialCurrencyMode = (): 'INR' | 'USD' => {
   return 'USD'
 }
 
-const OFFER_POST_DETAIL: PostDetail = {
-  id: 'post-promo-01',
-  title: 'Urgent: Limited Time Offer — Get Your Complete Business Website for Just ₹15,000 / $249',
-  slug: 'exclusive-limited-time-business-package',
-  excerpt: 'Exclusive limited-time package for startups and growing businesses in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, and globally. Book this month to lock in your complete business website with 100% source code ownership.',
+const OFFER_POST_INR: PostDetail = {
+  id: 'post-promo-inr',
+  title: 'Limited Time Launch Offer: Complete Business Website for Just ₹15,000',
+  slug: 'limited-time-business-website-offer-india',
+  excerpt: 'Exclusive launch offer for startups and growing businesses in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, and across India. Get a high-speed React website with 100% full source code ownership for ₹15,000.',
   featured_image: '/offer-banner-inr.jpg',
   published_at: '2026-08-04T12:00:00Z',
   reading_time_minutes: 4,
-  seo_title: 'Limited Time Business Website Offer: ₹15,000 / $249 | Spring Web Solutions',
-  seo_description: 'Get a complete high-performance React/Next.js business website with sub-1.0s load speed & 100% source code ownership for just ₹15,000 (India) / $249 (Global). Book now!',
+  seo_title: 'Limited Time Business Website Offer: ₹15,000 | Spring Web Solutions India',
+  seo_description: 'Get a complete high-performance React/Next.js business website with sub-1.0s load speed & 100% source code ownership for just ₹15,000 in Udumalpet, Tamil Nadu, and India. Book now!',
   profiles: { full_name: 'Spring Web Engineering Team' },
   categories: [
     { id: 'cat-1', name: 'Promotions & Offers', slug: 'promotions' },
     { id: 'cat-2', name: 'Web Development', slug: 'web-development' }
   ],
   content: `
-# Exclusive Launch Offer: Complete High-Performance Business Website for Just ₹15,000 / $249
+# Exclusive Launch Offer: Complete High-Performance Business Website for Just ₹15,000
 
 In today's fast-moving digital economy, a slow or outdated website is the single biggest leak in a business's sales pipeline. Traditional web agencies often trap business owners in endless monthly subscriptions, recurring maintenance fees, and proprietary locks that prevent you from owning your own digital asset.
 
-At **Spring Web Solutions**, we believe every business — whether a local startup in **Udumalpet, Tiruppur, Coimbatore, Tamil Nadu** or a growing international enterprise — deserves high-speed modern software architecture with **100% full source code ownership**.
+At **Spring Web Solutions**, we believe every business — from local startups in **Udumalpet, Tiruppur, and Coimbatore** to enterprises across **Tamil Nadu and India** — deserves high-speed modern software architecture with **100% full source code ownership**.
 
-For a limited time, we are opening **15 exclusive spots** for our complete business web application package at an unbelievable flat rate of **₹15,000 INR** (India) / **$249 USD** (Rest of the World).
+For a limited time, we are opening **15 exclusive spots** for our complete business web application package at a flat, one-time investment of **₹15,000 INR**.
 
 ---
 
 ## Why Traditional Subscriptions Cost You Thousands
 
-Most website platforms (like Wix or Shopify) charge recurring monthly fees that accumulate to hundreds of dollars every year, without giving you access to the underlying code. If you decide to cancel, your website disappears.
+Most website platforms (like Wix or Shopify) charge recurring monthly fees that accumulate to thousands of rupees every year, without giving you access to the underlying code. If you decide to cancel, your website disappears.
 
 With the **Spring Web Solutions Autonomous Business Package**, you receive:
 - **Zero Recurring Platform Lock-ins**: You own the code 100%.
@@ -106,11 +106,85 @@ All database backups, SSL certificates, domain names, and source repositories be
 
 Due to the intensive engineer allocation required for each client project, this promotional rate is strictly capped at **the first 15 bookings**.
 
-- **WhatsApp Direct**: [+91 80126 22119](https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20/%20$249%20Limited%20Time%20Business%20Website%20Offer!)
+- **WhatsApp Direct**: [+91 80126 22119](https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20Limited%20Time%20Business%20Website%20Offer!)
 - **Email Support**: [info@springwebsolutions.in](mailto:info@springwebsolutions.in)
-- **Official Website**: [www.springwebsolutions.in](https://www.springwebsolutions.in)
 
-> **Important Domain & Feature Note**: *Final price may exceed ₹15,000 / $249 if the custom domain name requested by the client exceeds standard registrar cost expectations, or if custom enterprise integrations increase development time and resource requirements.*
+> **Important Domain & Feature Note**: *Final price may exceed ₹15,000 if the custom domain name requested by the client exceeds standard registrar cost expectations, or if custom enterprise integrations increase development time and resource requirements.*
+  `
+}
+
+const OFFER_POST_USD: PostDetail = {
+  id: 'post-promo-usd',
+  title: 'Global Launch Offer: High-Performance Business Website Architecture for $249',
+  slug: 'limited-time-business-website-offer-global',
+  excerpt: 'Exclusive global launch offer for international startups, agencies, and enterprises. Get a high-speed React/Next.js web application with 100% full source code & database ownership for just $249 USD.',
+  featured_image: '/offer-banner-usd.jpg',
+  published_at: '2026-08-04T11:00:00Z',
+  reading_time_minutes: 4,
+  seo_title: 'Global Business Website Offer: $249 | Spring Web Solutions',
+  seo_description: 'Get a custom high-performance React/Next.js business web application with sub-1.0s load speed & 100% source code ownership for just $249 USD. Capped at 15 bookings worldwide.',
+  profiles: { full_name: 'Spring Web Global Architecture' },
+  categories: [
+    { id: 'cat-1', name: 'Promotions & Offers', slug: 'promotions' },
+    { id: 'cat-2', name: 'Web Development', slug: 'web-development' }
+  ],
+  content: `
+# Global Launch Offer: High-Performance Business Website Architecture for $249
+
+In today's fast-moving global market, page speed and technical architecture determine digital conversion rates. Web development agencies frequently trap growing businesses in recurring SaaS subscriptions and proprietary locks that prevent you from owning your application.
+
+At **Spring Web Solutions**, we build custom enterprise web architecture using industrial React and Next.js technology, delivering **100% full source code and database ownership** for every client worldwide.
+
+For a limited time, we are allocating **15 exclusive client spots** for our complete business web package at a flat rate of **$249 USD**.
+
+---
+
+## Why Traditional SaaS & Agency Subscriptions Cost You Thousands
+
+Proprietary platforms charge monthly fees that accumulate significantly year after year without granting access to the raw source repository. If you migrate or cancel, your entire application infrastructure is lost.
+
+With the **Spring Web Solutions Autonomous Business Architecture**, you receive:
+- **Zero Monthly Platform Fees**: You own 100% of your source code and database assets.
+- **Sub-1.0 Second Load Guarantee**: High-speed edge deployment engineered for top Core Web Vitals scores.
+- **AI Answer Engine Readiness (AEO)**: Complete JSON-LD schema integration optimized for ChatGPT, Perplexity, Gemini, and Google SERPs.
+
+---
+
+## What Is Included in the $249 Global Package?
+
+Every project is developed by senior software engineers with zero bloatware and enterprise-grade security.
+
+- **Modern, High-Speed Web Application**: Tailored frontend architecture built for conversion and scale.
+- **Cross-Platform Responsive UX**: Flawless performance across desktop, tablet, and mobile devices.
+- **Sub-1.0 Second Load Performance**: Accelerated asset loading for maximum SEO ranking and user retention.
+- **Technical SEO Infrastructure**: Google Search Console integration, canonical indexing, and XML sitemaps.
+- **Essential JSON-LD Schema (AEO)**: Structured entity markup for modern AI search engine discovery.
+- **100% Source Code & Database Ownership**: Direct handover of GitHub repositories and database keys.
+- **1 Year Domain & High-Speed Hosting**: Basic domain registration and cloud edge hosting included.
+
+---
+
+## Engineering Standards & Enterprise Guarantees
+
+### 1. Direct Software Architect Communication
+Work directly with senior lead engineers. We maintain transparent milestone updates and direct technical support.
+
+### 2. Zero Bloatware & Pure Edge Performance
+No slow drag-and-drop builders. Every module is compiled with modern web frameworks for maximum security and execution speed.
+
+### 3. Complete Ownership & Zero Vendor Lock-In
+All database backups, SSL certificates, custom domains, and source repositories belong 100% to your enterprise.
+
+---
+
+## Restricted to 15 Bookings Worldwide
+
+Due to dedicated engineering allocation per project, this promotional rate is strictly limited to **the first 15 confirmed bookings**.
+
+- **WhatsApp Direct**: [+91 80126 22119](https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20$249%20Global%20Business%20Website%20Offer!)
+- **Email Support**: [info@springwebsolutions.in](mailto:info@springwebsolutions.in)
+
+> **Important Domain & Feature Note**: *Final price may exceed $249 if the custom domain name requested by the client exceeds standard registrar cost expectations, or if custom enterprise integrations increase development complexity.*
   `
 }
 
@@ -121,9 +195,6 @@ export const BlogPost: React.FC = () => {
   const [related, setRelated] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [scrollProgress, setScrollProgress] = useState(0)
-
-  // Currency Mode State: Auto-detect India (INR) vs Rest of World (USD)
-  const [currencyMode, setCurrencyMode] = useState<'INR' | 'USD'>(detectInitialCurrencyMode())
 
   // Track scrolling progress
   useEffect(() => {
@@ -139,10 +210,27 @@ export const BlogPost: React.FC = () => {
 
   useEffect(() => {
     const fetchPostDetail = async () => {
-      // Check fallback post first for instant loading
+      // Direct resolution for dedicated SEO posts
+      if (slug === 'limited-time-business-website-offer-india' || slug === 'exclusive-limited-time-business-package-inr') {
+        setPost(OFFER_POST_INR)
+        document.title = OFFER_POST_INR.seo_title || OFFER_POST_INR.title
+        setLoading(false)
+        return
+      }
+
+      if (slug === 'limited-time-business-website-offer-global' || slug === 'exclusive-limited-time-business-package-usd') {
+        setPost(OFFER_POST_USD)
+        document.title = OFFER_POST_USD.seo_title || OFFER_POST_USD.title
+        setLoading(false)
+        return
+      }
+
+      // Legacy fallback mapping based on location
       if (slug === 'exclusive-limited-time-business-package') {
-        setPost(OFFER_POST_DETAIL)
-        document.title = OFFER_POST_DETAIL.seo_title || OFFER_POST_DETAIL.title
+        const isIndia = detectInitialCurrencyMode() === 'INR'
+        const targetPost = isIndia ? OFFER_POST_INR : OFFER_POST_USD
+        setPost(targetPost)
+        document.title = targetPost.seo_title || targetPost.title
         setLoading(false)
         return
       }
@@ -194,8 +282,12 @@ export const BlogPost: React.FC = () => {
         }
       } catch (err) {
         console.error('Error loading blog detail:', err)
-        if (slug === 'exclusive-limited-time-business-package') {
-          setPost(OFFER_POST_DETAIL)
+        if (slug?.includes('india') || slug?.includes('inr')) {
+          setPost(OFFER_POST_INR)
+        } else if (slug?.includes('global') || slug?.includes('usd')) {
+          setPost(OFFER_POST_USD)
+        } else {
+          setPost(OFFER_POST_INR)
         }
       } finally {
         setLoading(false)
@@ -207,7 +299,9 @@ export const BlogPost: React.FC = () => {
 
   const shareUrl = encodeURIComponent(window.location.href)
   const shareTitle = encodeURIComponent(post?.title || '')
-  const isOfferPost = slug === 'exclusive-limited-time-business-package' || post?.slug === 'exclusive-limited-time-business-package'
+  const isIndiaOffer = post?.slug === 'limited-time-business-website-offer-india' || slug === 'limited-time-business-website-offer-india' || slug === 'exclusive-limited-time-business-package-inr'
+  const isGlobalOffer = post?.slug === 'limited-time-business-website-offer-global' || slug === 'limited-time-business-website-offer-global' || slug === 'exclusive-limited-time-business-package-usd'
+  const isOfferPost = isIndiaOffer || isGlobalOffer
 
   // Image display based on currencyMode
   const displayImage = isOfferPost
@@ -304,47 +398,45 @@ export const BlogPost: React.FC = () => {
             </span>
           </div>
 
-          {/* Region & Currency Selector Switcher Bar for Offer */}
+          {/* Cross-linking Region Switcher Callout for Dedicated SEO Posts */}
           {isOfferPost && (
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl dark:bg-white/5 light:bg-slate-100 border dark:border-white/10 light:border-slate-200">
               <div className="space-y-0.5 text-center sm:text-left">
                 <div className="text-xs font-bold dark:text-white light:text-slate-900 flex items-center justify-center sm:justify-start gap-1.5">
-                  <span>Region & Currency Banner View</span>
+                  <span>Regional Package Options</span>
                 </div>
                 <div className="text-[11px] dark:text-slate-400 light:text-slate-600">
-                  {currencyMode === 'INR' ? 'Showing Indian Rupee (₹15,000) flyer' : 'Showing International USD ($249) flyer'}
+                  {isIndiaOffer 
+                    ? 'Currently viewing Indian Rupee (₹15,000) offer for Udumalpet, Tamil Nadu & India.' 
+                    : 'Currently viewing Global International ($249 USD) package for worldwide businesses.'
+                  }
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => setCurrencyMode('INR')}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
-                    currencyMode === 'INR'
-                      ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md'
-                      : 'dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700'
-                  }`}
-                >
-                  <span>🇮🇳 India (₹15,000)</span>
-                </button>
-                <button
-                  onClick={() => setCurrencyMode('USD')}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
-                    currencyMode === 'USD'
-                      ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md'
-                      : 'dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700'
-                  }`}
-                >
-                  <span>🌐 Rest of World ($249)</span>
-                </button>
+                {isIndiaOffer ? (
+                  <Link
+                    to="/blog/limited-time-business-website-offer-global"
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 hover:border-emerald-500"
+                  >
+                    <span>View Global $249 Offer &rarr;</span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/blog/limited-time-business-website-offer-india"
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 hover:border-emerald-500"
+                  >
+                    <span>View India ₹15,000 Offer &rarr;</span>
+                  </Link>
+                )}
               </div>
             </div>
           )}
 
           {/* Featured Image / Offer Banner */}
-          {displayImage && (
+          {post.featured_image && (
             <div className="rounded-3xl overflow-hidden dark:bg-white/2 light:bg-white border dark:border-white/10 light:border-slate-200 shadow-2xl">
               <img
-                src={displayImage}
+                src={post.featured_image}
                 alt={post.title}
                 className="w-full h-auto object-contain max-h-[850px] mx-auto"
               />
@@ -359,14 +451,14 @@ export const BlogPost: React.FC = () => {
                   <span>First 15 Customers Only &bull; Exclusive Launch Rate</span>
                 </div>
                 <h3 className="text-xl font-extrabold dark:text-white light:text-slate-900">
-                  {currencyMode === 'INR' ? 'Lock In Your Website for Just ₹15,000 !' : 'Lock In Your Website for Just $249 !'}
+                  {isIndiaOffer ? 'Lock In Your Website for Just ₹15,000 !' : 'Lock In Your Website for Just $249 !'}
                 </h3>
                 <p className="text-xs dark:text-slate-400 light:text-slate-600 max-w-xl">
                   Flat one-time payment. Includes 100% source code & database ownership, guaranteed &lt; 1.0s load speed, technical SEO, and direct senior engineer support.
                 </p>
               </div>
               <a
-                href={currencyMode === 'INR'
+                href={isIndiaOffer
                   ? 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20Limited%20Time%20Business%20Website%20Offer!'
                   : 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20$249%20Global%20Business%20Website%20Offer!'
                 }
@@ -375,7 +467,7 @@ export const BlogPost: React.FC = () => {
                 className="btn-primary text-xs font-bold py-3.5 px-6 shrink-0 flex items-center gap-2 shadow-lg shadow-emerald-500/20"
               >
                 <MessageSquare size={16} />
-                <span>{currencyMode === 'INR' ? 'Message on WhatsApp (₹15,000 Offer)' : 'Message on WhatsApp ($249 Offer)'}</span>
+                <span>{isIndiaOffer ? 'Message on WhatsApp (₹15,000 Offer)' : 'Message on WhatsApp ($249 Offer)'}</span>
               </a>
             </div>
           )}

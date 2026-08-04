@@ -23,15 +23,30 @@ import SEOHead from '@/components/seo/SEOHead'
 
 const DEFAULT_POSTS: Post[] = [
   {
-    id: 'post-promo-01',
-    title: 'Urgent: Limited Time Offer — Get Your Complete Business Website for Just ₹15,000 / $249',
-    slug: 'exclusive-limited-time-business-package',
-    excerpt: 'Exclusive limited-time package for startups and growing businesses in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, and globally. Book this month to lock in your complete business website with 100% source code ownership.',
+    id: 'post-promo-inr',
+    title: 'Limited Time Launch Offer: Complete Business Website for Just ₹15,000',
+    slug: 'limited-time-business-website-offer-india',
+    excerpt: 'Exclusive launch offer for startups and growing businesses in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, and across India. Get a high-speed React website with 100% full source code ownership for ₹15,000.',
     featured_image: '/offer-banner-inr.jpg',
     published_at: '2026-08-04T12:00:00Z',
-    reading_time_minutes: 3,
+    reading_time_minutes: 4,
     is_featured: true,
     profiles: { full_name: 'Spring Web Engineering Team' },
+    categories: [
+      { name: 'Promotions & Offers', slug: 'promotions' },
+      { name: 'Web Development', slug: 'web-development' }
+    ]
+  },
+  {
+    id: 'post-promo-usd',
+    title: 'Global Launch Offer: High-Performance Business Website Architecture for $249',
+    slug: 'limited-time-business-website-offer-global',
+    excerpt: 'Exclusive global launch offer for international startups, agencies, and enterprises. Get a high-speed React/Next.js web application with 100% full source code & database ownership for just $249 USD.',
+    featured_image: '/offer-banner-usd.jpg',
+    published_at: '2026-08-04T11:00:00Z',
+    reading_time_minutes: 4,
+    is_featured: false,
+    profiles: { full_name: 'Spring Web Global Architecture' },
     categories: [
       { name: 'Promotions & Offers', slug: 'promotions' },
       { name: 'Web Development', slug: 'web-development' }
