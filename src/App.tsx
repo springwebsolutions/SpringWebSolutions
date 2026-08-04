@@ -44,10 +44,8 @@ const ContactSubmissions = lazy(() => import('@/pages/admin/ContactSubmissions')
 const AdminJobPostings = lazy(() => import('@/pages/admin/AdminJobPostings').then(m => ({ default: m.AdminJobPostings })))
 const AdminCareerGuides = lazy(() => import('@/pages/admin/AdminCareerGuides').then(m => ({ default: m.AdminCareerGuides })))
 const AdminAdManager = lazy(() => import('@/pages/admin/AdminAdManager').then(m => ({ default: m.AdminAdManager })))
-const LeadGenSystem = lazy(() => import('@/pages/admin/LeadGenSystem').then(m => ({ default: m.LeadGenSystem })))
 
 const AdminApplications = lazy(() => import('@/pages/admin/AdminApplications').then(m => ({ default: m.AdminApplications })))
-const LeadAnalytics = lazy(() => import('@/pages/admin/LeadAnalytics').then(m => ({ default: m.LeadAnalytics })))
 const SystemHealth = lazy(() => import('@/pages/admin/SystemHealth').then(m => ({ default: m.SystemHealth })))
 const Admin2FASetup = lazy(() => import('@/pages/admin/Admin2FASetup').then(m => ({ default: m.Admin2FASetup })))
 
