@@ -9,12 +9,16 @@ import {
 } from 'lucide-react'
 
 // ─── QR Code display using native browser API ────────────────────────────────
-// Uses a public QR generation service (no npm dependency needed)
+// Renders SVG Data URIs directly or uses a QR generator for otpauth:// URIs
 const QRDisplay: React.FC<{ uri: string }> = ({ uri }) => {
-  const src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(uri)}&bgcolor=040509&color=10b981&margin=12`
+  const isDataUri = uri.startsWith('data:') || uri.startsWith('http')
+  const src = isDataUri 
+    ? uri 
+    : `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(uri)}&bgcolor=040509&color=10b981&margin=12`
+
   return (
     <div className="relative mx-auto w-[200px] h-[200px]">
-      <div className="absolute inset-0 rounded-2xl bg-[#040509] border border-emerald-500/20 overflow-hidden">
+      <div className="absolute inset-0 rounded-2xl bg-[#040509] border border-emerald-500/20 overflow-hidden flex items-center justify-center p-2">
         <img src={src} alt="TOTP QR Code" className="w-full h-full object-contain" />
       </div>
       {/* Corner accents */}
@@ -81,7 +85,7 @@ export const Admin2FASetup: React.FC = () => {
       if (error) throw error
 
       setFactorId(data.id)
-      setQrUri(data.totp.qr_code)
+      setQrUri(data.totp.qr_code || data.totp.uri)
       setSecret(data.totp.secret)
     } catch (err: any) {
       setVerifyError(err.message || 'Failed to start enrollment.')
@@ -89,8 +93,9 @@ export const Admin2FASetup: React.FC = () => {
   }
 
   // ── Verify code and complete enrollment ───────────────────────────────────
-  const completeEnrollment = async () => {
-    if (!factorId || verifyCode.replace(/\s/g, '').length < 6) return
+  const completeEnrollment = async (codeToVerify?: string) => {
+    const code = (codeToVerify || verifyCode).replace(/\s/g, '')
+    if (!factorId || code.length < 6) return
     setVerifyLoading(true)
     setVerifyError(null)
 
@@ -105,7 +110,7 @@ export const Admin2FASetup: React.FC = () => {
       const { error: verifyErr } = await supabase.auth.mfa.verify({
         factorId,
         challengeId: challenge.id,
-        code: verifyCode.replace(/\s/g, ''),
+        code,
       })
       if (verifyErr) throw verifyErr
 
@@ -129,9 +134,10 @@ export const Admin2FASetup: React.FC = () => {
   }
 
   // ── Remove (unenroll) factor ───────────────────────────────────────────────
-  const removeFactor = async (fid: string) => {
-    if (!removeCode || removeCode.replace(/\s/g, '').length < 6) {
-      setRemoveError('Enter your current TOTP code to confirm removal.')
+  const removeFactor = async (fid: string, codeToConfirm?: string) => {
+    const code = (codeToConfirm || removeCode).replace(/\s/g, '')
+    if (!code || code.length < 6) {
+      setRemoveError('Enter your current 6-digit TOTP code to confirm removal.')
       return
     }
     setRemoveLoading(true)
@@ -145,7 +151,7 @@ export const Admin2FASetup: React.FC = () => {
       const { error: verifyErr } = await supabase.auth.mfa.verify({
         factorId: fid,
         challengeId: challenge.id,
-        code: removeCode.replace(/\s/g, ''),
+        code,
       })
       if (verifyErr) throw new Error('Invalid code. Confirm with your current authenticator code.')
 
@@ -172,7 +178,7 @@ export const Admin2FASetup: React.FC = () => {
   const handleVerifyInput = (val: string) => {
     const cleaned = val.replace(/[^0-9]/g, '').slice(0, 6)
     setVerifyCode(cleaned)
-    if (cleaned.length === 6) setTimeout(() => completeEnrollment(), 200)
+    if (cleaned.length === 6) completeEnrollment(cleaned)
   }
 
   const is2FAEnabled = enrolledFactors.length > 0
@@ -414,7 +420,7 @@ export const Admin2FASetup: React.FC = () => {
 
             <div className="flex gap-2">
               <button
-                onClick={completeEnrollment}
+                onClick={() => completeEnrollment()}
                 disabled={verifyLoading || verifyCode.replace(/\s/g, '').length < 6}
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-black font-bold text-sm transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-40"
               >

@@ -103,8 +103,9 @@ export const AdminLogin: React.FC = () => {
   }
 
   // ── Step 2: Verify TOTP code ─────────────────────────────────────────────────
-  const verifyTotp = async () => {
-    if (!factorId || !challengeId || totpCode.length < 6) return
+  const verifyTotp = async (codeToVerify?: string) => {
+    const code = (codeToVerify || totpCode).replace(/\s/g, '')
+    if (!factorId || !challengeId || code.length < 6) return
     setLoading(true)
     setErrorMsg(null)
 
@@ -112,14 +113,14 @@ export const AdminLogin: React.FC = () => {
       const { error } = await supabase.auth.mfa.verify({
         factorId,
         challengeId,
-        code: totpCode.replace(/\s/g, ''),
+        code,
       })
 
       if (error) throw error
 
       await completeLogin()
     } catch (err: any) {
-      setErrorMsg(err.message?.includes('invalid') || err.message?.includes('expired')
+      setErrorMsg(err.message?.toLowerCase().includes('invalid') || err.message?.toLowerCase().includes('expired')
         ? 'Invalid code. Check your authenticator app and try again.'
         : err.message || 'TOTP verification failed.'
       )
@@ -155,10 +156,7 @@ export const AdminLogin: React.FC = () => {
     const cleaned = val.replace(/[^0-9]/g, '').slice(0, 6)
     setTotpCode(cleaned)
     if (cleaned.length === 6) {
-      // Auto-submit after brief delay for UX
-      setTimeout(() => {
-        if (cleaned.length === 6) verifyTotp()
-      }, 300)
+      verifyTotp(cleaned)
     }
   }
 
@@ -310,7 +308,7 @@ export const AdminLogin: React.FC = () => {
               </div>
 
               <button
-                onClick={verifyTotp}
+                onClick={() => verifyTotp()}
                 disabled={loading || totpCode.length < 6}
                 className="btn-admin-primary w-full py-2.5 text-sm justify-center shadow-lg shadow-emerald-500/20"
               >
