@@ -156,8 +156,8 @@ function App() {
               <Route path="career-guides" element={<AdminCareerGuides />} />
               <Route path="ads" element={<AdminAdManager />} />
               <Route path="crm" element={<LeadCRM />} />
-              <Route path="lead-gen" element={<LeadGenSystem />} />
-              <Route path="analytics" element={<LeadAnalytics />} />
+              <Route path="lead-gen" element={<LeadCRM />} />
+              <Route path="analytics" element={<LeadCRM />} />
               <Route path="media" element={<MediaLibrary />} />
               <Route path="support" element={<SupportManager />} />
               <Route path="contacts" element={<ContactSubmissions />} />

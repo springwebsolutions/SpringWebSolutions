@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useCRMStore, type Lead, type LeadNote, type LeadTask, type LeadActivity } from '@/stores/crmStore'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { sendResendEmail } from '@/lib/emailService'
+import { LeadGenSystem } from '@/pages/admin/LeadGenSystem'
+import { LeadAnalytics } from '@/pages/admin/LeadAnalytics'
 import { 
   Inbox, Phone, Mail, Building, Plus, Trash2, Send, CheckCircle, AlertCircle,
   MessageSquare, Calendar, CheckSquare, ListTodo, Activity, Loader2, ArrowRight,
@@ -944,151 +946,15 @@ export const LeadCRM: React.FC = () => {
 
       {/* VIEW: GOOGLE MAPS LEAD SCRAPER */}
       {crmViewMode === 'scraper' && (
-        <div className="space-y-6 animate-in fade-in duration-300">
-          {/* Scraper Control Panel */}
-          <div className="admin-card p-6 space-y-5">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                  <MapPin size={18} className="text-emerald-400" />
-                </div>
-                <div>
-                  <h2 className="text-base font-bold text-white flex items-center gap-2">
-                    <span>Google Maps Business Scraper Engine</span>
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/20">v2.1</span>
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">Discover local B2B prospects, phone numbers, and import directly into Lead CRM.</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> Live Telemetry Ready
-                </span>
-              </div>
-            </div>
-
-            <form onSubmit={handleRunScraper} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Search Terms / Keyword</label>
-                <input
-                  type="text"
-                  required
-                  value={scrapeKeyword}
-                  onChange={e => setScrapeKeyword(e.target.value)}
-                  placeholder="E.g., Textile Mills, Hotels, Clinics"
-                  className="admin-input text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Target City / Location</label>
-                <input
-                  type="text"
-                  required
-                  value={scrapeLocation}
-                  onChange={e => setScrapeLocation(e.target.value)}
-                  placeholder="E.g., Udumalpet, Tiruppur, Coimbatore"
-                  className="admin-input text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Industry Category</label>
-                <select
-                  value={scrapeCategory}
-                  onChange={e => setScrapeCategory(e.target.value)}
-                  className="admin-input text-xs"
-                >
-                  <option value="Web Development & IT">Web Development &amp; IT</option>
-                  <option value="Hospitality & Hotels">Hospitality &amp; Hotels</option>
-                  <option value="Healthcare & Clinics">Healthcare &amp; Clinics</option>
-                  <option value="Textiles & Garments">Textiles &amp; Garments</option>
-                  <option value="Manufacturing & Export">Manufacturing &amp; Export</option>
-                </select>
-              </div>
-              <div className="flex items-end">
-                <button
-                  type="submit"
-                  disabled={scraping}
-                  className="w-full btn-admin-primary justify-center py-2 text-xs font-bold shadow-lg shadow-emerald-500/20 cursor-pointer"
-                >
-                  {scraping ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
-                  <span>{scraping ? 'Scraping Google Maps…' : 'Run Scraper Engine'}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Discovered Leads Table */}
-          {scrapedLeads.length > 0 && (
-            <div className="admin-card p-6 space-y-4 animate-in fade-in duration-300">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <CheckCircle size={16} className="text-emerald-400" />
-                  <span>Discovered Business Leads ({scrapedLeads.length})</span>
-                </h3>
-                <span className="text-xs text-slate-400 font-mono">Imported to CRM: {importedCount}</span>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Business Name</th>
-                      <th>Category</th>
-                      <th>Phone</th>
-                      <th>Email Address</th>
-                      <th>Location</th>
-                      <th className="text-center">Import Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {scrapedLeads.map((biz, idx) => (
-                      <tr key={idx}>
-                        <td className="font-semibold text-white">{biz.name}</td>
-                        <td className="text-slate-400 text-xs">{biz.category}</td>
-                        <td className="text-slate-300 font-mono text-xs">{biz.phone}</td>
-                        <td className="text-emerald-400 font-mono text-xs">{biz.email}</td>
-                        <td className="text-slate-400 text-xs">{biz.city}, {biz.state}</td>
-                        <td className="text-center">
-                          <button
-                            onClick={() => importScrapedLeadToCrm(biz)}
-                            className="px-3 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1"
-                          >
-                            <Plus size={11} /> Import to CRM
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+        <div className="animate-in fade-in duration-300">
+          <LeadGenSystem />
         </div>
       )}
 
       {/* VIEW: PIPELINE ANALYTICS */}
       {crmViewMode === 'analytics' && (
-        <div className="space-y-6 animate-in fade-in duration-300">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="admin-card p-5 space-y-2">
-              <div className="text-xs font-semibold text-slate-500 uppercase">Total Leads</div>
-              <div className="text-2xl font-black text-white">{leads.length}</div>
-              <div className="text-[11px] text-emerald-400">+100% active database</div>
-            </div>
-            <div className="admin-card p-5 space-y-2">
-              <div className="text-xs font-semibold text-slate-500 uppercase">Deals Won</div>
-              <div className="text-2xl font-black text-emerald-400">{leads.filter(l => l.status === 'won').length}</div>
-              <div className="text-[11px] text-slate-500">Converted clients</div>
-            </div>
-            <div className="admin-card p-5 space-y-2">
-              <div className="text-xs font-semibold text-slate-500 uppercase">Conversion Rate</div>
-              <div className="text-2xl font-black text-indigo-400">
-                {leads.length > 0 ? Math.round((leads.filter(l => l.status === 'won').length / leads.length) * 100) : 0}%
-              </div>
-              <div className="text-[11px] text-slate-500">Pipeline conversion velocity</div>
-            </div>
-          </div>
+        <div className="animate-in fade-in duration-300">
+          <LeadAnalytics />
         </div>
       )}
 
