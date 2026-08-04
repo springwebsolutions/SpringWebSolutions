@@ -275,8 +275,8 @@ export const Dashboard: React.FC = () => {
     { to: `${prefix}/career-guides`,   icon: FileText,      label: 'Career Guides',   desc: 'Learning resources',   color: 'text-blue-400',     bg: 'bg-blue-500/5',     border: 'border-blue-500/15' },
     { to: `${prefix}/ads`,             icon: Megaphone,     label: 'Ad Slots',        desc: 'Ad placements',        color: 'text-orange-400',   bg: 'bg-orange-500/5',   border: 'border-orange-500/15' },
     { to: `${prefix}/crm`,             icon: Users,         label: 'Lead CRM',        desc: 'Pipeline & contacts',  color: 'text-emerald-400',  bg: 'bg-emerald-500/5',  border: 'border-emerald-500/15' },
-    { to: `${prefix}/lead-gen`,        icon: MapPin,        label: 'Lead Gen',        desc: 'Maps scraper',         color: 'text-green-400',    bg: 'bg-green-500/5',    border: 'border-green-500/15',   badge: 'v2.1' },
-    { to: `${prefix}/analytics`,       icon: BarChart2,     label: 'Analytics',       desc: 'Funnel metrics',       color: 'text-indigo-400',   bg: 'bg-indigo-500/5',   border: 'border-indigo-500/15' },
+    { to: `${prefix}/crm`,        icon: MapPin,        label: 'Lead Gen',        desc: 'Maps scraper',         color: 'text-green-400',    bg: 'bg-green-500/5',    border: 'border-green-500/15',   badge: 'v2.1' },
+    { to: `${prefix}/crm`,       icon: BarChart2,     label: 'Analytics',       desc: 'Funnel metrics',       color: 'text-indigo-400',   bg: 'bg-indigo-500/5',   border: 'border-indigo-500/15' },
     { to: `${prefix}/support`,         icon: Ticket,        label: 'Support Desk',    desc: 'Customer tickets',     color: 'text-rose-400',     bg: 'bg-rose-500/5',     border: 'border-rose-500/15' },
     { to: `${prefix}/contacts`,        icon: MessageSquare, label: 'Contacts',        desc: 'Enquiry forms',        color: 'text-violet-400',   bg: 'bg-violet-500/5',   border: 'border-violet-500/15' },
     { to: `${prefix}/health`,          icon: Activity,      label: 'System Health',   desc: 'API diagnostics',      color: 'text-slate-400',    bg: 'bg-slate-500/5',    border: 'border-slate-500/15' },
@@ -371,7 +371,7 @@ export const Dashboard: React.FC = () => {
               <span>New Article</span>
             </Link>
             <Link
-              to={`${prefix}/lead-gen`}
+              to={`${prefix}/crm`}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 text-xs font-bold transition-all shadow-sm shadow-emerald-500/10"
             >
               <MapPin size={13} />
@@ -551,7 +551,7 @@ export const Dashboard: React.FC = () => {
             <div className="text-center py-10 space-y-2">
               <Inbox size={24} className="mx-auto text-slate-700" />
               <p className="text-xs text-slate-600">No leads in CRM yet</p>
-              <Link to={`${prefix}/lead-gen`} className="inline-flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400 font-semibold">
+              <Link to={`${prefix}/crm`} className="inline-flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400 font-semibold">
                 <MapPin size={11} /> Start scraping leads
               </Link>
             </div>
