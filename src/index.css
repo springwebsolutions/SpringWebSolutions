@@ -578,6 +578,57 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0.75rem 1rem;
 }
 
+/* ── Light mode overrides for Admin Suite ── */
+.light .admin-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.light .admin-card:hover {
+  border-color: #cbd5e1;
+}
+
+.light .admin-input,
+.light .admin-select {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.light .admin-input::placeholder {
+  color: #64748b;
+}
+
+.light .admin-table {
+  color: #334155;
+}
+
+.light .admin-table thead th {
+  color: #64748b;
+  border-bottom-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.light .admin-table tbody tr {
+  border-bottom-color: #f1f5f9;
+}
+
+.light .admin-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.light .btn-admin-secondary {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.light .btn-admin-secondary:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
 /* Status badge variants */
 .badge {
   display: inline-flex;

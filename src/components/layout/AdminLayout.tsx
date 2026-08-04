@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import AdminLogin from '@/pages/admin/AdminLogin'
 import {
@@ -10,7 +11,7 @@ import {
   Zap, Globe, Menu, X, MessageSquare, Calendar, Briefcase, Megaphone,
   TrendingUp, Activity, UserCheck, Cpu, Search, Command,
   ChevronDown, RefreshCw, Star, BarChart2, ShoppingCart,
-  Database, Layers, MapPin, Target
+  Database, Layers, MapPin, Target, Sun, Moon
 } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
 
@@ -154,6 +155,7 @@ export const AdminLayout: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, profile, loading, initialized, mfaRequired, hasRole, initialize, signOut } = useAuthStore()
+  const { theme, toggleTheme } = usePageBuilderStore()
   const [sidebarOpen, setSidebarOpen]   = useState(true)
   const [mobileOpen, setMobileOpen]     = useState(false)
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false)
@@ -570,6 +572,19 @@ export const AdminLayout: React.FC = () => {
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400" />
               <span className="text-[10px] font-bold text-emerald-400 tracking-wider">LIVE</span>
             </div>
+
+            {/* Theme Switcher Toggle (Light Mode / Dark Mode) */}
+            <button
+              onClick={() => toggleTheme()}
+              className="p-2 rounded-lg hover:bg-white/[0.06] text-slate-400 hover:text-white transition-all cursor-pointer border border-transparent hover:border-white/10"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? (
+                <Sun size={16} className="text-amber-400 animate-in fade-in duration-200" />
+              ) : (
+                <Moon size={16} className="text-indigo-500 animate-in fade-in duration-200" />
+              )}
+            </button>
 
             {/* Notification Bell */}
             <div className="relative" ref={notifRef}>
