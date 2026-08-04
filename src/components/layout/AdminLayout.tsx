@@ -10,7 +10,7 @@ import {
   Zap, Globe, Menu, X, MessageSquare, Calendar, Briefcase, Megaphone,
   TrendingUp, Activity, UserCheck, Cpu, Search, Command,
   ChevronDown, RefreshCw, Star, BarChart2, ShoppingCart,
-  Database, Layers, MapPin
+  Database, Layers, MapPin, Target
 } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
 
@@ -293,18 +293,14 @@ export const AdminLayout: React.FC = () => {
       label: 'Content Hub',
       icon: FileText,
       items: [
-        { label: 'Website CMS', href: `${prefix}/content`, icon: Globe, desc: 'Site pages & content' },
-        { label: 'Blog CMS', href: `${prefix}/blog`, icon: BookOpen, desc: 'Articles & posts' },
-        { label: 'Marketplace', href: `${prefix}/marketplace`, icon: ShoppingCart, desc: 'Products & goods' },
-        { label: 'Media Library', href: `${prefix}/media`, icon: Image, desc: 'Files & assets' },
+        { label: 'Site & Blog CMS', href: `${prefix}/content`, icon: Globe, desc: 'Pages, blog, products & media' },
       ]
     },
     {
       label: 'Growth & Ads',
       icon: Briefcase,
       items: [
-        { label: 'Recruitment', href: `${prefix}/jobs`, icon: Briefcase, desc: 'Jobs & applications' },
-        { label: 'Knowledge Base', href: `${prefix}/kb`, icon: HelpCircle, desc: 'Help articles & guides' },
+        { label: 'Careers & Guides', href: `${prefix}/jobs`, icon: Briefcase, desc: 'Jobs, applications & KB' },
         { label: 'Ad Manager', href: `${prefix}/ads`, icon: Megaphone, desc: 'Ad slot placements' },
       ]
     },
@@ -312,8 +308,7 @@ export const AdminLayout: React.FC = () => {
       label: 'Sales & Service',
       icon: Users,
       items: [
-        { label: 'Lead CRM', href: `${prefix}/crm`, icon: Users, desc: 'Pipeline & contacts' },
-        { label: 'Lead Scraper', href: `${prefix}/lead-gen`, icon: MapPin, desc: 'Google Maps lead scraper', badge: 'v2.1' },
+        { label: 'Lead Engine & CRM', href: `${prefix}/crm`, icon: Target, desc: 'Leads, Maps scraper & analytics', badge: 'v2.1' },
         { label: 'Support & Contacts', href: `${prefix}/support`, icon: Ticket, desc: 'Support desk & enquiries' },
       ]
     },
