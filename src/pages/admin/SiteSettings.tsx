@@ -44,10 +44,11 @@ export const SiteSettings: React.FC = () => {
   const [exportLoading, setExportLoading] = useState<string | null>(null)
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
 
-  // Floating widget toggles
   const [whatsappWidgetEnabled, setWhatsappWidgetEnabled] = useState(true)
   const [aiChatEnabled, setAiChatEnabled] = useState(true)
   const [footerCtaLabel, setFooterCtaLabel] = useState('Get in Touch')
+
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
 
   useEffect(() => {
     fetchSettings()
