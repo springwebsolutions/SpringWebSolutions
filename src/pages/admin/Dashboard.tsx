@@ -335,29 +335,56 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Status chips */}
-        <div className="relative flex items-center gap-2 mt-4 flex-wrap">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10px] font-bold text-emerald-400">LIVE</span>
-          </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08]">
-            <Database size={10} className="text-slate-500" />
-            <span className="text-[10px] text-slate-500">
-              {isSupabaseConfigured ? 'Supabase Connected' : 'Supabase Not Configured'}
-            </span>
-          </div>
-          {metrics.total > 0 && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20">
-              <Users size={10} className="text-indigo-400" />
-              <span className="text-[10px] text-indigo-400">{metrics.total} Leads in CRM</span>
+        <div className="relative flex items-center justify-between flex-wrap gap-3 mt-4 pt-4 border-t border-white/[0.06]">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] font-bold text-emerald-400">LIVE ENGINE</span>
             </div>
-          )}
-          {ticketCount > 0 && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
-              <Ticket size={10} className="text-rose-400" />
-              <span className="text-[10px] text-rose-400">{ticketCount} Open Tickets</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08]">
+              <Database size={10} className="text-slate-500" />
+              <span className="text-[10px] text-slate-400">
+                {isSupabaseConfigured ? 'Supabase Connected' : 'Supabase Not Configured'}
+              </span>
             </div>
-          )}
+            {metrics.total > 0 && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20">
+                <Users size={10} className="text-indigo-400" />
+                <span className="text-[10px] text-indigo-400">{metrics.total} CRM Leads</span>
+              </div>
+            )}
+            {ticketCount > 0 && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20">
+                <Ticket size={10} className="text-rose-400" />
+                <span className="text-[10px] text-rose-400">{ticketCount} Open Tickets</span>
+              </div>
+            )}
+          </div>
+
+          {/* Quick Action Launchpad */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <Link
+              to={`${prefix}/blog`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-500/15 border border-violet-500/30 text-violet-300 hover:bg-violet-500/25 text-xs font-bold transition-all shadow-sm shadow-violet-500/10"
+            >
+              <BookOpen size={13} />
+              <span>New Article</span>
+            </Link>
+            <Link
+              to={`${prefix}/lead-gen`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 text-xs font-bold transition-all shadow-sm shadow-emerald-500/10"
+            >
+              <MapPin size={13} />
+              <span>Maps Scraper</span>
+            </Link>
+            <Link
+              to={`${prefix}/crm`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/25 text-xs font-bold transition-all shadow-sm shadow-indigo-500/10"
+            >
+              <Users size={13} />
+              <span>Manage Leads</span>
+            </Link>
+          </div>
         </div>
       </div>
 

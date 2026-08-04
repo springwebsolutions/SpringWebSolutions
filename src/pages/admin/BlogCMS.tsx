@@ -226,6 +226,14 @@ export const BlogCMS: React.FC = () => {
     }
   }
 
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredPosts = posts.filter(post => 
+    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+  )
+
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -466,13 +474,22 @@ export const BlogCMS: React.FC = () => {
               </div>
             </div>
             
-            <button
-              onClick={handleCreateNewClick}
-              className="btn-admin-primary cursor-pointer"
-            >
-              <Plus size={14} />
-              Compose Article
-            </button>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Filter articles..."
+                className="admin-input py-1.5 px-3 text-xs w-full sm:w-48"
+              />
+              <button
+                onClick={handleCreateNewClick}
+                className="btn-admin-primary cursor-pointer shrink-0"
+              >
+                <Plus size={14} />
+                Compose Article
+              </button>
+            </div>
           </div>
 
           {/* Posts Table */}
@@ -489,7 +506,7 @@ export const BlogCMS: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {posts.map(post => (
+                {filteredPosts.map(post => (
                   <tr key={post.id}>
                     <td>
                       <div className="font-semibold text-slate-200 max-w-xs truncate">{post.title}</div>
@@ -533,7 +550,7 @@ export const BlogCMS: React.FC = () => {
                     </td>
                   </tr>
                 ))}
-                {posts.length === 0 && (
+                {filteredPosts.length === 0 && (
                   <tr>
                     <td colSpan={6} className="text-center py-12 text-slate-600">
                       <BookOpen size={28} className="mx-auto mb-2 opacity-30" />
