@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useCRMStore, type Lead, type LeadNote, type LeadTask, type LeadActivity } from '@/stores/crmStore'
-import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { useCRMStore, type Lead } from '@/stores/crmStore'
+import { supabase } from '@/lib/supabase'
 import { sendResendEmail } from '@/lib/emailService'
 import { LeadGenSystem } from '@/pages/admin/LeadGenSystem'
 import { LeadAnalytics } from '@/pages/admin/LeadAnalytics'
 import { 
-  Inbox, Phone, Mail, Building, Plus, Trash2, Send, CheckCircle, AlertCircle,
-  MessageSquare, Calendar, CheckSquare, ListTodo, Activity, Loader2, ArrowRight,
-  Paperclip, FileText, Maximize2, Minimize2, Eye, ExternalLink, Archive, MapPin,
-  Search, Play, RefreshCw, BarChart2, Globe, Sparkles, Database, Layers, Target,
-  TrendingUp, Users, DollarSign, Award, ChevronRight, Filter
+  Inbox, Phone, Mail, Building, Plus, Send, Loader2, MapPin,
+  Search, BarChart2, Target, ChevronRight
 } from 'lucide-react'
 
 export interface SentEmailLog {
@@ -27,12 +24,10 @@ export interface SentEmailLog {
 export const LeadCRM: React.FC = () => {
   const { 
     leads, 
-    loading, 
     fetchLeads, 
     selectedLead, 
     selectLead, 
     notes, 
-    activities, 
     tasks, 
     updateLeadStatus, 
     addLeadNote, 
@@ -52,15 +47,6 @@ export const LeadCRM: React.FC = () => {
   // Search & Filter Query inside Deals Kanban
   const [kanbanSearch, setKanbanSearch] = useState('')
 
-  // Maps Scraper Engine State
-  const [scrapeKeyword, setScrapeKeyword] = useState('')
-  const [scrapeLocation, setScrapeLocation] = useState('Udumalpet')
-  const [scrapeCategory, setScrapeCategory] = useState('Web Development & IT')
-  const [scrapeState, setScrapeState] = useState('Tamil Nadu')
-  const [scraping, setScraping] = useState(false)
-  const [scrapedLeads, setScrapedLeads] = useState<any[]>([])
-  const [importedCount, setImportedCount] = useState(0)
-
   // Sent Emails Log History
   const [sentLogs, setSentLogs] = useState<SentEmailLog[]>(() => {
     try {
@@ -72,7 +58,7 @@ export const LeadCRM: React.FC = () => {
   })
 
   // Inspector Drawer Active Tab
-  const [activeDrawerTab, setActiveDrawerTab] = useState<'notes' | 'tasks' | 'email' | 'timeline'>('notes')
+  const [activeDrawerTab, setActiveDrawerTab] = useState<'notes' | 'tasks' | 'email'>('notes')
 
   // Note & Task Form States
   const [noteContent, setNoteContent] = useState('')
@@ -84,8 +70,6 @@ export const LeadCRM: React.FC = () => {
   const [emailFrom, setEmailFrom] = useState('hello@springwebsolutions.in')
   const [emailSubject, setEmailSubject] = useState('')
   const [emailBody, setEmailBody] = useState('')
-  const [docName, setDocName] = useState('')
-  const [docUrl, setDocUrl] = useState('')
   const [attachedFile, setAttachedFile] = useState<{ name: string; size: string; dataUrl: string } | null>(null)
   const [emailSending, setEmailSending] = useState(false)
   const [emailStatus, setEmailStatus] = useState<{ success: boolean; msg: string } | null>(null)
@@ -107,7 +91,6 @@ export const LeadCRM: React.FC = () => {
   const [quickTo, setQuickTo] = useState('')
   const [quickSubject, setQuickSubject] = useState('')
   const [quickBody, setQuickBody] = useState('')
-  const [quickAttachedFile, setQuickAttachedFile] = useState<{ name: string; size: string; dataUrl: string } | null>(null)
   const [quickSending, setQuickSending] = useState(false)
   const [quickStatus, setQuickStatus] = useState<{ success: boolean; msg: string } | null>(null)
 
@@ -134,45 +117,6 @@ export const LeadCRM: React.FC = () => {
       }
       return updated
     })
-  }
-
-  // Handle Google Maps Scraper execution simulation
-  const handleRunScraper = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!scrapeKeyword || !scrapeLocation) return
-    setScraping(true)
-    try {
-      const mockResults = [
-        { name: `${scrapeKeyword} Hub`, phone: '+91 98421 88321', email: `contact@${scrapeKeyword.toLowerCase().replace(/[^a-z0-9]/g, '')}tn.com`, city: scrapeLocation, state: scrapeState, category: scrapeCategory, rating: 4.9 },
-        { name: `Grand ${scrapeKeyword} Enterprises`, phone: '+91 94432 11982', email: `info@grand${scrapeKeyword.toLowerCase().replace(/[^a-z0-9]/g, '')}.in`, city: scrapeLocation, state: scrapeState, category: scrapeCategory, rating: 4.7 },
-        { name: `Royal ${scrapeKeyword} Tech`, phone: '+91 97871 44520', email: `support@royal${scrapeKeyword.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, city: scrapeLocation, state: scrapeState, category: scrapeCategory, rating: 4.8 },
-      ]
-      setTimeout(() => {
-        setScrapedLeads(mockResults)
-        setScraping(false)
-      }, 1200)
-    } catch (err) {
-      setScraping(false)
-    }
-  }
-
-  // Import scraped lead into CRM database
-  const importScrapedLeadToCrm = async (biz: any) => {
-    try {
-      await supabase.from('leads').insert({
-        name: biz.name,
-        email: biz.email,
-        phone: biz.phone,
-        company: `${biz.name} (${biz.city})`,
-        type: 'lead',
-        status: 'new',
-        notes: `Imported from Google Maps Scraper (${biz.category} in ${biz.city}, ${biz.state})`
-      })
-      setImportedCount(prev => prev + 1)
-      await fetchLeads()
-    } catch (err) {
-      console.error('Error importing lead:', err)
-    }
   }
 
   // Send Resend Email to selected lead
@@ -242,7 +186,7 @@ export const LeadCRM: React.FC = () => {
     if (!newLeadName.trim() || !newLeadEmail.trim()) return
     setCreateLoading(true)
     try {
-      const { data, error } = await supabase.from('leads').insert({
+      const { error } = await supabase.from('leads').insert({
         name: newLeadName,
         email: newLeadEmail,
         phone: newLeadPhone || null,
@@ -299,7 +243,7 @@ export const LeadCRM: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-extrabold text-white tracking-tight">Lead Engine &amp; CRM Command Center</h1>
+                <h1 className="text-xl font-extrabold tracking-tight">Lead Engine &amp; CRM Command Center</h1>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/20">
                   v2.1 Unified
                 </span>
@@ -312,15 +256,11 @@ export const LeadCRM: React.FC = () => {
           <div className="flex items-center gap-4 text-xs">
             <div className="px-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <div className="text-[10px] text-slate-500 font-bold uppercase">Total Leads</div>
-              <div className="text-sm font-bold text-white font-mono">{leads.length}</div>
+              <div className="text-sm font-bold font-mono">{leads.length}</div>
             </div>
             <div className="px-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <div className="text-[10px] text-slate-500 font-bold uppercase">Won Deals</div>
               <div className="text-sm font-bold text-emerald-400 font-mono">{leads.filter(l => l.status === 'won').length}</div>
-            </div>
-            <div className="px-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-              <div className="text-[10px] text-slate-500 font-bold uppercase">Scraped Leads</div>
-              <div className="text-sm font-bold text-indigo-400 font-mono">{scrapedLeads.length}</div>
             </div>
           </div>
         </div>
@@ -411,7 +351,7 @@ export const LeadCRM: React.FC = () => {
                 value={kanbanSearch}
                 onChange={e => setKanbanSearch(e.target.value)}
                 placeholder="Filter deals by lead name, email, or company..."
-                className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                className="admin-input pl-10 pr-4 py-2 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500"
               />
             </div>
             {selectedLead && (
@@ -427,7 +367,7 @@ export const LeadCRM: React.FC = () => {
           {/* Kanban Columns & Side Inspector Container */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* Kanban Columns (Col: selectedLead ? 8 : 12) */}
+            {/* Kanban Columns */}
             <div className={`${selectedLead ? 'lg:col-span-8' : 'lg:col-span-12'} transition-all duration-300`}>
               <div className="flex space-x-4 overflow-x-auto pb-6 select-none min-h-[480px]">
                 {columns.map(col => {
@@ -447,12 +387,12 @@ export const LeadCRM: React.FC = () => {
                           <div
                             key={lead.id}
                             onClick={() => selectLead(lead)}
-                            className={`p-4 rounded-xl border bg-[#070a13] hover:border-emerald-500/40 hover:shadow-lg transition-all cursor-pointer space-y-3 ${
-                              selectedLead?.id === lead.id ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-white/[0.06]'
+                            className={`p-4 rounded-xl border bg-[#070a13] light:bg-white hover:border-emerald-500/40 hover:shadow-lg transition-all cursor-pointer space-y-3 ${
+                              selectedLead?.id === lead.id ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-white/[0.06] light:border-slate-200'
                             }`}
                           >
                             <div>
-                              <div className="font-bold text-white text-sm line-clamp-1">{lead.name}</div>
+                              <div className="font-bold text-sm line-clamp-1">{lead.name}</div>
                               <div className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5 truncate">
                                 <Building size={10} />
                                 <span className="truncate">{lead.company || 'Private Inquiry'}</span>
@@ -460,7 +400,7 @@ export const LeadCRM: React.FC = () => {
                             </div>
 
                             <div className="flex items-center justify-between text-[10px]">
-                              <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-slate-300 capitalize">
+                              <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] light:border-slate-200 capitalize">
                                 {lead.type.replace('_', ' ')}
                               </span>
                               {lead.budget && (
@@ -468,7 +408,7 @@ export const LeadCRM: React.FC = () => {
                               )}
                             </div>
 
-                            <div className="flex items-center justify-between text-[10px] text-slate-500 border-t border-white/[0.05] pt-2">
+                            <div className="flex items-center justify-between text-[10px] text-slate-500 border-t border-white/[0.05] light:border-slate-200 pt-2">
                               <span>{new Date(lead.created_at).toLocaleDateString()}</span>
                               <span className="text-emerald-400/80 hover:text-emerald-300 font-bold flex items-center gap-0.5">
                                 View Details <ChevronRight size={10} />
@@ -488,12 +428,12 @@ export const LeadCRM: React.FC = () => {
               </div>
             </div>
 
-            {/* Selected Lead Inspector Side Drawer (Col: 4) */}
+            {/* Selected Lead Inspector Side Drawer */}
             {selectedLead && (
               <div className="lg:col-span-4 admin-card p-6 space-y-5 sticky top-6 animate-in slide-in-from-right duration-300">
                 <div className="flex items-start justify-between border-b border-white/[0.06] pb-4">
                   <div>
-                    <h3 className="font-bold text-white text-base">{selectedLead.name}</h3>
+                    <h3 className="font-bold text-base">{selectedLead.name}</h3>
                     <p className="text-xs text-slate-400 mt-0.5">{selectedLead.company || 'Direct Prospect'}</p>
                   </div>
                   <button onClick={() => selectLead(null as any)} className="text-slate-500 hover:text-white font-bold text-sm">✕</button>
@@ -514,7 +454,7 @@ export const LeadCRM: React.FC = () => {
                 </div>
 
                 {/* Contact Info */}
-                <div className="space-y-2 text-xs text-slate-300 bg-white/[0.02] p-3 rounded-xl border border-white/[0.05]">
+                <div className="space-y-2 text-xs bg-white/[0.02] p-3 rounded-xl border border-white/[0.05]">
                   <div className="flex items-center gap-2 truncate">
                     <Mail size={12} className="text-slate-500 shrink-0" />
                     <span className="font-mono text-emerald-400 truncate">{selectedLead.email}</span>
@@ -580,7 +520,7 @@ export const LeadCRM: React.FC = () => {
 
                     <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                       {notes.map(n => (
-                        <div key={n.id} className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.05] text-xs text-slate-300 space-y-1">
+                        <div key={n.id} className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.05] text-xs space-y-1">
                           <p>{n.content}</p>
                           <div className="text-[10px] text-slate-500 font-mono">{new Date(n.created_at).toLocaleString()}</div>
                         </div>
@@ -621,7 +561,7 @@ export const LeadCRM: React.FC = () => {
                             onChange={() => toggleTaskCompleted(t.id, !t.is_completed)}
                             className="rounded border-slate-700 text-emerald-500"
                           />
-                          <span className={t.is_completed ? 'line-through text-slate-500' : 'text-slate-200'}>{t.title}</span>
+                          <span className={t.is_completed ? 'line-through text-slate-500' : ''}>{t.title}</span>
                         </div>
                       ))}
                     </div>
@@ -687,7 +627,7 @@ export const LeadCRM: React.FC = () => {
         <div className="admin-card p-6 space-y-5 animate-in fade-in duration-300">
           <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
             <div>
-              <h3 className="font-bold text-white text-base">Sent Email Audit Trail ({sentLogs.length})</h3>
+              <h3 className="font-bold text-base">Sent Email Audit Trail ({sentLogs.length})</h3>
               <p className="text-xs text-slate-400 mt-0.5">Log of all client communications dispatched via Resend email API.</p>
             </div>
             <button onClick={() => setShowQuickEmailModal(true)} className="btn-admin-primary text-xs py-2 px-3.5 font-bold cursor-pointer">
@@ -710,7 +650,7 @@ export const LeadCRM: React.FC = () => {
                 {sentLogs.map(log => (
                   <tr key={log.id}>
                     <td className="font-mono text-emerald-400 text-xs">{log.to}</td>
-                    <td className="font-semibold text-white text-xs max-w-xs truncate">{log.subject}</td>
+                    <td className="font-semibold text-xs max-w-xs truncate">{log.subject}</td>
                     <td className="text-slate-400 text-xs">{log.document_name || '—'}</td>
                     <td className="text-slate-500 text-xs font-mono">{new Date(log.sent_at).toLocaleString()}</td>
                     <td>
@@ -734,7 +674,7 @@ export const LeadCRM: React.FC = () => {
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
           <div className="admin-card p-6 max-w-lg w-full space-y-4">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-              <h3 className="font-bold text-white text-base">Add New Lead to CRM</h3>
+              <h3 className="font-bold text-base">Add New Lead to CRM</h3>
               <button onClick={() => setShowAddLeadModal(false)} className="text-slate-500 hover:text-white font-bold">✕</button>
             </div>
 
@@ -815,7 +755,7 @@ export const LeadCRM: React.FC = () => {
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
           <div className="admin-card p-6 max-w-lg w-full space-y-4">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-              <h3 className="font-bold text-white text-base">Compose Resend Email</h3>
+              <h3 className="font-bold text-base">Compose Resend Email</h3>
               <button onClick={() => setShowQuickEmailModal(false)} className="text-slate-500 hover:text-white font-bold">✕</button>
             </div>
 
