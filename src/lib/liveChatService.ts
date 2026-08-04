@@ -34,7 +34,7 @@ export const liveChatService = {
     return id
   },
 
-  // Save & Broadcast user message
+  // Save & Broadcast user/bot/agent message
   async sendMessage(sessionId: string, sender: 'user' | 'bot' | 'agent', text: string, senderName?: string): Promise<LiveChatMessage> {
     const newMsg: LiveChatMessage = {
       id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
@@ -45,7 +45,38 @@ export const liveChatService = {
       created_at: new Date().toISOString()
     }
 
-    // Try Supabase insert
+    // 1. Save to Local Storage Cache
+    try {
+      const msgKey = `sw_chat_messages_${sessionId}`
+      const existingMsgsStr = localStorage.getItem(msgKey)
+      const existingMsgs: LiveChatMessage[] = existingMsgsStr ? JSON.parse(existingMsgsStr) : []
+      existingMsgs.push(newMsg)
+      localStorage.setItem(msgKey, JSON.stringify(existingMsgs))
+
+      // Update sessions cache
+      const sessionsStr = localStorage.getItem('sw_chat_sessions')
+      let sessions: LiveChatSession[] = sessionsStr ? JSON.parse(sessionsStr) : []
+      const existingIdx = sessions.findIndex(s => s.session_id === sessionId)
+      
+      const sessionObj: LiveChatSession = {
+        session_id: sessionId,
+        user_name: sender === 'user' ? (senderName || 'Visitor') : (existingIdx >= 0 ? sessions[existingIdx].user_name : 'Visitor'),
+        status: sender === 'user' ? 'waiting_admin' : 'active',
+        last_message: text,
+        updated_at: newMsg.created_at
+      }
+
+      if (existingIdx >= 0) {
+        sessions[existingIdx] = { ...sessions[existingIdx], ...sessionObj }
+      } else {
+        sessions.unshift(sessionObj)
+      }
+      localStorage.setItem('sw_chat_sessions', JSON.stringify(sessions))
+    } catch (err) {
+      console.error('Local chat storage error:', err)
+    }
+
+    // 2. Try Supabase insert & session upsert
     if (isSupabaseConfigured) {
       try {
         await supabase.from('live_chat_messages').insert([{
@@ -56,20 +87,19 @@ export const liveChatService = {
           created_at: newMsg.created_at
         }])
 
-        // Upsert session status
         await supabase.from('live_chat_sessions').upsert([{
           session_id: sessionId,
-          user_name: senderName || 'Visitor',
+          user_name: newMsg.sender_name,
           status: sender === 'user' ? 'waiting_admin' : 'active',
           last_message: text,
           updated_at: newMsg.created_at
         }], { onConflict: 'session_id' })
       } catch (e) {
-        // Fallback gracefully
+        // Fallback gracefully to local storage broadcast
       }
     }
 
-    // Broadcast in memory / custom event for immediate UI update across tabs
+    // 3. Broadcast across windows & memory listeners
     globalListeners.forEach(fn => fn(newMsg))
     window.dispatchEvent(new CustomEvent('sw_live_chat_message', { detail: newMsg }))
 
@@ -119,20 +149,39 @@ export const liveChatService = {
 
   // Admin: Fetch all active sessions
   async fetchActiveSessions(): Promise<LiveChatSession[]> {
+    let localSessions: LiveChatSession[] = []
+    try {
+      const saved = localStorage.getItem('sw_chat_sessions')
+      if (saved) localSessions = JSON.parse(saved)
+    } catch {}
+
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase
           .from('live_chat_sessions')
           .select('*')
           .order('updated_at', { ascending: false })
-        if (!error && data) return data
+        if (!error && data && data.length > 0) {
+          const map = new Map<string, LiveChatSession>()
+          data.forEach(s => map.set(s.session_id, s))
+          localSessions.forEach(s => {
+            if (!map.has(s.session_id)) map.set(s.session_id, s)
+          })
+          return Array.from(map.values()).sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+        }
       } catch (e) {}
     }
-    return []
+    return localSessions.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
   },
 
   // Admin: Fetch history for a session
   async fetchSessionMessages(sessionId: string): Promise<LiveChatMessage[]> {
+    let localMsgs: LiveChatMessage[] = []
+    try {
+      const saved = localStorage.getItem(`sw_chat_messages_${sessionId}`)
+      if (saved) localMsgs = JSON.parse(saved)
+    } catch {}
+
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase
@@ -140,9 +189,16 @@ export const liveChatService = {
           .select('*')
           .eq('session_id', sessionId)
           .order('created_at', { ascending: true })
-        if (!error && data) return data
+        if (!error && data && data.length > 0) {
+          const map = new Map<string, LiveChatMessage>()
+          data.forEach(m => map.set(m.id, m))
+          localMsgs.forEach(m => {
+            if (!map.has(m.id)) map.set(m.id, m)
+          })
+          return Array.from(map.values()).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        }
       } catch (e) {}
     }
-    return []
+    return localMsgs
   }
 }
