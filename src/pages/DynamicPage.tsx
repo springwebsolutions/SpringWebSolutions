@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom'
 import { usePageBuilderStore, type SectionData } from '@/stores/pageBuilderStore'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { SectionRenderer } from '@/components/dynamic/SectionRenderer'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { ShieldAlert, Database, Terminal, ArrowRight, Loader2 } from 'lucide-react'
+import SEOHead from '@/components/seo/SEOHead'
 
 // Helper to guarantee section order and layout consistency
 const ensureFullSections = (slug: string, fetchedSections: SectionData[]): SectionData[] => {
