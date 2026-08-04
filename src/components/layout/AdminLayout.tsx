@@ -283,50 +283,45 @@ export const AdminLayout: React.FC = () => {
 
   const navGroups: NavGroup[] = [
     {
-      label: 'Core',
+      label: 'Main',
       icon: Layers,
       items: [
-        { label: 'Overview',  href: `${prefix}/dashboard`, icon: LayoutDashboard, desc: 'Metrics & KPIs' },
+        { label: 'Overview', href: `${prefix}/dashboard`, icon: LayoutDashboard, desc: 'Control tower & metrics' },
       ]
     },
     {
-      label: 'Content',
+      label: 'Content Hub',
       icon: FileText,
       items: [
-        { label: 'Website CMS',    href: `${prefix}/content`,     icon: Globe,      desc: 'Pages & sections' },
-        { label: 'Blog CMS',       href: `${prefix}/blog`,        icon: BookOpen,   desc: 'Articles & posts' },
-        { label: 'Marketplace',    href: `${prefix}/marketplace`,  icon: ShoppingCart, desc: 'Products & goods' },
-        { label: 'Media Library',  href: `${prefix}/media`,       icon: Image,      desc: 'Files & assets' },
+        { label: 'Website CMS', href: `${prefix}/content`, icon: Globe, desc: 'Site pages & content' },
+        { label: 'Blog CMS', href: `${prefix}/blog`, icon: BookOpen, desc: 'Articles & posts' },
+        { label: 'Marketplace', href: `${prefix}/marketplace`, icon: ShoppingCart, desc: 'Products & goods' },
+        { label: 'Media Library', href: `${prefix}/media`, icon: Image, desc: 'Files & assets' },
       ]
     },
     {
-      label: 'Careers & Ads',
+      label: 'Growth & Ads',
       icon: Briefcase,
       items: [
-        { label: 'Job Openings',       href: `${prefix}/jobs`,             icon: Briefcase,  desc: 'Open positions' },
-        { label: 'Applications',       href: `${prefix}/job-applications`,  icon: UserCheck,  desc: 'Candidates' },
-        { label: 'Knowledge Base',     href: `${prefix}/kb`,               icon: HelpCircle, desc: 'Help articles' },
-        { label: 'Career Guides',      href: `${prefix}/career-guides`,    icon: BookOpen,   desc: 'Learning paths' },
-        { label: 'Ad Slots',           href: `${prefix}/ads`,              icon: Megaphone,  desc: 'Ad placements' },
+        { label: 'Recruitment', href: `${prefix}/jobs`, icon: Briefcase, desc: 'Jobs & applications' },
+        { label: 'Knowledge Base', href: `${prefix}/kb`, icon: HelpCircle, desc: 'Help articles & guides' },
+        { label: 'Ad Manager', href: `${prefix}/ads`, icon: Megaphone, desc: 'Ad slot placements' },
       ]
     },
     {
-      label: 'Operations',
-      icon: Cpu,
+      label: 'Sales & Service',
+      icon: Users,
       items: [
-        { label: 'Lead CRM',       href: `${prefix}/crm`,       icon: Users,       desc: 'Pipeline & contacts' },
-        { label: 'Lead Gen',       href: `${prefix}/lead-gen`,  icon: MapPin,      desc: 'Maps scraper', badge: 'v2.1' },
-        { label: 'Analytics',      href: `${prefix}/analytics`, icon: BarChart2,   desc: 'Funnel metrics' },
-        { label: 'Support Desk',   href: `${prefix}/support`,   icon: Ticket,      desc: 'Tickets' },
-        { label: 'Contacts',       href: `${prefix}/contacts`,  icon: MessageSquare, desc: 'Enquiry forms' },
+        { label: 'Lead CRM', href: `${prefix}/crm`, icon: Users, desc: 'Pipeline & contacts' },
+        { label: 'Lead Scraper', href: `${prefix}/lead-gen`, icon: MapPin, desc: 'Google Maps lead scraper', badge: 'v2.1' },
+        { label: 'Support & Contacts', href: `${prefix}/support`, icon: Ticket, desc: 'Support desk & enquiries' },
       ]
     },
     {
       label: 'System',
-      icon: Database,
+      icon: Settings,
       items: [
-        { label: 'System Health', href: `${prefix}/health`,   icon: Activity, desc: 'API diagnostics' },
-        { label: 'Settings',      href: `${prefix}/settings`, icon: Settings, desc: 'Config & integrations' },
+        { label: 'Settings & Health', href: `${prefix}/settings`, icon: Settings, desc: 'Configuration & diagnostics' },
       ]
     }
   ]

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { 
@@ -198,9 +199,28 @@ export const SupportManager: React.FC = () => {
     }
   }
 
+  const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
+  const prefix = isSuiteDomain ? '' : '/admin'
+
   return (
     <div className="space-y-6">
       
+      {/* Sub-Navigation Header Bar */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
+        <Link
+          to={`${prefix}/support`}
+          className="px-3.5 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold transition-all"
+        >
+          Support Desk
+        </Link>
+        <Link
+          to={`${prefix}/contacts`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
+        >
+          Contact Submissions
+        </Link>
+      </div>
+
       {/* Toolbar */}
       <div className="admin-card p-5 space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -209,7 +229,7 @@ export const SupportManager: React.FC = () => {
               <Ticket size={18} className="text-amber-400" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white tracking-tight">Support Desk</h1>
+              <h1 className="text-lg font-bold text-white tracking-tight">Support Desk &amp; Contacts</h1>
               <p className="text-[12px] text-slate-500 mt-0.5">Manage tickets, assign staff, and reply to clients.</p>
             </div>
           </div>
