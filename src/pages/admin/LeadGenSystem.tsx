@@ -226,146 +226,104 @@ export const LeadGenSystem: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8 p-6 text-slate-100 font-sans">
-      {/* Header Title Bar */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/10 pb-6">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <h1 className="text-2xl font-bold font-display text-white tracking-tight uppercase">
-              Lead Generation &amp; Outbound Prospecting System
-            </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">v1.1 Admin Vault</span>
+    <div className="space-y-6 text-slate-100 font-sans">
+      
+      {/* Sleek Metrics Ticker Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="admin-card p-4 space-y-1">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Prospects Stored</span>
+            <Database size={15} className="text-emerald-400" />
           </div>
-          <p className="text-xs text-slate-400 mt-1">
-            Automated lead discovery, deduplication engine, website auditing, and AI outreach studio for SpringWeb Solutions.
-          </p>
+          <div className="text-2xl font-black font-display text-white">{businesses.length}</div>
+          <div className="text-[10px] text-emerald-400 font-bold">
+            {businesses.filter(b => b.priority === 'High').length} High Priority Opportunities
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="admin-card p-4 space-y-1">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Google Maps API Quota</span>
+            <MapPin size={15} className="text-indigo-400" />
+          </div>
+          <div className="text-2xl font-black font-display text-white">{googleMapsQuotaUsed} / {googleMapsQuotaLimit}</div>
+          <div className="text-[10px] text-slate-400 font-mono">
+            Remaining: <strong className="text-emerald-400">{googleMapsQuotaLimit - googleMapsQuotaUsed}</strong> requests
+          </div>
+        </div>
+
+        <div className="admin-card p-4 space-y-1">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Monthly AI Spend</span>
+            <DollarSign size={15} className="text-teal-400" />
+          </div>
+          <div className="text-2xl font-black font-display text-white">₹{(currentMonthAiSpendINR || 0).toFixed(2)}</div>
+          <div className="text-[10px] text-slate-400 font-mono">
+            Hard Cap: <strong className="text-white">₹{monthlyBudgetCapINR || 500}</strong> ({( (currentMonthAiSpendINR || 0) / (monthlyBudgetCapINR || 500) * 100 ).toFixed(1)}% used)
+          </div>
+        </div>
+
+        <div className="admin-card p-4 space-y-1">
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>Outreach Conversion Rate</span>
+            <CheckCircle2 size={15} className="text-emerald-400" />
+          </div>
+          <div className="text-2xl font-black font-display text-white">
+            {businesses.length > 0 ? Math.round((businesses.filter(b => b.status === 'Won').length / businesses.length) * 100) : 0}%
+          </div>
+          <div className="text-[10px] text-slate-400">
+            Converted clients
+          </div>
+        </div>
+      </div>
+
+      {/* Streamlined 3-Tool Sub-Tab Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+        <div className="flex items-center gap-2">
+          {[
+            { id: 'finder', label: 'Maps Lead Finder', icon: Search },
+            { id: 'database', label: `Prospect Database (${businesses.length})`, icon: Database },
+            { id: 'outreach', label: 'Outreach & AI Studio', icon: MessageSquare }
+          ].map(tab => {
+            const Icon = tab.icon
+            const isActive = activeTab === tab.id
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
+                  isActive 
+                    ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 shadow-md'
+                    : 'bg-white/[0.03] hover:bg-white/[0.07] text-slate-400 border border-transparent'
+                }`}
+              >
+                <Icon size={14} />
+                <span>{tab.label}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <Plus size={16} />
-            <span>Add Manual Lead</span>
+            <Plus size={14} />
+            <span>Add Prospect</span>
           </button>
 
           <button
             onClick={() => exportDatabaseBackup('csv')}
-            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <Download size={15} />
+            <Download size={13} />
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
-      {/* Module Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-2">
-        {[
-          { id: 'overview', label: 'Dashboard & AI Budget', icon: BarChart2 },
-          { id: 'extension', label: 'Chrome Extension Scraper', icon: Cpu, badge: 'Live Sync' },
-          { id: 'finder', label: 'Lead Finder (Maps & Jobs)', icon: Search },
-          { id: 'database', label: `Lead Database (${businesses.length})`, icon: Database },
-          { id: 'audit', label: 'Website Audit & Scoring', icon: Globe },
-          { id: 'outreach', label: 'Outreach Studio (Template/AI)', icon: MessageSquare },
-          { id: 'backup', label: 'Backup & Logs', icon: Layers }
-        ].map(tab => {
-          const Icon = tab.icon
-          const isActive = activeTab === tab.id
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 transition-all cursor-pointer ${
-                isActive 
-                  ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 shadow-md'
-                  : 'bg-white/5 hover:bg-white/10 text-slate-400 border border-transparent'
-              }`}
-            >
-              <Icon size={15} />
-              <span>{tab.label}</span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* TAB 1: OVERVIEW & AI BUDGET */}
-      {activeTab === 'overview' && (
-        <div className="space-y-8 animate-fade-in">
-          {/* Top Metric Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 bg-white/5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Total Prospects Stored</span>
-                <Database size={16} className="text-emerald-400" />
-              </div>
-              <div className="text-3xl font-bold font-display text-white">{businesses.length}</div>
-              <div className="text-[11px] text-emerald-400 flex items-center gap-1">
-                <span>{businesses.filter(b => b.priority === 'High').length} High Priority Opportunities</span>
-              </div>
-            </div>
-
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 bg-white/5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Google Maps API Quota</span>
-                <MapPin size={16} className="text-indigo-400" />
-              </div>
-              <div className="text-3xl font-bold font-display text-white">{googleMapsQuotaUsed} / {googleMapsQuotaLimit}</div>
-              <div className="text-[11px] text-slate-400">
-                Remaining: <strong className="text-emerald-400">{googleMapsQuotaLimit - googleMapsQuotaUsed}</strong> requests (Auto Hard-Stop Active)
-              </div>
-            </div>
-
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 bg-white/5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Monthly AI Budget Spend</span>
-                <DollarSign size={16} className="text-teal-400" />
-              </div>
-              <div className="text-3xl font-bold font-display text-white">₹{currentMonthAiSpendINR.toFixed(2)}</div>
-              <div className="text-[11px] text-slate-400">
-                Hard Cap: <strong className="text-white">₹{monthlyBudgetCapINR}</strong> / mo ({(currentMonthAiSpendINR / monthlyBudgetCapINR * 100).toFixed(1)}% used)
-              </div>
-            </div>
-
-            <div className="glass-panel p-5 rounded-2xl border border-white/10 bg-white/5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Outreach Conversion Rate</span>
-                <CheckCircle2 size={16} className="text-emerald-400" />
-              </div>
-              <div className="text-3xl font-bold font-display text-white">
-                {businesses.length > 0 ? Math.round((businesses.filter(b => b.status === 'Won').length / businesses.length) * 100) : 0}%
-              </div>
-              <div className="text-[11px] text-slate-400">
-                Won: {businesses.filter(b => b.status === 'Won').length} | Contacted: {businesses.filter(b => b.status === 'Contacted').length}
-              </div>
-            </div>
-          </div>
-
-          {/* AI Protection & Quota Safety Bar */}
-          <div className="p-6 rounded-2xl glass-panel border border-emerald-500/30 bg-emerald-500/5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-                  <ShieldAlert size={20} className="text-emerald-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-sm">AI Token Guard &amp; Budget Protection Active</h3>
-                  <p className="text-xs text-slate-400">All AI calls require explicit confirmation and show estimated token costs before execution.</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="px-3 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                  SAFE &bull; ₹{(monthlyBudgetCapINR - currentMonthAiSpendINR).toFixed(2)} REMAINING
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: LEAD FINDER */}
+      {/* TAB 1: MAPS LEAD FINDER */}
       {activeTab === 'finder' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
           {/* Left Column: Job Creator Form */}
