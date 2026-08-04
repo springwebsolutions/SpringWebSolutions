@@ -51,30 +51,6 @@ const DEFAULT_POSTS: Post[] = [
       { name: 'Promotions & Offers', slug: 'promotions' },
       { name: 'Web Development', slug: 'web-development' }
     ]
-  },
-  {
-    id: 'post-02',
-    title: 'Building Scalable Enterprise ERP & CRM Platforms with Modern React Architecture',
-    slug: 'building-scalable-erp-systems-in-react-node',
-    excerpt: 'Discover how modern single-page applications and serverless databases eliminate bloat and speed up business billing and lead management.',
-    featured_image: '/cloud_storage_vector.png',
-    published_at: '2026-08-02T10:00:00Z',
-    reading_time_minutes: 5,
-    is_featured: false,
-    profiles: { full_name: 'Solutions Architect' },
-    categories: [{ name: 'Software Engineering', slug: 'engineering' }]
-  },
-  {
-    id: 'post-03',
-    title: 'Why 1.0-Second Load Times and Technical SEO Dominate Google Search in 2026',
-    slug: 'why-speed-seo-matter-in-2026',
-    excerpt: 'Core Web Vitals, JSON-LD Schema, and AI Answer Engine Optimization (AEO) are non-negotiable for local and global business growth.',
-    featured_image: '/seo_analytics_vector.png',
-    published_at: '2026-07-28T09:00:00Z',
-    reading_time_minutes: 4,
-    is_featured: false,
-    profiles: { full_name: 'SEO Strategist' },
-    categories: [{ name: 'SEO & Growth', slug: 'seo' }]
   }
 ]
 
@@ -82,9 +58,7 @@ export const BlogListing: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS)
   const [categories, setCategories] = useState<any[]>([
     { id: 'cat-1', name: 'Promotions & Offers', slug: 'promotions' },
-    { id: 'cat-2', name: 'Web Development', slug: 'web-development' },
-    { id: 'cat-3', name: 'Software Engineering', slug: 'engineering' },
-    { id: 'cat-4', name: 'SEO & Growth', slug: 'seo' }
+    { id: 'cat-2', name: 'Web Development', slug: 'web-development' }
   ])
   const [tags, setTags] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
