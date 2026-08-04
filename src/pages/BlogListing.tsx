@@ -21,9 +21,56 @@ interface Post {
 
 import SEOHead from '@/components/seo/SEOHead'
 
+const DEFAULT_POSTS: Post[] = [
+  {
+    id: 'post-promo-01',
+    title: 'Urgent: Limited Time Offer — Get Your Complete Business Website for Just ₹15,000 / $249',
+    slug: 'exclusive-limited-time-business-package',
+    excerpt: 'Exclusive limited-time package for startups and growing businesses in Udumalpet, Tiruppur, Coimbatore, Tamil Nadu, and globally. Book this month to lock in your complete business website with 100% source code ownership.',
+    featured_image: '/offer-banner-inr.jpg',
+    published_at: '2026-08-04T12:00:00Z',
+    reading_time_minutes: 3,
+    is_featured: true,
+    profiles: { full_name: 'Spring Web Engineering Team' },
+    categories: [
+      { name: 'Promotions & Offers', slug: 'promotions' },
+      { name: 'Web Development', slug: 'web-development' }
+    ]
+  },
+  {
+    id: 'post-02',
+    title: 'Building Scalable Enterprise ERP & CRM Platforms with Modern React Architecture',
+    slug: 'building-scalable-erp-systems-in-react-node',
+    excerpt: 'Discover how modern single-page applications and serverless databases eliminate bloat and speed up business billing and lead management.',
+    featured_image: '/cloud_storage_vector.png',
+    published_at: '2026-08-02T10:00:00Z',
+    reading_time_minutes: 5,
+    is_featured: false,
+    profiles: { full_name: 'Solutions Architect' },
+    categories: [{ name: 'Software Engineering', slug: 'engineering' }]
+  },
+  {
+    id: 'post-03',
+    title: 'Why 1.0-Second Load Times and Technical SEO Dominate Google Search in 2026',
+    slug: 'why-speed-seo-matter-in-2026',
+    excerpt: 'Core Web Vitals, JSON-LD Schema, and AI Answer Engine Optimization (AEO) are non-negotiable for local and global business growth.',
+    featured_image: '/seo_analytics_vector.png',
+    published_at: '2026-07-28T09:00:00Z',
+    reading_time_minutes: 4,
+    is_featured: false,
+    profiles: { full_name: 'SEO Strategist' },
+    categories: [{ name: 'SEO & Growth', slug: 'seo' }]
+  }
+]
+
 export const BlogListing: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [categories, setCategories] = useState<any[]>([])
+  const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS)
+  const [categories, setCategories] = useState<any[]>([
+    { id: 'cat-1', name: 'Promotions & Offers', slug: 'promotions' },
+    { id: 'cat-2', name: 'Web Development', slug: 'web-development' },
+    { id: 'cat-3', name: 'Software Engineering', slug: 'engineering' },
+    { id: 'cat-4', name: 'SEO & Growth', slug: 'seo' }
+  ])
   const [tags, setTags] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   
@@ -46,7 +93,9 @@ export const BlogListing: React.FC = () => {
           supabase.from('blog_tags').select('*')
         ])
 
-        setCategories(catRes.data || [])
+        if (catRes.data && catRes.data.length > 0) {
+          setCategories(catRes.data)
+        }
         setTags(tagRes.data || [])
 
         // Fetch posts
@@ -62,13 +111,13 @@ export const BlogListing: React.FC = () => {
 
         if (error) throw error
 
-        // Map categories cleanly
-        const mappedPosts = (data || []).map((post: any) => ({
-          ...post,
-          categories: post.blog_post_categories?.map((c: any) => c.blog_categories).filter(Boolean) || []
-        }))
-
-        setPosts(mappedPosts)
+        if (data && data.length > 0) {
+          const mappedPosts = data.map((post: any) => ({
+            ...post,
+            categories: post.blog_post_categories?.map((c: any) => c.blog_categories).filter(Boolean) || []
+          }))
+          setPosts(mappedPosts)
+        }
       } catch (err) {
         console.error('Error fetching blog catalog:', err)
       } finally {
