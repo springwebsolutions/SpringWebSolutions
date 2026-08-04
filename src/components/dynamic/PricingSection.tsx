@@ -31,7 +31,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
     {
       name: "Starter Business",
       tagline: "Essential high-speed digital presence for startups & local brands.",
-      price: "₹14,999",
+      price: "₹24,999",
       period: "one-time",
       features: [
         "High-Speed Responsive Website",
@@ -47,7 +47,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
     {
       name: "Professional Growth",
       tagline: "Full-scale corporate platform, CMS & lead automation engine.",
-      price: "₹39,999",
+      price: "₹49,999",
       period: "one-time",
       isPopular: true,
       features: [
@@ -128,11 +128,16 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                   <p className="text-xs text-slate-400 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
                 </div>
 
-                <div className="py-3 border-y border-white/10">
+                <div className="py-3 border-y border-white/10 space-y-1">
                   <div className="flex items-baseline gap-1">
                     <span className="font-display text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{plan.price}</span>
                     {plan.period && <span className="text-xs text-slate-400 font-medium">/{plan.period}</span>}
                   </div>
+                  {plan.price !== "Custom Quote" && (
+                    <p className="text-[11px] text-amber-400/90 font-sans leading-tight pt-1">
+                      * Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.
+                    </p>
+                  )}
                 </div>
 
                 {/* Feature List */}
@@ -192,7 +197,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
             </div>
             <div>
               <div className="text-sm font-bold text-white">100% Code Ownership &bull; Zero Monthly Lock-ins</div>
-              <div className="text-xs text-slate-400">All repositories, database assets, and SSL keys belong 100% to your company.</div>
+              <div className="text-xs text-slate-400">
+                All repositories, database assets, and SSL keys belong 100% to your company. 
+                <span className="text-amber-400/90 font-medium block mt-0.5">* Note: Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.</span>
+              </div>
             </div>
           </div>
           <Link to="/contact" className="btn-secondary text-xs shrink-0 py-2.5 px-5">
