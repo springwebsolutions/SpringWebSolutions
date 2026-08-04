@@ -101,7 +101,7 @@ export const BlogListing: React.FC = () => {
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
       <SEOHead
         title="Tech Blog & Software Engineering Insights | Spring Web Solutions"
-        description="Read expert articles on modern website development, custom ERP/CRM architecture, Android & iOS app engineering, and automation solutions by Spring Web Solutions."
+        description="Read expert articles on web development, custom ERP/CRM architecture, mobile apps, and tech automation by Spring Web Solutions. Learn more today!"
       />
       <Navbar />
 

@@ -110,7 +110,7 @@ export const Contact: React.FC = () => {
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
         title="Contact Us & Project Consultation | Spring Web Solutions (Udumalpet & Global)"
-        description="Get in touch with Spring Web Solutions for website engineering, custom ERP/CRM software, or mobile app development. Contact our headquarters in Udumalpet, Tamil Nadu or request a free quote online."
+        description="Need web development, ERP/CRM software, or app engineering? Contact Spring Web Solutions in Udumalpet today to request your free consultation!"
       />
       <Navbar />
 

@@ -44,8 +44,12 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       element.setAttribute('href', href)
     }
 
-    // 2. Primary Meta Tags
-    setMeta('description', description)
+    // 2. Truncate description to max 155 characters for SEO SERP safety
+    const cleanDesc = description.length > 155 
+      ? description.substring(0, 152).trim() + '...' 
+      : description
+
+    setMeta('description', cleanDesc)
     if (keywords) setMeta('keywords', keywords)
     setMeta('author', 'Spring Web Solutions')
 

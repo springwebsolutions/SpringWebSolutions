@@ -143,7 +143,7 @@ export const Portfolio: React.FC = () => {
     <div className="min-h-screen bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white transition-colors duration-300 flex flex-col">
       <SEOHead
         title="Client Portfolio & Web Engineering Case Studies | Spring Web Solutions"
-        description="Browse our portfolio of completed websites, enterprise ERP/CRM portals, e-commerce stores, and mobile applications developed for clients in Udumalpet, Tamil Nadu, India & worldwide."
+        description="Browse our portfolio of completed web applications, ERP/CRM portals, and mobile apps built for clients worldwide. Explore our case studies today!"
       />
       <Navbar />
 

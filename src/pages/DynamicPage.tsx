@@ -44,30 +44,30 @@ export const DynamicPage: React.FC = () => {
     if (pageSlug === 'home') {
       return {
         title: 'Spring Web Solutions | Website Development, Custom ERP/CRM & App Engineering (Udumalpet, Tamil Nadu, India & Global)',
-        description: 'Spring Web Solutions provides high-performance website development, custom ERP & CRM software, and Android/iOS/Windows app development. Serving businesses locally in Udumalpet, Tiruppur & Coimbatore, statewide across Tamil Nadu, nationally across India, and internationally worldwide.'
+        description: 'High-performance website development, custom ERP/CRM software, and mobile apps by Spring Web Solutions. Contact us today for a free project quote!'
       }
     }
     if (pageSlug === 'about') {
       return {
         title: 'About Us | Spring Web Solutions Engineering Team & Standards (Udumalpet, Tamil Nadu)',
-        description: 'Learn about Spring Web Solutions, a premier software engineering agency based in Udumalpet, Tamil Nadu. Discover our mission, technical architecture standards, and dedicated development team.'
+        description: "Discover Spring Web Solutions, Udumalpet's premier software engineering agency. Learn about our team, standards, and mission. Contact us to build today!"
       }
     }
     if (pageSlug === 'services') {
       return {
         title: 'Our Services | Web Development, Android & iOS Apps, ERP/CRM & Windows Software',
-        description: 'Explore Spring Web Solutions services: custom web application development, Android & iOS mobile apps, enterprise ERP & CRM software engineering, Windows desktop software, and technical SEO.'
+        description: 'Explore custom web development, mobile apps, ERP/CRM software, and technical SEO services by Spring Web Solutions. Get in touch to transform your tech!'
       }
     }
     if (pageSlug === 'plans' || pageSlug === 'pricing') {
       return {
         title: 'Pricing Plans & Software Development Packages | Spring Web Solutions',
-        description: 'View transparent pricing packages for website development, custom software engineering, ERP/CRM systems, and mobile apps by Spring Web Solutions. Request a custom quote today.'
+        description: 'View transparent pricing packages for web development, ERP/CRM software, and mobile apps by Spring Web Solutions. Request your custom quote today!'
       }
     }
     return {
       title: currentPage?.title ? `${currentPage.title} | Spring Web Solutions` : 'Spring Web Solutions | Digital Engineering Agency',
-      description: 'Spring Web Solutions builds high-performance web applications, enterprise ERP/CRM software, and mobile apps.'
+      description: 'Spring Web Solutions builds high-performance web applications, ERP/CRM software, and mobile apps. Contact us today to start your digital project!'
     }
   }
 

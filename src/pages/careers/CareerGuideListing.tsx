@@ -20,7 +20,7 @@ export const CareerGuideListing: React.FC = () => {
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans">
       <CareersSeo 
         title="Educational Career Guides & Technical Interview Roadmaps | SpringWeb Careers"
-        description="Free educational guides, technical interview roadmaps, resume building tips, and remote salary calculators for software developers and tech aspirants."
+        description="Access free software engineering roadmaps, interview prep guides, and developer resume tips by SpringWeb. Learn more and advance your career today!"
         canonicalUrl="https://careers.springwebsolutions.in/career-guides"
       />
       <CareersNavbar />

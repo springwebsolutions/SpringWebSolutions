@@ -142,7 +142,7 @@ export const Marketplace: React.FC = () => {
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
         title="Software Marketplace & Digital Product Store | Spring Web Solutions"
-        description="Explore and buy premium ready-to-deploy website templates, ERP & CRM modules, mobile app source codes, and automation tools built by Spring Web Solutions."
+        description="Browse and buy ready-to-deploy website templates, ERP/CRM modules, app source codes, and automation tools by Spring Web Solutions. Explore our store!"
       />
       <Navbar />
 

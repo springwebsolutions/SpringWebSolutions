@@ -77,7 +77,7 @@ export const KBListing: React.FC = () => {
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
       <SEOHead
         title="Knowledge Base & Technical Help Guides | Spring Web Solutions"
-        description="Explore documentation, setup guides, API tutorials, and technical troubleshooting articles for Spring Web Solutions platforms and digital products."
+        description="Explore technical documentation, setup guides, API tutorials, and troubleshooting articles by Spring Web Solutions. Search our help center today!"
       />
       <CareersNavbar />
 

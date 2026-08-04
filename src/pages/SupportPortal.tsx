@@ -143,7 +143,7 @@ export const SupportPortal: React.FC = () => {
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
       <SEOHead
         title="Customer Support Portal & Help Desk | Spring Web Solutions"
-        description="Get technical support, submit help desk tickets, check ticket status, and resolve issues for websites, ERP/CRM software, and mobile apps built by Spring Web Solutions."
+        description="Access technical support, submit help desk tickets, and track resolutions for Spring Web Solutions apps. Log in to get expert assistance today!"
       />
       <Navbar />
 

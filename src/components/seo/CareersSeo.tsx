@@ -11,7 +11,7 @@ interface CareersSeoProps {
 
 export const CareersSeo: React.FC<CareersSeoProps> = ({
   title = 'Software Jobs in Udumalpet, Tamil Nadu, India & Remote | SpringWeb Careers',
-  description = 'Discover tech career vacancies and developer job openings in Udumalpet, Tiruppur & Coimbatore (Local), across Tamil Nadu (State), India (National), and Remote (International). Free educational engineering guides & interview roadmaps.',
+  description = 'Discover software engineering jobs & developer vacancies in Udumalpet, Tamil Nadu, and remote. Apply today to build your career with SpringWeb!',
   keywords = 'software jobs Udumalpet, web developer jobs Udumalpet, IT career vacancies Udumalpet, software jobs Tiruppur, software company jobs Coimbatore, developer vacancies Tamil Nadu, Chennai tech jobs, software engineer jobs India, remote software jobs India, international remote developer vacancies, SpringWeb Careers',
   canonicalUrl = 'https://careers.springwebsolutions.in/',
   ogImage = 'https://careers.springwebsolutions.in/logo-emblem.png',
@@ -49,7 +49,11 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
     }
 
     // 2. Primary Meta Tags (Hierarchy: Local -> State -> National -> International)
-    setMeta('description', description)
+    const cleanDesc = description.length > 155 
+      ? description.substring(0, 152).trim() + '...' 
+      : description
+
+    setMeta('description', cleanDesc)
     setMeta('keywords', keywords)
     setMeta('author', 'Spring Web Solutions')
     setMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')

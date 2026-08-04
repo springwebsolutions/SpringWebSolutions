@@ -131,7 +131,7 @@ export const Login: React.FC = () => {
     <div className="min-h-screen bg-[#070a13] flex flex-col justify-center items-center px-4 text-slate-200 relative">
       <SEOHead
         title="Client Portal Sign In & Registration | Spring Web Solutions"
-        description="Sign in to your Spring Web Solutions client account to access active projects, manage support tickets, download licenses, and view invoices."
+        description="Sign in to your Spring Web Solutions client portal to manage active projects, support tickets, licenses, and invoices. Log in to get started!"
       />
       {/* Decorative Glow Nodes */}
       <div className="glow-node glow-indigo -bottom-20 -left-20" />
