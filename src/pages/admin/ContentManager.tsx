@@ -3,7 +3,8 @@ import { usePageBuilderStore, DEFAULT_PAGES_CACHE, type PageData, type SectionDa
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { 
   FileText, Edit, Eye, EyeOff, ArrowUp, ArrowDown, 
-  Save, CheckCircle, AlertCircle, Loader2, Plus, Trash2, Globe, Sparkles, RefreshCw
+  Save, CheckCircle, AlertCircle, Loader2, Plus, Trash2, Globe, Sparkles, RefreshCw,
+  Power, ShieldAlert
 } from 'lucide-react'
 
 // Human-friendly names for each section type
@@ -41,11 +42,13 @@ export const ContentManager: React.FC = () => {
     updateSectionsOrder,
     addSection,
     deleteSection,
-    updatePageSEO
+    updatePageSEO,
+    togglePagePublished
   } = usePageBuilderStore()
 
   const [selectedPage, setSelectedPage] = useState<string>('home')
   const [editingSection, setEditingSection] = useState<SectionData | null>(null)
+  const [togglingPageStatus, setTogglingPageStatus] = useState(false)
   
   // Section edit fields
   const [formData, setFormData] = useState<any>({})
@@ -271,6 +274,17 @@ export const ContentManager: React.FC = () => {
     }
   }
 
+  const isPagePublished = currentPage?.is_published !== false
+
+  const handleTogglePagePublish = async () => {
+    setTogglingPageStatus(true)
+    try {
+      await togglePagePublished(selectedPage, !isPagePublished)
+    } finally {
+      setTogglingPageStatus(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       
@@ -297,6 +311,7 @@ export const ContentManager: React.FC = () => {
         <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-[#04050a] border border-white/10 overflow-x-auto shrink-0 scrollbar-none">
           {sidebarPages.map(p => {
             const isSelected = selectedPage === p.slug
+            const isPub = p.is_published !== false
             return (
               <button
                 key={p.id}
@@ -309,6 +324,11 @@ export const ContentManager: React.FC = () => {
               >
                 <FileText size={14} className={isSelected ? 'text-slate-950' : 'text-slate-400'} />
                 <span>{p.title}</span>
+                {!isPub && (
+                  <span className="text-[9px] font-mono font-bold text-rose-400 bg-rose-500/20 px-1.5 py-0.5 rounded border border-rose-500/30 uppercase">
+                    Disabled
+                  </span>
+                )}
                 <span className={`text-[10px] font-mono font-normal ${isSelected ? 'text-slate-900/80 font-semibold' : 'text-slate-500'}`}>
                   /{p.slug}
                 </span>
@@ -331,6 +351,67 @@ export const ContentManager: React.FC = () => {
 
       {/* ── Main Full-Width Content Area ── */}
       <div className="w-full space-y-6">
+
+        {/* ── Page Availability & Maintenance Control Panel ── */}
+        <div className={`glass-panel p-5 rounded-3xl border transition-colors ${
+          isPagePublished 
+            ? 'border-emerald-500/20 bg-emerald-500/[0.02]' 
+            : 'border-rose-500/30 bg-rose-500/[0.03]'
+        } flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg`}>
+          <div className="flex items-center gap-3.5">
+            <div className={`h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 border ${
+              isPagePublished 
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+            }`}>
+              {isPagePublished ? <Globe size={22} /> : <ShieldAlert size={22} />}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-display font-bold text-white text-sm">
+                  Page Availability: <span className="capitalize">{currentPage?.title} Page</span>
+                </h4>
+                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider border ${
+                  isPagePublished 
+                    ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400' 
+                    : 'bg-rose-500/15 border-rose-500/30 text-rose-400'
+                }`}>
+                  {isPagePublished ? '🟢 ONLINE & PUBLISHED' : '🔴 DISABLED (MAINTENANCE)'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-1 font-light">
+                {isPagePublished 
+                  ? 'This page is active and publicly accessible to visitors on the live website.'
+                  : 'Visitors accessing this page will see a Page Under Maintenance screen.'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleTogglePagePublish}
+            disabled={togglingPageStatus}
+            className={`px-4 py-2.5 rounded-xl border text-xs font-bold font-display flex items-center gap-2 transition-all cursor-pointer shrink-0 ${
+              isPagePublished
+                ? 'bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/20 hover:border-rose-500/50'
+                : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50'
+            } disabled:opacity-50`}
+          >
+            {togglingPageStatus ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : isPagePublished ? (
+              <>
+                <Power size={14} />
+                <span>DISABLE THIS PAGE</span>
+              </>
+            ) : (
+              <>
+                <Globe size={14} />
+                <span>ENABLE & PUBLISH PAGE</span>
+              </>
+            )}
+          </button>
+        </div>
         
         {/* SEO Metadata Editor Card */}
         <form onSubmit={handleSaveSEO} className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/5 space-y-5">

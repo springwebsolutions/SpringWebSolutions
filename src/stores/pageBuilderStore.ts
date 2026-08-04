@@ -42,6 +42,7 @@ interface PageBuilderState {
   addSection: (pageId: string, type: string, content: any, styling?: any) => Promise<void>
   deleteSection: (sectionId: string) => Promise<void>
   updatePageSEO: (pageId: string, seoTitle: string, seoDescription: string, seoKeywords: string) => Promise<void>
+  togglePagePublished: (pageSlug: string, isPublished: boolean) => Promise<void>
   saveNavigation: (navigationData: any) => Promise<void>
 }
 
@@ -1120,6 +1121,60 @@ export const usePageBuilderStore = create<PageBuilderState>((set, get) => ({
     } catch (err) {
       console.error('Error updating page SEO:', err)
       throw err
+    }
+  },
+
+  togglePagePublished: async (pageSlug: string, isPublished: boolean) => {
+    // 1. Update local Zustand state & localStorage cache immediately
+    const curPage = get().currentPage
+    const pages = get().pages
+
+    const updatedPages = pages.map(p => p.slug === pageSlug ? { ...p, is_published: isPublished } : p)
+    
+    let updatedCurPage = curPage
+    if (curPage && (curPage.slug === pageSlug || (pageSlug === 'plans' && curPage.slug === 'pricing') || (pageSlug === 'pricing' && curPage.slug === 'plans'))) {
+      updatedCurPage = { ...curPage, is_published: isPublished }
+    }
+
+    const updatedCache = { ...get().pageCache }
+    if (updatedCache[pageSlug]) {
+      updatedCache[pageSlug] = {
+        ...updatedCache[pageSlug],
+        page: { ...updatedCache[pageSlug].page, is_published: isPublished }
+      }
+    }
+
+    try { localStorage.setItem('page_builder_cache_v3', JSON.stringify(updatedCache)) } catch (e) {}
+    set({ currentPage: updatedCurPage, pages: updatedPages, pageCache: updatedCache })
+
+    if (!isSupabaseConfigured) return
+
+    // 2. Persist to Supabase
+    try {
+      const searchSlugs = (pageSlug === 'plans' || pageSlug === 'pricing') ? ['plans', 'pricing'] : [pageSlug]
+      let { data: realPage } = await supabase
+        .from('pages')
+        .select('id')
+        .in('slug', searchSlugs)
+        .maybeSingle()
+
+      if (realPage?.id) {
+        const { error } = await supabase
+          .from('pages')
+          .update({ is_published: isPublished, updated_at: new Date().toISOString() })
+          .eq('id', realPage.id)
+        if (error) console.warn('Page published update notice:', error.message)
+      } else {
+        await supabase
+          .from('pages')
+          .insert({
+            title: updatedCurPage?.title || pageSlug,
+            slug: pageSlug,
+            is_published: isPublished
+          })
+      }
+    } catch (err) {
+      console.warn('Error toggling page publish status:', err)
     }
   },
 

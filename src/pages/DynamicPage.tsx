@@ -137,6 +137,31 @@ export const DynamicPage: React.FC = () => {
           <div className="flex-grow flex items-center justify-center text-brand-emerald min-h-[300px] py-20">
             <Loader2 className="animate-spin" size={32} />
           </div>
+        ) : currentPage?.is_published === false ? (
+          <div className="flex-grow flex flex-col items-center justify-center text-slate-800 dark:text-slate-200 px-4 py-16">
+            <div className="p-8 sm:p-12 rounded-3xl border border-rose-500/20 glass-panel text-center max-w-lg space-y-6 bg-brand-sand dark:bg-brand-dark shadow-2xl">
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto text-rose-400">
+                <ShieldAlert size={36} />
+              </div>
+              <div className="space-y-2">
+                <span className="text-xs uppercase tracking-widest font-mono text-rose-400 font-bold bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+                  Page Disabled
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display">
+                  Page Under Maintenance
+                </h1>
+                <p className="text-slate-600 dark:text-slate-400 text-sm font-sans font-light leading-relaxed">
+                  The <span className="font-semibold text-slate-800 dark:text-slate-200 capitalize">{pageSlug}</span> page is currently offline for scheduled updates or has been temporarily disabled by administrators.
+                </p>
+              </div>
+              <div className="flex justify-center pt-2">
+                <Link to="/" className="btn-primary flex items-center gap-2 text-sm font-semibold">
+                  <span>Return to Homepage</span>
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          </div>
         ) : !currentPage && !['home', 'about', 'services', 'plans', 'pricing'].includes(pageSlug) ? (
           <div className="flex-grow flex flex-col items-center justify-center text-slate-800 dark:text-slate-200 px-4 py-16">
             <div className="p-8 rounded-none border border-grid glass-panel text-center max-w-md space-y-6 bg-brand-sand dark:bg-brand-dark">
