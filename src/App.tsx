@@ -90,6 +90,19 @@ function App() {
   const isSuiteDomain = hostname.startsWith('suite.') || hostname.includes('suite.springwebsolutions.in')
   const isCareersDomain = hostname.startsWith('careers.') || hostname.includes('careers.springwebsolutions.in') || hostname.startsWith('jobs.') || hostname.includes('jobs.springwebsolutions.in')
 
+  // Dynamically set noindex, nofollow meta tag on suite subdomain to permanently prevent Google search indexing
+  useEffect(() => {
+    if (isSuiteDomain) {
+      let meta = document.querySelector('meta[name="robots"]')
+      if (!meta) {
+        meta = document.createElement('meta')
+        meta.setAttribute('name', 'robots')
+        document.head.appendChild(meta)
+      }
+      meta.setAttribute('content', 'noindex, nofollow, noarchive, nosnippet')
+    }
+  }, [isSuiteDomain])
+
   // Clean URL history if /admin is present in address bar on suite subdomain
   useEffect(() => {
     if (isSuiteDomain && typeof window !== 'undefined' && window.location.pathname.includes('/admin')) {

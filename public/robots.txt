@@ -6,6 +6,13 @@ Disallow: /admin/
 Disallow: /setup/
 Disallow: /login
 Disallow: /api/
+Disallow: /dashboard
+Disallow: /crm
+Disallow: /lead-gen
+Disallow: /analytics
+Disallow: /health
+Disallow: /settings
+Disallow: /security
 
 # AI Search & Answer Engine Crawlers (AEO Enabled)
 User-agent: GPTBot

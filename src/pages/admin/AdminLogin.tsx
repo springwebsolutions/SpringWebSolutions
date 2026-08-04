@@ -33,6 +33,16 @@ export const AdminLogin: React.FC = () => {
   const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
 
   useEffect(() => {
+    let meta = document.querySelector('meta[name="robots"]')
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.setAttribute('name', 'robots')
+      document.head.appendChild(meta)
+    }
+    meta.setAttribute('content', 'noindex, nofollow, noarchive, nosnippet')
+  }, [])
+
+  useEffect(() => {
     if (user) {
       const isStaff = hasRole('super_admin') || hasRole('admin') || hasRole('editor') ||
                       hasRole('sales') || hasRole('support') || hasRole('content_writer')
