@@ -372,77 +372,66 @@ export const AdminLayout: React.FC = () => {
       )}
 
       {/* Nav Groups */}
-      <nav className="flex-1 py-2 overflow-y-auto px-2 space-y-0.5 scrollbar-thin scrollbar-thumb-white/5">
+      <nav className="flex-1 py-3 overflow-y-auto px-3 space-y-4 scrollbar-thin scrollbar-thumb-white/5">
         {navGroups.map((group) => {
-          const isCollapsed = collapsedGroups.has(group.label)
           const GroupIcon = group.icon
-          const hasActive = group.items.some(item => location.pathname.startsWith(item.href))
+          const hasActive = group.items.some(item => location.pathname === item.href || location.pathname.startsWith(item.href + '/'))
 
           return (
-            <div key={group.label}>
+            <div key={group.label} className="space-y-1">
               {/* Group Header */}
               {sidebarOpen ? (
-                <button
-                  onClick={() => toggleGroup(group.label)}
-                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[10px] font-bold tracking-[0.12em] uppercase transition-all mt-2 mb-0.5 group
-                    ${hasActive ? 'text-emerald-500/80' : 'text-slate-600 hover:text-slate-400'}`}
-                >
-                  <GroupIcon size={11} className={hasActive ? 'text-emerald-500/60' : 'text-slate-700 group-hover:text-slate-500'} />
-                  <span className="flex-1 text-left">{group.label}</span>
-                  <ChevronDown
-                    size={11}
-                    className={`transition-transform duration-200 ${isCollapsed ? '-rotate-90' : 'rotate-0'} text-slate-700`}
-                  />
-                </button>
+                <div className={`flex items-center gap-2 px-2 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${
+                  hasActive ? 'text-emerald-400' : 'text-slate-500/70'
+                }`}>
+                  <GroupIcon size={12} className={hasActive ? 'text-emerald-400' : 'text-slate-600'} />
+                  <span>{group.label}</span>
+                </div>
               ) : (
-                <div className="my-2 border-t border-white/[0.04]" />
+                <div className="my-2 border-t border-white/[0.05]" />
               )}
 
               {/* Nav Items */}
-              {(!isCollapsed || !sidebarOpen) && (
-                <div className="space-y-0.5">
-                  {group.items.map((item) => {
-                    const Icon = item.icon
-                    const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
-                    return (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        onClick={() => setMobileOpen(false)}
-                        title={!sidebarOpen ? item.label : undefined}
-                        className={`group relative flex items-center gap-3 rounded-xl text-sm font-medium transition-all duration-150
-                          ${sidebarOpen ? 'px-3 py-2' : 'justify-center px-0 py-2.5 mx-1'}
-                          ${isActive
-                            ? 'bg-gradient-to-r from-emerald-500/12 to-emerald-500/5 text-emerald-400'
-                            : 'text-slate-500 hover:text-slate-200 hover:bg-white/[0.04]'
-                          }`}
-                      >
-                        {/* Active glow accent */}
-                        {isActive && (
-                          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/60" />
-                        )}
-                        <Icon
-                          size={16}
-                          className={isActive ? 'text-emerald-400' : 'text-slate-600 group-hover:text-slate-300'}
-                        />
-                        {sidebarOpen && (
-                          <>
-                            <div className="flex-1 min-w-0">
-                              <div className="truncate leading-none">{item.label}</div>
-                            </div>
-                            {item.badge && (
-                              <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[9px] font-bold border border-emerald-500/20">
-                                {item.badge}
-                              </span>
-                            )}
-                            {isActive && <ChevronRight size={12} className="ml-auto text-emerald-500/50 shrink-0" />}
-                          </>
-                        )}
-                      </Link>
-                    )
-                  })}
-                </div>
-              )}
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const Icon = item.icon
+                  const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
+                  return (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      title={!sidebarOpen ? item.label : undefined}
+                      className={`group relative flex items-center gap-3 rounded-xl text-xs font-semibold transition-all duration-200
+                        ${sidebarOpen ? 'px-3.5 py-2.5' : 'justify-center px-0 py-2.5 mx-1'}
+                        ${isActive
+                          ? 'bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-transparent text-emerald-300 font-bold border border-emerald-500/20 shadow-md shadow-emerald-500/10'
+                          : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
+                        }`}
+                    >
+                      {/* Active indicator indicator bar */}
+                      {isActive && (
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/80" />
+                      )}
+                      <Icon
+                        size={17}
+                        className={isActive ? 'text-emerald-400' : 'text-slate-500 group-hover:text-slate-300 transition-colors'}
+                      />
+                      {sidebarOpen && (
+                        <>
+                          <span className="flex-1 truncate">{item.label}</span>
+                          {item.badge && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30">
+                              {item.badge}
+                            </span>
+                          )}
+                          {isActive && <ChevronRight size={13} className="ml-auto text-emerald-400/80 shrink-0" />}
+                        </>
+                      )}
+                    </Link>
+                  )
+                })}
+              </div>
             </div>
           )
         })}
