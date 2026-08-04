@@ -54,7 +54,7 @@ const OFFER_POST_DETAIL: PostDetail = {
     { id: 'cat-2', name: 'Web Development', slug: 'web-development' }
   ],
   content: `
-# ⚡ Exclusive Launch Offer: Complete High-Performance Business Website for Just ₹15,000 / $249
+# Exclusive Launch Offer: Complete High-Performance Business Website for Just ₹15,000 / $249
 
 In today's fast-moving digital economy, a slow or outdated website is the single biggest leak in a business's sales pipeline. Traditional web agencies often trap business owners in endless monthly subscriptions, recurring maintenance fees, and proprietary locks that prevent you from owning your own digital asset.
 
@@ -64,7 +64,7 @@ For a limited time, we are opening **15 exclusive spots** for our complete busin
 
 ---
 
-## 🚀 Why Traditional Subscriptions Cost You Thousands
+## Why Traditional Subscriptions Cost You Thousands
 
 Most website platforms (like Wix or Shopify) charge recurring monthly fees that accumulate to hundreds of dollars every year, without giving you access to the underlying code. If you decide to cancel, your website disappears.
 
@@ -75,21 +75,21 @@ With the **Spring Web Solutions Autonomous Business Package**, you receive:
 
 ---
 
-## 📦 What Is Included in This Exclusive Package?
+## What Is Included in This Exclusive Package?
 
 Our engineering team builds every project using industrial React & Next.js technology, ensuring zero bloatware and top-tier security.
 
-- ✅ **Modern, High-Speed Website**: Responsive web architecture tailored to your brand identity.
-- ✅ **Mobile & Desktop Touch Optimization**: Flawless user experience on iPhones, Android devices, tablets, and desktop displays.
-- ✅ **Sub-1.0 Second Load Speed**: Lightning-fast performance to boost conversion rates and lower bounce rates.
-- ✅ **Technical SEO Setup**: Complete Google Search Console configuration, canonical tags, and XML sitemaps.
-- ✅ **Essential JSON-LD Schema (AEO)**: Structured data graph enabling AI search engines (like ChatGPT & Gemini) to display your business in direct answer panels.
-- ✅ **100% Full Source Code & Database Ownership**: Full handover of code repositories and server keys.
-- ✅ **1 Year Basic Domain & Hosting**: Complimentary domain registration and high-speed hosting included.
+- **Modern, High-Speed Website**: Responsive web architecture tailored to your brand identity.
+- **Mobile & Desktop Touch Optimization**: Flawless user experience on iPhones, Android devices, tablets, and desktop displays.
+- **Sub-1.0 Second Load Speed**: Lightning-fast performance to boost conversion rates and lower bounce rates.
+- **Technical SEO Setup**: Complete Google Search Console configuration, canonical tags, and XML sitemaps.
+- **Essential JSON-LD Schema (AEO)**: Structured data graph enabling AI search engines (like ChatGPT & Gemini) to display your business in direct answer panels.
+- **100% Full Source Code & Database Ownership**: Full handover of code repositories and server keys.
+- **1 Year Basic Domain & Hosting**: Complimentary domain registration and high-speed hosting included.
 
 ---
 
-## 💡 Why Businesses Trust Spring Web Solutions
+## Why Businesses Trust Spring Web Solutions
 
 ### 1. Direct Senior Engineer Support
 Work directly with experienced software architects based in **Udumalpet, Tamil Nadu**. No middle managers or outsourced delays.
@@ -102,13 +102,13 @@ All database backups, SSL certificates, domain names, and source repositories be
 
 ---
 
-## ⏰ First 15 Customers Only — Lock In Your Spot Today!
+## First 15 Customers Only — Lock In Your Spot Today!
 
 Due to the intensive engineer allocation required for each client project, this promotional rate is strictly capped at **the first 15 bookings**.
 
-- 📲 **WhatsApp Direct**: [+91 80126 22119](https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20/%20$249%20Limited%20Time%20Business%20Website%20Offer!)
-- ✉️ **Email Support**: [info@springwebsolutions.in](mailto:info@springwebsolutions.in)
-- 🌐 **Official Website**: [www.springwebsolutions.in](https://www.springwebsolutions.in)
+- **WhatsApp Direct**: [+91 80126 22119](https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20/%20$249%20Limited%20Time%20Business%20Website%20Offer!)
+- **Email Support**: [info@springwebsolutions.in](mailto:info@springwebsolutions.in)
+- **Official Website**: [www.springwebsolutions.in](https://www.springwebsolutions.in)
 
 > **Important Domain & Feature Note**: *Final price may exceed ₹15,000 / $249 if the custom domain name requested by the client exceeds standard registrar cost expectations, or if custom enterprise integrations increase development time and resource requirements.*
   `
