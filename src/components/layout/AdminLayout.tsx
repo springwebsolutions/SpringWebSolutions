@@ -153,7 +153,7 @@ const CommandPalette: React.FC<{
 export const AdminLayout: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, profile, loading, initialized, hasRole, initialize, signOut } = useAuthStore()
+  const { user, profile, loading, initialized, mfaRequired, hasRole, initialize, signOut } = useAuthStore()
   const [sidebarOpen, setSidebarOpen]   = useState(true)
   const [mobileOpen, setMobileOpen]     = useState(false)
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false)
@@ -228,7 +228,9 @@ export const AdminLayout: React.FC = () => {
 
   const isSuiteDomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('suite.')
 
-  if (initialized && !loading && !user) return <AdminLogin />
+  if (initialized && !loading && (!user || mfaRequired)) {
+    return <AdminLogin initialStep={mfaRequired ? 'totp' : 'credentials'} />
+  }
 
   const isAuthorized = user && (
     hasRole('super_admin') || hasRole('admin') || hasRole('editor') ||

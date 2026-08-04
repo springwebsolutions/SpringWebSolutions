@@ -14,18 +14,18 @@ import { Logo } from '@/components/ui/Logo'
 // ─── Step Types ───────────────────────────────────────────────────────────────
 type LoginStep = 'credentials' | 'totp' | 'success'
 
-export const AdminLogin: React.FC = () => {
+export const AdminLogin: React.FC<{ initialStep?: 'credentials' | 'totp' }> = ({ initialStep = 'credentials' }) => {
   const navigate = useNavigate()
   const [loading, setLoading]     = useState(false)
   const [errorMsg, setErrorMsg]   = useState<string | null>(null)
   const [showPass, setShowPass]   = useState(false)
-  const [step, setStep]           = useState<LoginStep>('credentials')
+  const [step, setStep]           = useState<LoginStep>(initialStep)
   const [totpCode, setTotpCode]   = useState('')
   const [challengeId, setChallengeId] = useState<string | null>(null)
   const [factorId, setFactorId]   = useState<string | null>(null)
   const [pendingEmail, setPendingEmail] = useState('')
 
-  const { user, initialize, hasRole } = useAuthStore()
+  const { user, mfaRequired, initialize, hasRole, checkMfaStatus } = useAuthStore()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginData>({
     resolver: zodResolver(loginSchema)
   })
@@ -42,13 +42,35 @@ export const AdminLogin: React.FC = () => {
     meta.setAttribute('content', 'noindex, nofollow, noarchive, nosnippet')
   }, [])
 
+  // Auto-initiate TOTP MFA challenge if user is signed in with password but needs 2FA verification
   useEffect(() => {
-    if (user) {
-      const isStaff = hasRole('super_admin') || hasRole('admin') || hasRole('editor') ||
-                      hasRole('sales') || hasRole('support') || hasRole('content_writer')
-      if (isStaff) navigate(isSuiteDomain ? '/dashboard' : '/admin/dashboard')
+    const prepareMfaChallenge = async () => {
+      if (user && mfaRequired) {
+        setStep('totp')
+        try {
+          const { data: factors } = await supabase.auth.mfa.listFactors()
+          const totpFactor = factors?.totp?.[0]
+          if (totpFactor) {
+            setFactorId(totpFactor.id)
+            setPendingEmail(user.email || '')
+            const { data: challenge, error: challengeErr } = await supabase.auth.mfa.challenge({
+              factorId: totpFactor.id,
+            })
+            if (challengeErr) throw challengeErr
+            setChallengeId(challenge.id)
+          }
+        } catch (err: any) {
+          setErrorMsg(err.message || 'Failed to initialize 2FA challenge. Please try again.')
+        }
+      } else if (user && !mfaRequired) {
+        const isStaff = hasRole('super_admin') || hasRole('admin') || hasRole('editor') ||
+                        hasRole('sales') || hasRole('support') || hasRole('content_writer')
+        if (isStaff) navigate(isSuiteDomain ? '/dashboard' : '/admin/dashboard')
+      }
     }
-  }, [user, navigate, hasRole, isSuiteDomain])
+
+    prepareMfaChallenge()
+  }, [user, mfaRequired])
 
   // ── Step 1: Sign in with email/password ─────────────────────────────────────
   const onSubmit = async (data: LoginData) => {

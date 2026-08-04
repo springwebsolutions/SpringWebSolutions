@@ -18,6 +18,8 @@ interface AuthState {
   permissions: string[]
   loading: boolean
   initialized: boolean
+  mfaRequired: boolean
+  checkMfaStatus: () => Promise<boolean>
   initialize: () => Promise<() => void>
   signOut: () => Promise<void>
   hasPermission: (permissionName: string) => boolean
@@ -31,6 +33,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   permissions: [],
   loading: true,
   initialized: false,
+  mfaRequired: false,
+
+  checkMfaStatus: async () => {
+    if (!isSupabaseConfigured) return false
+    try {
+      const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+      if (data) {
+        const isMfaNeeded = data.nextLevel === 'aal2' && data.currentLevel !== 'aal2'
+        set({ mfaRequired: isMfaNeeded })
+        return isMfaNeeded
+      }
+    } catch (e) {
+      // fallback
+    }
+    set({ mfaRequired: false })
+    return false
+  },
 
   initialize: async () => {
     if (get().initialized) {
@@ -48,6 +67,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const user = session.user
       set({ user, loading: true })
       
+      // Check MFA status first
+      await get().checkMfaStatus()
+
       // Load profile & roles
       try {
         const [profileRes, rolesRes] = await Promise.all([
@@ -59,8 +81,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           set({ profile: profileRes.data })
         }
 
-        // RPC helper can return json or roles list
-        // Let's fallback to querying tables if check_user_roles_and_permissions isn't deployed yet
         if (rolesRes.data) {
           set({
             roles: rolesRes.data.roles || [],
@@ -77,11 +97,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           
           let permissions: string[] = []
           if (roles.length > 0) {
-            // Retrieve permissions for these roles
             const { data: permData } = await supabase
               .from('role_permissions')
               .select('permissions(name)')
-              .eq('role_id', userRolesData?.[0]?.role_id) // simplified fallback
+              .eq('role_id', userRolesData?.[0]?.role_id)
             permissions = permData ? permData.map((p: any) => p.permissions?.name || '') : []
           }
           
@@ -100,6 +119,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (session) {
         const user = session.user
         set({ user })
+        await get().checkMfaStatus()
 
         try {
           const [profileRes, rolesRes] = await Promise.all([
@@ -117,7 +137,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               permissions: rolesRes.data.permissions || []
             })
           } else {
-            // Fallback manual query
             const { data: userRolesData } = await supabase
               .from('user_roles')
               .select('roles(name)')
@@ -130,7 +149,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           console.error(err)
         }
       } else {
-        set({ user: null, profile: null, roles: [], permissions: [] })
+        set({ user: null, profile: null, roles: [], permissions: [], mfaRequired: false })
       }
       set({ loading: false })
     })
@@ -143,7 +162,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signOut: async () => {
     if (!isSupabaseConfigured) return
     await supabase.auth.signOut()
-    set({ user: null, profile: null, roles: [], permissions: [] })
+    set({ user: null, profile: null, roles: [], permissions: [], mfaRequired: false })
   },
 
   hasPermission: (permissionName: string) => {
