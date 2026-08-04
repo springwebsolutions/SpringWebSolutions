@@ -262,11 +262,11 @@ export const FloatingContactWidgets: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-20 right-6 z-50 flex flex-col items-end space-y-3 pointer-events-auto">
+    <div className="fixed bottom-6 right-5 z-50 flex flex-col items-end space-y-3 pointer-events-auto">
       
       {/* Live AI Chatbot Drawer */}
       {isLiveChatOpen && (
-        <div className="mb-2 w-80 sm:w-96 rounded-2xl bg-[#080b14] border border-white/10 shadow-2xl shadow-emerald-900/30 overflow-hidden animate-fade-in-up">
+        <div className="mb-2 w-80 sm:w-96 rounded-2xl bg-[#080b14] light:bg-white border border-white/10 light:border-slate-200 shadow-2xl shadow-emerald-950/40 overflow-hidden animate-fade-in-up transition-colors duration-200">
           {/* Header */}
           <div className="p-4 bg-gradient-to-r from-indigo-600 via-teal-600 to-emerald-500 text-white flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -302,6 +302,7 @@ export const FloatingContactWidgets: React.FC = () => {
               <button
                 onClick={() => setIsLiveChatOpen(false)}
                 className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
+                title="Close Chat"
               >
                 <X size={16} />
               </button>
@@ -309,13 +310,13 @@ export const FloatingContactWidgets: React.FC = () => {
           </div>
 
           {/* Chat Messages Body */}
-          <div className="p-4 space-y-3 bg-[#040509] max-h-96 overflow-y-auto custom-scrollbar">
+          <div className="p-4 space-y-3 bg-[#040509] light:bg-slate-50 max-h-80 sm:max-h-96 overflow-y-auto custom-scrollbar transition-colors duration-200">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex flex-col space-y-1.5 ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
-                <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
+                <div className="flex items-center gap-1.5 text-[10px] text-slate-400 light:text-slate-500">
                   {msg.sender === 'agent' ? (
                     <span className="flex items-center gap-1 text-amber-400 font-bold">
                       <UserCheck size={10} /> {msg.sender_name || 'Admin Engineer'}
@@ -337,8 +338,8 @@ export const FloatingContactWidgets: React.FC = () => {
                     msg.sender === 'user'
                       ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-semibold rounded-br-none shadow-md'
                       : msg.sender === 'agent'
-                      ? 'bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/30 text-white font-medium rounded-bl-none shadow-md'
-                      : 'bg-white/[0.05] border border-white/10 text-slate-200 rounded-bl-none'
+                      ? 'bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/30 text-white light:text-slate-900 font-medium rounded-bl-none shadow-md'
+                      : 'bg-white/[0.05] light:bg-white border border-white/10 light:border-slate-200 text-slate-200 light:text-slate-800 rounded-bl-none shadow-sm'
                   }`}
                 >
                   {msg.text}
@@ -351,7 +352,7 @@ export const FloatingContactWidgets: React.FC = () => {
                       <button
                         key={idx}
                         onClick={() => handleUserSendMessage(opt.label, opt.action)}
-                        className="text-left text-xs p-2.5 rounded-xl bg-white/[0.03] hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 text-slate-300 hover:text-emerald-400 transition-all cursor-pointer flex items-center justify-between group"
+                        className="text-left text-xs p-2.5 rounded-xl bg-white/[0.03] light:bg-white hover:bg-emerald-500/10 border border-white/5 light:border-slate-200 text-slate-300 light:text-slate-700 hover:text-emerald-400 transition-all cursor-pointer flex items-center justify-between group shadow-sm"
                       >
                         <span>{opt.label}</span>
                         <Send size={11} className="opacity-0 group-hover:opacity-100 text-emerald-400 shrink-0 ml-2 transition-opacity" />
@@ -364,7 +365,7 @@ export const FloatingContactWidgets: React.FC = () => {
 
             {/* Typing Indicator */}
             {isTyping && (
-              <div className="flex items-center space-x-2 text-xs text-slate-400 pt-1">
+              <div className="flex items-center space-x-2 text-xs text-slate-400 light:text-slate-500 pt-1">
                 <Loader2 size={13} className="animate-spin text-emerald-400" />
                 <span>SpringWeb AI is typing...</span>
               </div>
@@ -373,7 +374,7 @@ export const FloatingContactWidgets: React.FC = () => {
           </div>
 
           {/* Input & Direct Actions Footer */}
-          <div className="p-3 bg-[#080b14] border-t border-white/10 space-y-2">
+          <div className="p-3 bg-[#080b14] light:bg-white border-t border-white/10 light:border-slate-200 space-y-2 transition-colors duration-200">
             <div className="flex items-center gap-2">
               <input
                 type="text"
@@ -381,7 +382,7 @@ export const FloatingContactWidgets: React.FC = () => {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleUserSendMessage()}
                 placeholder="Type your question or phone number..."
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                className="flex-1 bg-white/5 light:bg-slate-100 border border-white/10 light:border-slate-300 rounded-xl px-3 py-2 text-xs text-white light:text-slate-900 placeholder-slate-500 light:placeholder-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
               />
               <button
                 onClick={() => handleUserSendMessage()}
@@ -391,7 +392,7 @@ export const FloatingContactWidgets: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 pt-1">
+            <div className="flex items-center justify-between text-[11px] text-slate-400 light:text-slate-500 px-1 pt-1">
               <span>Direct Phone:</span>
               <a
                 href="tel:+918012622119"
