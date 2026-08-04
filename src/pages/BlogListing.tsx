@@ -102,17 +102,6 @@ export const BlogListing: React.FC = () => {
       }
 
       try {
-        // Fetch categories & tags
-        const [catRes, tagRes] = await Promise.all([
-          supabase.from('blog_categories').select('*'),
-          supabase.from('blog_tags').select('*')
-        ])
-
-        if (catRes.data && catRes.data.length > 0) {
-          setCategories(catRes.data)
-        }
-        setTags(tagRes.data || [])
-
         // Fetch posts
         const { data, error } = await supabase
           .from('blog_posts')
@@ -124,14 +113,26 @@ export const BlogListing: React.FC = () => {
           .eq('status', 'published')
           .order('published_at', { ascending: false })
 
-        if (error) throw error
-
-        if (data && data.length > 0) {
+        if (!error && data && data.length > 0) {
           const mappedPosts = data.map((post: any) => ({
             ...post,
             categories: post.blog_post_categories?.map((c: any) => c.blog_categories).filter(Boolean) || []
           }))
           setPosts(mappedPosts)
+
+          // Dynamically extract categories that actually have published posts
+          const catMap = new Map<string, { id: string; name: string; slug: string }>()
+          mappedPosts.forEach((p: any) => {
+            p.categories?.forEach((c: any) => {
+              if (c?.slug && !catMap.has(c.slug)) {
+                catMap.set(c.slug, { id: c.slug, name: c.name, slug: c.slug })
+              }
+            })
+          })
+
+          if (catMap.size > 0) {
+            setCategories(Array.from(catMap.values()))
+          }
         }
       } catch (err) {
         console.error('Error fetching blog catalog:', err)
@@ -162,11 +163,13 @@ export const BlogListing: React.FC = () => {
     : filteredPosts
 
   return (
-    <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
+    <div className="min-h-screen page-bg flex flex-col justify-between">
       <SEOHead
-        title="Tech Blog & Software Engineering Insights | Spring Web Solutions"
-        description="Read expert articles on web development, custom ERP/CRM architecture, mobile apps, and tech automation by Spring Web Solutions. Learn more today!"
+        title="Digital Growth Hub | Spring Web Solutions Blog"
+        description="Roadmaps, optimization insights, and software architecture guides by Spring Web Solution engineers."
+        ogImage="https://www.springwebsolutions.in/logo-emblem.png"
       />
+      
       <Navbar />
 
       <main className="flex-grow py-16">
@@ -188,22 +191,22 @@ export const BlogListing: React.FC = () => {
             <div className="flex flex-wrap gap-2 w-full md:w-auto">
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                   !selectedCategory 
-                    ? 'bg-brand-emerald text-white shadow-md' 
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white light:bg-slate-100 light:text-slate-600'
+                    ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md scale-[1.02]' 
+                    : 'dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900'
                 }`}
               >
                 All Articles
               </button>
               {categories.map((cat) => (
                 <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.slug)}
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                  key={cat.id || cat.slug}
+                  onClick={() => setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                     selectedCategory === cat.slug
-                      ? 'bg-brand-emerald text-white shadow-md'
-                      : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white light:bg-slate-100 light:text-slate-600'
+                      ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md scale-[1.02]'
+                      : 'dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900'
                   }`}
                 >
                   {cat.name}
