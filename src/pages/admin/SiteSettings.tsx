@@ -72,8 +72,8 @@ export const SiteSettings: React.FC = () => {
       setYoutube(socials.youtube || '')
 
       const resend = (siteConfig as any).resend_config || {}
-      setResendApiKey(resend.api_key || import.meta.env.VITE_RESEND_API_KEY || '')
-      setResendFromEmail(resend.from_email || import.meta.env.VITE_RESEND_FROM_EMAIL || 'hello@springwebsolutions.in')
+      setResendApiKey(resend.api_key || '')
+      setResendFromEmail(resend.from_email || 'hello@springwebsolutions.in')
       setResendNotifyEmail(resend.notify_email || 'sales@springwebsolutions.in')
     }
     if (navigation && navigation.header_menu) {
@@ -164,13 +164,13 @@ export const SiteSettings: React.FC = () => {
     }
   }
 
-  const handleSendTestEmail = async () => {
+  const handleTestResendEmail = async () => {
     setTestEmailLoading(true)
     setTestEmailStatus(null)
 
     const targetRecipient = resendNotifyEmail || email || 'hello@springwebsolutions.in'
     const sender = resendFromEmail || 'hello@springwebsolutions.in'
-    const keyToUse = resendApiKey || import.meta.env.VITE_RESEND_API_KEY
+    const keyToUse = resendApiKey || undefined
 
     const result = await sendResendEmail(
       {
@@ -423,12 +423,10 @@ export const SiteSettings: React.FC = () => {
                 <Mail size={16} className="text-brand-emerald" />
                 <span>Resend Email Dispatcher Integration</span>
               </h4>
-              {import.meta.env.VITE_RESEND_API_KEY && (
-                <span className="px-2.5 py-1 rounded-full bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald text-[11px] font-semibold flex items-center gap-1 w-max">
-                  <CheckCircle size={12} />
-                  <span>Vercel VITE_RESEND_API_KEY Active</span>
-                </span>
-              )}
+              <span className="px-2.5 py-1 rounded-full bg-brand-emerald/15 border border-brand-emerald/30 text-brand-emerald text-[11px] font-semibold flex items-center gap-1 w-max">
+                <CheckCircle size={12} />
+                <span>Vercel RESEND_API_KEY Active</span>
+              </span>
             </div>
             <p className="text-xs text-slate-400">
               Configure Resend API credentials for automated lead notifications, ticket alerts, and transactional client communications.
@@ -481,7 +479,7 @@ export const SiteSettings: React.FC = () => {
             <div className="pt-1">
               <button
                 type="button"
-                onClick={handleSendTestEmail}
+                onClick={handleTestResendEmail}
                 disabled={testEmailLoading}
                 className="btn-secondary text-xs py-2 px-4 flex items-center gap-2 cursor-pointer disabled:opacity-40"
               >
