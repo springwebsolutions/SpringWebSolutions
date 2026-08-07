@@ -109,16 +109,20 @@ export const Login: React.FC = () => {
       if (error) throw error
 
       if (data.user) {
-        // Ensure profile entry
+        // Ensure profile entry in profiles table
         await supabase.from('profiles').upsert({
           id: data.user.id,
           full_name: regFullName.trim()
         })
       }
 
-      setSuccessMsg('Account created successfully! Signing in...')
-      await initialize()
-      setTimeout(() => navigate('/support'), 1500)
+      if (data.session) {
+        setSuccessMsg('Client account created successfully! Redirecting to customer portal...')
+        await initialize()
+        setTimeout(() => navigate('/support'), 1200)
+      } else {
+        setSuccessMsg('Account created successfully! If email confirmation is enabled, please check your inbox to verify your email, then sign in.')
+      }
     } catch (err: any) {
       console.error('Registration error:', err)
       setErrorMsg(err.message || 'Error creating client account.')
