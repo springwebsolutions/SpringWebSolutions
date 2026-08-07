@@ -13,10 +13,13 @@ import {
 
 import SEOHead from '@/components/seo/SEOHead'
 
+import { sendLeadNotificationEmail } from '@/lib/emailService'
+
 export const Contact: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [honeypot, setHoneypot] = useState('')
 
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -30,6 +33,14 @@ export const Contact: React.FC = () => {
   const selectedType = watch('type') || 'contact'
 
   const onSubmit = async (data: ContactFormData) => {
+    // Honeypot Bot Trap Check: Drop if bot filled hidden field
+    if (honeypot.trim()) {
+      console.warn('[Bot Trap] Spam submission blocked via honeypot field.')
+      setSuccess(true)
+      reset()
+      return
+    }
+
     setLoading(true)
     setErrorMsg(null)
 
@@ -52,8 +63,17 @@ export const Contact: React.FC = () => {
       localStorage.setItem('sw_contact_submissions', JSON.stringify(localEntries))
     } catch (e) {}
 
+    // Dispatch email notification via Vercel serverless function (Rate limited & server-side key secured)
+    sendLeadNotificationEmail({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      company: data.company,
+      type: data.type,
+      message: data.description
+    }).catch(() => {})
+
     if (!isSupabaseConfigured) {
-      // Graceful fallback when database is in offline or client demo mode
       console.info('[Lead & Contact Submission Captured]:', data)
       setSuccess(true)
       reset()
@@ -259,6 +279,17 @@ export const Contact: React.FC = () => {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    
+                    {/* Honeypot Bot Trap Field (Hidden from human users, lures automated spam bots) */}
+                    <input
+                      type="text"
+                      name="hp_field"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      style={{ display: 'none', position: 'absolute', left: '-9999px' }}
+                    />
                     
                     {errorMsg && (
                       <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-start gap-2">
