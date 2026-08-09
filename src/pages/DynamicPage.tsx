@@ -44,25 +44,25 @@ export const DynamicPage: React.FC = () => {
   const getSeoData = () => {
     if (pageSlug === 'home') {
       return {
-        title: 'Spring Web Solutions | Website Development, Custom ERP/CRM & App Engineering (Udumalpet, Tamil Nadu, India & Global)',
-        description: 'High-performance website development, custom ERP/CRM software, and mobile apps by Spring Web Solutions. Contact us today for a free project quote!'
+        title: 'Spring Web Solutions | Web & App Engineering – Udumalpet',
+        description: 'High-performance website development, custom ERP/CRM software, and mobile apps by Spring Web Solutions, Udumalpet. Contact us today for a free project quote!'
       }
     }
     if (pageSlug === 'about') {
       return {
-        title: 'About Us | Spring Web Solutions Engineering Team & Standards (Udumalpet, Tamil Nadu)',
+        title: 'About Spring Web Solutions | Software Agency Udumalpet',
         description: "Discover Spring Web Solutions, Udumalpet's premier software engineering agency. Learn about our team, standards, and mission. Contact us to build today!"
       }
     }
     if (pageSlug === 'services') {
       return {
-        title: 'Our Services | Web Development, Android & iOS Apps, ERP/CRM & Windows Software',
+        title: 'Services | Spring Web Solutions Udumalpet',
         description: 'Explore custom web development, mobile apps, ERP/CRM software, and technical SEO services by Spring Web Solutions. Get in touch to transform your tech!'
       }
     }
     if (pageSlug === 'plans' || pageSlug === 'pricing') {
       return {
-        title: 'Pricing Plans & Software Development Packages | Spring Web Solutions',
+        title: 'Pricing Plans | Spring Web Solutions Udumalpet',
         description: 'View transparent pricing packages for web development, ERP/CRM software, and mobile apps by Spring Web Solutions. Request your custom quote today!'
       }
     }
