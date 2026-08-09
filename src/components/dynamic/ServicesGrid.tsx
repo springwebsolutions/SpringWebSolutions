@@ -7,6 +7,7 @@ interface ServiceItem {
   title: string
   desc: string
   href: string
+  imageAlt?: string
 }
 
 interface ServicesGridProps {
@@ -38,6 +39,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
       title: 'Website & Web App Development',
       subtitle: 'High-speed corporate websites, React & Next.js web applications, e-commerce storefronts, and conversion portals for businesses in Udumalpet, Tamil Nadu, India, and worldwide.',
       image: '/web_dev_vector.png',
+      imageAlt: 'Custom Website and Web App Development by Spring Web Solutions, Udumalpet — High-Speed React & Next.js Engineering',
       imageLeft: false,
       features: [
         'Custom Web Applications & Portals',
@@ -53,6 +55,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
       title: 'Custom ERP & CRM Systems',
       subtitle: 'Tailor-made Enterprise Resource Planning (ERP) and Customer Relationship Management (CRM) software for inventory tracking, automated billing, client lead pipelines, and real-time WhatsApp analytics.',
       image: '/cloud_storage_vector.png',
+      imageAlt: 'Custom ERP and CRM Dashboard Software Built by Spring Web Solutions Udumalpet — Inventory, Billing & Lead Automation',
       imageLeft: true,
       features: [
         'Custom CRM & Client Portal Software',
@@ -68,6 +71,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
       title: 'Android, iOS & Windows App Development',
       subtitle: 'Native Android mobile apps (Kotlin/Flutter), iOS applications, and high-speed C# .NET Windows desktop software built for offline reliability, billing, and retail operations.',
       image: '/digital_marketing_vector.png',
+      imageAlt: 'Android iOS and Windows Desktop App Development by Spring Web Solutions Udumalpet — Kotlin, Flutter & C# .NET Engineering',
       imageLeft: false,
       features: [
         'Native Android (Kotlin) App Development',
@@ -83,6 +87,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
       title: 'Technical SEO & Search Dominance',
       subtitle: 'Semantic JSON-LD schema markup, AEO answer engine optimization, Core Web Vitals speed tuning, and search index management for long-term organic rankings.',
       image: '/seo_analytics_vector.png',
+      imageAlt: 'Technical SEO and AEO Search Optimization Analytics by Spring Web Solutions Udumalpet — Local, National & International Rankings',
       imageLeft: true,
       features: [
         'Local SEO (Udumalpet, Tiruppur, Coimbatore)',
@@ -193,7 +198,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
                       <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-slate-50/60 to-transparent pointer-events-none" />
                       <img
                         src={service.image}
-                        alt={`Spring Web Solutions - ${service.title} Engineering Service Preview`}
+                        alt={service.imageAlt || `Custom ${service.title} Service by Spring Web Solutions, Udumalpet, Tamil Nadu, India`}
                         width={600}
                         height={450}
                         loading="lazy"
@@ -207,7 +212,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
                     {/* ── Bottom status bar ── */}
                     <div className="h-6 bg-[#0d1117] dark:bg-[#0d1117] light:bg-slate-100 border-t border-white/10 dark:border-white/10 light:border-slate-200 flex items-center px-4 gap-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[9px] text-slate-500 uppercase tracking-widest">Live Preview</span>
+                       <span className="text-[9px] text-slate-500 uppercase tracking-widest">springwebsolutions.in</span>
                     </div>
                   </div>
                 </div>
