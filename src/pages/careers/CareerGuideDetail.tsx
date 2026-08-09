@@ -55,7 +55,7 @@ export const CareerGuideDetail: React.FC = () => {
       'name': 'SpringWeb Solutions',
       'logo': {
         '@type': 'ImageObject',
-        'url': 'https://careers.springwebsolutions.in/logo-emblem.png'
+        'url': 'https://www.springwebsolutions.in/logo-emblem.png'
       }
     },
     'datePublished': guide.created_at

@@ -100,7 +100,7 @@ export const JobDetail: React.FC = () => {
       '@type': 'Organization',
       'name': job.company_name,
       'sameAs': 'https://careers.springwebsolutions.in',
-      'logo': 'https://careers.springwebsolutions.in/logo-emblem.png'
+      'logo': 'https://www.springwebsolutions.in/logo-emblem.png'
     },
     'jobLocation': {
       '@type': 'Place',

@@ -14,7 +14,7 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
   description = 'Discover software engineering jobs & developer vacancies in Udumalpet, Tamil Nadu, and remote. Apply today to build your career with SpringWeb!',
   keywords = 'software jobs Udumalpet, web developer jobs Udumalpet, IT career vacancies Udumalpet, software jobs Tiruppur, software company jobs Coimbatore, developer vacancies Tamil Nadu, Chennai tech jobs, software engineer jobs India, remote software jobs India, international remote developer vacancies, SpringWeb Careers',
   canonicalUrl = 'https://careers.springwebsolutions.in/',
-  ogImage = 'https://careers.springwebsolutions.in/logo-emblem.png',
+  ogImage = 'https://www.springwebsolutions.in/logo-emblem.png',
   schemaJson
 }) => {
   useEffect(() => {
