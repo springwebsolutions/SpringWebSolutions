@@ -193,7 +193,11 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
                       <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-slate-50/60 to-transparent pointer-events-none" />
                       <img
                         src={service.image}
-                        alt={service.title}
+                        alt={`Spring Web Solutions - ${service.title} Engineering Service Preview`}
+                        width={600}
+                        height={450}
+                        loading="lazy"
+                        decoding="async"
                         className="relative z-10 w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
                       />
                       {/* Bottom vignette so img blends down softly */}

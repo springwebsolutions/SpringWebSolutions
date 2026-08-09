@@ -361,9 +361,14 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         <div className="max-w-3xl mx-auto space-y-6">
           {/* H2 Headline */}
           <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-white dark:text-white light:text-slate-900 font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] light:drop-shadow-none">
-            Helping Businesses Grow Through{' '}
-            <br className="hidden sm:inline" />
-            <TypewriterText />
+            <span className="sr-only">
+              Helping Businesses Grow Through Websites, Web Apps, Android &amp; iOS Mobile Apps, Windows Desktop Software, Custom ERP &amp; CRM Platforms, and Business Automation
+            </span>
+            <span aria-hidden="true">
+              Helping Businesses Grow Through{' '}
+              <br className="hidden sm:inline" />
+              <TypewriterText />
+            </span>
           </h2>
 
           {/* Hero Subtitle Paragraph */}

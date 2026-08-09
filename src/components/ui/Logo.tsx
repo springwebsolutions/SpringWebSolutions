@@ -29,7 +29,10 @@ export const Logo: React.FC<LogoProps> = ({
       <div className={`${iconDimensions} flex items-center justify-center shrink-0 hover:scale-105 transition-transform duration-200`}>
         <img 
           src="/logo-emblem.png" 
-          alt="Spring Web Solutions" 
+          alt="Spring Web Solutions - Web Development & Custom ERP/CRM Agency" 
+          width={64}
+          height={64}
+          decoding="async"
           className="w-full h-full object-contain filter drop-shadow-sm"
         />
       </div>

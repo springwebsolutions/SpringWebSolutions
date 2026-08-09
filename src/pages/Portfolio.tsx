@@ -208,7 +208,11 @@ export const Portfolio: React.FC = () => {
                   <div className="relative h-56 w-full overflow-hidden bg-slate-900">
                     <img
                       src={project.image}
-                      alt={project.title}
+                      alt={`Spring Web Solutions Portfolio Case Study - ${project.title} (${project.categoryLabel})`}
+                      width={640}
+                      height={360}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-transparent to-transparent opacity-80" />
