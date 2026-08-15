@@ -4,26 +4,26 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { Loader2 } from 'lucide-react'
 
-// Public Website Pages
+// Public Website Pages (Lazy Loaded for Initial Bundle Optimization)
 import DynamicPage from '@/pages/DynamicPage'
-import Portfolio from '@/pages/Portfolio'
-import BlogListing from '@/pages/BlogListing'
-import BlogPost from '@/pages/BlogPost'
-import Marketplace from '@/pages/Marketplace'
-import ProductDetail from '@/pages/ProductDetail'
-import Contact from '@/pages/Contact'
-import Login from '@/pages/Login'
-import KBListing from '@/pages/KBListing'
-import KBArticle from '@/pages/KBArticle'
-import SupportPortal from '@/pages/SupportPortal'
-import SupportTicketDetail from '@/pages/SupportTicketDetail'
+const Portfolio = lazy(() => import('@/pages/Portfolio'))
+const BlogListing = lazy(() => import('@/pages/BlogListing'))
+const BlogPost = lazy(() => import('@/pages/BlogPost'))
+const Marketplace = lazy(() => import('@/pages/Marketplace'))
+const ProductDetail = lazy(() => import('@/pages/ProductDetail'))
+const Contact = lazy(() => import('@/pages/Contact'))
+const Login = lazy(() => import('@/pages/Login'))
+const KBListing = lazy(() => import('@/pages/KBListing'))
+const KBArticle = lazy(() => import('@/pages/KBArticle'))
+const SupportPortal = lazy(() => import('@/pages/SupportPortal'))
+const SupportTicketDetail = lazy(() => import('@/pages/SupportTicketDetail'))
 
-// Careers & Jobs Subdomain Portal
-import { CareersHome } from '@/pages/careers/CareersHome'
-import { JobListings } from '@/pages/careers/JobListings'
-import { JobDetail } from '@/pages/careers/JobDetail'
-import { CareerGuideListing } from '@/pages/careers/CareerGuideListing'
-import { CareerGuideDetail } from '@/pages/careers/CareerGuideDetail'
+// Careers & Jobs Subdomain Portal (Lazy Loaded)
+const CareersHome = lazy(() => import('@/pages/careers/CareersHome').then(m => ({ default: m.CareersHome })))
+const JobListings = lazy(() => import('@/pages/careers/JobListings').then(m => ({ default: m.JobListings })))
+const JobDetail = lazy(() => import('@/pages/careers/JobDetail').then(m => ({ default: m.JobDetail })))
+const CareerGuideListing = lazy(() => import('@/pages/careers/CareerGuideListing').then(m => ({ default: m.CareerGuideListing })))
+const CareerGuideDetail = lazy(() => import('@/pages/careers/CareerGuideDetail').then(m => ({ default: m.CareerGuideDetail })))
 
 import WhatsAppWidget from '@/components/ui/WhatsAppWidget'
 
@@ -113,21 +113,23 @@ function App() {
   if (isCareersDomain) {
     return (
       <Router>
-        <Routes>
-          <Route path="/" element={<CareersHome />} />
-          <Route path="/jobs" element={<JobListings />} />
-          <Route path="/jobs/:slug" element={<JobDetail />} />
-          <Route path="/career-guides" element={<CareerGuideListing />} />
-          <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
+        <Suspense fallback={<AdminLoader />}>
+          <Routes>
+            <Route path="/" element={<CareersHome />} />
+            <Route path="/jobs" element={<JobListings />} />
+            <Route path="/jobs/:slug" element={<JobDetail />} />
+            <Route path="/career-guides" element={<CareerGuideListing />} />
+            <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
 
-          {/* Knowledge Base moved to Careers domain */}
-          <Route path="/kb" element={<KBListing />} />
-          <Route path="/kb/:slug" element={<KBArticle />} />
-          <Route path="/guides" element={<KBListing />} />
-          <Route path="/guides/:slug" element={<KBArticle />} />
+            {/* Knowledge Base moved to Careers domain */}
+            <Route path="/kb" element={<KBListing />} />
+            <Route path="/kb/:slug" element={<KBArticle />} />
+            <Route path="/guides" element={<KBListing />} />
+            <Route path="/guides/:slug" element={<KBArticle />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </Router>
     )
   }
@@ -170,55 +172,50 @@ function App() {
     )
   }
 
-  const SectionRedirect: React.FC<{ targetId: string }> = ({ targetId }) => {
-    useEffect(() => {
-      window.location.href = `/#${targetId}`
-    }, [targetId])
-    return null
-  }
-
   // Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
   return (
     <Router>
-      <Routes>
-        {/* Public Website Routes */}
-        <Route path="/" element={<DynamicPage />} />
-        <Route path="/about" element={<DynamicPage />} />
-        <Route path="/services" element={<Navigate to="/#services" replace />} />
-        <Route path="/plans" element={<DynamicPage />} />
-        <Route path="/pricing" element={<DynamicPage />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/contact" element={<Contact />} />
+      <Suspense fallback={<AdminLoader />}>
+        <Routes>
+          {/* Public Website Routes */}
+          <Route path="/" element={<DynamicPage />} />
+          <Route path="/about" element={<DynamicPage />} />
+          <Route path="/services" element={<Navigate to="/#services" replace />} />
+          <Route path="/plans" element={<DynamicPage />} />
+          <Route path="/pricing" element={<DynamicPage />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/contact" element={<Contact />} />
 
-        {/* Careers & Jobs Subdomain Portal Routes */}
-        <Route path="/careers" element={<CareersHome />} />
-        <Route path="/jobs" element={<JobListings />} />
-        <Route path="/jobs/:slug" element={<JobDetail />} />
-        <Route path="/career-guides" element={<CareerGuideListing />} />
-        <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
+          {/* Careers & Jobs Subdomain Portal Routes */}
+          <Route path="/careers" element={<CareersHome />} />
+          <Route path="/jobs" element={<JobListings />} />
+          <Route path="/jobs/:slug" element={<JobDetail />} />
+          <Route path="/career-guides" element={<CareerGuideListing />} />
+          <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
 
-        {/* Blog System */}
-        <Route path="/blog" element={<BlogListing />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
+          {/* Blog System */}
+          <Route path="/blog" element={<BlogListing />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
 
-        {/* Knowledge Base -> Redirects to careers subdomain */}
-        <Route path="/kb" element={<CareersKBRedirect />} />
-        <Route path="/kb/*" element={<CareersKBRedirect />} />
+          {/* Knowledge Base -> Redirects to careers subdomain */}
+          <Route path="/kb" element={<CareersKBRedirect />} />
+          <Route path="/kb/*" element={<CareersKBRedirect />} />
 
-        {/* Support Desk */}
-        <Route path="/support" element={<SupportPortal />} />
-        <Route path="/support/:id" element={<SupportTicketDetail />} />
+          {/* Support Desk */}
+          <Route path="/support" element={<SupportPortal />} />
+          <Route path="/support/:id" element={<SupportTicketDetail />} />
 
-        {/* Marketplace */}
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/marketplace/:slug" element={<ProductDetail />} />
+          {/* Marketplace */}
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/marketplace/:slug" element={<ProductDetail />} />
 
-        {/* Public Client Auth */}
-        <Route path="/login" element={<Login />} />
+          {/* Public Client Auth */}
+          <Route path="/login" element={<Login />} />
 
-        {/* Catch All - Redirect to Homepage */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Catch All - Redirect to Homepage */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
       <WhatsAppWidget />
     </Router>
   )
