@@ -14,14 +14,22 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- Google Tag (gtag.js) - Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N3S6LMWV6X"></script>
+    <!-- Preload High-Priority Above-the-Fold Assets (LCP Acceleration) -->
+    <link rel="preload" href="/logo-emblem.png" as="image" type="image/png" fetchpriority="high" />
+
+    <!-- Google Analytics 4 (Non-blocking Deferred Load for PageSpeed Performance) -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-N3S6LMWV6X');
+
+      window.addEventListener('load', function() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-N3S6LMWV6X';
+        document.head.appendChild(script);
+      });
     </script>
     
     <!-- Primary SEO & AEO Meta Tags (Priority Hierarchy: Local -> State -> National -> International) -->
