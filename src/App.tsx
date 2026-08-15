@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { Loader2 } from 'lucide-react'
@@ -48,6 +48,18 @@ const AdminAdManager = lazy(() => import('@/pages/admin/AdminAdManager').then(m 
 const AdminApplications = lazy(() => import('@/pages/admin/AdminApplications').then(m => ({ default: m.AdminApplications })))
 const SystemHealth = lazy(() => import('@/pages/admin/SystemHealth').then(m => ({ default: m.SystemHealth })))
 const Admin2FASetup = lazy(() => import('@/pages/admin/Admin2FASetup').then(m => ({ default: m.Admin2FASetup })))
+
+const ScrollToTop: React.FC = () => {
+  const { pathname, hash } = useLocation()
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0)
+    }
+  }, [pathname, hash])
+
+  return null
+}
 
 const AdminLoader: React.FC = () => (
   <div className="flex h-64 w-full items-center justify-center">
@@ -113,6 +125,7 @@ function App() {
   if (isCareersDomain) {
     return (
       <Router>
+        <ScrollToTop />
         <Suspense fallback={<AdminLoader />}>
           <Routes>
             <Route path="/" element={<CareersHome />} />
@@ -138,6 +151,7 @@ function App() {
   if (isSuiteDomain) {
     return (
       <Router>
+        <ScrollToTop />
         <Suspense fallback={<AdminLoader />}>
           <Routes>
             {/* Explicitly strip /admin or /admin/* on subdomain and force clean root URL */}
@@ -175,6 +189,7 @@ function App() {
   // Main Domain Router for springwebsolutions.in & www.springwebsolutions.in ───
   return (
     <Router>
+      <ScrollToTop />
       <Suspense fallback={<AdminLoader />}>
         <Routes>
           {/* Public Website Routes */}

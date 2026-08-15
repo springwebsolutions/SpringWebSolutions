@@ -76,7 +76,7 @@ export const DynamicPage: React.FC = () => {
 
   useEffect(() => {
     if (!loading) {
-      const targetSectionId = (pageSlug === 'plans' || pageSlug === 'pricing') ? 'pricing' : window.location.hash.replace('#', '')
+      const targetSectionId = window.location.hash.replace('#', '')
       if (targetSectionId) {
         setTimeout(() => {
           const targetEl = document.getElementById(targetSectionId)
