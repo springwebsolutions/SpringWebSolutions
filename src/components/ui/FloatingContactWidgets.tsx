@@ -296,6 +296,7 @@ export const FloatingContactWidgets: React.FC = () => {
                 onClick={() => { setMessages(initialMessages); setIsHumanConnected(false) }}
                 className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
                 title="Reset Chat"
+                aria-label="Reset chat conversation"
               >
                 <RefreshCw size={14} />
               </button>
@@ -303,6 +304,7 @@ export const FloatingContactWidgets: React.FC = () => {
                 onClick={() => setIsLiveChatOpen(false)}
                 className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
                 title="Close Chat"
+                aria-label="Close chat window"
               >
                 <X size={16} />
               </button>
@@ -387,6 +389,8 @@ export const FloatingContactWidgets: React.FC = () => {
               <button
                 onClick={() => handleUserSendMessage()}
                 className="p-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition-all cursor-pointer shrink-0"
+                title="Send message"
+                aria-label="Send live chat message"
               >
                 <Send size={14} />
               </button>
@@ -397,6 +401,7 @@ export const FloatingContactWidgets: React.FC = () => {
               <a
                 href="tel:+918012622119"
                 className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
+                aria-label="Call Spring Web Solutions direct phone line"
               >
                 <Phone size={11} /> +91 80126 22119
               </a>
@@ -413,6 +418,7 @@ export const FloatingContactWidgets: React.FC = () => {
           onClick={() => handleWhatsAppDirect()}
           className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs shadow-lg shadow-emerald-600/30 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
           title="Direct WhatsApp Chat"
+          aria-label="Open Direct WhatsApp Chat with Spring Web Solutions"
         >
           <MessageCircle size={17} className="fill-slate-950 text-[#25D366] animate-bounce" />
           <span>WhatsApp Us</span>
@@ -424,6 +430,7 @@ export const FloatingContactWidgets: React.FC = () => {
           onClick={() => setIsLiveChatOpen(!isLiveChatOpen)}
           className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-white/20"
           title="Open SpringWeb AI Chatbot"
+          aria-label="Toggle SpringWeb AI Chatbot Assistant"
         >
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>

@@ -177,145 +177,161 @@ export const Navbar: React.FC = () => {
   const companyName = siteConfig?.company_name || 'Spring Web Solutions'
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/90 dark:bg-[#040509]/90 light:bg-white/90 border-white/10 light:border-slate-200 backdrop-blur-xl transition-all duration-300 shadow-xl shadow-black/30">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo Section */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <Logo size="sm" />
-            </Link>
-          </div>
+    <>
+      {/* Skip-to-content Bypass Link for Keyboard Accessibility (WCAG AA) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-emerald-500 focus:text-slate-950 focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none transition-all"
+      >
+        Skip to main content
+      </a>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center space-x-1">
-            {headerLinks.map((link: any, idx: number) => {
-              const lowerLabel = (link.label || '').toLowerCase()
-              const lowerHref = (link.href || '').toLowerCase()
-              const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname === '/about' || location.pathname === '/services'
-
-              let isActive = false
-              if (isHomePage) {
-                if (activeSection === 'home' && (lowerLabel === 'home' || lowerHref === '/')) isActive = true
-                else if (activeSection === 'about' && (lowerLabel === 'about' || lowerHref === '/about')) isActive = true
-                else if (activeSection === 'services' && (lowerLabel === 'services' || lowerHref === '/services')) isActive = true
-                else if (activeSection === lowerLabel) isActive = true
-              } else {
-                isActive = location.pathname === link.href || (link.href !== '/' && location.pathname.startsWith(link.href))
-              }
-
-              if (link.href.startsWith('http')) {
-                return (
-                  <a
-                    key={idx}
-                    href={link.href}
-                    className="relative px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display text-slate-300 dark:text-slate-300 light:text-slate-700 hover:text-emerald-400 transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                )
-              }
-
-              return (
-                <Link
-                  key={idx}
-                  to={link.href}
-                  onClick={(e) => handleNavClick(e, link.href, link.label)}
-                  className="relative px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display"
-                  style={{
-                    color: isActive ? 'rgb(52,211,153)' : '',
-                    transition: 'color 0.3s ease',
-                  }}
-                >
-                  {/* Emerald active box — fades in/out independently via opacity */}
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: '0.75rem',
-                      border: '1px solid rgba(16,185,129,0.4)',
-                      background: 'rgba(16,185,129,0.12)',
-                      boxShadow: '0 4px 24px 0 rgba(16,185,129,0.15)',
-                      opacity: isActive ? 1 : 0,
-                      transition: 'opacity 0.35s ease',
-                      pointerEvents: 'none',
-                    }}
-                  />
-                  {/* Label — inherits color from parent Link */}
-                  <span className={`relative z-10 ${isActive ? '' : 'text-slate-300 dark:text-slate-300 light:text-slate-700'}`}>
-                    {link.label}
-                  </span>
-                </Link>
-              )
-            })}
-          </div>
-
-          {/* Action Buttons (Auth & Theme Switcher) */}
-          <div className="hidden md:flex items-center space-x-3">
-            {/* Theme Toggle */}
-            <button
-              onClick={() => toggleTheme()}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all cursor-pointer light:bg-slate-100 light:border-slate-200 light:text-slate-600 light:hover:text-slate-900"
-              title="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            {/* Operations Suite Entry */}
-            {user && (hasRole('super_admin') || hasRole('admin') || hasRole('editor') || hasRole('sales') || hasRole('support')) && (
-              <a
-                href="https://suite.springwebsolutions.in/"
-                className="p-2 rounded-lg bg-white/5 border border-white/10 text-brand-emerald hover:text-white transition-all light:bg-slate-100 light:border-slate-200"
-                title="Operations Suite"
-              >
-                <LayoutDashboard size={18} />
-              </a>
-            )}
-
-            {user ? (
-              <div className="flex items-center space-x-2">
-                <span className="text-xs text-slate-300 light:text-slate-600 font-medium">
-                  {profile?.full_name || user.email}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 transition-all cursor-pointer"
-                  title="Logout"
-                >
-                  <LogOut size={16} />
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="btn-primary text-xs flex items-center space-x-1"
-              >
-                <User size={14} />
-                <span>Client Login</span>
+      <nav className="sticky top-0 z-50 w-full border-b bg-[#040509]/90 dark:bg-[#040509]/90 light:bg-white/90 border-white/10 light:border-slate-200 backdrop-blur-xl transition-all duration-300 shadow-xl shadow-black/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo Section */}
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center" aria-label="Spring Web Solutions Homepage">
+                <Logo size="sm" />
               </Link>
-            )}
-          </div>
+            </div>
 
-          {/* Mobile Hamburger Toggle */}
-          <div className="flex md:hidden items-center space-x-2">
-            <button
-              onClick={() => toggleTheme()}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 light:text-slate-600"
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white light:text-slate-600"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Desktop Nav Links (with > 8px spacing) */}
+            <div className="hidden md:flex items-center space-x-2.5">
+              {headerLinks.map((link: any, idx: number) => {
+                const lowerLabel = (link.label || '').toLowerCase()
+                const lowerHref = (link.href || '').toLowerCase()
+                const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname === '/about' || location.pathname === '/services'
+
+                let isActive = false
+                if (isHomePage) {
+                  if (activeSection === 'home' && (lowerLabel === 'home' || lowerHref === '/')) isActive = true
+                  else if (activeSection === 'about' && (lowerLabel === 'about' || lowerHref === '/about')) isActive = true
+                  else if (activeSection === 'services' && (lowerLabel === 'services' || lowerHref === '/services')) isActive = true
+                  else if (activeSection === lowerLabel) isActive = true
+                } else {
+                  isActive = location.pathname === link.href || (link.href !== '/' && location.pathname.startsWith(link.href))
+                }
+
+                if (link.href.startsWith('http')) {
+                  return (
+                    <a
+                      key={idx}
+                      href={link.href}
+                      className="relative px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display text-slate-300 dark:text-slate-300 light:text-slate-700 hover:text-emerald-400 transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  )
+                }
+
+                return (
+                  <Link
+                    key={idx}
+                    to={link.href}
+                    onClick={(e) => handleNavClick(e, link.href, link.label)}
+                    className="relative px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display"
+                    style={{
+                      color: isActive ? 'rgb(52,211,153)' : '',
+                      transition: 'color 0.3s ease',
+                    }}
+                  >
+                    {/* Emerald active box — fades in/out independently via opacity */}
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '0.75rem',
+                        border: '1px solid rgba(16,185,129,0.4)',
+                        background: 'rgba(16,185,129,0.12)',
+                        boxShadow: '0 4px 24px 0 rgba(16,185,129,0.15)',
+                        opacity: isActive ? 1 : 0,
+                        transition: 'opacity 0.35s ease',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    {/* Label — inherits color from parent Link */}
+                    <span className={`relative z-10 ${isActive ? '' : 'text-slate-300 dark:text-slate-300 light:text-slate-700'}`}>
+                      {link.label}
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Action Buttons (Auth & Theme Switcher) */}
+            <div className="hidden md:flex items-center space-x-3">
+              {/* Theme Toggle */}
+              <button
+                onClick={() => toggleTheme()}
+                className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all cursor-pointer light:bg-slate-100 light:border-slate-200 light:text-slate-600 light:hover:text-slate-900"
+                title="Toggle dark/light theme mode"
+                aria-label="Toggle dark/light theme mode"
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+
+              {/* Operations Suite Entry */}
+              {user && (hasRole('super_admin') || hasRole('admin') || hasRole('editor') || hasRole('sales') || hasRole('support')) && (
+                <a
+                  href="https://suite.springwebsolutions.in/"
+                  className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-brand-emerald hover:text-white transition-all light:bg-slate-100 light:border-slate-200"
+                  title="Operations Suite Portal"
+                  aria-label="Operations Suite Portal"
+                >
+                  <LayoutDashboard size={18} />
+                </a>
+              )}
+
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-slate-300 light:text-slate-600 font-medium">
+                    {profile?.full_name || user.email}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 transition-all cursor-pointer"
+                    title="Logout Account"
+                    aria-label="Logout account"
+                  >
+                    <LogOut size={16} />
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="btn-primary text-xs flex items-center space-x-1"
+                >
+                  <User size={14} />
+                  <span>Client Login</span>
+                </Link>
+              )}
+            </div>
+
+            {/* Mobile Hamburger Toggle */}
+            <div className="flex md:hidden items-center space-x-2">
+              <button
+                onClick={() => toggleTheme()}
+                className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 light:text-slate-600"
+                title="Toggle dark/light theme mode"
+                aria-label="Toggle dark/light theme mode"
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white light:text-slate-600"
+                title="Toggle mobile menu"
+                aria-label="Toggle mobile menu"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-white/10 light:border-slate-200 bg-[#040509]/98 light:bg-white backdrop-blur-xl p-4 space-y-3 shadow-2xl">
           <div className="space-y-1">
@@ -387,6 +403,7 @@ export const Navbar: React.FC = () => {
         </div>
       )}
     </nav>
+  </>
   )
 }
 export default Navbar

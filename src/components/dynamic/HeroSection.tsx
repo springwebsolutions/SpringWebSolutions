@@ -50,7 +50,7 @@ const TypewriterText: React.FC = () => {
   }, [subIndex, index, reverse])
 
   return (
-    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-300 font-black min-w-[200px] text-left drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
+    <span className="inline-block text-emerald-400 dark:text-emerald-400 light:text-emerald-700 font-black min-w-[200px] text-left drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
       {TYPEWRITER_WORDS[index].substring(0, subIndex)}
       <span className="animate-pulse text-emerald-400 font-light ml-0.5">|</span>
     </span>
@@ -351,7 +351,7 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           {/* H1 Title */}
           <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] light:drop-shadow-none">
             Spring Web{' '}
-            <span className="hero-shimmer-text text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] light:drop-shadow-none">
+            <span className="hero-shimmer-text text-emerald-400 dark:text-emerald-400 light:text-emerald-700 bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-700 light:via-teal-700 light:to-indigo-700">
               Solutions
             </span>
           </h1>

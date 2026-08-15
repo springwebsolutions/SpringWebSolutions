@@ -132,7 +132,7 @@ export const DynamicPage: React.FC = () => {
       <Navbar />
       
       {/* Dynamic compiler compiling the dynamic layout grid sections */}
-      <main className="flex-grow flex flex-col">
+      <main id="main-content" className="flex-grow flex flex-col">
         {loading || (currentPage && currentPage.slug !== pageSlug) ? (
           <div className="flex-grow flex items-center justify-center text-brand-emerald min-h-[300px] py-20">
             <Loader2 className="animate-spin" size={32} />

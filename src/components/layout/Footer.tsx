@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
               <Sparkles size={13} /> Ready to Upgrade Your Digital Infrastructure?
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold tracking-tight text-white dark:text-white light:text-slate-900 leading-tight">
-              Let's craft something <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-600 light:to-indigo-600">extraordinary</span>.
+              Let's craft something <span className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700 bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-700 light:to-indigo-700">extraordinary</span>.
             </h2>
             <p className="text-sm sm:text-base text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed">
               Get a custom proposal, technical architecture audit, or free consultation for your web app, mobile software, or CRM project.
@@ -116,11 +116,11 @@ export const Footer: React.FC = () => {
             <div className="space-y-3 text-sm text-slate-300 dark:text-slate-300 light:text-slate-700 font-sans font-light">
               <div className="flex items-center space-x-2.5">
                 <Mail size={16} className="text-emerald-400 light:text-emerald-600 shrink-0" />
-                <a href={`mailto:${email}`} className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors font-mono text-xs">{email}</a>
+                <a href={`mailto:${email}`} className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors font-mono text-xs inline-flex items-center min-h-[28px] py-1">{email}</a>
               </div>
               <div className="flex items-center space-x-2.5">
                 <Phone size={16} className="text-emerald-400 light:text-emerald-600 shrink-0" />
-                <a href={`tel:${phone}`} className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors font-mono text-xs">{phone}</a>
+                <a href={`tel:${phone}`} className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors font-mono text-xs inline-flex items-center min-h-[28px] py-1">{phone}</a>
               </div>
               <div className="flex items-start space-x-2.5">
                 <MapPin size={16} className="text-emerald-400 light:text-emerald-600 mt-0.5 shrink-0" />
@@ -145,10 +145,10 @@ export const Footer: React.FC = () => {
               <h3 className="font-display text-xs font-bold tracking-widest text-slate-200 dark:text-slate-200 light:text-slate-900 uppercase">
                 {group.heading}
               </h3>
-              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600">
+              <ul className="space-y-2 text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600">
                 {group.links.map((link: any, lIdx: number) => (
                   <li key={lIdx}>
-                    <Link to={link.href} className="hover:text-emerald-400 dark:hover:text-emerald-400 light:hover:text-emerald-600 hover:translate-x-1 inline-flex items-center transition-all duration-200">
+                    <Link to={link.href} className="hover:text-emerald-400 dark:hover:text-emerald-400 light:hover:text-emerald-600 hover:translate-x-1 inline-flex items-center min-h-[28px] py-1 transition-all duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -170,9 +170,9 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-6 text-xs">
-            <Link to="/careers" className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors">Careers</Link>
-            <Link to="/support" className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors">Support Desk</Link>
-            <a href="/sitemap.xml" className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors">Sitemap</a>
+            <Link to="/careers" className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors inline-flex items-center min-h-[28px] py-1">Careers</Link>
+            <Link to="/support" className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors inline-flex items-center min-h-[28px] py-1">Support Desk</Link>
+            <a href="/sitemap.xml" className="hover:text-emerald-400 light:hover:text-emerald-600 transition-colors inline-flex items-center min-h-[28px] py-1">Sitemap</a>
           </div>
         </div>
 

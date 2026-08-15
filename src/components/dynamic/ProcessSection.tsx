@@ -104,7 +104,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content }) => {
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white dark:text-white light:text-slate-900 uppercase tracking-tight font-display leading-tight">
             {title.split(' ').slice(0, -2).join(' ')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400 light:from-emerald-600 light:via-teal-600 light:to-indigo-600">
+            <span className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700 bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-700 light:via-teal-700 light:to-indigo-700">
               {title.split(' ').slice(-2).join(' ')}
             </span>
           </h2>

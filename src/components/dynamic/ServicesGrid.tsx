@@ -160,9 +160,10 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
                 <div className="pt-2">
                   <Link
                     to={service.href}
-                    className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-lg shadow-blue-600/30 hover:scale-105"
+                    aria-label={`Explore ${service.title} Solution & Request Quote`}
+                    className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-lg shadow-blue-600/30 hover:scale-105"
                   >
-                    <span>Read More</span>
+                    <span>Explore {service.title} Solution</span>
                   </Link>
                 </div>
               </div>
