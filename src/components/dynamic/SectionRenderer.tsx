@@ -1,17 +1,17 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { HeroSection } from './HeroSection'
-import { AboutSection } from './AboutSection'
-import { ServicesGrid } from './ServicesGrid'
-import { ProcessSection } from './ProcessSection'
-import { PricingSection } from './PricingSection'
-import { TechStack } from './TechStack'
-import { CtaSection } from './CtaSection'
-import { FaqSection } from './FaqSection'
-import { ComparisonTable } from './ComparisonTable'
-import { CaseStudiesSection } from './CaseStudiesSection'
-import { TeamSection } from './TeamSection'
-import { AppDevelopmentSection } from './AppDevelopmentSection'
 import type { SectionData } from '@/stores/pageBuilderStore'
+
+// Lazy-load below-the-fold section components to minimize initial bundle execution time & TBT on mobile
+const AboutSection = lazy(() => import('./AboutSection'))
+const ServicesGrid = lazy(() => import('./ServicesGrid'))
+const ProcessSection = lazy(() => import('./ProcessSection'))
+const PricingSection = lazy(() => import('./PricingSection'))
+const TechStack = lazy(() => import('./TechStack'))
+const FaqSection = lazy(() => import('./FaqSection'))
+const ComparisonTable = lazy(() => import('./ComparisonTable'))
+const CaseStudiesSection = lazy(() => import('./CaseStudiesSection'))
+const TeamSection = lazy(() => import('./TeamSection'))
 
 interface SectionRendererProps {
   sections: SectionData[]
@@ -19,7 +19,7 @@ interface SectionRendererProps {
 
 export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) => {
   return (
-    <>
+    <Suspense fallback={<div className="min-h-[100px] w-full bg-[#040509]" />}>
       {(sections || [])
         .filter(sec => sec.is_active)
         .map(sec => {
@@ -66,7 +66,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ sections }) =>
               return null
           }
         })}
-    </>
+    </Suspense>
   )
 }
 export default SectionRenderer
