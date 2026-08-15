@@ -93,7 +93,8 @@ const ParticleCanvas: React.FC = () => {
       parent.addEventListener('mouseleave', handleMouseLeave)
     }
 
-    const NUM = 75
+    const isMobile = W < 768
+    const NUM = isMobile ? 18 : 65
     type Pt = { x: number; y: number; vx: number; vy: number; r: number; color: string; origX: number; origY: number }
     const colors = ['rgba(16,185,129,', 'rgba(99,102,241,', 'rgba(45,212,191,', 'rgba(59,130,246,']
 
@@ -105,14 +106,14 @@ const ParticleCanvas: React.FC = () => {
         y: ry,
         origX: rx,
         origY: ry,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.6,
-        r: Math.random() * 2.5 + 1.2,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        r: Math.random() * 2 + 1,
         color: colors[Math.floor(Math.random() * colors.length)]
       }
     })
 
-    const MAX_DIST = 175
+    const MAX_DIST = isMobile ? 120 : 175
     const MOUSE_MAGNET_DIST = 220
     let time = 0
 

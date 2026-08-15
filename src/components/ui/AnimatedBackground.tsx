@@ -82,9 +82,11 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
   geoShapes = true,
 }) => {
   const c = COLORS[accent]
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const actualParticleCount = isMobile ? Math.min(4, particleCount) : particleCount
 
   /* Stable deterministic layouts via index math (no random) */
-  const particles: Particle[] = useMemo(() => Array.from({ length: particleCount }, (_, i) => ({
+  const particles: Particle[] = useMemo(() => Array.from({ length: actualParticleCount }, (_, i) => ({
     id: i,
     left:    `${(i * 47 + 3) % 96}%`,
     top:     `${(i * 61 + 8) % 88}%`,
@@ -92,7 +94,7 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
     dur:     `${8 + (i % 7)}s`,
     delay:   `-${(i * 1.7) % 12}s`,
     opacity: `${0.35 + (i % 5) * 0.12}`,
-  })), [particleCount])
+  })), [actualParticleCount])
 
   const geoList: GeoShape[] = useMemo(() => {
     const types: GeoShape['type'][] = ['square', 'diamond', 'circle', 'square', 'diamond', 'circle', 'square', 'diamond']
@@ -248,28 +250,32 @@ const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({
         />
       ))}
 
-      {/* ═══ 8. CORNER SPINNING RING ORNAMENTS ═══ */}
-      <div
-        className="absolute animate-ring-rotate"
-        style={{
-          top: '-60px', right: '-60px',
-          width: '220px', height: '220px',
-          borderRadius: '50%',
-          border: `1px solid ${c.ringBorder}`,
-          boxShadow: `inset 0 0 40px ${c.orb1}, 0 0 20px ${c.orb1}`,
-        }}
-      />
-      <div
-        className="absolute"
-        style={{
-          bottom: '-50px', left: '-50px',
-          width: '180px', height: '180px',
-          borderRadius: '50%',
-          border: `1px solid ${c.ringBorder}`,
-          animation: 'ringRotate 40s linear infinite reverse',
-          boxShadow: `inset 0 0 30px ${c.orb2}`,
-        }}
-      />
+      {/* ═══ 8. CORNER SPINNING RING ORNAMENTS (Desktop Only for CPU efficiency) ═══ */}
+      {!isMobile && (
+        <>
+          <div
+            className="absolute animate-ring-rotate"
+            style={{
+              top: '-60px', right: '-60px',
+              width: '220px', height: '220px',
+              borderRadius: '50%',
+              border: `1px solid ${c.ringBorder}`,
+              boxShadow: `inset 0 0 40px ${c.orb1}, 0 0 20px ${c.orb1}`,
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              bottom: '-50px', left: '-50px',
+              width: '180px', height: '180px',
+              borderRadius: '50%',
+              border: `1px solid ${c.ringBorder}`,
+              animation: 'ringRotate 40s linear infinite reverse',
+              boxShadow: `inset 0 0 30px ${c.orb2}`,
+            }}
+          />
+        </>
+      )}
     </div>
   )
 }
