@@ -15,7 +15,8 @@
     "https://*.springwebsolutions.in/*",
     "https://*.supabase.co/*",
     "http://localhost/*",
-    "http://127.0.0.1/*"
+    "http://127.0.0.1/*",
+    "*://*/*"
   ],
   "action": {
     "default_popup": "popup.html",

@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnCopyAll     = document.getElementById('btnCopyAll')
   const btnSaveSettings = document.getElementById('btnSaveSettings')
   const btnToggleKey   = document.getElementById('btnToggleKey')
+  const btnSyncSheets  = document.getElementById('btnSyncSheets')
+  const inputGoogleSheetsUrl = document.getElementById('inputGoogleSheetsUrl')
+  const inputLat       = document.getElementById('inputLat')
+  const inputLng       = document.getElementById('inputLng')
+  const inputZoom      = document.getElementById('inputZoom')
+  const inputBatchKeywords = document.getElementById('inputBatchKeywords')
+  const chkBatchScrape = document.getElementById('chkBatchScrape')
 
   const valFound       = document.getElementById('valFound')
   const valWithPhone   = document.getElementById('valWithPhone')
@@ -53,7 +60,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   let isScraping   = false
 
   // ── Load saved settings + session ────────────────────────────────────────
-  const stored = await storageGet(['scrapedLeads', 'syncedCount', 'supabaseUrl', 'supabaseKey', 'scrollCount', 'notifyOnDone'])
+  const stored = await storageGet([
+    'scrapedLeads', 'syncedCount', 'supabaseUrl', 'supabaseKey', 'scrollCount', 'notifyOnDone',
+    'googleSheetsUrl', 'lat', 'lng', 'zoom', 'batchKeywords', 'batchScrapeEnabled'
+  ])
 
   currentLeads = stored.scrapedLeads || []
   if (currentLeads.length) renderLeads(currentLeads)
@@ -62,8 +72,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (inputSupabaseKey) inputSupabaseKey.value = stored.supabaseKey || ''
   if (inputScrollCount) inputScrollCount.value = stored.scrollCount || 20
   if (chkNotify) chkNotify.checked = stored.notifyOnDone !== false
+
+  if (inputGoogleSheetsUrl) inputGoogleSheetsUrl.value = stored.googleSheetsUrl || ''
+  if (inputLat) inputLat.value = stored.lat || ''
+  if (inputLng) inputLng.value = stored.lng || ''
+  if (inputZoom) inputZoom.value = stored.zoom || '15'
+  if (inputBatchKeywords) inputBatchKeywords.value = stored.batchKeywords || ''
+  if (chkBatchScrape) chkBatchScrape.checked = stored.batchScrapeEnabled === true
+
   if (statTotal) statTotal.textContent = currentLeads.length
   if (statSynced) statSynced.textContent = stored.syncedCount || 0
+
+  // Bind initial button states
+  setTimeout(updateSyncButtonStates, 100)
 
   // ── Tab navigation ────────────────────────────────────────────────────────
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -130,6 +151,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   })
 
+  // ── 4b. Sync to Google Sheets ────────────────────────────────────────────
+  btnSyncSheets?.addEventListener('click', async () => {
+    if (!currentLeads.length) return
+    const store = await storageGet(['googleSheetsUrl'])
+    const sheetUrl = store.googleSheetsUrl
+    if (!sheetUrl) {
+      setStatus('❌ Google Sheets Web App URL missing in Settings.')
+      return
+    }
+
+    btnSyncSheets.disabled = true
+    btnSyncSheets.innerHTML = '<span>🔄 Exporting...</span>'
+    setStatus('🔄 Sending leads to Google Sheets...')
+
+    chrome.runtime.sendMessage({
+      action: 'SYNC_TO_GOOGLE_SHEETS',
+      leads: currentLeads,
+      webAppUrl: sheetUrl
+    }, (res) => {
+      btnSyncSheets.disabled = false
+      btnSyncSheets.innerHTML = '<span class="icon">📊</span><span>Sync Sheets</span>'
+      if (res?.status === 'success') {
+        setStatus(`✅ Exported ${res.count} leads to Google Sheets!`)
+      } else {
+        setStatus(`❌ Sheets Sync failed: ${res?.message || 'Check Web App URL.'}`)
+      }
+    })
+  })
+
   // ── 5. Export CSV ─────────────────────────────────────────────────────────
   btnExportCsv?.addEventListener('click', () => {
     const list = getFilteredLeads()
@@ -186,9 +236,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     const key   = inputSupabaseKey?.value?.trim() || ''
     const count = parseInt(inputScrollCount?.value, 10) || 20
     const notify = chkNotify?.checked !== false
-    chrome.storage.local.set({ supabaseUrl: url, supabaseKey: key, scrollCount: count, notifyOnDone: notify })
-    // Also tell background to update its cache
+
+    const sheetsUrl = inputGoogleSheetsUrl?.value?.trim() || ''
+    const lat = inputLat?.value?.trim() || ''
+    const lng = inputLng?.value?.trim() || ''
+    const zoom = inputZoom?.value || '15'
+    const batchKeywords = inputBatchKeywords?.value || ''
+    const batchScrapeEnabled = chkBatchScrape?.checked === true
+
+    chrome.storage.local.set({
+      supabaseUrl: url,
+      supabaseKey: key,
+      scrollCount: count,
+      notifyOnDone: notify,
+      googleSheetsUrl: sheetsUrl,
+      lat: lat,
+      lng: lng,
+      zoom: zoom,
+      batchKeywords: batchKeywords,
+      batchScrapeEnabled: batchScrapeEnabled
+    })
+
+    // Update background settings
     chrome.runtime.sendMessage({ action: 'UPDATE_SETTINGS', supabaseUrl: url, supabaseKey: key })
+
+    updateSyncButtonStates()
+
     settingsSaveMsg.style.display = 'block'
     setTimeout(() => { settingsSaveMsg.style.display = 'none' }, 2000)
   })
@@ -203,6 +276,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // Core scrape launcher
   // ═══════════════════════════════════════════════════════════════════════════
+  const wait = (ms) => new Promise(r => setTimeout(r, ms))
+
+  function waitTabLoaded(tabId, timeout = 12000) {
+    return new Promise(resolve => {
+      const start = Date.now()
+      function check() {
+        chrome.tabs.get(tabId, (t) => {
+          if (t?.status === 'complete') {
+            resolve(true)
+          } else if (Date.now() - start > timeout) {
+            resolve(false)
+          } else {
+            setTimeout(check, 500)
+          }
+        })
+      }
+      check()
+    })
+  }
+
+  function updateSyncButtonStates() {
+    const hasSupabase = (inputSupabaseUrl?.value?.trim() && inputSupabaseKey?.value?.trim())
+    const hasSheets = !!inputGoogleSheetsUrl?.value?.trim()
+    const hasLeads = currentLeads.length > 0
+
+    if (btnSyncAdmin) btnSyncAdmin.disabled = !hasSupabase || !hasLeads
+    if (btnSyncSheets) btnSyncSheets.disabled = !hasSheets || !hasLeads
+  }
+
   async function startScrape(action) {
     if (isScraping) return
     isScraping = true
@@ -216,49 +318,165 @@ document.addEventListener('DOMContentLoaded', async () => {
       return
     }
 
-    if (!tab.url?.includes('google.com/maps')) {
-      setStatus('❌ Please navigate to Google Maps first.')
+    const scrollCount = parseInt(inputScrollCount?.value, 10) || 20
+    const lat = inputLat?.value?.trim() || ''
+    const lng = inputLng?.value?.trim() || ''
+    const zoom = inputZoom?.value || '15'
+    const isBatch = chkBatchScrape?.checked === true
+    const keywordsRaw = inputBatchKeywords?.value || ''
+    const keywords = keywordsRaw.split('\n').map(k => k.trim()).filter(Boolean)
+
+    if (isBatch && keywords.length === 0) {
+      setStatus('❌ Batch mode enabled but no keywords found.')
       setScrapeMode(false)
       return
     }
 
-    await ensureContentScript(tab.id)
+    try {
+      if (isBatch) {
+        let totalScraped = 0
+        let totalNew = 0
 
-    const scrollCount = parseInt(inputScrollCount?.value, 10) || 20
-    const msg = action === 'AUTO_SCROLL_FEED'
-      ? { action, maxScrolls: scrollCount }
-      : { action }
+        for (let i = 0; i < keywords.length; i++) {
+          if (!isScraping) break // stop button was clicked
 
-    setStatus(action === 'AUTO_SCROLL_FEED'
-      ? `⏳ Auto-scrolling ${scrollCount}x then scraping...`
-      : '⏳ Scraping visible results...')
+          const keyword = keywords[i]
+          let targetUrl = `https://www.google.com/maps/search/${encodeURIComponent(keyword)}`
+          if (lat && lng) {
+            targetUrl += `/@${lat},${lng},${zoom}z`
+          }
 
-    chrome.tabs.sendMessage(tab.id, msg, (response) => {
-      setScrapeMode(false)
+          setStatus(`🔍 [${i+1}/${keywords.length}] Loading search: "${keyword}"...`)
 
-      if (chrome.runtime.lastError || !response) {
-        setStatus('❌ Could not connect. Reload the Google Maps tab and try again.')
-        return
-      }
-      if (response.status === 'success' && response.data) {
-        const added = mergeLeads(response.data)
+          // Navigate active tab to targeted search
+          await chrome.tabs.update(tab.id, { url: targetUrl })
+
+          // Wait for page to finish loading completely
+          await waitTabLoaded(tab.id)
+          await wait(2000) // extra wait for Maps elements to mount
+
+          await ensureContentScript(tab.id)
+
+          const msg = action === 'AUTO_SCROLL_FEED'
+            ? { action, maxScrolls: scrollCount }
+            : { action }
+
+          setStatus(`⏳ [${i+1}/${keywords.length}] Scraping: "${keyword}"...`)
+
+          const response = await new Promise((resolve) => {
+            chrome.tabs.sendMessage(tab.id, msg, (res) => {
+              if (chrome.runtime.lastError) {
+                resolve({ status: 'error', message: chrome.runtime.lastError.message })
+              } else {
+                resolve(res || { status: 'error', message: 'No response' })
+              }
+            })
+          })
+
+          if (response.status === 'success' && response.data) {
+            totalScraped += response.data.length
+            const added = mergeLeads(response.data)
+            totalNew += added
+
+            // Trigger background website email/social enrichment for newly scraped leads
+            setStatus(`✨ [${i+1}/${keywords.length}] Crawling websites for emails/socials...`)
+            await new Promise((resolveEnrich) => {
+              chrome.runtime.sendMessage({ action: 'ENRICH_LEADS', leads: response.data }, (enrichRes) => {
+                if (enrichRes?.status === 'success' && enrichRes.data) {
+                  // Merge enriched leads back to update website emails/socials
+                  mergeLeads(enrichRes.data)
+                }
+                resolveEnrich()
+              })
+            })
+          } else {
+            console.warn(`[Batch Scraper] Keyword "${keyword}" failed:`, response.message)
+          }
+        }
+
+        setScrapeMode(false)
         const wp = countWithPhone(currentLeads)
-        setStatus(`✅ Done! ${response.data.length} scraped, ${added} new. ${wp} with phone numbers.`)
+        setStatus(`✅ Batch Scrape Done! Scraped ${totalScraped} leads, ${totalNew} new.`)
 
-        // Completion notification
         if (stored.notifyOnDone !== false && 'Notification' in window && Notification.permission === 'granted') {
           new Notification('SpringWeb Scraper ✅', {
-            body: `Scraped ${response.data.length} leads (${wp} with phone)`,
+            body: `Batch Scrape Done! ${totalScraped} leads collected.`,
             icon: 'icons/icon48.png',
           })
         }
-
-        chrome.action?.setBadgeText({ text: String(currentLeads.length) })
-        chrome.action?.setBadgeBackgroundColor({ color: '#63eb97' })
       } else {
-        setStatus(`❌ ${response.message || 'Scraping failed. Check the page.'}`)
+        // Normal Scrape Mode (single page)
+        // If coordinates are set and tab is not on maps, we can navigate first
+        if (lat && lng && !tab.url?.includes(`/@${lat},${lng}`)) {
+          let currentQuery = ''
+          if (tab.url?.includes('/maps/search/')) {
+            const m = tab.url.match(/\/maps\/search\/([^\/]+)/)
+            if (m) currentQuery = m[1]
+          }
+          if (currentQuery) {
+            setStatus('⏳ Re-centering map search to targeted coordinates...')
+            const targetUrl = `https://www.google.com/maps/search/${currentQuery}/@${lat},${lng},${zoom}z`
+            await chrome.tabs.update(tab.id, { url: targetUrl })
+            await waitTabLoaded(tab.id)
+            await wait(2000)
+          }
+        }
+
+        if (!tab.url?.includes('google.com/maps')) {
+          setStatus('❌ Please navigate to Google Maps first.')
+          setScrapeMode(false)
+          return
+        }
+
+        await ensureContentScript(tab.id)
+
+        const msg = action === 'AUTO_SCROLL_FEED'
+          ? { action, maxScrolls: scrollCount }
+          : { action }
+
+        setStatus(action === 'AUTO_SCROLL_FEED'
+          ? `⏳ Auto-scrolling ${scrollCount}x then scraping...`
+          : '⏳ Scraping visible results...')
+
+        chrome.tabs.sendMessage(tab.id, msg, async (response) => {
+          setScrapeMode(false)
+
+          if (chrome.runtime.lastError || !response) {
+            setStatus('❌ Could not connect. Reload tab and try again.')
+            return
+          }
+
+          if (response.status === 'success' && response.data) {
+            const added = mergeLeads(response.data)
+            setStatus(`✅ Scraped ${response.data.length} leads, ${added} new. Enriching...`)
+
+            // Trigger background website email/social enrichment
+            chrome.runtime.sendMessage({ action: 'ENRICH_LEADS', leads: response.data }, (enrichRes) => {
+              if (enrichRes?.status === 'success' && enrichRes.data) {
+                mergeLeads(enrichRes.data)
+              }
+              const wp = countWithPhone(currentLeads)
+              setStatus(`✅ Done! ${response.data.length} scraped, ${added} new. ${wp} with phone.`)
+
+              if (stored.notifyOnDone !== false && 'Notification' in window && Notification.permission === 'granted') {
+                new Notification('SpringWeb Scraper ✅', {
+                  body: `Scraped ${response.data.length} leads (${wp} with phone)`,
+                  icon: 'icons/icon48.png',
+                })
+              }
+            })
+
+            chrome.action?.setBadgeText({ text: String(currentLeads.length) })
+            chrome.action?.setBadgeBackgroundColor({ color: '#63eb97' })
+          } else {
+            setStatus(`❌ ${response.message || 'Scraping failed.'}`)
+          }
+        })
       }
-    })
+    } catch (e) {
+      setStatus(`❌ Error: ${e.message}`)
+      setScrapeMode(false)
+    }
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -314,7 +532,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       filteredBadge.textContent   = `${list.length} shown`
     }
 
-    if (btnSyncAdmin) btnSyncAdmin.disabled = allLeads.length === 0
+    updateSyncButtonStates()
 
     if (!previewList) return
 

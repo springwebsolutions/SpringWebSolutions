@@ -317,6 +317,33 @@
     })
   }
 
+  // ─── Reviews Snippets Extraction ─────────────────────────────────────────
+  function extractReviews(root) {
+    root = root || document
+    const reviews = []
+    // 1. Check standard quote elements (Google Maps quote blocks)
+    const quotes = root.querySelectorAll('q')
+    for (const q of quotes) {
+      const text = q.innerText?.trim()?.replace(/^["']|["']$/g, '') // remove outer quotes
+      if (text && text.length > 5 && !reviews.includes(text)) {
+        reviews.push(text)
+        if (reviews.length >= 3) break
+      }
+    }
+    // 2. Check standard class containers (like .wi370c review highlight text span)
+    if (reviews.length < 3) {
+      const textSpans = root.querySelectorAll('span.wi370c, .w6ppb')
+      for (const el of textSpans) {
+        const text = el.innerText?.trim()?.replace(/^["']|["']$/g, '')
+        if (text && text.length > 5 && !reviews.includes(text)) {
+          reviews.push(text)
+          if (reviews.length >= 3) break
+        }
+      }
+    }
+    return reviews
+  }
+
   // ─── Build lead object from current detail pane ───────────────────────────
   function buildLeadFromPane(cardName, cardCategory, cardRatingNum, cardReviewsNum) {
     const name  = document.querySelector('h1')?.innerText?.trim() || cardName
@@ -331,6 +358,7 @@
     const openStatus   = extractOpenStatus()
     const mapsUrl      = extractMapsUrl()
     const loc          = inferLocation()
+    const snippets     = extractReviews()
 
     const paneText     = document.querySelector(SEL.detailPane)?.innerText || ''
     const emailMatch   = paneText.match(EMAIL_RE)
@@ -357,6 +385,7 @@
       reviews_count:  reviews || null,
       open_status:    openStatus || null,
       google_maps_url: mapsUrl || null,
+      review_snippets: snippets,
       source:         'SpringWeb Maps Scraper v2.1',
     }
   }

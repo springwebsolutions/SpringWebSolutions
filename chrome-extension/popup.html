@@ -92,11 +92,14 @@
         <button id="btnSyncAdmin" class="btn btn-emerald" disabled>
           <span class="icon">☁️</span><span>Sync to Admin</span>
         </button>
+        <button id="btnSyncSheets" class="btn btn-primary" disabled style="background-color: #4285f4; border-color: #4285f4; color: white;">
+          <span class="icon">📊</span><span>Sync Sheets</span>
+        </button>
         <button id="btnExportCsv" class="btn btn-ghost">
-          <span class="icon">📊</span><span>CSV</span>
+          <span>CSV</span>
         </button>
         <button id="btnExportJson" class="btn btn-ghost">
-          <span class="icon">📋</span><span>JSON</span>
+          <span>JSON</span>
         </button>
       </div>
 
@@ -147,9 +150,52 @@
         </div>
 
         <button id="btnSaveSettings" class="btn btn-primary" style="margin-top:8px">
-          <span class="icon">💾</span><span>Save Connection</span>
+          <span class="icon">💾</span><span>Save All Settings</span>
         </button>
         <div id="settingsSaveMsg" class="save-msg" style="display:none">✅ Saved!</div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="settings-title">📊 Google Sheets Export</h3>
+        <p class="settings-hint">Direct export via a free Google Apps Script Web App URL.</p>
+        <div class="field-group">
+          <label for="inputGoogleSheetsUrl">Apps Script Web App URL</label>
+          <input type="url" id="inputGoogleSheetsUrl" class="field-input" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="settings-title">📍 Geolocation Spying</h3>
+        <p class="settings-hint">Force map coordinates and zoom before executing queries.</p>
+        <div class="field-row" style="display: flex; gap: 8px;">
+          <div class="field-group" style="flex: 1; margin-bottom: 0;">
+            <label for="inputLat">Latitude</label>
+            <input type="text" id="inputLat" class="field-input" placeholder="e.g. 10.5842">
+          </div>
+          <div class="field-group" style="flex: 1; margin-bottom: 0;">
+            <label for="inputLng">Longitude</label>
+            <input type="text" id="inputLng" class="field-input" placeholder="e.g. 77.2465">
+          </div>
+          <div class="field-group" style="flex: 0.6; margin-bottom: 0;">
+            <label for="inputZoom">Zoom</label>
+            <input type="number" id="inputZoom" class="field-input" value="15" min="1" max="21">
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="settings-title">📋 Bulk Search Keywords</h3>
+        <p class="settings-hint">Scrape multiple search queries sequentially (one per line).</p>
+        <div class="field-group">
+          <label for="inputBatchKeywords">Keywords List</label>
+          <textarea id="inputBatchKeywords" class="field-input" rows="3" placeholder="e.g.&#10;textile mills tiruppur&#10;software companies coimbatore" style="resize: vertical; font-family: monospace; font-size: 11px;"></textarea>
+        </div>
+        <div class="field-group">
+          <label style="display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="chkBatchScrape">
+            Enable batch scraping mode
+          </label>
+        </div>
       </div>
 
       <div class="settings-section">
