@@ -15,22 +15,22 @@
 
   // ─── Selectors (verified from live Google Maps DOM, August 2026) ──────────
   const SEL = {
-    phoneByDataItemId: 'button[data-item-id^="phone:tel:"]',
+    phoneByDataItemId: 'button[data-item-id^="phone:tel:"], a[data-item-id^="phone:tel:"]',
     phoneByTelHref:    'a[href^="tel:"]',
-    phoneByAriaLabel:  'button[aria-label^="Phone:"], button[aria-label^="Call phone"]',
-    addressBtn:        'button[data-item-id="address"]',
+    phoneByAriaLabel:  'button[aria-label^="Phone:"], button[aria-label^="Call phone"], button[aria-label*="Phone number"]',
+    addressBtn:        'button[data-item-id="address"], button[aria-label^="Address:"]',
     feed:              'div[role="feed"]',
-    cards:             'div[role="feed"] > div',
-    cardLink:          'a.hfpxzc',
-    cardName:          '.qBF1Pd, .fontHeadlineSmall',
+    cards:             'div[role="feed"] > div, div[role="feed"] div[role="listitem"]',
+    cardLink:          'a.hfpxzc, a[href*="/maps/place"]',
+    cardName:          '.qBF1Pd, .fontHeadlineSmall, [class*="header-title"]',
     cardMeta:          '.W4Efsd',
-    cardRating:        '.MW450e',
-    cardReviews:       '.UY7F9, .e4rVHe span',
+    cardRating:        '.MW450e, span[aria-label*="stars"]',
+    cardReviews:       '.UY7F9, .e4rVHe span, span[aria-label*="reviews"]',
     searchBox:         '#searchboxinput, input[aria-label*="Search"]',
-    detailPane:        'div[role="main"]',
-    infoRowText:       '.Io6YTe',
-    endOfResults:      '.PbZDve, .m6QErb[aria-label*="end"]',
-    openHours:         'div[aria-label*="Hours"], button[data-item-id="oh"]',
+    detailPane:        'div[role="main"], div.bJz1Cb',
+    infoRowText:       '.Io6YTe, .fontBodyMedium',
+    endOfResults:      '.PbZDve, .m6QErb[aria-label*="end"], p[class*="end-of-results"]',
+    openHours:         'div[aria-label*="Hours"], button[data-item-id="oh"], span[class*="open-status"]',
     ratingSelectors:   ['.F7beT', 'div.fontDisplayLarge', 'span[aria-label*="star" i]', '.MW450e'],
     reviewsCount:      'button[aria-label*="review" i], span[aria-label*="review" i]',
   }
@@ -444,6 +444,12 @@
         }
       }
 
+      // Scroll card into view to trigger lazy loading and ensure click target is clickable
+      try {
+        card.scrollIntoView({ block: 'center', behavior: 'instant' })
+      } catch (e) {}
+      await wait(200)
+
       // Click to open detail pane
       const clickTarget = card.querySelector(SEL.cardLink) || card.querySelector('a[href*="/maps/place"]')
       if (!clickTarget) continue
@@ -451,11 +457,22 @@
       try {
         clickTarget.click()
 
-        // Wait for detail pane to show this business (MutationObserver-based)
-        await waitForDetailPane(cardName, 3000)
+        // Wait for detail pane with backup click retry
+        let paneLoaded = false
+        const waitPromise = waitForDetailPane(cardName, 3000).then(res => {
+          paneLoaded = res
+          return res
+        })
 
-        // Small extra wait for phone/website elements to render
-        await wait(300)
+        setTimeout(() => {
+          if (!paneLoaded) {
+            console.log('[SpringWeb Scraper] Detail pane load slow, retrying click for:', cardName)
+            try { clickTarget.click() } catch (err) {}
+          }
+        }, 1200)
+
+        await waitPromise
+        await wait(350) // Extra padding for detail field selectors to render
 
         const lead = buildLeadFromPane(cardName, cardCategory, ratingNum, reviewsNum)
         if (lead) {
@@ -477,15 +494,41 @@
     if (!feed) throw new Error('Google Maps feed not found. Search for businesses first.')
 
     stopRequested = false
+    let lastHeight = feed.scrollHeight
+    let sameHeightCount = 0
 
     for (let s = 0; s < maxScrolls; s++) {
       if (stopRequested) break
-      feed.scrollBy({ top: 900, behavior: 'smooth' })
-      await wait(900)
+      
+      // Scroll to current bottom of container
+      feed.scrollTop = feed.scrollHeight
+      
+      // Variable wait: wait slightly longer as items load
+      const delay = 900 + Math.min(s * 30, 600)
+      await wait(delay)
 
-      // Detect "end of list" message
+      // Dynamic check for height changes (lazy loading completed detection)
+      const currentHeight = feed.scrollHeight
+      if (currentHeight === lastHeight) {
+        sameHeightCount++
+        if (sameHeightCount >= 3) {
+          console.log('[SpringWeb Scraper] Bottom reached (height unchanged for 3 iterations).')
+          break
+        }
+      } else {
+        sameHeightCount = 0
+        lastHeight = currentHeight
+      }
+
+      // Check standard end elements
       const endEl = document.querySelector(SEL.endOfResults)
-      if (endEl && (endEl.innerText?.toLowerCase().includes('end') || endEl.clientHeight > 0)) break
+      if (endEl) {
+        const text = (endEl.innerText || '').toLowerCase()
+        if (text.includes('end') || text.includes('you\'ve reached') || endEl.clientHeight > 0) {
+          console.log('[SpringWeb Scraper] Bottom reached (end message element detected).')
+          break
+        }
+      }
     }
 
     return scrapeAllLeadsFromFeed(progressCallback)

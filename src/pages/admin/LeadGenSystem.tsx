@@ -113,9 +113,16 @@ export const LeadGenSystem: React.FC = () => {
 
   // Filtered Businesses
   const filteredBusinesses = businesses.filter(b => {
-    const matchesSearch = b.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          (b.phone && b.phone.includes(searchTerm)) ||
-                          (b.city && b.city.toLowerCase().includes(searchTerm.toLowerCase()))
+    // Multi-token fuzzy search matching
+    const tokens = searchTerm.toLowerCase().split(/\s+/).filter(Boolean)
+    const matchesSearch = tokens.length === 0 || tokens.every(token => 
+      b.name.toLowerCase().includes(token) ||
+      (b.phone && b.phone.includes(token)) ||
+      (b.city && b.city.toLowerCase().includes(token)) ||
+      (b.category && b.category.toLowerCase().includes(token)) ||
+      (b.state && b.state.toLowerCase().includes(token)) ||
+      (b.status && b.status.toLowerCase().includes(token))
+    )
     const matchesState = selectedState === 'All' || b.state === selectedState
     const matchesPriority = selectedPriority === 'All' || b.priority === selectedPriority
     const matchesStatus = selectedStatus === 'All' || b.status === selectedStatus
