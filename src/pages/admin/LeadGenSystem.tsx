@@ -44,12 +44,15 @@ export const LeadGenSystem: React.FC = () => {
   const [selectedPriority, setSelectedPriority] = useState<string>('All')
   const [selectedStatus, setSelectedStatus] = useState<string>('All')
   const [onlyDuplicates, setOnlyDuplicates] = useState<boolean>(false)
+  const [onlyNoWebsite, setOnlyNoWebsite] = useState<boolean>(false)
+  const [onlyPhone, setOnlyPhone] = useState<boolean>(false)
 
   // New Discovery Job Form
   const [jobKeyword, setJobKeyword] = useState('')
   const [jobCategory, setJobCategory] = useState('Web Development & IT')
   const [jobLocation, setJobLocation] = useState('Udumalpet')
   const [jobState, setJobState] = useState('Tamil Nadu')
+  const [jobScrapeOption, setJobScrapeOption] = useState<'all' | 'no_website' | 'only_phone'>('all')
   const [jobSubmitting, setJobSubmitting] = useState(false)
 
   // Selected Lead for Audit / Outreach
@@ -117,7 +120,9 @@ export const LeadGenSystem: React.FC = () => {
     const matchesPriority = selectedPriority === 'All' || b.priority === selectedPriority
     const matchesStatus = selectedStatus === 'All' || b.status === selectedStatus
     const matchesDup = !onlyDuplicates || b.duplicate_flag
-    return matchesSearch && matchesState && matchesPriority && matchesStatus && matchesDup
+    const matchesNoWebsite = !onlyNoWebsite || (!b.website || b.website.trim() === '')
+    const matchesOnlyPhone = !onlyPhone || (!!b.phone && b.phone.trim().length > 6)
+    return matchesSearch && matchesState && matchesPriority && matchesStatus && matchesDup && matchesNoWebsite && matchesOnlyPhone
   })
 
   // Start Discovery Job
@@ -125,7 +130,7 @@ export const LeadGenSystem: React.FC = () => {
     e.preventDefault()
     if (!jobKeyword || !jobLocation) return
     setJobSubmitting(true)
-    await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState)
+    await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption)
     setJobKeyword('')
     setJobSubmitting(false)
   }
@@ -358,6 +363,19 @@ export const LeadGenSystem: React.FC = () => {
                   <option>Mobile App Prospects</option>
                   <option>Industrial Manufacturers</option>
                   <option>Healthcare &amp; Hospitals</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Scrape Filter Mode</label>
+                <select
+                  value={jobScrapeOption}
+                  onChange={e => setJobScrapeOption(e.target.value as 'all' | 'no_website' | 'only_phone')}
+                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:border-emerald-500 outline-none"
+                >
+                  <option value="all">Scrape All Discovered Leads</option>
+                  <option value="no_website">Only Leads with No Website</option>
+                  <option value="only_phone">Only Leads with Phone Numbers</option>
                 </select>
               </div>
 
@@ -613,6 +631,26 @@ export const LeadGenSystem: React.FC = () => {
                   className="rounded accent-amber-500"
                 />
                 <span>Show Potential Duplicates</span>
+              </label>
+
+              <label className="flex items-center gap-2 text-xs text-blue-400 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={onlyNoWebsite}
+                  onChange={e => setOnlyNoWebsite(e.target.checked)}
+                  className="rounded accent-blue-500"
+                />
+                <span>No Website Only</span>
+              </label>
+
+              <label className="flex items-center gap-2 text-xs text-emerald-400 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={onlyPhone}
+                  onChange={e => setOnlyPhone(e.target.checked)}
+                  className="rounded accent-emerald-500"
+                />
+                <span>Phone Only</span>
               </label>
             </div>
           </div>

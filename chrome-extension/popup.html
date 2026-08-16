@@ -77,14 +77,17 @@
       </div>
 
       <!-- Filter Row -->
-      <div class="filter-row">
+      <div class="filter-row" style="flex-wrap: wrap; gap: 4px;">
         <label class="filter-chip">
           <input type="checkbox" id="filterPhone"> 📞 Phone only
         </label>
         <label class="filter-chip">
           <input type="checkbox" id="filterWeb"> 🌐 Web only
         </label>
-        <button id="btnCopyAll" class="btn-text" title="Copy all phone numbers">📋 Copy Phones</button>
+        <label class="filter-chip">
+          <input type="checkbox" id="filterNoWeb"> ❌ No Web only
+        </label>
+        <button id="btnCopyAll" class="btn-text" title="Copy all phone numbers" style="margin-left: auto;">📋 Copy Phones</button>
       </div>
 
       <!-- Sync + Export -->
@@ -205,6 +208,16 @@
           <label for="inputScrollCount">Auto-Scroll Iterations</label>
           <input type="number" id="inputScrollCount" class="field-input" value="20" min="5" max="100">
           <span class="field-hint">More scrolls = more businesses loaded</span>
+        </div>
+
+        <div class="field-group">
+          <label for="selectScrapeFilter">Scrape Filter Rule</label>
+          <select id="selectScrapeFilter" class="field-input" style="background-color: #121824; color: white;">
+            <option value="all">Scrape all businesses</option>
+            <option value="no_website">Only scrape business with no website</option>
+            <option value="only_phone">Only scrape business with phone number</option>
+          </select>
+          <span class="field-hint">Filters leads extracted during scraping sessions</span>
         </div>
 
         <div class="field-group">

@@ -171,7 +171,7 @@ interface LeadGenState {
   importCsvBusinesses: (records: Partial<BusinessLead>[]) => Promise<number>
   toggleDncFlag: (businessId: string, dncState: boolean) => Promise<void>
   updateBusinessStatus: (businessId: string, status: BusinessLead['status']) => Promise<void>
-  createDiscoveryJob: (keyword: string, category: string, location: string, state: string) => Promise<void>
+  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone') => Promise<void>
   runWebsiteAudit: (businessId: string, websiteUrl: string) => Promise<WebsiteAuditData | null>
   logOutreach: (log: Omit<OutreachLog, 'id' | 'created_at'>) => Promise<void>
   recordAiUsage: (usage: Omit<AIUsageLog, 'id' | 'created_at'>) => Promise<boolean>
@@ -396,7 +396,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
     }
   },
 
-  createDiscoveryJob: async (keyword, category, location, state) => {
+  createDiscoveryJob: async (keyword, category, location, state, scrapeOption = 'all') => {
     if (!isSupabaseConfigured) return
     try {
       const payload = {
@@ -407,7 +407,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         source: 'Google Maps & Web Discovery API',
         status: 'processing',
         progress: 25,
-        records_found: Math.floor(Math.random() * 8) + 4
+        records_found: 4
       }
       const { data: job, error } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
       if (error) throw error
@@ -417,12 +417,20 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         const sampleDiscovered = [
           { name: `${keyword} Hub ${location}`, phone: '+91 98421 88219', city: location, state, website: 'http://example.com' },
           { name: `Grand ${category} ${location}`, phone: '+91 94432 11092', city: location, state, website: null },
-          { name: `${location} Digital Solutions`, phone: '+91 80126 22119', city: location, state, website: 'https://springwebsolutions.in' }
+          { name: `${location} Digital Solutions`, phone: '', city: location, state, website: 'https://springwebsolutions.in' },
+          { name: `${location} Raw Leads`, phone: '', city: location, state, website: null }
         ]
-        for (const disc of sampleDiscovered) {
+
+        const filtered = sampleDiscovered.filter(disc => {
+          if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
+          if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+          return true
+        })
+
+        for (const disc of filtered) {
           await get().addBusiness({ ...disc, source: 'Google Maps API' })
         }
-        await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: sampleDiscovered.length }).eq('id', job.id)
+        await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: filtered.length }).eq('id', job.id)
         await get().fetchData()
       }, 1500)
 

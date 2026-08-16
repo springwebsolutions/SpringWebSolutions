@@ -47,10 +47,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const filterPhone    = document.getElementById('filterPhone')
   const filterWeb      = document.getElementById('filterWeb')
+  const filterNoWeb    = document.getElementById('filterNoWeb')
 
   const inputSupabaseUrl  = document.getElementById('inputSupabaseUrl')
   const inputSupabaseKey  = document.getElementById('inputSupabaseKey')
   const inputScrollCount  = document.getElementById('inputScrollCount')
+  const selectScrapeFilter = document.getElementById('selectScrapeFilter')
   const chkNotify         = document.getElementById('chkNotify')
   const settingsSaveMsg   = document.getElementById('settingsSaveMsg')
   const statTotal         = document.getElementById('statTotal')
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── Load saved settings + session ────────────────────────────────────────
   const stored = await storageGet([
     'scrapedLeads', 'syncedCount', 'supabaseUrl', 'supabaseKey', 'scrollCount', 'notifyOnDone',
-    'googleSheetsUrl', 'lat', 'lng', 'zoom', 'batchKeywords', 'batchScrapeEnabled'
+    'googleSheetsUrl', 'lat', 'lng', 'zoom', 'batchKeywords', 'batchScrapeEnabled', 'scrapeFilter'
   ])
 
   currentLeads = stored.scrapedLeads || []
@@ -79,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (inputZoom) inputZoom.value = stored.zoom || '15'
   if (inputBatchKeywords) inputBatchKeywords.value = stored.batchKeywords || ''
   if (chkBatchScrape) chkBatchScrape.checked = stored.batchScrapeEnabled === true
+  if (selectScrapeFilter) selectScrapeFilter.value = stored.scrapeFilter || 'all'
 
   if (statTotal) statTotal.textContent = currentLeads.length
   if (statSynced) statSynced.textContent = stored.syncedCount || 0
@@ -229,6 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── 9. Filter checkboxes ──────────────────────────────────────────────────
   filterPhone?.addEventListener('change', () => renderLeads(currentLeads))
   filterWeb?.addEventListener('change',   () => renderLeads(currentLeads))
+  filterNoWeb?.addEventListener('change', () => renderLeads(currentLeads))
 
   // ── 10. Settings: save ───────────────────────────────────────────────────
   btnSaveSettings?.addEventListener('click', () => {
@@ -243,6 +247,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const zoom = inputZoom?.value || '15'
     const batchKeywords = inputBatchKeywords?.value || ''
     const batchScrapeEnabled = chkBatchScrape?.checked === true
+    const scrapeFilter = selectScrapeFilter?.value || 'all'
 
     chrome.storage.local.set({
       supabaseUrl: url,
@@ -254,7 +259,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       lng: lng,
       zoom: zoom,
       batchKeywords: batchKeywords,
-      batchScrapeEnabled: batchScrapeEnabled
+      batchScrapeEnabled: batchScrapeEnabled,
+      scrapeFilter: scrapeFilter
     })
 
     // Update background settings
@@ -374,14 +380,22 @@ document.addEventListener('DOMContentLoaded', async () => {
           })
 
           if (response.status === 'success' && response.data) {
-            totalScraped += response.data.length
-            const added = mergeLeads(response.data)
+            let scrapedData = response.data
+            const sFilter = selectScrapeFilter?.value || 'all'
+            if (sFilter === 'no_website') {
+              scrapedData = scrapedData.filter(item => !item.website || item.website.trim() === '')
+            } else if (sFilter === 'only_phone') {
+              scrapedData = scrapedData.filter(item => !!item.phone && item.phone.trim().length > 6)
+            }
+
+            totalScraped += scrapedData.length
+            const added = mergeLeads(scrapedData)
             totalNew += added
 
             // Trigger background website email/social enrichment for newly scraped leads
             setStatus(`✨ [${i+1}/${keywords.length}] Crawling websites for emails/socials...`)
             await new Promise((resolveEnrich) => {
-              chrome.runtime.sendMessage({ action: 'ENRICH_LEADS', leads: response.data }, (enrichRes) => {
+              chrome.runtime.sendMessage({ action: 'ENRICH_LEADS', leads: scrapedData }, (enrichRes) => {
                 if (enrichRes?.status === 'success' && enrichRes.data) {
                   // Merge enriched leads back to update website emails/socials
                   mergeLeads(enrichRes.data)
@@ -447,20 +461,28 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
 
           if (response.status === 'success' && response.data) {
-            const added = mergeLeads(response.data)
-            setStatus(`✅ Scraped ${response.data.length} leads, ${added} new. Enriching...`)
+            let scrapedData = response.data
+            const sFilter = selectScrapeFilter?.value || 'all'
+            if (sFilter === 'no_website') {
+              scrapedData = scrapedData.filter(item => !item.website || item.website.trim() === '')
+            } else if (sFilter === 'only_phone') {
+              scrapedData = scrapedData.filter(item => !!item.phone && item.phone.trim().length > 6)
+            }
+
+            const added = mergeLeads(scrapedData)
+            setStatus(`✅ Scraped ${scrapedData.length} leads, ${added} new. Enriching...`)
 
             // Trigger background website email/social enrichment
-            chrome.runtime.sendMessage({ action: 'ENRICH_LEADS', leads: response.data }, (enrichRes) => {
+            chrome.runtime.sendMessage({ action: 'ENRICH_LEADS', leads: scrapedData }, (enrichRes) => {
               if (enrichRes?.status === 'success' && enrichRes.data) {
                 mergeLeads(enrichRes.data)
               }
               const wp = countWithPhone(currentLeads)
-              setStatus(`✅ Done! ${response.data.length} scraped, ${added} new. ${wp} with phone.`)
+              setStatus(`✅ Done! ${scrapedData.length} scraped, ${added} new. ${wp} with phone.`)
 
               if (stored.notifyOnDone !== false && 'Notification' in window && Notification.permission === 'granted') {
                 new Notification('SpringWeb Scraper ✅', {
-                  body: `Scraped ${response.data.length} leads (${wp} with phone)`,
+                  body: `Scraped ${scrapedData.length} leads (${wp} with phone)`,
                   icon: 'icons/icon48.png',
                 })
               }
@@ -485,6 +507,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let list = currentLeads
     if (filterPhone?.checked) list = list.filter(l => l.phone && l.phone.length > 6)
     if (filterWeb?.checked)   list = list.filter(l => l.website)
+    if (filterNoWeb?.checked) list = list.filter(l => !l.website || l.website.trim() === '')
     return list
   }
 
