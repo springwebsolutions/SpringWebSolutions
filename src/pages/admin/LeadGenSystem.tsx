@@ -53,6 +53,7 @@ export const LeadGenSystem: React.FC = () => {
   const [jobLocation, setJobLocation] = useState('Udumalpet')
   const [jobState, setJobState] = useState('Tamil Nadu')
   const [jobScrapeOption, setJobScrapeOption] = useState<'all' | 'no_website' | 'only_phone'>('all')
+  const [jobSource, setJobSource] = useState<'simulated' | 'openstreetmap'>('simulated')
   const [jobSubmitting, setJobSubmitting] = useState(false)
 
   // Selected Lead for Audit / Outreach
@@ -99,7 +100,7 @@ export const LeadGenSystem: React.FC = () => {
     if (!selectedLead) return
     const lang = determineLanguage(selectedLead.state)
     const services = (selectedLead.recommended_services || ['Website Development']).join(', ')
-    
+
     if (lang === 'Tamil') {
       setOutreachText(
         `வணக்கம் ${selectedLead.name} குழுமத்திற்கு,\n\nநான் SpringWeb Solutions-லிருந்து தொடர்புகொள்கிறேன். உங்கள் வணிகத்திற்கு ${services} மூலம் வாடிக்கையாளர் வருகையை 3X அதிகரிக்க முடியும்.\n\nஇலவச ஆலோசனைக்கு அழைக்கவும்: +91 80126 22119\nspringwebsolutions.in`
@@ -137,7 +138,7 @@ export const LeadGenSystem: React.FC = () => {
     e.preventDefault()
     if (!jobKeyword || !jobLocation) return
     setJobSubmitting(true)
-    await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption)
+    await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption, jobSource)
     setJobKeyword('')
     setJobSubmitting(false)
   }
@@ -383,6 +384,18 @@ export const LeadGenSystem: React.FC = () => {
                   <option value="all">Scrape All Discovered Leads</option>
                   <option value="no_website">Only Leads with No Website</option>
                   <option value="only_phone">Only Leads with Phone Numbers</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Discovery Source API</label>
+                <select
+                  value={jobSource}
+                  onChange={e => setJobSource(e.target.value as 'simulated' | 'openstreetmap')}
+                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:border-emerald-500 outline-none"
+                >
+                  <option value="simulated">Mock Maps API (Simulated)</option>
+                  <option value="openstreetmap">OpenStreetMap (Live Free POIs)</option>
                 </select>
               </div>
 

@@ -171,7 +171,7 @@ interface LeadGenState {
   importCsvBusinesses: (records: Partial<BusinessLead>[]) => Promise<number>
   toggleDncFlag: (businessId: string, dncState: boolean) => Promise<void>
   updateBusinessStatus: (businessId: string, status: BusinessLead['status']) => Promise<void>
-  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone') => Promise<void>
+  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone', jobSource?: 'simulated' | 'openstreetmap') => Promise<void>
   runWebsiteAudit: (businessId: string, websiteUrl: string) => Promise<WebsiteAuditData | null>
   logOutreach: (log: Omit<OutreachLog, 'id' | 'created_at'>) => Promise<void>
   recordAiUsage: (usage: Omit<AIUsageLog, 'id' | 'created_at'>) => Promise<boolean>
@@ -396,7 +396,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
     }
   },
 
-  createDiscoveryJob: async (keyword, category, location, state, scrapeOption = 'all') => {
+  createDiscoveryJob: async (keyword, category, location, state, scrapeOption = 'all', jobSource = 'simulated') => {
     if (!isSupabaseConfigured) return
     try {
       const payload = {
@@ -404,35 +404,131 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         category,
         location,
         state,
-        source: 'Google Maps & Web Discovery API',
+        source: jobSource === 'openstreetmap' ? 'OpenStreetMap API' : 'Google Maps & Web Discovery API',
         status: 'processing',
-        progress: 25,
-        records_found: 4
+        progress: 10,
+        records_found: 0
       }
       const { data: job, error } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
       if (error) throw error
 
-      // Simulate worker picking up job and inserting discovered leads
-      setTimeout(async () => {
-        const sampleDiscovered = [
-          { name: `${keyword} Hub ${location}`, phone: '+91 98421 88219', city: location, state, website: 'http://example.com' },
-          { name: `Grand ${category} ${location}`, phone: '+91 94432 11092', city: location, state, website: null },
-          { name: `${location} Digital Solutions`, phone: '', city: location, state, website: 'https://springwebsolutions.in' },
-          { name: `${location} Raw Leads`, phone: '', city: location, state, website: null }
-        ]
+      if (jobSource === 'openstreetmap') {
+        // Run live OpenStreetMap search
+        setTimeout(async () => {
+          try {
+            // Step 1: Geocode location using public Nominatim endpoint
+            const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location + ', ' + state)}&format=json&limit=1`
+            const geoRes = await fetch(geocodeUrl, {
+              headers: {
+                'User-Agent': 'SpringWebSolutions Scraper / shanj@springwebsolutions.in'
+              }
+            })
 
-        const filtered = sampleDiscovered.filter(disc => {
-          if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
-          if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
-          return true
-        })
+            if (!geoRes.ok) throw new Error('Nominatim geocoder request failed.')
+            const geoData = await geoRes.json()
 
-        for (const disc of filtered) {
-          await get().addBusiness({ ...disc, source: 'Google Maps API' })
-        }
-        await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: filtered.length }).eq('id', job.id)
-        await get().fetchData()
-      }, 1500)
+            if (!geoData || geoData.length === 0) {
+              throw new Error(`Location "${location}" could not be geocoded by OpenStreetMap.`)
+            }
+
+            const bbox = geoData[0].boundingbox // ["minlat", "maxlat", "minlon", "maxlon"]
+            const minlat = bbox[0]
+            const maxlat = bbox[1]
+            const minlon = bbox[2]
+            const maxlon = bbox[3]
+
+            // Step 2: Query Overpass interpreter
+            await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', job.id)
+
+            const overpassQuery = `[out:json][timeout:25];(node[~"name|shop|office|amenity|craft"~"${keyword}",i](${minlat},${minlon},${maxlat},${maxlon});way[~"name|shop|office|amenity|craft"~"${keyword}",i](${minlat},${minlon},${maxlat},${maxlon}););out body;`
+            const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`
+
+            const opRes = await fetch(overpassUrl)
+            if (!opRes.ok) throw new Error('Overpass interpreter query failed.')
+
+            const opData = await opRes.json()
+            const elements = opData.elements || []
+
+            // Step 3: Parse and filter leads
+            const leads = elements.map((el: any) => {
+              const tags = el.tags || {}
+              const name = tags.name || `${keyword} Business`
+              const rawPhone = tags.phone || tags['contact:phone'] || tags.mobile || tags['contact:mobile'] || ''
+              const phone = normalizePhone(rawPhone) ? rawPhone : ''
+              const website = tags.website || tags['contact:website'] || tags.url || ''
+              const email = tags.email || tags['contact:email'] || ''
+              const street = tags['addr:street'] || ''
+              const postcode = tags['addr:postcode'] || ''
+
+              const address = [street, location, state, postcode].filter(Boolean).join(', ')
+
+              return {
+                name,
+                phone: phone || null,
+                website: website || null,
+                email: email || null,
+                address: address || `${location}, ${state}`,
+                city: location,
+                state: state,
+                category: tags.shop || tags.amenity || tags.office || keyword,
+                rating: null,
+                reviews_count: null
+              }
+            })
+
+            const filtered = leads.filter((disc: any) => {
+              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
+              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+              return true
+            })
+
+            // Step 4: Add parsed businesses to DB
+            let savedCount = 0
+            for (const disc of filtered) {
+              const res = await get().addBusiness({ ...disc, source: 'OpenStreetMap API' })
+              if (res) savedCount++
+            }
+
+            await supabase.from('discovery_jobs').update({
+              status: 'completed',
+              progress: 100,
+              records_found: savedCount
+            }).eq('id', job.id)
+
+            await get().fetchData()
+          } catch (jobErr: any) {
+            console.error('[OSM Discovery Job Failed]:', jobErr)
+            await supabase.from('discovery_jobs').update({
+              status: 'failed',
+              progress: 100,
+              error_message: jobErr.message || 'OSM interpreter network timeout.'
+            }).eq('id', job.id)
+            await get().fetchData()
+          }
+        }, 100)
+      } else {
+        // Simulate worker picking up job and inserting discovered leads
+        setTimeout(async () => {
+          const sampleDiscovered = [
+            { name: `${keyword} Hub ${location}`, phone: '+91 98421 88219', city: location, state, website: 'http://example.com' },
+            { name: `Grand ${category} ${location}`, phone: '+91 94432 11092', city: location, state, website: null },
+            { name: `${location} Digital Solutions`, phone: '', city: location, state, website: 'https://springwebsolutions.in' },
+            { name: `${location} Raw Leads`, phone: '', city: location, state, website: null }
+          ]
+
+          const filtered = sampleDiscovered.filter(disc => {
+            if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
+            if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+            return true
+          })
+
+          for (const disc of filtered) {
+            await get().addBusiness({ ...disc, source: 'Google Maps API' })
+          }
+          await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: filtered.length }).eq('id', job.id)
+          await get().fetchData()
+        }, 1500)
+      }
 
     } catch (err) {
       console.error('[Create Discovery Job Error]:', err)
