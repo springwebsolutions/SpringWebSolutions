@@ -53,7 +53,7 @@ export const LeadGenSystem: React.FC = () => {
   const [jobCategory, setJobCategory] = useState('Web Development & IT')
   const [jobLocation, setJobLocation] = useState('Udumalpet')
   const [jobState, setJobState] = useState('Tamil Nadu')
-  const [jobScrapeOption, setJobScrapeOption] = useState<'all' | 'no_website' | 'only_phone'>('all')
+  const [jobScrapeOption, setJobScrapeOption] = useState<'all' | 'no_website' | 'only_phone' | 'both'>('all')
   const [jobSource, setJobSource] = useState<'simulated' | 'openstreetmap'>('simulated')
   const [jobSubmitting, setJobSubmitting] = useState(false)
 
@@ -240,7 +240,7 @@ export const LeadGenSystem: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 text-slate-100 font-sans">
+    <div className="space-y-6 text-slate-800 dark:text-slate-100 font-sans">
       
       {/* Sleek Metrics Ticker Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -536,42 +536,43 @@ export const LeadGenSystem: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Category</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 mb-1">Category</label>
                 <select
                   value={jobCategory}
                   onChange={e => setJobCategory(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:border-emerald-500 outline-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:border-emerald-500 outline-none"
                 >
-                  <option>Web Development &amp; IT Services</option>
-                  <option>Custom ERP &amp; Billing Systems</option>
-                  <option>Mobile App Prospects</option>
-                  <option>Industrial Manufacturers</option>
-                  <option>Healthcare &amp; Hospitals</option>
+                  <option className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Web Development &amp; IT Services</option>
+                  <option className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Custom ERP &amp; Billing Systems</option>
+                  <option className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mobile App Prospects</option>
+                  <option className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Industrial Manufacturers</option>
+                  <option className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Healthcare &amp; Hospitals</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Scrape Filter Mode</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 mb-1">Scrape Filter Mode</label>
                 <select
                   value={jobScrapeOption}
-                  onChange={e => setJobScrapeOption(e.target.value as 'all' | 'no_website' | 'only_phone')}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:border-emerald-500 outline-none"
+                  onChange={e => setJobScrapeOption(e.target.value as 'all' | 'no_website' | 'only_phone' | 'both')}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:border-emerald-500 outline-none"
                 >
-                  <option value="all">Scrape All Discovered Leads</option>
-                  <option value="no_website">Only Leads with No Website</option>
-                  <option value="only_phone">Only Leads with Phone Numbers</option>
+                  <option value="all" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Scrape All Discovered Leads</option>
+                  <option value="no_website" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Only Leads with No Website</option>
+                  <option value="only_phone" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Only Leads with Phone Numbers</option>
+                  <option value="both" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Only Phone Numbers &amp; No Website</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Discovery Source API</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 mb-1">Discovery Source API</label>
                 <select
                   value={jobSource}
                   onChange={e => setJobSource(e.target.value as 'simulated' | 'openstreetmap')}
-                  className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:border-emerald-500 outline-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:border-emerald-500 outline-none"
                 >
-                  <option value="simulated">Mock Maps API (Simulated)</option>
-                  <option value="openstreetmap">OpenStreetMap (Live Free POIs)</option>
+                  <option value="simulated" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mock Maps API (Simulated)</option>
+                  <option value="openstreetmap" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">OpenStreetMap (Live Free POIs)</option>
                 </select>
               </div>
 
@@ -783,7 +784,7 @@ export const LeadGenSystem: React.FC = () => {
       {activeTab === 'database' && (
         <div className="space-y-6 animate-fade-in">
           {/* Filter Bar */}
-          <div className="glass-panel p-4 rounded-2xl border border-white/10 bg-white/5 flex flex-wrap items-center justify-between gap-4">
+          <div className="glass-panel p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3 flex-1 min-w-[240px]">
               <Search size={16} className="text-slate-400" />
               <input
@@ -791,7 +792,7 @@ export const LeadGenSystem: React.FC = () => {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Filter by business name, phone, city..."
-                className="w-full bg-transparent text-white text-xs outline-none"
+                className="w-full bg-transparent text-slate-900 dark:text-white text-xs outline-none"
               />
             </div>
 
@@ -799,24 +800,24 @@ export const LeadGenSystem: React.FC = () => {
               <select
                 value={selectedState}
                 onChange={e => setSelectedState(e.target.value)}
-                className="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white outline-none"
+                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white outline-none"
               >
-                <option value="All">All States</option>
-                <option value="Tamil Nadu">Tamil Nadu (Tamil)</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Kerala">Kerala</option>
-                <option value="Maharashtra">Maharashtra</option>
+                <option value="All" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">All States</option>
+                <option value="Tamil Nadu" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Tamil Nadu (Tamil)</option>
+                <option value="Karnataka" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Karnataka</option>
+                <option value="Kerala" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Kerala</option>
+                <option value="Maharashtra" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Maharashtra</option>
               </select>
 
               <select
                 value={selectedPriority}
                 onChange={e => setSelectedPriority(e.target.value)}
-                className="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white outline-none"
+                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white outline-none"
               >
-                <option value="All">All Priorities</option>
-                <option value="High">High Priority (Score &gt; 50)</option>
-                <option value="Medium">Medium Priority</option>
-                <option value="Low">Low Priority</option>
+                <option value="All" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">All Priorities</option>
+                <option value="High" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">High Priority (Score &gt; 50)</option>
+                <option value="Medium" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Medium Priority</option>
+                <option value="Low" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Low Priority</option>
               </select>
 
               <label className="flex items-center gap-2 text-xs text-amber-400 cursor-pointer">
@@ -916,15 +917,15 @@ export const LeadGenSystem: React.FC = () => {
                               <select
                                 value={b.status}
                                 onChange={e => updateBusinessStatus(b.id, e.target.value as any)}
-                                className="px-2 py-1 rounded bg-black/40 border border-white/10 text-[11px] text-white outline-none"
+                                className="px-2 py-1 rounded bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-[11px] text-slate-900 dark:text-white outline-none"
                               >
-                                <option value="New">New</option>
-                                <option value="Contacted">Contacted</option>
-                                <option value="Replied">Replied</option>
-                                <option value="Meeting Scheduled">Meeting Scheduled</option>
-                                <option value="Proposal Sent">Proposal Sent</option>
-                                <option value="Won">Won</option>
-                                <option value="Lost">Lost</option>
+                                <option value="New" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">New</option>
+                                <option value="Contacted" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Contacted</option>
+                                <option value="Replied" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Replied</option>
+                                <option value="Meeting Scheduled" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Meeting Scheduled</option>
+                                <option value="Proposal Sent" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Proposal Sent</option>
+                                <option value="Won" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Won</option>
+                                <option value="Lost" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Lost</option>
                               </select>
                             </td>
                           </tr>
@@ -1184,11 +1185,11 @@ export const LeadGenSystem: React.FC = () => {
                 <select
                   value={aiModel}
                   onChange={e => setAiModel(e.target.value as any)}
-                  className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white outline-none"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white outline-none"
                 >
-                  <option value="gpt-4o-mini">gpt-4o-mini (Free / Zero Cost — ₹0.00)</option>
-                  <option value="claude-3-haiku">claude-3-haiku (Free / Zero Cost — ₹0.00)</option>
-                  <option value="gpt-4o">gpt-4o (Free / Zero Cost — ₹0.00)</option>
+                  <option value="gpt-4o-mini" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">gpt-4o-mini (Free / Zero Cost — ₹0.00)</option>
+                  <option value="claude-3-haiku" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">claude-3-haiku (Free / Zero Cost — ₹0.00)</option>
+                  <option value="gpt-4o" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">gpt-4o (Free / Zero Cost — ₹0.00)</option>
                 </select>
 
                 <button

@@ -171,7 +171,7 @@ interface LeadGenState {
   importCsvBusinesses: (records: Partial<BusinessLead>[]) => Promise<number>
   toggleDncFlag: (businessId: string, dncState: boolean) => Promise<void>
   updateBusinessStatus: (businessId: string, status: BusinessLead['status']) => Promise<void>
-  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone', jobSource?: 'simulated' | 'openstreetmap') => Promise<void>
+  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone' | 'both', jobSource?: 'simulated' | 'openstreetmap') => Promise<void>
   runWebsiteAudit: (businessId: string, websiteUrl: string) => Promise<WebsiteAuditData | null>
   logOutreach: (log: Omit<OutreachLog, 'id' | 'created_at'>) => Promise<void>
   recordAiUsage: (usage: Omit<AIUsageLog, 'id' | 'created_at'>) => Promise<boolean>
@@ -479,6 +479,9 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
             const filtered = leads.filter((disc: any) => {
               if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
               if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+              if (scrapeOption === 'both') {
+                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
+              }
               return true
             })
 
@@ -519,6 +522,9 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
           const filtered = sampleDiscovered.filter(disc => {
             if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
             if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+            if (scrapeOption === 'both') {
+              return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
+            }
             return true
           })
 

@@ -386,6 +386,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               scrapedData = scrapedData.filter(item => !item.website || item.website.trim() === '')
             } else if (sFilter === 'only_phone') {
               scrapedData = scrapedData.filter(item => !!item.phone && item.phone.trim().length > 6)
+            } else if (sFilter === 'both') {
+              scrapedData = scrapedData.filter(item => (!item.website || item.website.trim() === '') && (!!item.phone && item.phone.trim().length > 6))
             }
 
             totalScraped += scrapedData.length
@@ -467,6 +469,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               scrapedData = scrapedData.filter(item => !item.website || item.website.trim() === '')
             } else if (sFilter === 'only_phone') {
               scrapedData = scrapedData.filter(item => !!item.phone && item.phone.trim().length > 6)
+            } else if (sFilter === 'both') {
+              scrapedData = scrapedData.filter(item => (!item.website || item.website.trim() === '') && (!!item.phone && item.phone.trim().length > 6))
             }
 
             const added = mergeLeads(scrapedData)

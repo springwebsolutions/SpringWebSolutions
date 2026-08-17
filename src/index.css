@@ -185,6 +185,52 @@ h1, h2, h3, h4, h5, h6 {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
+/* ── bg-slate-950, bg-slate-900, bg-black overrides for CRM components in light mode ── */
+.light .bg-slate-950\/60 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+.light .bg-slate-900\/40 {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+.light .bg-black\/40 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  color: #0f172a !important;
+}
+
+/* ── Text color overrides for readability in light mode ── */
+.light .text-slate-100 {
+  color: #0f172a !important;
+}
+.light .text-emerald-400 {
+  color: #059669 !important;
+}
+.light .text-indigo-400 {
+  color: #4f46e5 !important;
+}
+.light .text-cyan-400 {
+  color: #0891b2 !important;
+}
+.light .text-violet-400 {
+  color: #7c3aed !important;
+}
+.light .text-amber-400 {
+  color: #d97706 !important;
+}
+.light .text-blue-400 {
+  color: #2563eb !important;
+}
+.light .text-emerald-300 {
+  color: #047857 !important;
+}
+.light .text-indigo-300 {
+  color: #4338ca !important;
+}
+.light .text-cyan-300 {
+  color: #0e7490 !important;
+}
+.light .text-violet-300 {
+  color: #6d28d9 !important;
+}
 
 /* Obsidian Glassmorphic panel classes */
 .glass-panel {
