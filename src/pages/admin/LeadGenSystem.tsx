@@ -9,7 +9,8 @@ import {
 import { 
   Search, Plus, Filter, Download, Database, ShieldAlert, Cpu, Sparkles, 
   MessageSquare, Mail, Phone, Globe, CheckCircle2, AlertCircle, RefreshCw, 
-  Layers, MapPin, DollarSign, Upload, FileText, ArrowRight, Check, X, Lock, Play, BarChart2
+  Layers, MapPin, DollarSign, Upload, FileText, ArrowRight, Check, X, Lock, Play, BarChart2,
+  LayoutDashboard, Server
 } from 'lucide-react'
 
 export const LeadGenSystem: React.FC = () => {
@@ -243,60 +244,86 @@ export const LeadGenSystem: React.FC = () => {
       
       {/* Sleek Metrics Ticker Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="admin-card p-4 space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-400">
+        {/* Card 1: Prospects Stored */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-slate-950/60 p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/[0.03] rounded-full blur-2xl -mr-8 -mt-8 transition-all group-hover:bg-emerald-500/[0.06]"></div>
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
             <span>Prospects Stored</span>
-            <Database size={15} className="text-emerald-400" />
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
+              <Database size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-black font-display text-white">{businesses.length}</div>
-          <div className="text-[10px] text-emerald-400 font-bold">
+          <div className="mt-4 text-3xl font-black tracking-tight text-white font-display">
+            {businesses.length}
+          </div>
+          <div className="mt-2 text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             {businesses.filter(b => b.priority === 'High').length} High Priority Opportunities
           </div>
         </div>
 
-        <div className="admin-card p-4 space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Google Maps API Quota</span>
-            <MapPin size={15} className="text-indigo-400" />
+        {/* Card 2: Google Maps API Quota */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-slate-950/60 p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-indigo-500/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/[0.03] rounded-full blur-2xl -mr-8 -mt-8 transition-all group-hover:bg-indigo-500/[0.06]"></div>
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <span>Maps API Quota</span>
+            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform">
+              <MapPin size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-black font-display text-white">{googleMapsQuotaUsed} / {googleMapsQuotaLimit}</div>
-          <div className="text-[10px] text-slate-400 font-mono">
-            Remaining: <strong className="text-emerald-400">{googleMapsQuotaLimit - googleMapsQuotaUsed}</strong> requests
+          <div className="mt-4 text-3xl font-black tracking-tight text-white font-display">
+            {googleMapsQuotaUsed} <span className="text-slate-500 text-lg font-medium">/ {googleMapsQuotaLimit}</span>
+          </div>
+          <div className="mt-2 text-xs font-mono text-slate-400">
+            Remaining: <strong className="text-indigo-300">{googleMapsQuotaLimit - googleMapsQuotaUsed}</strong> API requests
           </div>
         </div>
 
-        <div className="admin-card p-4 space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-400">
+        {/* Card 3: Monthly AI Spend */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-slate-950/60 p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/[0.03] rounded-full blur-2xl -mr-8 -mt-8 transition-all group-hover:bg-cyan-500/[0.06]"></div>
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
             <span>Monthly AI Spend</span>
-            <DollarSign size={15} className="text-teal-400" />
+            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform">
+              <DollarSign size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-black font-display text-white">₹{(currentMonthAiSpendINR || 0).toFixed(2)}</div>
-          <div className="text-[10px] text-slate-400 font-mono">
-            Hard Cap: <strong className="text-white">₹{monthlyBudgetCapINR || 500}</strong> ({( (currentMonthAiSpendINR || 0) / (monthlyBudgetCapINR || 500) * 100 ).toFixed(1)}% used)
+          <div className="mt-4 text-3xl font-black tracking-tight text-white font-display">
+            ₹{(currentMonthAiSpendINR || 0).toFixed(2)}
+          </div>
+          <div className="mt-2 text-xs text-slate-400">
+            Budget Cap: <strong className="text-slate-300">₹{monthlyBudgetCapINR || 500}</strong> ({( (currentMonthAiSpendINR || 0) / (monthlyBudgetCapINR || 500) * 100 ).toFixed(1)}% limit)
           </div>
         </div>
 
-        <div className="admin-card p-4 space-y-1">
-          <div className="flex items-center justify-between text-xs text-slate-400">
-            <span>Outreach Conversion Rate</span>
-            <CheckCircle2 size={15} className="text-emerald-400" />
+        {/* Card 4: Outreach Conversion Rate */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-slate-950/60 p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/[0.03] rounded-full blur-2xl -mr-8 -mt-8 transition-all group-hover:bg-violet-500/[0.06]"></div>
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <span>Conversion Rate</span>
+            <div className="p-2 rounded-xl bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform">
+              <CheckCircle2 size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-black font-display text-white">
+          <div className="mt-4 text-3xl font-black tracking-tight text-white font-display">
             {businesses.length > 0 ? Math.round((businesses.filter(b => b.status === 'Won').length / businesses.length) * 100) : 0}%
           </div>
-          <div className="text-[10px] text-slate-400">
-            Converted clients
+          <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+            <span className="font-semibold text-violet-400">{businesses.filter(b => b.status === 'Won').length} converted client{businesses.filter(b => b.status === 'Won').length !== 1 ? 's' : ''}</span> total
           </div>
         </div>
       </div>
 
-      {/* Streamlined 3-Tool Sub-Tab Controls */}
+      {/* Streamlined Tab Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {[
+            { id: 'overview', label: 'Overview Dashboard', icon: LayoutDashboard },
             { id: 'finder', label: 'Maps Lead Finder', icon: Search },
+            { id: 'extension', label: 'Chrome Scraper Sync', icon: Cpu },
             { id: 'database', label: `Prospect Database (${businesses.length})`, icon: Database },
-            { id: 'outreach', label: 'Outreach & AI Studio', icon: MessageSquare }
+            { id: 'outreach', label: 'Outreach & AI Studio', icon: MessageSquare },
+            { id: 'backup', label: 'Backup & Logs', icon: Server }
           ].map(tab => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -335,6 +362,155 @@ export const LeadGenSystem: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* TAB: OVERVIEW DASHBOARD */}
+      {activeTab === 'overview' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
+          {/* Left Column: Pipeline & Logs */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Pipeline Funnel */}
+            <div className="glass-panel p-6 rounded-2xl border border-white/10 bg-slate-900/40 space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-white text-base font-display">Prospect Pipeline Funnel</h3>
+                <span className="text-xs text-slate-400 font-mono">Conversion Funnel</span>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  { status: 'New', label: 'Discovered (New)', color: 'bg-indigo-500', text: 'text-indigo-400' },
+                  { status: 'Contacted', label: 'Contacted (Outreach sent)', color: 'bg-blue-500', text: 'text-blue-400' },
+                  { status: 'Replied', label: 'Replied (Leads engaged)', color: 'bg-amber-500', text: 'text-amber-400' },
+                  { status: 'Meeting Scheduled', label: 'Meetings Scheduled', color: 'bg-orange-500', text: 'text-orange-400' },
+                  { status: 'Proposal Sent', label: 'Proposals Submitted', color: 'bg-pink-500', text: 'text-pink-400' },
+                  { status: 'Won', label: 'Won (Closed Contracts)', color: 'bg-emerald-500', text: 'text-emerald-400' },
+                ].map(step => {
+                  const count = businesses.filter(b => b.status === step.status).length
+                  const pct = businesses.length > 0 ? Math.round((count / businesses.length) * 100) : 0
+                  return (
+                    <div key={step.status} className="space-y-1">
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                        <span className="text-slate-300">{step.label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className={`font-bold ${step.text}`}>{count} leads</span>
+                          <span className="text-slate-500 font-normal">({pct}%)</span>
+                        </div>
+                      </div>
+                      <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${step.color} transition-all duration-500`}
+                          style={{ width: `${pct}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="glass-panel p-6 rounded-2xl border border-white/10 bg-slate-900/40 space-y-4">
+              <h3 className="font-bold text-white text-base font-display">Recent Outreach Logs</h3>
+              <div className="divide-y divide-white/5 max-h-[300px] overflow-y-auto pr-1">
+                {outreachLogs.length === 0 ? (
+                  <div className="text-center py-8 text-slate-500 text-xs">No outreach attempts recorded yet.</div>
+                ) : (
+                  outreachLogs.slice(0, 5).map(log => {
+                    const biz = businesses.find(b => b.id === log.business_id)
+                    return (
+                      <div key={log.id} className="py-3 flex items-start justify-between text-xs">
+                        <div className="space-y-1">
+                          <div className="font-bold text-white">{biz?.name || 'Unknown Client'}</div>
+                          <div className="text-slate-400 text-[11px] truncate max-w-sm">{log.message}</div>
+                        </div>
+                        <div className="text-right shrink-0 ml-4">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">
+                            {log.channel}
+                          </span>
+                          <div className="text-[10px] text-slate-500 mt-1">{new Date(log.created_at).toLocaleDateString()}</div>
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Workflow Steps & Status */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="glass-panel p-6 rounded-2xl border border-white/10 bg-slate-900/40 space-y-4">
+              <h3 className="font-bold text-white text-base font-display">Interactive Workflow</h3>
+              <div className="space-y-3">
+                <div
+                  onClick={() => setActiveTab('extension')}
+                  className="p-3.5 rounded-xl bg-black/40 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer flex items-start gap-3 group"
+                >
+                  <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Cpu size={16} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">1. Setup Chrome Scraper</div>
+                    <p className="text-[10.5px] text-slate-400 mt-0.5">Download and install the unpack scraper extension to grab live maps data.</p>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setActiveTab('finder')}
+                  className="p-3.5 rounded-xl bg-black/40 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer flex items-start gap-3 group"
+                >
+                  <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Search size={16} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">2. Query OpenStreetMap</div>
+                    <p className="text-[10.5px] text-slate-400 mt-0.5">Run zero-cost geocoded keywords discovery jobs globally.</p>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setActiveTab('database')}
+                  className="p-3.5 rounded-xl bg-black/40 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer flex items-start gap-3 group"
+                >
+                  <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Database size={16} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">3. Verify Lead Quality</div>
+                    <p className="text-[10.5px] text-slate-400 mt-0.5">Run real-time site audits and review duplicates in the list.</p>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setActiveTab('outreach')}
+                  className="p-3.5 rounded-xl bg-black/40 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer flex items-start gap-3 group"
+                >
+                  <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400 group-hover:scale-105 transition-transform shrink-0">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-violet-300 transition-colors">4. Deploy AI Outreach</div>
+                    <p className="text-[10.5px] text-slate-400 mt-0.5">Write multilingual pitches and record analytics.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-panel p-6 rounded-2xl border border-white/10 bg-slate-900/40 space-y-4">
+              <h3 className="font-bold text-white text-base font-display">Discovery Analytics</h3>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-black/40 border border-white/5">
+                  <div className="text-slate-400 text-[10px]">Active Jobs</div>
+                  <div className="text-lg font-bold text-white mt-1">{jobs.filter(j => j.status === 'processing').length} active</div>
+                </div>
+                <div className="p-3 rounded-xl bg-black/40 border border-white/5">
+                  <div className="text-slate-400 text-[10px]">OSM Successes</div>
+                  <div className="text-lg font-bold text-emerald-400 mt-1">{jobs.filter(j => j.source === 'OpenStreetMap API').length} runs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TAB 1: MAPS LEAD FINDER */}
       {activeTab === 'finder' && (
@@ -675,104 +851,195 @@ export const LeadGenSystem: React.FC = () => {
             </div>
           </div>
 
-          {/* Database Table */}
-          <div className="glass-panel rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="border-b border-white/10 text-slate-400 uppercase text-[10px] bg-white/5">
-                  <tr>
-                    <th className="p-4">Business Name</th>
-                    <th className="p-4">Phone / WhatsApp</th>
-                    <th className="p-4">City / State</th>
-                    <th className="p-4">Score &amp; Priority</th>
-                    <th className="p-4">Est. Value</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {filteredBusinesses.length === 0 ? (
+          {/* Database Workspace Split Pane */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left side: Database List */}
+            <div className="lg:col-span-8 glass-panel rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="border-b border-white/10 text-slate-400 uppercase text-[10px] bg-white/5">
                     <tr>
-                      <td colSpan={7} className="p-8 text-center text-slate-500">No matching business records found.</td>
+                      <th className="p-4">Business Name</th>
+                      <th className="p-4">Phone / WhatsApp</th>
+                      <th className="p-4">Score</th>
+                      <th className="p-4">Est. Value</th>
+                      <th className="p-4">Status</th>
                     </tr>
-                  ) : (
-                    filteredBusinesses.map(b => {
-                      const lang = determineLanguage(b.state)
-                      return (
-                        <tr key={b.id} className={`hover:bg-white/5 transition-all ${b.dnc_flag ? 'opacity-40 bg-red-500/5' : ''}`}>
-                          <td className="p-4 font-semibold text-white">
-                            <div className="flex items-center gap-2">
-                              <span>{b.name}</span>
-                              {b.dnc_flag && <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/20 text-red-400">DNC</span>}
-                              {b.duplicate_flag && <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-400">DUPLICATE</span>}
-                            </div>
-                            <div className="text-[11px] text-slate-400 font-normal">{b.category} &bull; <span className="text-emerald-400 font-mono">{lang} Communication</span></div>
-                          </td>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {filteredBusinesses.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="p-8 text-center text-slate-500">No matching business records found.</td>
+                      </tr>
+                    ) : (
+                      filteredBusinesses.map(b => {
+                        const lang = determineLanguage(b.state)
+                        const isSelected = selectedLead?.id === b.id
+                        return (
+                          <tr
+                            key={b.id}
+                            onClick={() => setSelectedLead(b)}
+                            className={`hover:bg-white/5 transition-all cursor-pointer ${
+                              isSelected ? 'bg-emerald-500/10 border-l-2 border-emerald-500' : ''
+                            } ${b.dnc_flag ? 'opacity-40 bg-red-500/5' : ''}`}
+                          >
+                            <td className="p-4 font-semibold text-white">
+                              <div className="flex items-center gap-2">
+                                <span>{b.name}</span>
+                                {b.dnc_flag && <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/20 text-red-400">DNC</span>}
+                                {b.duplicate_flag && <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-400">DUP</span>}
+                              </div>
+                              <div className="text-[11px] text-slate-400 font-normal">
+                                {b.category} &bull; <span className="text-emerald-400 font-mono">{lang}</span>
+                              </div>
+                            </td>
 
-                          <td className="p-4 font-mono text-slate-300">
-                            <div>{b.phone || 'N/A'}</div>
-                            <div className="text-[10px] text-slate-500">{b.email || 'No email'}</div>
-                          </td>
+                            <td className="p-4 font-mono text-slate-300">
+                              <div>{b.phone || 'N/A'}</div>
+                              <div className="text-[10px] text-slate-500">{b.email || 'No email'}</div>
+                            </td>
 
-                          <td className="p-4 text-slate-300">
-                            <div>{b.city}, {b.state}</div>
-                            <div className="text-[10px] text-slate-500">{b.country}</div>
-                          </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-white font-mono text-sm">{b.lead_score}</span>
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                  b.priority === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
+                                }`}>
+                                  {b.priority}
+                                </span>
+                              </div>
+                            </td>
 
-                          <td className="p-4">
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-white font-mono text-sm">{b.lead_score}</span>
-                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                b.priority === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
-                              }`}>
-                                {b.priority}
-                              </span>
-                            </div>
-                          </td>
+                            <td className="p-4 font-mono text-emerald-400 font-semibold">{b.estimated_value_band}</td>
 
-                          <td className="p-4 font-mono text-emerald-400 font-semibold">{b.estimated_value_band}</td>
-
-                          <td className="p-4">
-                            <select
-                              value={b.status}
-                              onChange={e => updateBusinessStatus(b.id, e.target.value as any)}
-                              className="px-2 py-1 rounded bg-black/40 border border-white/10 text-xs text-white outline-none"
-                            >
-                              <option value="New">New</option>
-                              <option value="Contacted">Contacted</option>
-                              <option value="Replied">Replied</option>
-                              <option value="Meeting Scheduled">Meeting Scheduled</option>
-                              <option value="Proposal Sent">Proposal Sent</option>
-                              <option value="Won">Won</option>
-                              <option value="Lost">Lost</option>
-                            </select>
-                          </td>
-
-                          <td className="p-4">
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => { setSelectedLead(b); setActiveTab('outreach'); }}
-                                className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold hover:bg-emerald-500/30 cursor-pointer"
+                            <td className="p-4" onClick={e => e.stopPropagation()}>
+                              <select
+                                value={b.status}
+                                onChange={e => updateBusinessStatus(b.id, e.target.value as any)}
+                                className="px-2 py-1 rounded bg-black/40 border border-white/10 text-[11px] text-white outline-none"
                               >
-                                Outreach
-                              </button>
+                                <option value="New">New</option>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Replied">Replied</option>
+                                <option value="Meeting Scheduled">Meeting Scheduled</option>
+                                <option value="Proposal Sent">Proposal Sent</option>
+                                <option value="Won">Won</option>
+                                <option value="Lost">Lost</option>
+                              </select>
+                            </td>
+                          </tr>
+                        )
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-                              <button
-                                onClick={() => toggleDncFlag(b.id, !b.dnc_flag)}
-                                className={`px-2 py-1 rounded text-[11px] font-bold border cursor-pointer ${
-                                  b.dnc_flag ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-white/5 text-slate-400 border-white/10'
-                                }`}
-                              >
-                                {b.dnc_flag ? 'DNC Active' : 'Set DNC'}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })
-                  )}
-                </tbody>
-              </table>
+            {/* Right side: Detail Inspector panel */}
+            <div className="lg:col-span-4 space-y-6">
+              {selectedLead ? (
+                <div className="glass-panel p-6 rounded-2xl border border-white/10 bg-slate-900/40 space-y-6 animate-fade-in">
+                  <div>
+                    <div className="text-[9px] uppercase font-bold tracking-widest text-emerald-400">Prospect Inspector</div>
+                    <h3 className="font-bold text-white text-base font-display mt-1">{selectedLead.name}</h3>
+                    <div className="text-[11px] text-slate-400 mt-0.5">{selectedLead.category}</div>
+                    <div className="text-[11px] text-slate-400">📍 {selectedLead.city}, {selectedLead.state}</div>
+                  </div>
+
+                  {/* Score Info */}
+                  <div className="p-4 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Lead Score</div>
+                      <div className="text-xl font-black text-white mt-0.5">{selectedLead.lead_score} <span className="text-[10px] text-slate-500 font-semibold">/ 100</span></div>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                      selectedLead.priority === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
+                    }`}>
+                      {selectedLead.priority} Priority
+                    </span>
+                  </div>
+
+                  {/* Lead Metadata */}
+                  <div className="space-y-3 text-xs border-t border-white/5 pt-4">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Phone:</span>
+                      <span className="font-mono text-white font-semibold">{selectedLead.phone || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Email:</span>
+                      <span className="font-mono text-white truncate max-w-[180px]">{selectedLead.email || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Website:</span>
+                      {selectedLead.website ? (
+                        <a
+                          href={selectedLead.website}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-emerald-400 hover:underline truncate max-w-[180px] font-mono"
+                        >
+                          {selectedLead.website}
+                        </a>
+                      ) : (
+                        <span className="text-slate-500">N/A</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Recommended Services */}
+                  <div className="border-t border-white/5 pt-4 space-y-2">
+                    <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Recommended Services</h4>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(selectedLead.recommended_services || ['Website Development']).map((srv, idx) => (
+                        <span key={idx} className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px]">
+                          {srv}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Actions Row */}
+                  <div className="border-t border-white/5 pt-4 space-y-2">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => { setActiveTab('outreach') }}
+                        className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-emerald-950/20"
+                      >
+                        <MessageSquare size={13} />
+                        <span>Launch Studio</span>
+                      </button>
+
+                      <button
+                        onClick={() => { setActiveTab('audit') }}
+                        className="flex-1 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all"
+                      >
+                        <Globe size={13} />
+                        <span>Audit Site</span>
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => toggleDncFlag(selectedLead.id, !selectedLead.dnc_flag)}
+                      className={`w-full py-2 rounded-xl text-[11px] font-bold border transition-all cursor-pointer ${
+                        selectedLead.dnc_flag
+                          ? 'bg-red-500/20 text-red-400 border-red-500/30'
+                          : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'
+                      }`}
+                    >
+                      {selectedLead.dnc_flag ? '⛔ DNC Active' : 'Set Do Not Contact (DNC)'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="glass-panel p-8 rounded-2xl border border-white/10 bg-slate-900/40 text-center py-24 space-y-4">
+                  <Database size={32} className="mx-auto text-slate-600 animate-pulse" />
+                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Select a Prospect</h4>
+                  <p className="text-[11px] text-slate-500 max-w-[200px] mx-auto leading-relaxed">
+                    Click any lead in the database list to inspect parameters and trigger campaigns.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
