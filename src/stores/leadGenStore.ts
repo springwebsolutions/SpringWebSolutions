@@ -361,8 +361,17 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
       await get().fetchData()
       return data as BusinessLead
     } catch (err) {
-      console.error('[Add Business Error]:', err)
-      return null
+      console.warn('[Add Business Supabase Warning, using local state]:', err)
+      const fallbackLead: BusinessLead = {
+        id: 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+        ...payload,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      } as BusinessLead
+      set(state => ({
+        businesses: [fallbackLead, ...state.businesses.filter(b => b.id !== fallbackLead.id)]
+      }))
+      return fallbackLead
     }
   },
 
@@ -414,85 +423,71 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         progress: 10,
         records_found: 0
       }
-      const { data: job, error } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
-      if (error) throw error
+      let jobId = 'job-' + Date.now()
+      if (isSupabaseConfigured) {
+        try {
+          const { data: job, error } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
+          if (job?.id) jobId = job.id
+        } catch (dbErr) {
+          console.warn('[Discovery Job Supabase Insert Warning]:', dbErr)
+        }
+      }
 
-      // Immediately refresh UI to show the new job in queue
-      await get().fetchData()
+      // Add job to local state immediately so UI updates right away
+      const newJobRecord: DiscoveryJob = {
+        id: jobId,
+        keyword,
+        category,
+        location,
+        state,
+        source: payload.source,
+        status: 'processing',
+        progress: 25,
+        records_found: 0,
+        created_at: new Date().toISOString()
+      }
+      set(state => ({ jobs: [newJobRecord, ...state.jobs.filter(j => j.id !== jobId)] }))
 
       if (jobSource === 'openstreetmap') {
-        // Run live OpenStreetMap search using Overpass API only (no Nominatim needed)
-        // Overpass can geocode via area search: area["name"="CityName"] eliminates
-        // the need for a separate Nominatim request (which returns 403 from browsers
-        // because User-Agent is a forbidden header in browser fetch).
         setTimeout(async () => {
           try {
-            await supabase.from('discovery_jobs').update({ progress: 30 }).eq('id', job.id)
+            // Update progress
+            set(state => ({
+              jobs: state.jobs.map(j => j.id === jobId ? { ...j, progress: 50 } : j)
+            }))
+            if (isSupabaseConfigured) {
+              await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', jobId)
+            }
 
-            const kw = keyword.replace(/[^a-zA-Z0-9 ]/g, '') // sanitize for regex safety
-            const areaName = location.trim()
-
-            // Use Overpass area search: first find the area by name, then search within it
-            // The 3600000000 offset converts OSM relation IDs to Overpass area IDs
-            const overpassQuery = `[out:json][timeout:30];
-area["name"~"${areaName}",i]->.searchArea;
-(
-  node["name"~"${kw}",i](area.searchArea);
-  way["name"~"${kw}",i](area.searchArea);
-  node["amenity"~"${kw}",i](area.searchArea);
-  way["amenity"~"${kw}",i](area.searchArea);
-  node["shop"~"${kw}",i](area.searchArea);
-  way["shop"~"${kw}",i](area.searchArea);
-  node["office"~"${kw}",i](area.searchArea);
-  way["office"~"${kw}",i](area.searchArea);
-  node["craft"~"${kw}",i](area.searchArea);
-  way["craft"~"${kw}",i](area.searchArea);
-  node["healthcare"~"${kw}",i](area.searchArea);
-  way["healthcare"~"${kw}",i](area.searchArea);
-);
-out body;`
-
-            await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', job.id)
-
-            const opRes = await fetch('https://overpass-api.de/api/interpreter', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: `data=${encodeURIComponent(overpassQuery)}`
-            })
-            if (!opRes.ok) throw new Error(`Overpass API returned status ${opRes.status}. The server may be busy — try again in a few seconds.`)
-
-            const opData = await opRes.json()
-            const elements = opData.elements || []
-
-            await supabase.from('discovery_jobs').update({ progress: 75 }).eq('id', job.id)
-
-            // Parse and filter leads
-            const leads = elements.map((el: any) => {
-              const tags = el.tags || {}
-              const name = tags.name || `${keyword} Business`
-              const rawPhone = tags.phone || tags['contact:phone'] || tags.mobile || tags['contact:mobile'] || ''
-              const phone = normalizePhone(rawPhone) ? rawPhone : ''
-              const website = tags.website || tags['contact:website'] || tags.url || ''
-              const email = tags.email || tags['contact:email'] || ''
-              const street = tags['addr:street'] || ''
-              const city = tags['addr:city'] || location
-              const postcode = tags['addr:postcode'] || ''
-
-              const address = [street, city, state, postcode].filter(Boolean).join(', ')
-
-              return {
-                name,
-                phone: phone || undefined,
-                website: website || undefined,
-                email: email || undefined,
-                address: address || `${location}, ${state}`,
-                city: city,
-                state: state,
-                category: tags.shop || tags.amenity || tags.office || tags.healthcare || tags.craft || keyword
+            // Call backend serverless function (runs on Vercel Node backend with full User-Agent headers and mirror failover)
+            const apiUrl = `/api/osm-search?keyword=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}&state=${encodeURIComponent(state)}`
+            const response = await fetch(apiUrl)
+            
+            let rawLeads: any[] = []
+            if (response.ok) {
+              const data = await response.json()
+              rawLeads = data.leads || []
+            } else {
+              // Direct client fallback
+              const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(keyword + ' in ' + location)}&limit=15`
+              const pRes = await fetch(photonUrl)
+              if (pRes.ok) {
+                const pData = await pRes.json()
+                rawLeads = (pData.features || []).map((f: any) => ({
+                  name: f.properties?.name || `${keyword} Specialist`,
+                  phone: null,
+                  email: null,
+                  website: null,
+                  address: `${f.properties?.city || location}, ${state}`,
+                  city: location,
+                  state: state,
+                  category: f.properties?.osm_value || keyword
+                }))
               }
-            })
+            }
 
-            const filtered = leads.filter((disc: any) => {
+            // Filter leads based on user preference
+            const filtered = rawLeads.filter((disc: any) => {
               if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
               if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
               if (scrapeOption === 'both') {
@@ -501,27 +496,58 @@ out body;`
               return true
             })
 
-            // Add parsed businesses to DB
             let savedCount = 0
             for (const disc of filtered) {
-              const res = await get().addBusiness({ ...disc, source: 'OpenStreetMap API' })
+              const res = await get().addBusiness({
+                name: disc.name,
+                phone: disc.phone || undefined,
+                email: disc.email || undefined,
+                website: disc.website || undefined,
+                address: disc.address || `${location}, ${state}`,
+                city: disc.city || location,
+                state: disc.state || state,
+                category: disc.category || keyword,
+                source: 'OpenStreetMap API'
+              })
               if (res) savedCount++
             }
 
-            await supabase.from('discovery_jobs').update({
-              status: 'completed',
-              progress: 100,
-              records_found: savedCount
-            }).eq('id', job.id)
+            // Finalize job status
+            set(state => ({
+              jobs: state.jobs.map(j => j.id === jobId ? {
+                ...j,
+                status: 'completed',
+                progress: 100,
+                records_found: savedCount
+              } : j)
+            }))
+
+            if (isSupabaseConfigured) {
+              await supabase.from('discovery_jobs').update({
+                status: 'completed',
+                progress: 100,
+                records_found: savedCount
+              }).eq('id', jobId)
+            }
 
             await get().fetchData()
           } catch (jobErr: any) {
             console.error('[OSM Discovery Job Failed]:', jobErr)
-            await supabase.from('discovery_jobs').update({
-              status: 'failed',
-              progress: 100,
-              error_message: jobErr.message || 'Overpass API network error.'
-            }).eq('id', job.id)
+            set(state => ({
+              jobs: state.jobs.map(j => j.id === jobId ? {
+                ...j,
+                status: 'failed',
+                progress: 100,
+                error_message: jobErr.message || 'Discovery engine error.'
+              } : j)
+            }))
+            if (isSupabaseConfigured) {
+              await supabase.from('discovery_jobs').update({
+                status: 'failed',
+                progress: 100,
+                error_message: jobErr.message || 'Discovery engine error.'
+              }).eq('id', jobId)
+            }
             await get().fetchData()
           }
         }, 100)
@@ -570,7 +596,7 @@ out body;`
               status: 'completed',
               progress: 100,
               records_found: savedCount
-            }).eq('id', job.id)
+            }).eq('id', jobId)
 
             await get().fetchData()
           } catch (jobErr: any) {
@@ -579,7 +605,7 @@ out body;`
               status: 'failed',
               progress: 100,
               error_message: jobErr.message || 'Mapbox Search Box API error.'
-            }).eq('id', job.id)
+            }).eq('id', jobId)
             await get().fetchData()
           }
         }, 100)
@@ -642,7 +668,7 @@ out body;`
               status: 'completed',
               progress: 100,
               records_found: savedCount
-            }).eq('id', job.id)
+            }).eq('id', jobId)
 
             await get().fetchData()
           } catch (jobErr: any) {
@@ -651,7 +677,7 @@ out body;`
               status: 'failed',
               progress: 100,
               error_message: jobErr.message || 'Geoapify Places API error.'
-            }).eq('id', job.id)
+            }).eq('id', jobId)
             await get().fetchData()
           }
         }, 100)
@@ -700,7 +726,7 @@ out body;`
               status: 'completed',
               progress: 100,
               records_found: savedCount
-            }).eq('id', job.id)
+            }).eq('id', jobId)
 
             await get().fetchData()
           } catch (jobErr: any) {
@@ -709,7 +735,7 @@ out body;`
               status: 'failed',
               progress: 100,
               error_message: jobErr.message || 'LocationIQ Search API error.'
-            }).eq('id', job.id)
+            }).eq('id', jobId)
             await get().fetchData()
           }
         }, 100)
@@ -735,7 +761,7 @@ out body;`
           for (const disc of filtered) {
             await get().addBusiness({ ...disc, source: 'Google Maps API' })
           }
-          await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: filtered.length }).eq('id', job.id)
+          await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: filtered.length }).eq('id', jobId)
           await get().fetchData()
         }, 1500)
       }
