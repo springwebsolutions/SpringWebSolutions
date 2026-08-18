@@ -438,14 +438,37 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
             const minlon = bbox[2]
             const maxlon = bbox[3]
 
-            // Step 2: Query Overpass interpreter
+            // Step 2: Query Overpass interpreter via POST (avoids URL length limits)
             await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', job.id)
 
-            const overpassQuery = `[out:json][timeout:25];(node[~"name|shop|office|amenity|craft"~"${keyword}",i](${minlat},${minlon},${maxlat},${maxlon});way[~"name|shop|office|amenity|craft"~"${keyword}",i](${minlat},${minlon},${maxlat},${maxlon}););out body;`
-            const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`
+            // Build a robust Overpass QL query that searches:
+            // 1. Nodes/ways whose "name" tag value contains the keyword (case-insensitive)
+            // 2. Nodes/ways whose amenity/shop/office/craft tag value contains the keyword
+            // 3. Nodes/ways tagged with common amenity values matching the keyword
+            const kw = keyword.replace(/[^a-zA-Z0-9 ]/g, '') // sanitize for regex safety
+            const overpassQuery = `[out:json][timeout:30];
+(
+  node["name"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  way["name"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  node["amenity"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  way["amenity"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  node["shop"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  way["shop"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  node["office"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  way["office"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  node["craft"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  way["craft"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  node["healthcare"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  way["healthcare"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+);
+out body;`
 
-            const opRes = await fetch(overpassUrl)
-            if (!opRes.ok) throw new Error('Overpass interpreter query failed.')
+            const opRes = await fetch('https://overpass-api.de/api/interpreter', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: `data=${encodeURIComponent(overpassQuery)}`
+            })
+            if (!opRes.ok) throw new Error(`Overpass interpreter query failed with status ${opRes.status}.`)
 
             const opData = await opRes.json()
             const elements = opData.elements || []
@@ -465,15 +488,13 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
 
               return {
                 name,
-                phone: phone || null,
-                website: website || null,
-                email: email || null,
+                phone: phone || undefined,
+                website: website || undefined,
+                email: email || undefined,
                 address: address || `${location}, ${state}`,
                 city: location,
                 state: state,
-                category: tags.shop || tags.amenity || tags.office || keyword,
-                rating: null,
-                reviews_count: null
+                category: tags.shop || tags.amenity || tags.office || tags.healthcare || keyword
               }
             })
 
