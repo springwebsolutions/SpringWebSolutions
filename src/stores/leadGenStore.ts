@@ -171,7 +171,7 @@ interface LeadGenState {
   importCsvBusinesses: (records: Partial<BusinessLead>[]) => Promise<number>
   toggleDncFlag: (businessId: string, dncState: boolean) => Promise<void>
   updateBusinessStatus: (businessId: string, status: BusinessLead['status']) => Promise<void>
-  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone' | 'both', jobSource?: 'simulated' | 'openstreetmap') => Promise<void>
+  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone' | 'both', jobSource?: 'simulated' | 'openstreetmap' | 'mapbox' | 'geoapify' | 'locationiq') => Promise<void>
   runWebsiteAudit: (businessId: string, websiteUrl: string) => Promise<WebsiteAuditData | null>
   logOutreach: (log: Omit<OutreachLog, 'id' | 'created_at'>) => Promise<void>
   recordAiUsage: (usage: Omit<AIUsageLog, 'id' | 'created_at'>) => Promise<boolean>
@@ -404,7 +404,12 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         category,
         location,
         state,
-        source: jobSource === 'openstreetmap' ? 'OpenStreetMap API' : 'Google Maps & Web Discovery API',
+        source: 
+          jobSource === 'openstreetmap' ? 'OpenStreetMap API' : 
+          jobSource === 'mapbox' ? 'Mapbox Search API' :
+          jobSource === 'geoapify' ? 'Geoapify Places API' :
+          jobSource === 'locationiq' ? 'LocationIQ API' :
+          'Google Maps & Web Discovery API',
         status: 'processing',
         progress: 10,
         records_found: 0
@@ -505,6 +510,194 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
               status: 'failed',
               progress: 100,
               error_message: jobErr.message || 'OSM interpreter network timeout.'
+            }).eq('id', job.id)
+            await get().fetchData()
+          }
+        }, 100)
+      } else if (jobSource === 'mapbox') {
+        setTimeout(async () => {
+          try {
+            const mapboxKey = localStorage.getItem('mapbox_api_key') || ''
+            if (!mapboxKey) throw new Error('Mapbox Access Token is not configured in settings.')
+            
+            const queryUrl = `https://api.mapbox.com/search/searchbox/v1/forward?q=${encodeURIComponent(keyword + ' ' + location)}&types=poi&limit=25&access_token=${mapboxKey}`
+            const response = await fetch(queryUrl)
+            if (!response.ok) throw new Error(`Mapbox returned status ${response.status}`)
+            const data = await response.json()
+            
+            const leads = (data.features || []).map((feat: any) => {
+              const props = feat.properties || {}
+              const address = props.full_address || props.address || ''
+              return {
+                name: props.name || keyword,
+                phone: props.telephone || props.phone || '',
+                email: '',
+                website: props.website || '',
+                address: address || `${location}, ${state}`,
+                city: location,
+                state: state,
+                category: props.category?.[0] || props.poi_category?.[0] || keyword
+              }
+            })
+
+            const filtered = leads.filter((disc: any) => {
+              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
+              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+              if (scrapeOption === 'both') {
+                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
+              }
+              return true
+            })
+
+            let savedCount = 0
+            for (const disc of filtered) {
+              const res = await get().addBusiness({ ...disc, source: 'Mapbox Search API' })
+              if (res) savedCount++
+            }
+
+            await supabase.from('discovery_jobs').update({
+              status: 'completed',
+              progress: 100,
+              records_found: savedCount
+            }).eq('id', job.id)
+
+            await get().fetchData()
+          } catch (jobErr: any) {
+            console.error('[Mapbox Discovery Job Failed]:', jobErr)
+            await supabase.from('discovery_jobs').update({
+              status: 'failed',
+              progress: 100,
+              error_message: jobErr.message || 'Mapbox Search Box API error.'
+            }).eq('id', job.id)
+            await get().fetchData()
+          }
+        }, 100)
+      } else if (jobSource === 'geoapify') {
+        setTimeout(async () => {
+          try {
+            const geoapifyKey = localStorage.getItem('geoapify_api_key') || ''
+            if (!geoapifyKey) throw new Error('Geoapify API Key is not configured in settings.')
+            
+            // Step 1: Geocode location to get coordinates
+            const geoUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(location + ', ' + state)}&apiKey=${geoapifyKey}`
+            const geoRes = await fetch(geoUrl)
+            if (!geoRes.ok) throw new Error(`Geoapify geocoding returned status ${geoRes.status}`)
+            const geoData = await geoRes.json()
+            
+            let lat = 11.0
+            let lon = 77.0
+            if (geoData.features && geoData.features.length > 0) {
+              const coords = geoData.features[0].geometry.coordinates
+              lon = coords[0]
+              lat = coords[1]
+            }
+
+            // Step 2: Query Places
+            const queryUrl = `https://api.geoapify.com/v2/places?categories=commercial,catering,education,healthcare,leisure,service,tourism&filter=circle:${lon},${lat},10000&bias=proximity:${lon},${lat}&name=${encodeURIComponent(keyword)}&limit=25&apiKey=${geoapifyKey}`
+            const response = await fetch(queryUrl)
+            if (!response.ok) throw new Error(`Geoapify Places API returned status ${response.status}`)
+            const data = await response.json()
+
+            const leads = (data.features || []).map((feat: any) => {
+              const props = feat.properties || {}
+              return {
+                name: props.name || keyword,
+                phone: props.datasource?.raw?.phone || props.phone || '',
+                email: props.datasource?.raw?.email || props.email || '',
+                website: props.datasource?.raw?.website || props.website || '',
+                address: props.formatted || props.address_line2 || `${location}, ${state}`,
+                city: location,
+                state: state,
+                category: props.categories?.[0] || keyword
+              }
+            })
+
+            const filtered = leads.filter((disc: any) => {
+              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
+              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+              if (scrapeOption === 'both') {
+                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
+              }
+              return true
+            })
+
+            let savedCount = 0
+            for (const disc of filtered) {
+              const res = await get().addBusiness({ ...disc, source: 'Geoapify Places API' })
+              if (res) savedCount++
+            }
+
+            await supabase.from('discovery_jobs').update({
+              status: 'completed',
+              progress: 100,
+              records_found: savedCount
+            }).eq('id', job.id)
+
+            await get().fetchData()
+          } catch (jobErr: any) {
+            console.error('[Geoapify Discovery Job Failed]:', jobErr)
+            await supabase.from('discovery_jobs').update({
+              status: 'failed',
+              progress: 100,
+              error_message: jobErr.message || 'Geoapify Places API error.'
+            }).eq('id', job.id)
+            await get().fetchData()
+          }
+        }, 100)
+      } else if (jobSource === 'locationiq') {
+        setTimeout(async () => {
+          try {
+            const locationiqKey = localStorage.getItem('locationiq_api_key') || ''
+            if (!locationiqKey) throw new Error('LocationIQ Access Token is not configured in settings.')
+
+            const queryUrl = `https://us1.locationiq.com/v1/search?key=${locationiqKey}&q=${encodeURIComponent(keyword + ', ' + location + ', ' + state)}&format=json&addressdetails=1&limit=25`
+            const response = await fetch(queryUrl)
+            if (!response.ok) throw new Error(`LocationIQ returned status ${response.status}`)
+            const data = await response.json()
+
+            const list = Array.isArray(data) ? data : []
+            const leads = list.map((item: any) => {
+              const details = item.address || {}
+              return {
+                name: item.display_name?.split(',')?.[0] || keyword,
+                phone: details.phone || '',
+                email: details.email || '',
+                website: details.website || '',
+                address: item.display_name || `${location}, ${state}`,
+                city: details.city || details.town || details.village || location,
+                state: details.state || state,
+                category: item.type || item.class || keyword
+              }
+            })
+
+            const filtered = leads.filter((disc: any) => {
+              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
+              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
+              if (scrapeOption === 'both') {
+                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
+              }
+              return true
+            })
+
+            let savedCount = 0
+            for (const disc of filtered) {
+              const res = await get().addBusiness({ ...disc, source: 'LocationIQ API' })
+              if (res) savedCount++
+            }
+
+            await supabase.from('discovery_jobs').update({
+              status: 'completed',
+              progress: 100,
+              records_found: savedCount
+            }).eq('id', job.id)
+
+            await get().fetchData()
+          } catch (jobErr: any) {
+            console.error('[LocationIQ Discovery Job Failed]:', jobErr)
+            await supabase.from('discovery_jobs').update({
+              status: 'failed',
+              progress: 100,
+              error_message: jobErr.message || 'LocationIQ Search API error.'
             }).eq('id', job.id)
             await get().fetchData()
           }

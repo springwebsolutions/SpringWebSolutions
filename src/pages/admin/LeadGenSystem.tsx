@@ -54,8 +54,14 @@ export const LeadGenSystem: React.FC = () => {
   const [jobLocation, setJobLocation] = useState('Udumalpet')
   const [jobState, setJobState] = useState('Tamil Nadu')
   const [jobScrapeOption, setJobScrapeOption] = useState<'all' | 'no_website' | 'only_phone' | 'both'>('all')
-  const [jobSource, setJobSource] = useState<'simulated' | 'openstreetmap'>('simulated')
+  const [jobSource, setJobSource] = useState<'simulated' | 'openstreetmap' | 'mapbox' | 'geoapify' | 'locationiq'>('simulated')
   const [jobSubmitting, setJobSubmitting] = useState(false)
+  
+  // Custom API keys settings drawer states
+  const [mapboxKey, setMapboxKey] = useState(() => localStorage.getItem('mapbox_api_key') || '')
+  const [geoapifyKey, setGeoapifyKey] = useState(() => localStorage.getItem('geoapify_api_key') || '')
+  const [locationiqKey, setLocationiqKey] = useState(() => localStorage.getItem('locationiq_api_key') || '')
+  const [showKeysDrawer, setShowKeysDrawer] = useState(false)
 
   // Selected Lead for Audit / Outreach
   const [selectedLead, setSelectedLead] = useState<BusinessLead | null>(null)
@@ -138,6 +144,21 @@ export const LeadGenSystem: React.FC = () => {
   const handleCreateJob = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!jobKeyword || !jobLocation) return
+
+    // API Keys Validation
+    if (jobSource === 'mapbox' && !mapboxKey) {
+      alert('Mapbox Access Token is required to query the Mapbox Search Box API. Please paste your token inside the API Keys drawer below.')
+      return
+    }
+    if (jobSource === 'geoapify' && !geoapifyKey) {
+      alert('Geoapify API Key is required to query the Geoapify Places API. Please paste your key inside the API Keys drawer below.')
+      return
+    }
+    if (jobSource === 'locationiq' && !locationiqKey) {
+      alert('LocationIQ Access Token is required to query the LocationIQ Search API. Please paste your token inside the API Keys drawer below.')
+      return
+    }
+
     setJobSubmitting(true)
     await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption, jobSource)
     setJobKeyword('')
@@ -568,11 +589,14 @@ export const LeadGenSystem: React.FC = () => {
                 <label className="block text-xs text-slate-500 dark:text-slate-400 mb-1">Discovery Source API</label>
                 <select
                   value={jobSource}
-                  onChange={e => setJobSource(e.target.value as 'simulated' | 'openstreetmap')}
+                  onChange={e => setJobSource(e.target.value as any)}
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:border-emerald-500 outline-none"
                 >
                   <option value="simulated" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mock Maps API (Simulated)</option>
                   <option value="openstreetmap" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">OpenStreetMap (Live Free POIs)</option>
+                  <option value="mapbox" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mapbox Search Box API (requires token)</option>
+                  <option value="geoapify" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Geoapify Places API (requires key)</option>
+                  <option value="locationiq" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">LocationIQ Search API (requires key)</option>
                 </select>
               </div>
 
@@ -595,6 +619,53 @@ export const LeadGenSystem: React.FC = () => {
                     className="w-full px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white text-xs outline-none"
                   />
                 </div>
+              </div>
+
+              {/* API Keys Configurations Accordion */}
+              <div className="border-t border-slate-200 dark:border-white/10 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowKeysDrawer(!showKeysDrawer)}
+                  className="flex items-center justify-between w-full text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors"
+                >
+                  <span>🔑 API Keys Configurations</span>
+                  <span className="text-[10px]">{showKeysDrawer ? '▲ Hide' : '▼ Show'}</span>
+                </button>
+
+                {showKeysDrawer && (
+                  <div className="mt-3 space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 animate-fade-in">
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">Mapbox Access Token</label>
+                      <input
+                        type="password"
+                        value={mapboxKey}
+                        onChange={e => { setMapboxKey(e.target.value); localStorage.setItem('mapbox_api_key', e.target.value); }}
+                        placeholder="pk.ey..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">Geoapify API Key</label>
+                      <input
+                        type="password"
+                        value={geoapifyKey}
+                        onChange={e => { setGeoapifyKey(e.target.value); localStorage.setItem('geoapify_api_key', e.target.value); }}
+                        placeholder="geo_..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">LocationIQ Token</label>
+                      <input
+                        type="password"
+                        value={locationiqKey}
+                        onChange={e => { setLocationiqKey(e.target.value); localStorage.setItem('locationiq_api_key', e.target.value); }}
+                        placeholder="pk.loc..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <button
