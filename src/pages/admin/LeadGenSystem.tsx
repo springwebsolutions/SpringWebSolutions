@@ -161,7 +161,6 @@ export const LeadGenSystem: React.FC = () => {
 
     setJobSubmitting(true)
     await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption, jobSource)
-    setJobKeyword('')
     setJobSubmitting(false)
   }
 
