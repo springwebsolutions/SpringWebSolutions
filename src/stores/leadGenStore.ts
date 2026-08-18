@@ -417,63 +417,56 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
       const { data: job, error } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
       if (error) throw error
 
+      // Immediately refresh UI to show the new job in queue
+      await get().fetchData()
+
       if (jobSource === 'openstreetmap') {
-        // Run live OpenStreetMap search
+        // Run live OpenStreetMap search using Overpass API only (no Nominatim needed)
+        // Overpass can geocode via area search: area["name"="CityName"] eliminates
+        // the need for a separate Nominatim request (which returns 403 from browsers
+        // because User-Agent is a forbidden header in browser fetch).
         setTimeout(async () => {
           try {
-            // Step 1: Geocode location using public Nominatim endpoint
-            const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location + ', ' + state)}&format=json&limit=1`
-            const geoRes = await fetch(geocodeUrl)
+            await supabase.from('discovery_jobs').update({ progress: 30 }).eq('id', job.id)
 
-            if (!geoRes.ok) throw new Error('Nominatim geocoder request failed.')
-            const geoData = await geoRes.json()
-
-            if (!geoData || geoData.length === 0) {
-              throw new Error(`Location "${location}" could not be geocoded by OpenStreetMap.`)
-            }
-
-            const bbox = geoData[0].boundingbox // ["minlat", "maxlat", "minlon", "maxlon"]
-            const minlat = bbox[0]
-            const maxlat = bbox[1]
-            const minlon = bbox[2]
-            const maxlon = bbox[3]
-
-            // Step 2: Query Overpass interpreter via POST (avoids URL length limits)
-            await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', job.id)
-
-            // Build a robust Overpass QL query that searches:
-            // 1. Nodes/ways whose "name" tag value contains the keyword (case-insensitive)
-            // 2. Nodes/ways whose amenity/shop/office/craft tag value contains the keyword
-            // 3. Nodes/ways tagged with common amenity values matching the keyword
             const kw = keyword.replace(/[^a-zA-Z0-9 ]/g, '') // sanitize for regex safety
+            const areaName = location.trim()
+
+            // Use Overpass area search: first find the area by name, then search within it
+            // The 3600000000 offset converts OSM relation IDs to Overpass area IDs
             const overpassQuery = `[out:json][timeout:30];
+area["name"~"${areaName}",i]->.searchArea;
 (
-  node["name"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  way["name"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  node["amenity"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  way["amenity"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  node["shop"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  way["shop"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  node["office"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  way["office"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  node["craft"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  way["craft"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  node["healthcare"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
-  way["healthcare"~"${kw}",i](${minlat},${minlon},${maxlat},${maxlon});
+  node["name"~"${kw}",i](area.searchArea);
+  way["name"~"${kw}",i](area.searchArea);
+  node["amenity"~"${kw}",i](area.searchArea);
+  way["amenity"~"${kw}",i](area.searchArea);
+  node["shop"~"${kw}",i](area.searchArea);
+  way["shop"~"${kw}",i](area.searchArea);
+  node["office"~"${kw}",i](area.searchArea);
+  way["office"~"${kw}",i](area.searchArea);
+  node["craft"~"${kw}",i](area.searchArea);
+  way["craft"~"${kw}",i](area.searchArea);
+  node["healthcare"~"${kw}",i](area.searchArea);
+  way["healthcare"~"${kw}",i](area.searchArea);
 );
 out body;`
+
+            await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', job.id)
 
             const opRes = await fetch('https://overpass-api.de/api/interpreter', {
               method: 'POST',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               body: `data=${encodeURIComponent(overpassQuery)}`
             })
-            if (!opRes.ok) throw new Error(`Overpass interpreter query failed with status ${opRes.status}.`)
+            if (!opRes.ok) throw new Error(`Overpass API returned status ${opRes.status}. The server may be busy — try again in a few seconds.`)
 
             const opData = await opRes.json()
             const elements = opData.elements || []
 
-            // Step 3: Parse and filter leads
+            await supabase.from('discovery_jobs').update({ progress: 75 }).eq('id', job.id)
+
+            // Parse and filter leads
             const leads = elements.map((el: any) => {
               const tags = el.tags || {}
               const name = tags.name || `${keyword} Business`
@@ -482,9 +475,10 @@ out body;`
               const website = tags.website || tags['contact:website'] || tags.url || ''
               const email = tags.email || tags['contact:email'] || ''
               const street = tags['addr:street'] || ''
+              const city = tags['addr:city'] || location
               const postcode = tags['addr:postcode'] || ''
 
-              const address = [street, location, state, postcode].filter(Boolean).join(', ')
+              const address = [street, city, state, postcode].filter(Boolean).join(', ')
 
               return {
                 name,
@@ -492,9 +486,9 @@ out body;`
                 website: website || undefined,
                 email: email || undefined,
                 address: address || `${location}, ${state}`,
-                city: location,
+                city: city,
                 state: state,
-                category: tags.shop || tags.amenity || tags.office || tags.healthcare || keyword
+                category: tags.shop || tags.amenity || tags.office || tags.healthcare || tags.craft || keyword
               }
             })
 
@@ -507,7 +501,7 @@ out body;`
               return true
             })
 
-            // Step 4: Add parsed businesses to DB
+            // Add parsed businesses to DB
             let savedCount = 0
             for (const disc of filtered) {
               const res = await get().addBusiness({ ...disc, source: 'OpenStreetMap API' })
@@ -526,7 +520,7 @@ out body;`
             await supabase.from('discovery_jobs').update({
               status: 'failed',
               progress: 100,
-              error_message: jobErr.message || 'OSM interpreter network timeout.'
+              error_message: jobErr.message || 'Overpass API network error.'
             }).eq('id', job.id)
             await get().fetchData()
           }
