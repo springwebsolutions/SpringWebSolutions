@@ -227,30 +227,6 @@ function App() {
           {/* Public Client Auth */}
           <Route path="/login" element={<Login />} />
 
-          {/* Admin routes fallback for local development without subdomain matching */}
-          <Route path="/admin/*" element={<AdminLayout />}>
-            <Route index element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="content" element={<ContentManager />} />
-            <Route path="blog" element={<BlogCMS />} />
-            <Route path="kb" element={<KBCMS />} />
-            <Route path="marketplace" element={<MarketplaceCMS />} />
-            <Route path="jobs" element={<AdminJobPostings />} />
-            <Route path="job-applications" element={<AdminApplications />} />
-            <Route path="career-guides" element={<AdminCareerGuides />} />
-            <Route path="ads" element={<AdminAdManager />} />
-            <Route path="crm" element={<LeadCRM />} />
-            <Route path="lead-gen" element={<LeadCRM />} />
-            <Route path="analytics" element={<LeadCRM />} />
-            <Route path="media" element={<MediaLibrary />} />
-            <Route path="support" element={<SupportManager />} />
-            <Route path="contacts" element={<ContactSubmissions />} />
-            <Route path="health" element={<SystemHealth />} />
-            <Route path="settings" element={<SiteSettings />} />
-            <Route path="security/2fa" element={<Admin2FASetup />} />
-            <Route path="*" element={<Navigate to="dashboard" replace />} />
-          </Route>
-
           {/* Catch All - Redirect to Homepage */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
