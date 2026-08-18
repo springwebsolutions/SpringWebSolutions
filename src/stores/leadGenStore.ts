@@ -278,10 +278,27 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
   loading: false,
 
   fetchData: async () => {
+    // 1. Load locally cached leads and jobs from localStorage first
+    let localLeads: BusinessLead[] = []
+    let localJobs: DiscoveryJob[] = []
+    try {
+      const storedLeads = localStorage.getItem('springweb_crm_leads')
+      if (storedLeads) localLeads = JSON.parse(storedLeads)
+      const storedJobs = localStorage.getItem('springweb_crm_jobs')
+      if (storedJobs) localJobs = JSON.parse(storedJobs)
+    } catch (e) {}
+
     if (!isSupabaseConfigured) {
-      set({ businesses: DEFAULT_LEADS_SEED })
+      const initialMap = new Map<string, BusinessLead>()
+      DEFAULT_LEADS_SEED.forEach(b => initialMap.set(b.id, b))
+      localLeads.forEach(b => initialMap.set(b.id, b))
+      set({
+        businesses: Array.from(initialMap.values()),
+        jobs: localJobs
+      })
       return
     }
+
     set({ loading: true })
     try {
       const [bizRes, jobsRes, aiRes, outreachRes] = await Promise.all([
@@ -292,10 +309,23 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
       ])
 
       const fetchedBiz = (bizRes.data || []) as BusinessLead[]
-      const businesses = fetchedBiz.length > 0 ? fetchedBiz : DEFAULT_LEADS_SEED
-      const jobs = (jobsRes.data || []) as DiscoveryJob[]
+      const fetchedJobs = (jobsRes.data || []) as DiscoveryJob[]
       const aiUsageLogs = (aiRes.data || []) as AIUsageLog[]
       const outreachLogs = (outreachRes.data || []) as OutreachLog[]
+
+      // Non-destructive merge: keep all seed leads, Supabase leads, and locally discovered leads
+      const leadMap = new Map<string, BusinessLead>()
+      DEFAULT_LEADS_SEED.forEach(b => leadMap.set(b.id, b))
+      fetchedBiz.forEach(b => leadMap.set(b.id, b))
+      localLeads.forEach(b => leadMap.set(b.id, b))
+      get().businesses.forEach(b => leadMap.set(b.id, b))
+      const businesses = Array.from(leadMap.values())
+
+      const jobMap = new Map<string, DiscoveryJob>()
+      fetchedJobs.forEach(j => jobMap.set(j.id, j))
+      localJobs.forEach(j => jobMap.set(j.id, j))
+      get().jobs.forEach(j => jobMap.set(j.id, j))
+      const jobs = Array.from(jobMap.values())
 
       // Calculate current month AI spend
       const now = new Date()
@@ -319,7 +349,6 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
   },
 
   addBusiness: async (b) => {
-    if (!isSupabaseConfigured) return null
     const normPhone = normalizePhone(b.phone)
     
     // Check local deduplication
@@ -355,24 +384,42 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
       status: b.status || 'New'
     }
 
-    try {
-      const { data, error } = await supabase.from('businesses').insert(payload).select('*').single()
-      if (error) throw error
-      await get().fetchData()
-      return data as BusinessLead
-    } catch (err) {
-      console.warn('[Add Business Supabase Warning, using local state]:', err)
-      const fallbackLead: BusinessLead = {
+    let savedLead: BusinessLead | null = null
+
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.from('businesses').insert(payload).select('*').single()
+        if (!error && data) {
+          savedLead = data as BusinessLead
+        }
+      } catch (err) {
+        console.warn('[Add Business Supabase Warning, saving to local]:', err)
+      }
+    }
+
+    if (!savedLead) {
+      savedLead = {
         id: 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
         ...payload,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       } as BusinessLead
-      set(state => ({
-        businesses: [fallbackLead, ...state.businesses.filter(b => b.id !== fallbackLead.id)]
-      }))
-      return fallbackLead
     }
+
+    // Persist into localStorage immediately
+    try {
+      const stored = localStorage.getItem('springweb_crm_leads')
+      const currentList: BusinessLead[] = stored ? JSON.parse(stored) : []
+      const updatedList = [savedLead, ...currentList.filter(x => x.id !== savedLead!.id)]
+      localStorage.setItem('springweb_crm_leads', JSON.stringify(updatedList))
+    } catch (e) {}
+
+    // Update in-memory Zustand state
+    set(state => ({
+      businesses: [savedLead!, ...state.businesses.filter(x => x.id !== savedLead!.id)]
+    }))
+
+    return savedLead
   },
 
   importCsvBusinesses: async (records) => {
@@ -446,6 +493,14 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
         records_found: 0,
         created_at: new Date().toISOString()
       }
+
+      try {
+        const storedJobs = localStorage.getItem('springweb_crm_jobs')
+        const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
+        const updatedJobs = [newJobRecord, ...currentJobs.filter(x => x.id !== jobId)]
+        localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
+      } catch (e) {}
+
       set(state => ({ jobs: [newJobRecord, ...state.jobs.filter(j => j.id !== jobId)] }))
 
       if (jobSource === 'openstreetmap') {
@@ -513,6 +568,13 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
             }
 
             // Finalize job status
+            try {
+              const storedJobs = localStorage.getItem('springweb_crm_jobs')
+              const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
+              const updatedJobs = currentJobs.map(j => j.id === jobId ? { ...j, status: 'completed' as const, progress: 100, records_found: savedCount } : j)
+              localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
+            } catch (e) {}
+
             set(state => ({
               jobs: state.jobs.map(j => j.id === jobId ? {
                 ...j,
@@ -533,6 +595,13 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
             await get().fetchData()
           } catch (jobErr: any) {
             console.error('[OSM Discovery Job Failed]:', jobErr)
+            try {
+              const storedJobs = localStorage.getItem('springweb_crm_jobs')
+              const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
+              const updatedJobs = currentJobs.map(j => j.id === jobId ? { ...j, status: 'failed' as const, progress: 100, error_message: jobErr.message || 'Discovery engine error.' } : j)
+              localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
+            } catch (e) {}
+
             set(state => ({
               jobs: state.jobs.map(j => j.id === jobId ? {
                 ...j,
