@@ -423,11 +423,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
           try {
             // Step 1: Geocode location using public Nominatim endpoint
             const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location + ', ' + state)}&format=json&limit=1`
-            const geoRes = await fetch(geocodeUrl, {
-              headers: {
-                'User-Agent': 'SpringWebSolutions Scraper / shanj@springwebsolutions.in'
-              }
-            })
+            const geoRes = await fetch(geocodeUrl)
 
             if (!geoRes.ok) throw new Error('Nominatim geocoder request failed.')
             const geoData = await geoRes.json()
