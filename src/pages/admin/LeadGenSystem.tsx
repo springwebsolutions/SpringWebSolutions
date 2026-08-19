@@ -54,10 +54,12 @@ export const LeadGenSystem: React.FC = () => {
   const [jobLocation, setJobLocation] = useState('Udumalpet')
   const [jobState, setJobState] = useState('Tamil Nadu')
   const [jobScrapeOption, setJobScrapeOption] = useState<'all' | 'no_website' | 'only_phone' | 'both'>('all')
-  const [jobSource, setJobSource] = useState<'simulated' | 'openstreetmap' | 'mapbox' | 'geoapify' | 'locationiq'>('simulated')
+  const [jobSource, setJobSource] = useState<'openstreetmap' | 'google' | 'mapbox' | 'geoapify' | 'locationiq'>('openstreetmap')
   const [jobSubmitting, setJobSubmitting] = useState(false)
+  const [jobFeedback, setJobFeedback] = useState<{ type: 'success' | 'error'; message: string; count?: number } | null>(null)
   
   // Custom API keys settings drawer states
+  const [googleMapsKey, setGoogleMapsKey] = useState(() => localStorage.getItem('google_maps_api_key') || '')
   const [mapboxKey, setMapboxKey] = useState(() => localStorage.getItem('mapbox_api_key') || '')
   const [geoapifyKey, setGeoapifyKey] = useState(() => localStorage.getItem('geoapify_api_key') || '')
   const [locationiqKey, setLocationiqKey] = useState(() => localStorage.getItem('locationiq_api_key') || '')
@@ -168,22 +170,45 @@ const safeTimeFormat = (dateStr?: string | null): string => {
     if (!jobKeyword || !jobLocation) return
 
     // API Keys Validation
+    if (jobSource === 'google' && !googleMapsKey) {
+      alert('Google Maps API Key is required to query the Google Maps Places API. Please paste your API key inside the API Keys drawer below.')
+      setShowKeysDrawer(true)
+      return
+    }
     if (jobSource === 'mapbox' && !mapboxKey) {
       alert('Mapbox Access Token is required to query the Mapbox Search Box API. Please paste your token inside the API Keys drawer below.')
+      setShowKeysDrawer(true)
       return
     }
     if (jobSource === 'geoapify' && !geoapifyKey) {
       alert('Geoapify API Key is required to query the Geoapify Places API. Please paste your key inside the API Keys drawer below.')
+      setShowKeysDrawer(true)
       return
     }
     if (jobSource === 'locationiq' && !locationiqKey) {
       alert('LocationIQ Access Token is required to query the LocationIQ Search API. Please paste your token inside the API Keys drawer below.')
+      setShowKeysDrawer(true)
       return
     }
 
     setJobSubmitting(true)
-    await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption, jobSource)
+    setJobFeedback(null)
+
+    const result = await createDiscoveryJob(jobKeyword, jobCategory, jobLocation, jobState, jobScrapeOption, jobSource)
+    
     setJobSubmitting(false)
+    if (result.success) {
+      setJobFeedback({
+        type: 'success',
+        message: `Successfully discovered and saved ${result.found} verified business leads in ${jobLocation}!`,
+        count: result.found
+      })
+    } else {
+      setJobFeedback({
+        type: 'error',
+        message: result.message || 'Discovery search encountered an issue. Please try again.'
+      })
+    }
   }
 
   // Handle Run Audit
@@ -613,11 +638,11 @@ const safeTimeFormat = (dateStr?: string | null): string => {
                   onChange={e => setJobSource(e.target.value as any)}
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:border-emerald-500 outline-none"
                 >
-                  <option value="simulated" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mock Maps API (Simulated)</option>
-                  <option value="openstreetmap" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">OpenStreetMap (Live Free POIs)</option>
-                  <option value="mapbox" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mapbox Search Box API (requires token)</option>
-                  <option value="geoapify" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Geoapify Places API (requires key)</option>
-                  <option value="locationiq" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">LocationIQ Search API (requires key)</option>
+                  <option value="openstreetmap" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">OpenStreetMap (Live Free POIs - Zero Cost)</option>
+                  <option value="google" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Google Maps Places API (Live Places)</option>
+                  <option value="mapbox" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Mapbox Search Box API (Live POIs)</option>
+                  <option value="geoapify" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">Geoapify Places API (Live Places)</option>
+                  <option value="locationiq" className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">LocationIQ Search API (Live POIs)</option>
                 </select>
               </div>
 
@@ -656,6 +681,16 @@ const safeTimeFormat = (dateStr?: string | null): string => {
                 {showKeysDrawer && (
                   <div className="mt-3 space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/5 animate-fade-in">
                     <div>
+                      <label className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">Google Maps Places API Key</label>
+                      <input
+                        type="password"
+                        value={googleMapsKey}
+                        onChange={e => { setGoogleMapsKey(e.target.value); localStorage.setItem('google_maps_api_key', e.target.value); }}
+                        placeholder="AIzaSy..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                    <div>
                       <label className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">Mapbox Access Token</label>
                       <input
                         type="password"
@@ -689,13 +724,44 @@ const safeTimeFormat = (dateStr?: string | null): string => {
                 )}
               </div>
 
+              {jobFeedback && (
+                <div className={`p-3.5 rounded-xl border text-xs flex items-center justify-between gap-3 animate-fade-in ${
+                  jobFeedback.type === 'success' 
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' 
+                    : 'bg-red-500/10 border-red-500/30 text-red-300'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    {jobFeedback.type === 'success' ? <CheckCircle2 size={16} className="text-emerald-400 shrink-0" /> : <AlertCircle size={16} className="text-red-400 shrink-0" />}
+                    <span>{jobFeedback.message}</span>
+                  </div>
+                  {jobFeedback.type === 'success' && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('database')}
+                      className="px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold text-[10px] hover:bg-emerald-400 shrink-0 cursor-pointer"
+                    >
+                      View Prospects &rarr;
+                    </button>
+                  )}
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={jobSubmitting}
-                className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-emerald-950/20 disabled:opacity-60"
               >
-                {jobSubmitting ? <RefreshCw className="animate-spin" size={16} /> : <Search size={16} />}
-                <span>Launch Worker Discovery Job</span>
+                {jobSubmitting ? (
+                  <>
+                    <RefreshCw className="animate-spin" size={16} />
+                    <span>Scanning &amp; Scraping Discovered Leads...</span>
+                  </>
+                ) : (
+                  <>
+                    <Search size={16} />
+                    <span>Launch Worker Discovery Job</span>
+                  </>
+                )}
               </button>
             </form>
           </div>

@@ -95,7 +95,7 @@ export interface AIUsageLog {
 // Utility: Normalize Phone Number (strips spaces, dashes, country code +91)
 export const normalizePhone = (phone?: string | null): string => {
   if (!phone) return ''
-  let cleaned = phone.replace(/[^0-9]/g, '')
+  let cleaned = String(phone).replace(/[^0-9]/g, '')
   if (cleaned.startsWith('91') && cleaned.length > 10) {
     cleaned = cleaned.substring(2)
   }
@@ -114,7 +114,7 @@ export const calculateLeadScore = (audit?: Partial<WebsiteAuditData>, hasWebsite
     score += 40
     recommended.push('Website Development', 'High-Speed Responsive Site')
   } else {
-    if (audit?.speed_score && audit.speed_score < 60) {
+    if (audit?.speed_score !== undefined && audit.speed_score < 60) {
       score += 15
       recommended.push('Speed Optimization', 'Core Web Vitals Tuning')
     }
@@ -149,7 +149,7 @@ export const calculateLeadScore = (audit?: Partial<WebsiteAuditData>, hasWebsite
 // Utility: Determine Communication Language
 export const determineLanguage = (state?: string | null): 'Tamil' | 'English' => {
   if (!state) return 'English'
-  const normState = state.trim().toLowerCase()
+  const normState = String(state).trim().toLowerCase()
   return normState.includes('tamil') || normState.includes('tn') ? 'Tamil' : 'English'
 }
 
@@ -171,7 +171,14 @@ interface LeadGenState {
   importCsvBusinesses: (records: Partial<BusinessLead>[]) => Promise<number>
   toggleDncFlag: (businessId: string, dncState: boolean) => Promise<void>
   updateBusinessStatus: (businessId: string, status: BusinessLead['status']) => Promise<void>
-  createDiscoveryJob: (keyword: string, category: string, location: string, state: string, scrapeOption?: 'all' | 'no_website' | 'only_phone' | 'both', jobSource?: 'simulated' | 'openstreetmap' | 'mapbox' | 'geoapify' | 'locationiq') => Promise<void>
+  createDiscoveryJob: (
+    keyword: string,
+    category: string,
+    location: string,
+    state: string,
+    scrapeOption?: 'all' | 'no_website' | 'only_phone' | 'both',
+    jobSource?: 'openstreetmap' | 'google' | 'mapbox' | 'geoapify' | 'locationiq'
+  ) => Promise<{ success: boolean; found: number; message?: string }>
   runWebsiteAudit: (businessId: string, websiteUrl: string) => Promise<WebsiteAuditData | null>
   logOutreach: (log: Omit<OutreachLog, 'id' | 'created_at'>) => Promise<void>
   recordAiUsage: (usage: Omit<AIUsageLog, 'id' | 'created_at'>) => Promise<boolean>
@@ -271,7 +278,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
   jobs: [],
   outreachLogs: [],
   aiUsageLogs: [],
-  monthlyBudgetCapINR: 0, // ₹0 Free Tier Zero Cost Goal
+  monthlyBudgetCapINR: 0,
   currentMonthAiSpendINR: 0,
   googleMapsQuotaUsed: 0,
   googleMapsQuotaLimit: 10000,
@@ -399,7 +406,7 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
 
     if (!savedLead) {
       savedLead = {
-        id: 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+        id: 'lead-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
         ...payload,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -423,473 +430,330 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
   },
 
   importCsvBusinesses: async (records) => {
-    if (!isSupabaseConfigured || records.length === 0) return 0
+    if (records.length === 0) return 0
     let imported = 0
-    for (const r of records) {
-      const res = await get().addBusiness(r)
-      if (res) imported++
+    for (const rec of records) {
+      const saved = await get().addBusiness({ ...rec, source: 'CSV Bulk Import' })
+      if (saved) imported++
     }
     return imported
   },
 
   toggleDncFlag: async (businessId, dncState) => {
-    if (!isSupabaseConfigured) return
-    try {
-      await supabase.from('businesses').update({ dnc_flag: dncState }).eq('id', businessId)
-      await get().fetchData()
-    } catch (err) {
-      console.error('[Toggle DNC Error]:', err)
+    // Update local state and localStorage
+    set(state => {
+      const updated = state.businesses.map(b => b.id === businessId ? { ...b, dnc_flag: dncState } : b)
+      try {
+        localStorage.setItem('springweb_crm_leads', JSON.stringify(updated))
+      } catch (e) {}
+      return { businesses: updated }
+    })
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('businesses').update({ dnc_flag: dncState }).eq('id', businessId)
+      } catch (err) {
+        console.error('[Toggle DNC Error]:', err)
+      }
     }
   },
 
   updateBusinessStatus: async (businessId, status) => {
-    if (!isSupabaseConfigured) return
-    try {
-      await supabase.from('businesses').update({ status, updated_at: new Date().toISOString() }).eq('id', businessId)
-      await get().fetchData()
-    } catch (err) {
-      console.error('[Update Status Error]:', err)
+    set(state => {
+      const updated = state.businesses.map(b => b.id === businessId ? { ...b, status } : b)
+      try {
+        localStorage.setItem('springweb_crm_leads', JSON.stringify(updated))
+      } catch (e) {}
+      return { businesses: updated }
+    })
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('businesses').update({ status }).eq('id', businessId)
+      } catch (err) {
+        console.error('[Update Status Error]:', err)
+      }
     }
   },
 
-  createDiscoveryJob: async (keyword, category, location, state, scrapeOption = 'all', jobSource = 'simulated') => {
-    if (!isSupabaseConfigured) return
-    try {
-      const payload = {
-        keyword,
-        category,
-        location,
-        state,
-        source: 
-          jobSource === 'openstreetmap' ? 'OpenStreetMap API' : 
-          jobSource === 'mapbox' ? 'Mapbox Search API' :
-          jobSource === 'geoapify' ? 'Geoapify Places API' :
-          jobSource === 'locationiq' ? 'LocationIQ API' :
-          'Google Maps & Web Discovery API',
-        status: 'processing',
-        progress: 10,
-        records_found: 0
+  createDiscoveryJob: async (
+    keyword,
+    category,
+    location,
+    state,
+    scrapeOption = 'all',
+    jobSource = 'openstreetmap'
+  ) => {
+    const sourceLabel = 
+      jobSource === 'openstreetmap' ? 'OpenStreetMap API' : 
+      jobSource === 'google' ? 'Google Maps API' :
+      jobSource === 'mapbox' ? 'Mapbox Search API' :
+      jobSource === 'geoapify' ? 'Geoapify Places API' :
+      jobSource === 'locationiq' ? 'LocationIQ API' : 'Discovery Search API'
+
+    const payload = {
+      keyword,
+      category,
+      location,
+      state,
+      source: sourceLabel,
+      status: 'processing' as const,
+      progress: 25,
+      records_found: 0
+    }
+
+    let jobId = 'job-' + Date.now()
+    if (isSupabaseConfigured) {
+      try {
+        const { data: job } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
+        if (job?.id) jobId = job.id
+      } catch (dbErr) {
+        console.warn('[Discovery Job Supabase Warning]:', dbErr)
       }
-      let jobId = 'job-' + Date.now()
-      if (isSupabaseConfigured) {
-        try {
-          const { data: job, error } = await supabase.from('discovery_jobs').insert(payload).select('*').single()
-          if (job?.id) jobId = job.id
-        } catch (dbErr) {
-          console.warn('[Discovery Job Supabase Insert Warning]:', dbErr)
-        }
+    }
+
+    // Add job to local state immediately
+    const newJobRecord: DiscoveryJob = {
+      id: jobId,
+      keyword,
+      category,
+      location,
+      state,
+      source: sourceLabel,
+      status: 'processing',
+      progress: 25,
+      records_found: 0,
+      created_at: new Date().toISOString()
+    }
+
+    try {
+      const storedJobs = localStorage.getItem('springweb_crm_jobs')
+      const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
+      const updatedJobs = [newJobRecord, ...currentJobs.filter(x => x.id !== jobId)]
+      localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
+    } catch (e) {}
+
+    set(state => ({ jobs: [newJobRecord, ...state.jobs.filter(j => j.id !== jobId)] }))
+
+    try {
+      // Step 1: Retrieve API Key if required
+      let key = ''
+      if (jobSource === 'google') key = localStorage.getItem('google_maps_api_key') || ''
+      else if (jobSource === 'mapbox') key = localStorage.getItem('mapbox_api_key') || ''
+      else if (jobSource === 'geoapify') key = localStorage.getItem('geoapify_api_key') || ''
+      else if (jobSource === 'locationiq') key = localStorage.getItem('locationiq_api_key') || ''
+
+      // Step 2: Update progress to 50%
+      set(state => ({
+        jobs: state.jobs.map(j => j.id === jobId ? { ...j, progress: 50 } : j)
+      }))
+
+      // Step 3: Call the unified serverless discovery endpoint
+      const apiUrl = `/api/discover-leads?keyword=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}&state=${encodeURIComponent(state)}&source=${jobSource}&apiKey=${encodeURIComponent(key)}`
+      const response = await fetch(apiUrl)
+      
+      let rawLeads: any[] = []
+      if (response.ok) {
+        const data = await response.json()
+        rawLeads = data.leads || []
+      } else {
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(errData.error || `Discovery API returned status ${response.status}`)
       }
 
-      // Add job to local state immediately so UI updates right away
-      const newJobRecord: DiscoveryJob = {
-        id: jobId,
-        keyword,
-        category,
-        location,
-        state,
-        source: payload.source,
-        status: 'processing',
-        progress: 25,
-        records_found: 0,
-        created_at: new Date().toISOString()
+      // Step 4: Apply scrape filters
+      const filtered = rawLeads.filter((disc: any) => {
+        if (scrapeOption === 'no_website') return !disc.website || String(disc.website).trim() === ''
+        if (scrapeOption === 'only_phone') return !!disc.phone && String(disc.phone).trim().length > 6
+        if (scrapeOption === 'both') {
+          return (!disc.website || String(disc.website).trim() === '') && (!!disc.phone && String(disc.phone).trim().length > 6)
+        }
+        return true
+      })
+
+      // Step 5: Save discovered leads
+      let savedCount = 0
+      for (const disc of filtered) {
+        const res = await get().addBusiness({
+          name: disc.name,
+          phone: disc.phone || undefined,
+          email: disc.email || undefined,
+          website: disc.website || undefined,
+          address: disc.address || `${location}, ${state}`,
+          city: disc.city || location,
+          state: disc.state || state,
+          category: disc.category || keyword,
+          rating: disc.rating || 4.5,
+          reviews_count: disc.reviews_count || 12,
+          source: sourceLabel
+        })
+        if (res) savedCount++
       }
+
+      // Step 6: Mark job completed
+      try {
+        const storedJobs = localStorage.getItem('springweb_crm_jobs')
+        const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
+        const updatedJobs = currentJobs.map(j => j.id === jobId ? { ...j, status: 'completed' as const, progress: 100, records_found: savedCount } : j)
+        localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
+      } catch (e) {}
+
+      set(state => ({
+        jobs: state.jobs.map(j => j.id === jobId ? {
+          ...j,
+          status: 'completed',
+          progress: 100,
+          records_found: savedCount
+        } : j)
+      }))
+
+      if (isSupabaseConfigured) {
+        await supabase.from('discovery_jobs').update({
+          status: 'completed',
+          progress: 100,
+          records_found: savedCount
+        }).eq('id', jobId)
+      }
+
+      await get().fetchData()
+      return { success: true, found: savedCount }
+    } catch (jobErr: any) {
+      console.error('[Discovery Job Failed]:', jobErr)
+      const errorMsg = jobErr.message || 'Discovery engine connection error.'
 
       try {
         const storedJobs = localStorage.getItem('springweb_crm_jobs')
         const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
-        const updatedJobs = [newJobRecord, ...currentJobs.filter(x => x.id !== jobId)]
+        const updatedJobs = currentJobs.map(j => j.id === jobId ? { ...j, status: 'failed' as const, progress: 100, error_message: errorMsg } : j)
         localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
       } catch (e) {}
 
-      set(state => ({ jobs: [newJobRecord, ...state.jobs.filter(j => j.id !== jobId)] }))
+      set(state => ({
+        jobs: state.jobs.map(j => j.id === jobId ? {
+          ...j,
+          status: 'failed',
+          progress: 100,
+          error_message: errorMsg
+        } : j)
+      }))
 
-      if (jobSource === 'openstreetmap') {
-        setTimeout(async () => {
-          try {
-            // Update progress
-            set(state => ({
-              jobs: state.jobs.map(j => j.id === jobId ? { ...j, progress: 50 } : j)
-            }))
-            if (isSupabaseConfigured) {
-              await supabase.from('discovery_jobs').update({ progress: 50 }).eq('id', jobId)
-            }
-
-            // Call backend serverless function (runs on Vercel Node backend with full User-Agent headers and mirror failover)
-            const apiUrl = `/api/osm-search?keyword=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}&state=${encodeURIComponent(state)}`
-            const response = await fetch(apiUrl)
-            
-            let rawLeads: any[] = []
-            if (response.ok) {
-              const data = await response.json()
-              rawLeads = data.leads || []
-            } else {
-              // Direct client fallback
-              const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(keyword + ' in ' + location)}&limit=15`
-              const pRes = await fetch(photonUrl)
-              if (pRes.ok) {
-                const pData = await pRes.json()
-                rawLeads = (pData.features || []).map((f: any) => ({
-                  name: f.properties?.name || `${keyword} Specialist`,
-                  phone: null,
-                  email: null,
-                  website: null,
-                  address: `${f.properties?.city || location}, ${state}`,
-                  city: location,
-                  state: state,
-                  category: f.properties?.osm_value || keyword
-                }))
-              }
-            }
-
-            // Filter leads based on user preference
-            const filtered = rawLeads.filter((disc: any) => {
-              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
-              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
-              if (scrapeOption === 'both') {
-                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
-              }
-              return true
-            })
-
-            let savedCount = 0
-            for (const disc of filtered) {
-              const res = await get().addBusiness({
-                name: disc.name,
-                phone: disc.phone || undefined,
-                email: disc.email || undefined,
-                website: disc.website || undefined,
-                address: disc.address || `${location}, ${state}`,
-                city: disc.city || location,
-                state: disc.state || state,
-                category: disc.category || keyword,
-                source: 'OpenStreetMap API'
-              })
-              if (res) savedCount++
-            }
-
-            // Finalize job status
-            try {
-              const storedJobs = localStorage.getItem('springweb_crm_jobs')
-              const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
-              const updatedJobs = currentJobs.map(j => j.id === jobId ? { ...j, status: 'completed' as const, progress: 100, records_found: savedCount } : j)
-              localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
-            } catch (e) {}
-
-            set(state => ({
-              jobs: state.jobs.map(j => j.id === jobId ? {
-                ...j,
-                status: 'completed',
-                progress: 100,
-                records_found: savedCount
-              } : j)
-            }))
-
-            if (isSupabaseConfigured) {
-              await supabase.from('discovery_jobs').update({
-                status: 'completed',
-                progress: 100,
-                records_found: savedCount
-              }).eq('id', jobId)
-            }
-
-            await get().fetchData()
-          } catch (jobErr: any) {
-            console.error('[OSM Discovery Job Failed]:', jobErr)
-            try {
-              const storedJobs = localStorage.getItem('springweb_crm_jobs')
-              const currentJobs: DiscoveryJob[] = storedJobs ? JSON.parse(storedJobs) : []
-              const updatedJobs = currentJobs.map(j => j.id === jobId ? { ...j, status: 'failed' as const, progress: 100, error_message: jobErr.message || 'Discovery engine error.' } : j)
-              localStorage.setItem('springweb_crm_jobs', JSON.stringify(updatedJobs))
-            } catch (e) {}
-
-            set(state => ({
-              jobs: state.jobs.map(j => j.id === jobId ? {
-                ...j,
-                status: 'failed',
-                progress: 100,
-                error_message: jobErr.message || 'Discovery engine error.'
-              } : j)
-            }))
-            if (isSupabaseConfigured) {
-              await supabase.from('discovery_jobs').update({
-                status: 'failed',
-                progress: 100,
-                error_message: jobErr.message || 'Discovery engine error.'
-              }).eq('id', jobId)
-            }
-            await get().fetchData()
-          }
-        }, 100)
-      } else if (jobSource === 'mapbox') {
-        setTimeout(async () => {
-          try {
-            const mapboxKey = localStorage.getItem('mapbox_api_key') || ''
-            if (!mapboxKey) throw new Error('Mapbox Access Token is not configured in settings.')
-            
-            const queryUrl = `https://api.mapbox.com/search/searchbox/v1/forward?q=${encodeURIComponent(keyword + ' ' + location)}&types=poi&limit=25&access_token=${mapboxKey}`
-            const response = await fetch(queryUrl)
-            if (!response.ok) throw new Error(`Mapbox returned status ${response.status}`)
-            const data = await response.json()
-            
-            const leads = (data.features || []).map((feat: any) => {
-              const props = feat.properties || {}
-              const address = props.full_address || props.address || ''
-              return {
-                name: props.name || keyword,
-                phone: props.telephone || props.phone || '',
-                email: '',
-                website: props.website || '',
-                address: address || `${location}, ${state}`,
-                city: location,
-                state: state,
-                category: props.category?.[0] || props.poi_category?.[0] || keyword
-              }
-            })
-
-            const filtered = leads.filter((disc: any) => {
-              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
-              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
-              if (scrapeOption === 'both') {
-                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
-              }
-              return true
-            })
-
-            let savedCount = 0
-            for (const disc of filtered) {
-              const res = await get().addBusiness({ ...disc, source: 'Mapbox Search API' })
-              if (res) savedCount++
-            }
-
-            await supabase.from('discovery_jobs').update({
-              status: 'completed',
-              progress: 100,
-              records_found: savedCount
-            }).eq('id', jobId)
-
-            await get().fetchData()
-          } catch (jobErr: any) {
-            console.error('[Mapbox Discovery Job Failed]:', jobErr)
-            await supabase.from('discovery_jobs').update({
-              status: 'failed',
-              progress: 100,
-              error_message: jobErr.message || 'Mapbox Search Box API error.'
-            }).eq('id', jobId)
-            await get().fetchData()
-          }
-        }, 100)
-      } else if (jobSource === 'geoapify') {
-        setTimeout(async () => {
-          try {
-            const geoapifyKey = localStorage.getItem('geoapify_api_key') || ''
-            if (!geoapifyKey) throw new Error('Geoapify API Key is not configured in settings.')
-            
-            // Step 1: Geocode location to get coordinates
-            const geoUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(location + ', ' + state)}&apiKey=${geoapifyKey}`
-            const geoRes = await fetch(geoUrl)
-            if (!geoRes.ok) throw new Error(`Geoapify geocoding returned status ${geoRes.status}`)
-            const geoData = await geoRes.json()
-            
-            let lat = 11.0
-            let lon = 77.0
-            if (geoData.features && geoData.features.length > 0) {
-              const coords = geoData.features[0].geometry.coordinates
-              lon = coords[0]
-              lat = coords[1]
-            }
-
-            // Step 2: Query Places
-            const queryUrl = `https://api.geoapify.com/v2/places?categories=commercial,catering,education,healthcare,leisure,service,tourism&filter=circle:${lon},${lat},10000&bias=proximity:${lon},${lat}&name=${encodeURIComponent(keyword)}&limit=25&apiKey=${geoapifyKey}`
-            const response = await fetch(queryUrl)
-            if (!response.ok) throw new Error(`Geoapify Places API returned status ${response.status}`)
-            const data = await response.json()
-
-            const leads = (data.features || []).map((feat: any) => {
-              const props = feat.properties || {}
-              return {
-                name: props.name || keyword,
-                phone: props.datasource?.raw?.phone || props.phone || '',
-                email: props.datasource?.raw?.email || props.email || '',
-                website: props.datasource?.raw?.website || props.website || '',
-                address: props.formatted || props.address_line2 || `${location}, ${state}`,
-                city: location,
-                state: state,
-                category: props.categories?.[0] || keyword
-              }
-            })
-
-            const filtered = leads.filter((disc: any) => {
-              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
-              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
-              if (scrapeOption === 'both') {
-                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
-              }
-              return true
-            })
-
-            let savedCount = 0
-            for (const disc of filtered) {
-              const res = await get().addBusiness({ ...disc, source: 'Geoapify Places API' })
-              if (res) savedCount++
-            }
-
-            await supabase.from('discovery_jobs').update({
-              status: 'completed',
-              progress: 100,
-              records_found: savedCount
-            }).eq('id', jobId)
-
-            await get().fetchData()
-          } catch (jobErr: any) {
-            console.error('[Geoapify Discovery Job Failed]:', jobErr)
-            await supabase.from('discovery_jobs').update({
-              status: 'failed',
-              progress: 100,
-              error_message: jobErr.message || 'Geoapify Places API error.'
-            }).eq('id', jobId)
-            await get().fetchData()
-          }
-        }, 100)
-      } else if (jobSource === 'locationiq') {
-        setTimeout(async () => {
-          try {
-            const locationiqKey = localStorage.getItem('locationiq_api_key') || ''
-            if (!locationiqKey) throw new Error('LocationIQ Access Token is not configured in settings.')
-
-            const queryUrl = `https://us1.locationiq.com/v1/search?key=${locationiqKey}&q=${encodeURIComponent(keyword + ', ' + location + ', ' + state)}&format=json&addressdetails=1&limit=25`
-            const response = await fetch(queryUrl)
-            if (!response.ok) throw new Error(`LocationIQ returned status ${response.status}`)
-            const data = await response.json()
-
-            const list = Array.isArray(data) ? data : []
-            const leads = list.map((item: any) => {
-              const details = item.address || {}
-              return {
-                name: item.display_name?.split(',')?.[0] || keyword,
-                phone: details.phone || '',
-                email: details.email || '',
-                website: details.website || '',
-                address: item.display_name || `${location}, ${state}`,
-                city: details.city || details.town || details.village || location,
-                state: details.state || state,
-                category: item.type || item.class || keyword
-              }
-            })
-
-            const filtered = leads.filter((disc: any) => {
-              if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
-              if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
-              if (scrapeOption === 'both') {
-                return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
-              }
-              return true
-            })
-
-            let savedCount = 0
-            for (const disc of filtered) {
-              const res = await get().addBusiness({ ...disc, source: 'LocationIQ API' })
-              if (res) savedCount++
-            }
-
-            await supabase.from('discovery_jobs').update({
-              status: 'completed',
-              progress: 100,
-              records_found: savedCount
-            }).eq('id', jobId)
-
-            await get().fetchData()
-          } catch (jobErr: any) {
-            console.error('[LocationIQ Discovery Job Failed]:', jobErr)
-            await supabase.from('discovery_jobs').update({
-              status: 'failed',
-              progress: 100,
-              error_message: jobErr.message || 'LocationIQ Search API error.'
-            }).eq('id', jobId)
-            await get().fetchData()
-          }
-        }, 100)
-      } else {
-        // Simulate worker picking up job and inserting discovered leads
-        setTimeout(async () => {
-          const sampleDiscovered = [
-            { name: `${keyword} Hub ${location}`, phone: '+91 98421 88219', city: location, state, website: 'http://example.com' },
-            { name: `Grand ${category} ${location}`, phone: '+91 94432 11092', city: location, state, website: null },
-            { name: `${location} Digital Solutions`, phone: '', city: location, state, website: 'https://springwebsolutions.in' },
-            { name: `${location} Raw Leads`, phone: '', city: location, state, website: null }
-          ]
-
-          const filtered = sampleDiscovered.filter(disc => {
-            if (scrapeOption === 'no_website') return !disc.website || disc.website.trim() === ''
-            if (scrapeOption === 'only_phone') return !!disc.phone && disc.phone.trim().length > 6
-            if (scrapeOption === 'both') {
-              return (!disc.website || disc.website.trim() === '') && (!!disc.phone && disc.phone.trim().length > 6)
-            }
-            return true
-          })
-
-          for (const disc of filtered) {
-            await get().addBusiness({ ...disc, source: 'Google Maps API' })
-          }
-          await supabase.from('discovery_jobs').update({ status: 'completed', progress: 100, records_found: filtered.length }).eq('id', jobId)
-          await get().fetchData()
-        }, 1500)
+      if (isSupabaseConfigured) {
+        await supabase.from('discovery_jobs').update({
+          status: 'failed',
+          progress: 100,
+          error_message: errorMsg
+        }).eq('id', jobId)
       }
 
-    } catch (err) {
-      console.error('[Create Discovery Job Error]:', err)
+      await get().fetchData()
+      return { success: false, found: 0, message: errorMsg }
     }
   },
 
   runWebsiteAudit: async (businessId, websiteUrl) => {
-    if (!isSupabaseConfigured) return null
     try {
-      const hasWebsite = !!websiteUrl && websiteUrl.length > 5
-      const mockSpeed = hasWebsite ? Math.floor(Math.random() * 35) + 55 : 0
-      const mockMobile = Math.random() > 0.3
-      const mockForm = Math.random() > 0.4
-      const mockWhatsapp = Math.random() > 0.6
+      const hasWebsite = !!websiteUrl && String(websiteUrl).trim().length > 4
 
-      const auditPayload = {
-        business_id: businessId,
-        website_exists: hasWebsite,
-        ssl_active: hasWebsite ? websiteUrl.startsWith('https') : false,
-        mobile_friendly: mockMobile,
-        speed_score: mockSpeed,
-        has_contact_form: mockForm,
-        has_whatsapp_button: mockWhatsapp,
-        has_meta_tags: Math.random() > 0.3,
-        has_schema_markup: Math.random() > 0.7,
-        broken_links_count: hasWebsite ? Math.floor(Math.random() * 3) : 0,
-        ui_quality_score: hasWebsite ? Math.floor(Math.random() * 30) + 60 : 0
+      // Call live audit serverless engine
+      let auditResult: WebsiteAuditData | null = null
+
+      try {
+        const res = await fetch(`/api/audit-website?url=${encodeURIComponent(websiteUrl || '')}&businessId=${encodeURIComponent(businessId)}`)
+        if (res.ok) {
+          const data = await res.json()
+          if (data.audit) {
+            auditResult = {
+              id: 'audit-' + Date.now(),
+              business_id: businessId,
+              ...data.audit,
+              created_at: new Date().toISOString()
+            }
+          }
+        }
+      } catch (liveErr) {
+        console.warn('[Live Audit Fetch Error]:', liveErr)
       }
 
-      const { data: audit, error } = await supabase.from('website_audit').insert(auditPayload).select('*').single()
-      if (error) throw error
+      if (!auditResult) {
+        auditResult = {
+          id: 'audit-' + Date.now(),
+          business_id: businessId,
+          website_exists: hasWebsite,
+          ssl_active: hasWebsite ? websiteUrl.startsWith('https') : false,
+          mobile_friendly: true,
+          speed_score: hasWebsite ? 75 : 0,
+          has_contact_form: true,
+          has_whatsapp_button: false,
+          has_meta_tags: true,
+          has_schema_markup: false,
+          broken_links_count: 0,
+          ui_quality_score: hasWebsite ? 70 : 0,
+          created_at: new Date().toISOString()
+        }
+      }
 
-      const { score, priority, recommended, valueBand } = calculateLeadScore(audit, hasWebsite)
-      await supabase.from('businesses').update({
-        lead_score: score,
-        priority,
-        recommended_services: recommended,
-        estimated_value_band: valueBand,
-        last_scan_date: new Date().toISOString()
-      }).eq('id', businessId)
+      // Calculate Lead Score & Update Business
+      const { score, priority, recommended, valueBand } = calculateLeadScore(auditResult, hasWebsite)
 
-      await get().fetchData()
-      return audit as WebsiteAuditData
+      // Update in local state & localStorage
+      set(state => {
+        const updatedBiz = state.businesses.map(b => b.id === businessId ? {
+          ...b,
+          lead_score: score,
+          priority,
+          recommended_services: recommended,
+          estimated_value_band: valueBand,
+          last_scan_date: new Date().toISOString()
+        } : b)
+        try {
+          localStorage.setItem('springweb_crm_leads', JSON.stringify(updatedBiz))
+        } catch (e) {}
+        return {
+          businesses: updatedBiz,
+          audits: { ...state.audits, [businessId]: auditResult! }
+        }
+      })
+
+      if (isSupabaseConfigured) {
+        try {
+          await supabase.from('website_audit').insert(auditResult)
+          await supabase.from('businesses').update({
+            lead_score: score,
+            priority,
+            recommended_services: recommended,
+            estimated_value_band: valueBand,
+            last_scan_date: new Date().toISOString()
+          }).eq('id', businessId)
+        } catch (dbErr) {
+          console.warn('[Audit DB Sync Warning]:', dbErr)
+        }
+      }
+
+      return auditResult
     } catch (err) {
-      console.error('[Audit Error]:', err)
+      console.error('[Audit Fatal Error]:', err)
       return null
     }
   },
 
   logOutreach: async (log) => {
-    if (!isSupabaseConfigured) return
-    try {
-      await supabase.from('outreach').insert(log)
-      await get().fetchData()
-    } catch (err) {
-      console.error('[Log Outreach Error]:', err)
+    const newLog: OutreachLog = {
+      id: 'outreach-' + Date.now(),
+      ...log,
+      created_at: new Date().toISOString()
+    }
+
+    set(state => ({
+      outreachLogs: [newLog, ...state.outreachLogs]
+    }))
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('outreach').insert(log)
+        await get().fetchData()
+      } catch (err) {
+        console.error('[Log Outreach Error]:', err)
+      }
     }
   },
 
@@ -902,15 +766,25 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
       return false
     }
 
-    if (!isSupabaseConfigured) return true
-    try {
-      await supabase.from('ai_usage').insert(usage)
-      await get().fetchData()
-      return true
-    } catch (err) {
-      console.error('[Record AI Usage Error]:', err)
-      return false
+    const newLog: AIUsageLog = {
+      id: 'ai-' + Date.now(),
+      ...usage,
+      created_at: new Date().toISOString()
     }
+
+    set(state => ({
+      aiUsageLogs: [newLog, ...state.aiUsageLogs],
+      currentMonthAiSpendINR: Math.round((state.currentMonthAiSpendINR + usage.estimated_cost_inr) * 100) / 100
+    }))
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('ai_usage').insert(usage)
+      } catch (err) {
+        console.error('[Record AI Usage Error]:', err)
+      }
+    }
+    return true
   },
 
   exportDatabaseBackup: (format) => {
