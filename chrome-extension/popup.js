@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           await waitTabLoaded(tab.id)
           await wait(2000) // extra wait for Maps elements to mount
 
-          await ensureContentScript(tab.id)
+          await ensureContentScript(tab.id, targetUrl)
 
           const msg = action === 'AUTO_SCROLL_FEED'
             ? { action, maxScrolls: scrollCount }
@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return
         }
 
-        await ensureContentScript(tab.id)
+        await ensureContentScript(tab.id, tab.url)
 
         const msg = action === 'AUTO_SCROLL_FEED'
           ? { action, maxScrolls: scrollCount }
@@ -647,17 +647,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     return new Promise(r => chrome.tabs.query({ active: true, currentWindow: true }, t => r(t[0] || null)))
   }
 
-  function ensureContentScript(tabId) {
+  function ensureContentScript(tabId, tabUrl) {
     return new Promise(resolve => {
-      chrome.tabs.sendMessage(tabId, { action: 'PING' }, res => {
-        if (chrome.runtime.lastError || !res) {
-          chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] }, () => {
-            setTimeout(resolve, 200)
-          })
-        } else {
-          resolve()
-        }
-      })
+      if (!tabUrl || (!tabUrl.includes('google.com/maps') && !tabUrl.includes('google.co.in/maps'))) {
+        return resolve(false)
+      }
+      try {
+        chrome.tabs.sendMessage(tabId, { action: 'PING' }, res => {
+          if (chrome.runtime.lastError || !res) {
+            chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] }, () => {
+              const err = chrome.runtime.lastError // Consume runtime error silently
+              setTimeout(() => resolve(!err), 300)
+            })
+          } else {
+            resolve(true)
+          }
+        })
+      } catch (e) {
+        resolve(false)
+      }
     })
   }
 
