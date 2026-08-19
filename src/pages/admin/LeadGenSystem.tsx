@@ -119,24 +119,46 @@ export const LeadGenSystem: React.FC = () => {
     }
   }, [selectedLead, outreachChannel])
 
-  // Filtered Businesses
-  const filteredBusinesses = businesses.filter(b => {
+// Safe Date/Time Formatters
+const safeDateFormat = (dateStr?: string | null): string => {
+  if (!dateStr) return 'Today'
+  try {
+    const d = new Date(dateStr)
+    return isNaN(d.getTime()) ? 'Today' : d.toLocaleDateString()
+  } catch {
+    return 'Today'
+  }
+}
+
+const safeTimeFormat = (dateStr?: string | null): string => {
+  if (!dateStr) return 'Just now'
+  try {
+    const d = new Date(dateStr)
+    return isNaN(d.getTime()) ? 'Just now' : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  } catch {
+    return 'Just now'
+  }
+}
+
+  // Filtered Businesses (Null-safe and crash-proof)
+  const filteredBusinesses = (businesses || []).filter(b => {
+    if (!b) return false
     // Multi-token fuzzy search matching
     const tokens = searchTerm.toLowerCase().split(/\s+/).filter(Boolean)
     const matchesSearch = tokens.length === 0 || tokens.every(token => 
-      b.name.toLowerCase().includes(token) ||
-      (b.phone && b.phone.includes(token)) ||
-      (b.city && b.city.toLowerCase().includes(token)) ||
-      (b.category && b.category.toLowerCase().includes(token)) ||
-      (b.state && b.state.toLowerCase().includes(token)) ||
-      (b.status && b.status.toLowerCase().includes(token))
+      (b.name && typeof b.name === 'string' && b.name.toLowerCase().includes(token)) ||
+      (b.phone && typeof b.phone === 'string' && b.phone.includes(token)) ||
+      (b.city && typeof b.city === 'string' && b.city.toLowerCase().includes(token)) ||
+      (b.category && typeof b.category === 'string' && b.category.toLowerCase().includes(token)) ||
+      (b.state && typeof b.state === 'string' && b.state.toLowerCase().includes(token)) ||
+      (b.status && typeof b.status === 'string' && b.status.toLowerCase().includes(token))
     )
     const matchesState = selectedState === 'All' || b.state === selectedState
     const matchesPriority = selectedPriority === 'All' || b.priority === selectedPriority
     const matchesStatus = selectedStatus === 'All' || b.status === selectedStatus
-    const matchesDup = !onlyDuplicates || b.duplicate_flag
-    const matchesNoWebsite = !onlyNoWebsite || (!b.website || b.website.trim() === '')
-    const matchesOnlyPhone = !onlyPhone || (!!b.phone && b.phone.trim().length > 6)
+    const matchesDup = !onlyDuplicates || !!b.duplicate_flag
+    const matchesNoWebsite = !onlyNoWebsite || (!b.website || typeof b.website !== 'string' || b.website.trim() === '')
+    const matchesOnlyPhone = !onlyPhone || (!!b.phone && typeof b.phone === 'string' && b.phone.trim().length > 6)
     return matchesSearch && matchesState && matchesPriority && matchesStatus && matchesDup && matchesNoWebsite && matchesOnlyPhone
   })
 
@@ -446,7 +468,7 @@ export const LeadGenSystem: React.FC = () => {
                           <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">
                             {log.channel}
                           </span>
-                          <div className="text-[10px] text-slate-500 mt-1">{new Date(log.created_at).toLocaleDateString()}</div>
+                          <div className="text-[10px] text-slate-500 mt-1">{safeDateFormat(log.created_at)}</div>
                         </div>
                       </div>
                     )
@@ -520,11 +542,11 @@ export const LeadGenSystem: React.FC = () => {
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-slate-400 text-[10px]">Active Jobs</div>
-                  <div className="text-lg font-bold text-white mt-1">{jobs.filter(j => j.status === 'processing').length} active</div>
+                  <div className="text-lg font-bold text-white mt-1">{(jobs || []).filter(j => j?.status === 'processing').length} active</div>
                 </div>
                 <div className="p-3 rounded-xl bg-black/40 border border-white/5">
                   <div className="text-slate-400 text-[10px]">OSM Successes</div>
-                  <div className="text-lg font-bold text-emerald-400 mt-1">{jobs.filter(j => j.source === 'OpenStreetMap API').length} runs</div>
+                  <div className="text-lg font-bold text-emerald-400 mt-1">{(jobs || []).filter(j => j?.source === 'OpenStreetMap API').length} runs</div>
                 </div>
               </div>
             </div>
@@ -694,26 +716,32 @@ export const LeadGenSystem: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {jobs.length === 0 ? (
+                  {(jobs || []).length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-8 text-center text-slate-500">No active discovery jobs in queue.</td>
                     </tr>
                   ) : (
-                    jobs.map(j => (
-                      <tr key={j.id} className="hover:bg-white/5">
-                        <td className="py-3 font-semibold text-white">{j.keyword} ({j.location})</td>
-                        <td className="py-3 text-slate-400">{j.source}</td>
-                        <td className="py-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            j.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
-                          }`}>
-                            {j.status}
-                          </span>
-                        </td>
-                        <td className="py-3 text-emerald-400 font-bold">+{j.records_found} leads</td>
-                        <td className="py-3 text-slate-500 text-[11px]">{new Date(j.created_at).toLocaleDateString()}</td>
-                      </tr>
-                    ))
+                    (jobs || []).map(j => {
+                      if (!j) return null
+                      const isDone = j.status === 'completed'
+                      const isErr = j.status === 'failed'
+                      return (
+                        <tr key={j.id || Math.random().toString()} className="hover:bg-white/5">
+                          <td className="py-3 font-semibold text-white">{j.keyword || 'Search'} ({j.location || 'Local'})</td>
+                          <td className="py-3 text-slate-400">{j.source || 'Search API'}</td>
+                          <td className="py-3">
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                              isDone ? 'bg-emerald-500/20 text-emerald-400' :
+                              isErr ? 'bg-red-500/20 text-red-400' : 'bg-amber-500/20 text-amber-400'
+                            }`}>
+                              {j.status || 'processing'}
+                            </span>
+                          </td>
+                          <td className="py-3 text-emerald-400 font-bold">+{j.records_found ?? 0} leads</td>
+                          <td className="py-3 text-slate-500 text-[11px]">{safeDateFormat(j.created_at)}</td>
+                        </tr>
+                      )
+                    })
                   )}
                 </tbody>
               </table>
@@ -817,32 +845,35 @@ export const LeadGenSystem: React.FC = () => {
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-white text-base font-display">Live Synced Leads Stream</h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  {businesses.filter(b => b.source.includes('Extension')).length} Extension Leads
+                  {(businesses || []).filter(b => b?.source?.includes('Extension')).length} Extension Leads
                 </span>
               </div>
 
               <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
-                {businesses.filter(b => b.source.includes('Extension')).length === 0 ? (
+                {(businesses || []).filter(b => b?.source?.includes('Extension')).length === 0 ? (
                   <div className="text-center py-12 space-y-2">
                     <Cpu size={32} className="mx-auto text-slate-600 animate-pulse" />
                     <div className="text-xs font-semibold text-slate-300">Waiting for live extension sync...</div>
                     <div className="text-[11px] text-slate-500 max-w-xs mx-auto">Use the Chrome extension on google.com/maps to instantly stream clean leads into this console.</div>
                   </div>
                 ) : (
-                  businesses.filter(b => b.source.includes('Extension')).map(lead => (
-                    <div key={lead.id} className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
-                      <div>
-                        <div className="text-xs font-bold text-white">{lead.name}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">📍 {lead.city}, {lead.state} &bull; 📞 {lead.phone || 'No Phone'}</div>
+                  (businesses || []).filter(b => b?.source?.includes('Extension')).map(lead => {
+                    if (!lead) return null
+                    return (
+                      <div key={lead.id || Math.random().toString()} className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+                        <div>
+                          <div className="text-xs font-bold text-white">{lead.name || 'Unnamed Business'}</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">📍 {lead.city || 'Udumalpet'}, {lead.state || 'TN'} &bull; 📞 {lead.phone || 'No Phone'}</div>
+                        </div>
+                        <div className="text-right">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            {lead.lead_score ?? 50} pts
+                          </span>
+                          <div className="text-[9px] text-slate-500 mt-1">{safeTimeFormat(lead.created_at)}</div>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                          {lead.lead_score} pts
-                        </span>
-                        <div className="text-[9px] text-slate-500 mt-1">{new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                      </div>
-                    </div>
-                  ))
+                    )
+                  })
                 )}
               </div>
             </div>
@@ -1356,7 +1387,7 @@ export const LeadGenSystem: React.FC = () => {
                         <td className="py-2 font-mono text-slate-300">{log.prompt_tokens}</td>
                         <td className="py-2 font-mono text-slate-300">{log.completion_tokens}</td>
                         <td className="py-2 font-mono text-white">₹{log.estimated_cost_inr}</td>
-                        <td className="py-2 text-slate-500 text-[11px]">{new Date(log.created_at).toLocaleTimeString()}</td>
+                        <td className="py-2 text-slate-500 text-[11px]">{safeTimeFormat(log.created_at)}</td>
                       </tr>
                     ))
                   )}
