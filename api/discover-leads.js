@@ -1,8 +1,7 @@
 // Vercel Serverless Function: Multi-Provider Real-Time Business Discovery Engine
-// Supports: OpenStreetMap (Overpass + Photon + Nominatim), Google Maps Places API, Mapbox, Geoapify, LocationIQ
+// Supports: OpenStreetMap (Multi-term Parallel Photon + Nominatim), Google Maps Places API, Mapbox, Geoapify, LocationIQ
 
 export default async function handler(req, res) {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
@@ -41,9 +40,7 @@ export default async function handler(req, res) {
       const googleUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(searchQuery)}&key=${googleKey}`
       
       const gRes = await fetch(googleUrl)
-      if (!gRes.ok) {
-        throw new Error(`Google Maps API returned HTTP ${gRes.status}`)
-      }
+      if (!gRes.ok) throw new Error(`Google Maps API returned HTTP ${gRes.status}`)
       const gData = await gRes.json()
 
       if (gData.status === 'REQUEST_DENIED' || gData.status === 'INVALID_REQUEST') {
@@ -51,21 +48,19 @@ export default async function handler(req, res) {
       }
 
       const results = gData.results || []
-      rawLeads = results.map(place => {
-        return {
-          name: place.name || keyword,
-          phone: null, // Basic textsearch doesn't include phone; place_id details can enrich
-          email: null,
-          website: null,
-          address: place.formatted_address || `${location}, ${state}`,
-          city: location,
-          state: state,
-          category: (place.types && place.types[0]) ? place.types[0].replace(/_/g, ' ') : keyword,
-          rating: place.rating || 4.5,
-          reviews_count: place.user_ratings_total || 10,
-          source: 'Google Maps API'
-        }
-      })
+      rawLeads = results.map(place => ({
+        name: place.name || keyword,
+        phone: null,
+        email: null,
+        website: null,
+        address: place.formatted_address || `${location}, ${state}`,
+        city: location,
+        state: state,
+        category: (place.types && place.types[0]) ? place.types[0].replace(/_/g, ' ') : keyword,
+        rating: place.rating || 4.5,
+        reviews_count: place.user_ratings_total || 10,
+        source: 'Google Maps API'
+      }))
     }
 
     // =========================================================================
@@ -115,7 +110,6 @@ export default async function handler(req, res) {
         })
       }
 
-      // Geocode city first
       const geoRes = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(location + ', ' + state)}&apiKey=${geoapifyKey}`)
       const geoData = await geoRes.json()
       let lat = 10.5839, lon = 77.25
@@ -183,134 +177,125 @@ export default async function handler(req, res) {
     }
 
     // =========================================================================
-    // PROVIDER 5 (DEFAULT): LIVE OPENSTREETMAP (Photon + Nominatim + Overpass)
+    // PROVIDER 5 (DEFAULT): MULTI-TERM PARALLEL OPENSTREETMAP DISCOVERY
     // =========================================================================
     else {
-      // 1. First attempt: Query Photon OpenStreetMap Live POIs
-      const roadTags = ['highway', 'secondary', 'primary', 'trunk', 'tertiary', 'residential', 'service', 'track', 'footway', 'path', 'cycleway', 'motorway', 'unclassified', 'bus_stop']
-
-      try {
-        const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(keyword + ' ' + location)}&limit=30`
-        const pRes = await fetch(photonUrl, {
-          headers: { 'User-Agent': 'SpringWebSolutions/1.1 (leadengine@springwebsolutions.in)' }
-        })
-        if (pRes.ok) {
-          const pData = await pRes.json()
-          const features = pData.features || []
-          for (const f of features) {
-            const p = f.properties || {}
-            const isRoad = p.osm_key === 'highway' || roadTags.includes(p.osm_value) || roadTags.includes(p.osm_key) || p.osm_key === 'boundary' || p.osm_key === 'place'
-            
-            if (p.name && !isRoad) {
-              rawLeads.push({
-                name: p.name,
-                phone: p.phone || p['contact:phone'] || p.mobile || null,
-                email: p.email || p['contact:email'] || null,
-                website: p.website || p['contact:website'] || null,
-                address: [p.street, p.city || location, p.state || state, p.postcode].filter(Boolean).join(', ') || `${location}, ${state}`,
-                city: p.city || p.district || location,
-                state: p.state || state,
-                category: p.osm_value || p.osm_key || keyword,
-                rating: 4.6,
-                reviews_count: 15,
-                source: 'OpenStreetMap API'
-              })
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('[OSM Search] Photon query error:', err.message)
+      const synonyms = {
+        clinic: ['clinic', 'hospital', 'doctor', 'healthcare', 'medical', 'pharmacy', 'dental', 'nursing', 'eye care', 'scan', 'lab'],
+        hospital: ['hospital', 'clinic', 'healthcare', 'medical', 'emergency', 'maternity', 'care'],
+        doctor: ['doctor', 'clinic', 'hospital', 'physician', 'specialist', 'dental', 'medical'],
+        textile: ['textile', 'spinning', 'cotton', 'garment', 'mills', 'fabrics', 'handloom', 'weaving', 'yarn'],
+        hotel: ['hotel', 'restaurant', 'lodging', 'resort', 'motel', 'dhaba', 'inn', 'cafe'],
+        restaurant: ['restaurant', 'hotel', 'cafe', 'bakery', 'sweets', 'bhojanalaya', 'fast food', 'eatery'],
+        school: ['school', 'college', 'academy', 'institute', 'polytechnic', 'university', 'vidyalaya', 'matriculation'],
+        college: ['college', 'polytechnic', 'engineering', 'arts science', 'university', 'institute', 'academy'],
+        software: ['software', 'it services', 'tech', 'computer', 'digital', 'developer', 'web', 'solutions'],
+        manufacturer: ['manufacturing', 'factory', 'industry', 'engineering', 'works', 'enterprise', 'packaging'],
+        jeweller: ['jewellers', 'jewellery', 'gold', 'silver', 'diamonds', 'ornaments'],
+        auto: ['automobiles', 'motors', 'garage', 'service centre', 'spares', 'tyres', 'mechanic', 'honda', 'hero']
       }
 
-      // 2. Second attempt (Enrichment): Query Nominatim Search API
-      try {
-        const nomUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(keyword + ' ' + location + ' ' + state)}&format=json&addressdetails=1&extratags=1&limit=25`
-        const nomRes = await fetch(nomUrl, {
-          headers: {
-            'User-Agent': 'SpringWebSolutions-Engine/1.1 (support@springwebsolutions.in)',
-            'Accept': 'application/json'
-          }
-        })
-        if (nomRes.ok) {
-          const nomData = await nomRes.json()
-          if (Array.isArray(nomData)) {
-            for (const item of nomData) {
-              const tags = item.extratags || {}
-              const addr = item.address || {}
-              const name = item.name || item.display_name?.split(',')?.[0] || keyword
-              const isRoad = item.class === 'highway' || item.class === 'boundary' || item.class === 'place' || roadTags.includes(item.type)
-
-              if (!isRoad && !rawLeads.some(r => r.name.toLowerCase() === name.toLowerCase())) {
-                rawLeads.push({
-                  name,
-                  phone: tags.phone || tags['contact:phone'] || tags.mobile || null,
-                  email: tags.email || tags['contact:email'] || null,
-                  website: tags.website || tags['contact:website'] || tags.url || null,
-                  address: item.display_name || `${location}, ${state}`,
-                  city: addr.city || addr.town || addr.suburb || location,
-                  state: addr.state || state,
-                  category: item.type || item.class || keyword,
-                  rating: 4.7,
-                  reviews_count: 18,
-                  source: 'OpenStreetMap API'
-                })
-              }
-            }
-          }
+      const kwLower = keyword.toLowerCase()
+      let searchTerms = [keyword]
+      for (const [key, list] of Object.entries(synonyms)) {
+        if (kwLower.includes(key) || list.some(s => kwLower.includes(s))) {
+          searchTerms = Array.from(new Set([keyword, ...list]))
+          break
         }
-      } catch (err) {
-        console.warn('[OSM Search] Nominatim query error:', err.message)
       }
 
-      // 3. Third attempt: Overpass interpreter fast scan
-      if (rawLeads.length < 5) {
+      const roadTags = [
+        'highway', 'secondary', 'primary', 'trunk', 'tertiary', 'residential', 
+        'service', 'track', 'footway', 'path', 'cycleway', 'motorway', 'unclassified', 
+        'bus_stop', 'administrative', 'boundary', 'place', 'waterway'
+      ]
+
+      // Query Photon in parallel across expanded terms
+      const photonPromises = searchTerms.slice(0, 7).map(async term => {
         try {
-          const kwClean = keyword.replace(/[^a-zA-Z0-9 ]/g, '').trim()
-          const opQuery = `[out:json][timeout:15];
-area["name"~"${location.trim()}",i]->.searchArea;
-(
-  nwr["amenity"~"${kwClean}",i](area.searchArea);
-  nwr["shop"~"${kwClean}",i](area.searchArea);
-  nwr["office"~"${kwClean}",i](area.searchArea);
-  nwr["healthcare"~"${kwClean}",i](area.searchArea);
-  nwr["name"~"${kwClean}",i](area.searchArea);
-);
-out center tags 20;`
-
-          const opRes = await fetch('https://overpass-api.de/api/interpreter', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'User-Agent': 'SpringWebSolutions-Engine/1.1 (support@springwebsolutions.in)'
-            },
-            body: 'data=' + encodeURIComponent(opQuery)
+          const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(term + ' in ' + location)}&limit=30`
+          const pRes = await fetch(photonUrl, {
+            headers: { 'User-Agent': 'SpringWebSolutions-Discovery/1.2' }
           })
-
-          if (opRes.ok) {
-            const opData = await opRes.json()
-            for (const el of (opData.elements || [])) {
-              const t = el.tags || {}
-              if (t.name && !rawLeads.some(r => r.name.toLowerCase() === t.name.toLowerCase())) {
-                rawLeads.push({
-                  name: t.name,
-                  phone: t.phone || t['contact:phone'] || t.mobile || null,
-                  email: t.email || t['contact:email'] || null,
-                  website: t.website || t['contact:website'] || t.url || null,
-                  address: [t['addr:street'], t['addr:city'] || location, state].filter(Boolean).join(', '),
-                  city: t['addr:city'] || location,
+          if (pRes.ok) {
+            const pData = await pRes.json()
+            return (pData.features || []).map(f => {
+              const p = f.properties || {}
+              const isRoad = p.osm_key === 'highway' || roadTags.includes(p.osm_value) || roadTags.includes(p.osm_key) || p.osm_key === 'boundary' || p.osm_key === 'place'
+              if (p.name && !isRoad) {
+                return {
+                  name: p.name,
+                  phone: p.phone || p['contact:phone'] || p.mobile || null,
+                  email: p.email || p['contact:email'] || null,
+                  website: p.website || p['contact:website'] || null,
+                  address: [p.street, p.city || location, state, p.postcode].filter(Boolean).join(', ') || `${location}, ${state}`,
+                  city: p.city || p.district || location,
                   state: state,
-                  category: t.amenity || t.shop || t.office || t.healthcare || keyword,
-                  rating: 4.5,
-                  reviews_count: 10,
+                  category: p.osm_value || p.osm_key || term,
+                  rating: 4.6,
+                  reviews_count: 15,
                   source: 'OpenStreetMap API'
-                })
+                }
               }
+              return null
+            }).filter(Boolean)
+          }
+        } catch (err) {
+          return []
+        }
+        return []
+      })
+
+      // Query Nominatim in parallel
+      const nominatimPromise = (async () => {
+        try {
+          const nomUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(keyword + ' ' + location + ' ' + state)}&format=json&addressdetails=1&extratags=1&limit=25`
+          const nomRes = await fetch(nomUrl, {
+            headers: {
+              'User-Agent': 'SpringWebSolutions-Engine/1.2 (contact@springwebsolutions.in)',
+              'Accept': 'application/json'
+            }
+          })
+          if (nomRes.ok) {
+            const nomData = await nomRes.json()
+            if (Array.isArray(nomData)) {
+              return nomData.map(item => {
+                const tags = item.extratags || {}
+                const addr = item.address || {}
+                const name = item.name || item.display_name?.split(',')?.[0] || keyword
+                const isRoad = item.class === 'highway' || item.class === 'boundary' || item.class === 'place' || roadTags.includes(item.type)
+                if (!isRoad && name) {
+                  return {
+                    name,
+                    phone: tags.phone || tags['contact:phone'] || tags.mobile || null,
+                    email: tags.email || tags['contact:email'] || null,
+                    website: tags.website || tags['contact:website'] || tags.url || null,
+                    address: item.display_name || `${location}, ${state}`,
+                    city: addr.city || addr.town || addr.suburb || location,
+                    state: addr.state || state,
+                    category: item.type || item.class || keyword,
+                    rating: 4.7,
+                    reviews_count: 18,
+                    source: 'OpenStreetMap API'
+                  }
+                }
+                return null
+              }).filter(Boolean)
             }
           }
         } catch (err) {
-          console.warn('[OSM Search] Overpass query error:', err.message)
+          return []
         }
-      }
+        return []
+      })()
+
+      const [photonResults, nomResults] = await Promise.all([
+        Promise.all(photonPromises),
+        nominatimPromise
+      ])
+
+      photonResults.flat().forEach(l => rawLeads.push(l))
+      nomResults.forEach(l => rawLeads.push(l))
     }
 
     // Deduplicate leads by name
@@ -329,10 +314,10 @@ out center tags 20;`
       leads: uniqueLeads
     })
   } catch (error) {
-    console.error('[Discover Leads API Error]:', error)
+    console.error('[Discover Leads API Fatal Error]:', error)
     return res.status(500).json({
       success: false,
-      error: error.message || 'Internal discovery error'
+      error: error.message || 'Internal discovery engine error'
     })
   }
 }

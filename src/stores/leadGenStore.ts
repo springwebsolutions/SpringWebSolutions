@@ -564,32 +564,70 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
       } catch (backendErr) {
         console.warn('[Discovery Engine Backend Warning, switching to direct client fallback]:', backendErr)
         if (jobSource === 'openstreetmap') {
-          const roadTags = ['highway', 'secondary', 'primary', 'trunk', 'tertiary', 'residential', 'service', 'track', 'footway', 'path']
-          try {
-            const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(keyword + ' ' + location)}&limit=30`
-            const pRes = await fetch(photonUrl)
-            if (pRes.ok) {
-              const pData = await pRes.json()
-              for (const f of (pData.features || [])) {
-                const p = f.properties || {}
-                const isRoad = p.osm_key === 'highway' || roadTags.includes(p.osm_value) || roadTags.includes(p.osm_key) || p.osm_key === 'boundary' || p.osm_key === 'place'
-                if (p.name && !isRoad) {
-                  rawLeads.push({
-                    name: p.name,
-                    phone: p.phone || p['contact:phone'] || p.mobile || null,
-                    email: p.email || p['contact:email'] || null,
-                    website: p.website || p['contact:website'] || null,
-                    address: [p.street, p.city || location, p.state || state, p.postcode].filter(Boolean).join(', ') || `${location}, ${state}`,
-                    city: p.city || p.district || location,
-                    state: p.state || state,
-                    category: p.osm_value || p.osm_key || keyword,
-                    rating: 4.6,
-                    reviews_count: 15,
-                    source: sourceLabel
-                  })
-                }
-              }
+          const synonyms: Record<string, string[]> = {
+            clinic: ['clinic', 'hospital', 'doctor', 'healthcare', 'medical', 'pharmacy', 'dental', 'nursing', 'eye care', 'scan', 'lab'],
+            hospital: ['hospital', 'clinic', 'healthcare', 'medical', 'emergency', 'maternity', 'care'],
+            doctor: ['doctor', 'clinic', 'hospital', 'physician', 'specialist', 'dental', 'medical'],
+            textile: ['textile', 'spinning', 'cotton', 'garment', 'mills', 'fabrics', 'handloom', 'weaving', 'yarn'],
+            hotel: ['hotel', 'restaurant', 'lodging', 'resort', 'motel', 'dhaba', 'inn', 'cafe'],
+            restaurant: ['restaurant', 'hotel', 'cafe', 'bakery', 'sweets', 'bhojanalaya', 'fast food', 'eatery'],
+            school: ['school', 'college', 'academy', 'institute', 'polytechnic', 'university', 'vidyalaya'],
+            college: ['college', 'polytechnic', 'engineering', 'arts science', 'university', 'institute'],
+            software: ['software', 'it services', 'tech', 'computer', 'digital', 'developer', 'web'],
+            manufacturer: ['manufacturing', 'factory', 'industry', 'engineering', 'works', 'enterprise', 'packaging']
+          }
+
+          const kwLower = keyword.toLowerCase()
+          let searchTerms = [keyword]
+          for (const [key, list] of Object.entries(synonyms)) {
+            if (kwLower.includes(key) || list.some(s => kwLower.includes(s))) {
+              searchTerms = Array.from(new Set([keyword, ...list]))
+              break
             }
+          }
+
+          const roadTags = [
+            'highway', 'secondary', 'primary', 'trunk', 'tertiary', 'residential', 
+            'service', 'track', 'footway', 'path', 'cycleway', 'motorway', 'unclassified', 
+            'bus_stop', 'administrative', 'boundary', 'place', 'waterway'
+          ]
+
+          try {
+            const photonPromises = searchTerms.slice(0, 6).map(async term => {
+              try {
+                const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(term + ' in ' + location)}&limit=30`
+                const pRes = await fetch(photonUrl)
+                if (pRes.ok) {
+                  const pData = await pRes.json()
+                  return (pData.features || []).map((f: any) => {
+                    const p = f.properties || {}
+                    const isRoad = p.osm_key === 'highway' || roadTags.includes(p.osm_value) || roadTags.includes(p.osm_key) || p.osm_key === 'boundary' || p.osm_key === 'place'
+                    if (p.name && !isRoad) {
+                      return {
+                        name: p.name,
+                        phone: p.phone || p['contact:phone'] || p.mobile || null,
+                        email: p.email || p['contact:email'] || null,
+                        website: p.website || p['contact:website'] || null,
+                        address: [p.street, p.city || location, state, p.postcode].filter(Boolean).join(', ') || `${location}, ${state}`,
+                        city: p.city || p.district || location,
+                        state: state,
+                        category: p.osm_value || p.osm_key || term,
+                        rating: 4.6,
+                        reviews_count: 15,
+                        source: sourceLabel
+                      }
+                    }
+                    return null
+                  }).filter(Boolean)
+                }
+              } catch (e) {
+                return []
+              }
+              return []
+            })
+
+            const photonResults = await Promise.all(photonPromises)
+            photonResults.flat().forEach((l: any) => rawLeads.push(l))
           } catch (pErr) {
             console.error('[Photon Client Fallback Error]:', pErr)
           }
