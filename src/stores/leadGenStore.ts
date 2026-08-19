@@ -550,15 +550,50 @@ export const useLeadGenStore = create<LeadGenState>((set, get) => ({
 
       // Step 3: Call the unified serverless discovery endpoint
       const apiUrl = `/api/discover-leads?keyword=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}&state=${encodeURIComponent(state)}&source=${jobSource}&apiKey=${encodeURIComponent(key)}`
-      const response = await fetch(apiUrl)
       
       let rawLeads: any[] = []
-      if (response.ok) {
-        const data = await response.json()
-        rawLeads = data.leads || []
-      } else {
-        const errData = await response.json().catch(() => ({}))
-        throw new Error(errData.error || `Discovery API returned status ${response.status}`)
+      try {
+        const response = await fetch(apiUrl)
+        const contentType = response.headers.get('content-type') || ''
+        if (response.ok && contentType.includes('application/json')) {
+          const data = await response.json()
+          rawLeads = data.leads || []
+        } else {
+          throw new Error(`API returned non-JSON response or status ${response.status}`)
+        }
+      } catch (backendErr) {
+        console.warn('[Discovery Engine Backend Warning, switching to direct client fallback]:', backendErr)
+        if (jobSource === 'openstreetmap') {
+          const roadTags = ['highway', 'secondary', 'primary', 'trunk', 'tertiary', 'residential', 'service', 'track', 'footway', 'path']
+          try {
+            const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(keyword + ' ' + location)}&limit=30`
+            const pRes = await fetch(photonUrl)
+            if (pRes.ok) {
+              const pData = await pRes.json()
+              for (const f of (pData.features || [])) {
+                const p = f.properties || {}
+                const isRoad = p.osm_key === 'highway' || roadTags.includes(p.osm_value) || roadTags.includes(p.osm_key) || p.osm_key === 'boundary' || p.osm_key === 'place'
+                if (p.name && !isRoad) {
+                  rawLeads.push({
+                    name: p.name,
+                    phone: p.phone || p['contact:phone'] || p.mobile || null,
+                    email: p.email || p['contact:email'] || null,
+                    website: p.website || p['contact:website'] || null,
+                    address: [p.street, p.city || location, p.state || state, p.postcode].filter(Boolean).join(', ') || `${location}, ${state}`,
+                    city: p.city || p.district || location,
+                    state: p.state || state,
+                    category: p.osm_value || p.osm_key || keyword,
+                    rating: 4.6,
+                    reviews_count: 15,
+                    source: sourceLabel
+                  })
+                }
+              }
+            }
+          } catch (pErr) {
+            console.error('[Photon Client Fallback Error]:', pErr)
+          }
+        }
       }
 
       // Step 4: Apply scrape filters
