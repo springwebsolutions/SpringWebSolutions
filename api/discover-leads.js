@@ -125,11 +125,18 @@ export default async function handler(req, res) {
 
       rawLeads = (pData.features || []).map(feat => {
         const p = feat.properties || {}
+        const raw = p.datasource?.raw || {}
+        const contact = p.contact || {}
+
+        const phone = contact.phone || raw.phone || raw['contact:phone'] || raw.mobile || p.phone || null
+        const email = contact.email || raw.email || raw['contact:email'] || p.email || null
+        const website = p.website || contact.url || raw.website || raw['contact:website'] || raw.url || null
+
         return {
           name: p.name || keyword,
-          phone: p.datasource?.raw?.phone || p.phone || null,
-          email: p.datasource?.raw?.email || p.email || null,
-          website: p.datasource?.raw?.website || p.website || null,
+          phone,
+          email,
+          website,
           address: p.formatted || p.address_line2 || `${location}, ${state}`,
           city: location,
           state: state,
@@ -153,21 +160,34 @@ export default async function handler(req, res) {
         })
       }
 
-      const liqUrl = `https://us1.locationiq.com/v1/search?key=${locKey}&q=${encodeURIComponent(keyword + ', ' + location + ', ' + state)}&format=json&addressdetails=1&limit=25`
+      const liqUrl = `https://us1.locationiq.com/v1/search?key=${locKey}&q=${encodeURIComponent(keyword + ', ' + location + ', ' + state)}&format=json&addressdetails=1&extratags=1&limit=25`
       const liqRes = await fetch(liqUrl)
       const liqData = await liqRes.json()
 
       const list = Array.isArray(liqData) ? liqData : []
       rawLeads = list.map(item => {
         const addr = item.address || {}
+        const tags = item.extratags || {}
+
+        const phone = tags.phone || tags['contact:phone'] || tags.mobile || tags['contact:mobile'] || addr.phone || null
+        const website = tags.website || tags['contact:website'] || tags.url || addr.website || null
+        const email = tags.email || tags['contact:email'] || addr.email || null
+
         return {
           name: item.display_name?.split(',')?.[0] || keyword,
-          phone: addr.phone || null,
-          email: addr.email || null,
-          website: addr.website || null,
+          phone,
+          email,
+          website,
           address: item.display_name || `${location}, ${state}`,
           city: addr.city || addr.town || addr.village || location,
           state: addr.state || state,
+          category: item.type || item.class || keyword,
+          rating: 4.5,
+          reviews_count: 12,
+          source: 'LocationIQ API'
+        }
+      })
+    }
           category: item.type || item.class || keyword,
           rating: 4.5,
           reviews_count: 12,
