@@ -7,237 +7,99 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-container">
-
+  <div class="app">
+    
     <!-- ── Header ────────────────────────────────────────────────────── -->
     <header class="header">
       <div class="brand">
-        <img src="icons/icon48.png" alt="Logo" class="brand-logo">
+        <img src="icons/icon48.png" alt="Logo" class="logo">
         <div>
-          <h1>SpringWeb Scraper</h1>
-          <span class="subtitle">Google Maps · Real-Time Lead Engine</span>
+          <div class="brand-title">SpringWeb Scraper</div>
+          <div class="brand-sub">Google Maps Lead Engine</div>
         </div>
       </div>
-      <div class="header-right">
-        <div class="version-badge">v2.1</div>
+      <div class="header-actions">
+        <span class="badge-version">v2.3</span>
       </div>
     </header>
 
-    <!-- ── Status Bar ─────────────────────────────────────────────────── -->
+    <!-- ── Status Bar ────────────────────────────────────────────────── -->
     <div class="status-bar" id="statusBar">
-      Navigate to Google Maps, search for businesses, then scrape.
+      📍 Open Google Maps &amp; search for businesses to scrape.
     </div>
 
-    <!-- ── Progress Bar ───────────────────────────────────────────────── -->
-    <div class="progress-wrap" id="progressBar" style="display:none">
-      <div class="progress-fill" id="progressFill"></div>
-      <span class="progress-label" id="progressLabel">0 / 0</span>
+    <!-- ── Primary Action Buttons ────────────────────────────────────── -->
+    <div class="action-grid">
+      <button id="btnScrapePage" class="btn btn-primary">
+        <span>⚡ Scrape Visible</span>
+      </button>
+      <button id="btnAutoScroll" class="btn btn-secondary">
+        <span>🔄 Auto-Scroll (20+)</span>
+      </button>
+      <button id="btnStop" class="btn btn-danger" style="display:none">
+        <span>⏹ Stop</span>
+      </button>
     </div>
 
-    <!-- ── Tab Navigation ─────────────────────────────────────────────── -->
-    <nav class="tab-nav">
-      <button class="tab-btn active" data-tab="leads">📋 Leads</button>
-      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
-    </nav>
-
-    <!-- ═══════════════════ TAB: LEADS ═══════════════════ -->
-    <div class="tab-panel active" id="tab-leads">
-
-      <!-- Action Buttons -->
-      <div class="action-row">
-        <button id="btnScrapePage" class="btn btn-primary">
-          <span class="icon">⚡</span><span>Scrape Page</span>
-        </button>
-        <button id="btnAutoScroll" class="btn btn-secondary">
-          <span class="icon">🔄</span><span>Auto-Scroll</span>
-        </button>
-        <button id="btnStop" class="btn btn-danger" style="display:none">
-          <span class="icon">⏹</span><span>Stop</span>
-        </button>
+    <!-- ── Metric Pills ──────────────────────────────────────────────── -->
+    <div class="metric-row">
+      <div class="metric-pill">
+        <span class="m-label">Found:</span>
+        <strong class="m-val" id="valFound">0</strong>
       </div>
-
-      <!-- Metrics -->
-      <div class="metrics-grid">
-        <div class="metric">
-          <span class="value" id="valFound">0</span>
-          <span class="label">Total</span>
-        </div>
-        <div class="metric green">
-          <span class="value" id="valWithPhone">0</span>
-          <span class="label">📞 Phone</span>
-        </div>
-        <div class="metric blue">
-          <span class="value" id="valWithWeb">0</span>
-          <span class="label">🌐 Web</span>
-        </div>
-        <div class="metric highlight">
-          <span class="value" id="valSynced">0</span>
-          <span class="label">☁️ Synced</span>
-        </div>
+      <div class="metric-pill green">
+        <span class="m-label">📞 Phones:</span>
+        <strong class="m-val" id="valWithPhone">0</strong>
       </div>
-
-      <!-- Filter Row -->
-      <div class="filter-row" style="flex-wrap: wrap; gap: 4px;">
-        <label class="filter-chip">
-          <input type="checkbox" id="filterPhone"> 📞 Phone only
-        </label>
-        <label class="filter-chip">
-          <input type="checkbox" id="filterWeb"> 🌐 Web only
-        </label>
-        <label class="filter-chip">
-          <input type="checkbox" id="filterNoWeb"> ❌ No Web only
-        </label>
-        <button id="btnCopyAll" class="btn-text" title="Copy all phone numbers" style="margin-left: auto;">📋 Copy Phones</button>
+      <div class="metric-pill blue">
+        <span class="m-label">🌐 Web:</span>
+        <strong class="m-val" id="valWithWeb">0</strong>
       </div>
-
-      <!-- Sync + Export -->
-      <div class="action-row">
-        <button id="btnSyncAdmin" class="btn btn-emerald" disabled>
-          <span class="icon">☁️</span><span>Sync to Admin</span>
-        </button>
-        <button id="btnSyncSheets" class="btn btn-primary" disabled style="background-color: #4285f4; border-color: #4285f4; color: white;">
-          <span class="icon">📊</span><span>Sync Sheets</span>
-        </button>
-        <button id="btnExportCsv" class="btn btn-ghost">
-          <span>CSV</span>
-        </button>
-        <button id="btnExportJson" class="btn btn-ghost">
-          <span>JSON</span>
-        </button>
-      </div>
-
-      <!-- Lead List -->
-      <div class="preview-container">
-        <div class="table-header">
-          <span id="leadCountBadge" class="badge">0 leads</span>
-          <div class="table-header-right">
-            <span id="filteredBadge" class="badge alt" style="display:none">0 shown</span>
-            <button id="btnClear" class="btn-icon" title="Clear all leads">🗑️</button>
-          </div>
-        </div>
-        <div class="table-wrapper" id="previewList">
-          <div class="empty-state">
-            <span class="empty-icon">📍</span>
-            <p>Open <strong>Google Maps</strong>, search for local businesses<br>
-              (e.g. <em>"Textile Mills in Tiruppur"</em>) and click<br>
-              <strong>⚡ Scrape Page</strong>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <footer class="footer-actions">
-        <a href="https://suite.springwebsolutions.in/lead-gen" target="_blank" class="btn-text highlight">
-          🔗 Admin Panel ↗
-        </a>
-      </footer>
-    </div>
-
-    <!-- ═══════════════════ TAB: SETTINGS ═══════════════════ -->
-    <div class="tab-panel" id="tab-settings">
-      <div class="settings-section">
-        <h3 class="settings-title">🔗 Supabase Connection</h3>
-        <p class="settings-hint">Your leads sync here in real time.</p>
-
-        <div class="field-group">
-          <label for="inputSupabaseUrl">Supabase Project URL</label>
-          <input type="url" id="inputSupabaseUrl" class="field-input"
-            placeholder="https://xxxx.supabase.co">
-        </div>
-
-        <div class="field-group">
-          <label for="inputSupabaseKey">Supabase Anon Key</label>
-          <input type="password" id="inputSupabaseKey" class="field-input"
-            placeholder="sb_publishable_...">
-          <button class="btn-text" id="btnToggleKey" style="margin-top:4px">👁 Show key</button>
-        </div>
-
-        <button id="btnSaveSettings" class="btn btn-primary" style="margin-top:8px">
-          <span class="icon">💾</span><span>Save All Settings</span>
-        </button>
-        <div id="settingsSaveMsg" class="save-msg" style="display:none">✅ Saved!</div>
-      </div>
-
-      <div class="settings-section">
-        <h3 class="settings-title">📊 Google Sheets Export</h3>
-        <p class="settings-hint">Direct export via a free Google Apps Script Web App URL.</p>
-        <div class="field-group">
-          <label for="inputGoogleSheetsUrl">Apps Script Web App URL</label>
-          <input type="url" id="inputGoogleSheetsUrl" class="field-input" placeholder="https://script.google.com/macros/s/.../exec">
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h3 class="settings-title">📍 Geolocation Spying</h3>
-        <p class="settings-hint">Force map coordinates and zoom before executing queries.</p>
-        <div class="field-row" style="display: flex; gap: 8px;">
-          <div class="field-group" style="flex: 1; margin-bottom: 0;">
-            <label for="inputLat">Latitude</label>
-            <input type="text" id="inputLat" class="field-input" placeholder="e.g. 10.5842">
-          </div>
-          <div class="field-group" style="flex: 1; margin-bottom: 0;">
-            <label for="inputLng">Longitude</label>
-            <input type="text" id="inputLng" class="field-input" placeholder="e.g. 77.2465">
-          </div>
-          <div class="field-group" style="flex: 0.6; margin-bottom: 0;">
-            <label for="inputZoom">Zoom</label>
-            <input type="number" id="inputZoom" class="field-input" value="15" min="1" max="21">
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h3 class="settings-title">📋 Bulk Search Keywords</h3>
-        <p class="settings-hint">Scrape multiple search queries sequentially (one per line).</p>
-        <div class="field-group">
-          <label for="inputBatchKeywords">Keywords List</label>
-          <textarea id="inputBatchKeywords" class="field-input" rows="3" placeholder="e.g.&#10;textile mills tiruppur&#10;software companies coimbatore" style="resize: vertical; font-family: monospace; font-size: 11px;"></textarea>
-        </div>
-        <div class="field-group">
-          <label style="display: flex; align-items: center; gap: 6px;">
-            <input type="checkbox" id="chkBatchScrape">
-            Enable batch scraping mode
-          </label>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h3 class="settings-title">⚙️ Scraping Options</h3>
-
-        <div class="field-group">
-          <label for="inputScrollCount">Auto-Scroll Iterations</label>
-          <input type="number" id="inputScrollCount" class="field-input" value="20" min="5" max="100">
-          <span class="field-hint">More scrolls = more businesses loaded</span>
-        </div>
-
-        <div class="field-group">
-          <label for="selectScrapeFilter">Scrape Filter Rule</label>
-          <select id="selectScrapeFilter" class="field-input" style="background-color: #121824; color: white;">
-            <option value="all">Scrape all businesses</option>
-            <option value="no_website">Only scrape business with no website</option>
-            <option value="only_phone">Only scrape business with phone number</option>
-            <option value="both">Only phone numbers &amp; no website</option>
-          </select>
-          <span class="field-hint">Filters leads extracted during scraping sessions</span>
-        </div>
-
-        <div class="field-group">
-          <label>
-            <input type="checkbox" id="chkNotify" checked>
-            Show notification when scraping completes
-          </label>
-        </div>
-      </div>
-
-      <div class="settings-section">
-        <h3 class="settings-title">📊 Session Stats</h3>
-        <div class="stat-row"><span>Total scraped</span><strong id="statTotal">0</strong></div>
-        <div class="stat-row"><span>Total synced</span><strong id="statSynced">0</strong></div>
-        <div class="stat-row"><span>Extension version</span><strong>v2.1.0</strong></div>
+      <div class="metric-pill purple">
+        <span class="m-label">☁️ Synced:</span>
+        <strong class="m-val" id="valSynced">0</strong>
       </div>
     </div>
 
-  </div><!-- /.app-container -->
+    <!-- ── Sync & Export Bar ─────────────────────────────────────────── -->
+    <div class="sync-row">
+      <button id="btnSyncAdmin" class="btn btn-emerald" disabled>
+        <span>☁️ Sync to Admin CRM</span>
+      </button>
+      <button id="btnCopyAll" class="btn btn-ghost" title="Copy all discovered phone numbers">
+        <span>📋 Copy Phones</span>
+      </button>
+      <button id="btnExportCsv" class="btn btn-ghost" title="Download CSV">
+        <span>CSV</span>
+      </button>
+      <button id="btnClear" class="btn btn-icon" title="Clear table">
+        <span>🗑️</span>
+      </button>
+    </div>
+
+    <!-- ── Discovered Leads List ─────────────────────────────────────── -->
+    <div class="list-container">
+      <div class="list-header">
+        <span id="leadCountBadge" class="count-tag">0 leads discovered</span>
+      </div>
+
+      <div class="list-scroll" id="previewList">
+        <div class="empty-box">
+          <div class="empty-icon">📍</div>
+          <div class="empty-title">Ready to Scrape</div>
+          <div class="empty-desc">Open Google Maps, search for any industry (e.g. <em>"Clinics in Udumalpet"</em>) and click <strong>⚡ Scrape Visible</strong>.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Footer Link ───────────────────────────────────────────────── -->
+    <footer class="footer">
+      <a href="https://suite.springwebsolutions.in/crm" target="_blank" class="footer-link">
+        SpringWeb Solutions Suite &rarr;
+      </a>
+    </footer>
+
+  </div>
 
   <script src="cleaner.js"></script>
   <script src="popup.js"></script>
