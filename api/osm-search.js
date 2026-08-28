@@ -112,51 +112,7 @@ export default async function handler(req, res) {
       }
     })
 
-    // If Overpass yielded few results for this specific area/keyword, generate realistic local business leads
-    if (leads.length === 0) {
-      leads = [
-        {
-          name: `${keyword} Prime Care ${location}`,
-          phone: '+91 98422 ' + Math.floor(10000 + Math.random() * 90000),
-          email: null,
-          website: null,
-          address: `Gandhi Nagar, ${location}, ${state}`,
-          city: location,
-          state: state,
-          category: keyword
-        },
-        {
-          name: `Sri ${keyword} Centre`,
-          phone: '+91 94433 ' + Math.floor(10000 + Math.random() * 90000),
-          email: null,
-          website: 'https://' + keyword.toLowerCase().replace(/\s+/g, '') + location.toLowerCase() + '.in',
-          address: `Palani Road, ${location}, ${state}`,
-          city: location,
-          state: state,
-          category: keyword
-        },
-        {
-          name: `${location} City ${keyword} Hub`,
-          phone: '+91 80126 ' + Math.floor(10000 + Math.random() * 90000),
-          email: 'contact@' + keyword.toLowerCase().replace(/\s+/g, '') + '.com',
-          website: null,
-          address: `Bus Stand Commercial Complex, ${location}, ${state}`,
-          city: location,
-          state: state,
-          category: keyword
-        },
-        {
-          name: `Apex ${keyword} & Services`,
-          phone: '+91 97871 ' + Math.floor(10000 + Math.random() * 90000),
-          email: null,
-          website: null,
-          address: `Dharapuram Road, ${location}, ${state}`,
-          city: location,
-          state: state,
-          category: keyword
-        }
-      ]
-    }
+    // End formatting leads
 
     return res.status(200).json({
       success: true,
