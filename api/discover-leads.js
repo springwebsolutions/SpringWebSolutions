@@ -188,13 +188,6 @@ export default async function handler(req, res) {
         }
       })
     }
-          category: item.type || item.class || keyword,
-          rating: 4.5,
-          reviews_count: 12,
-          source: 'LocationIQ API'
-        }
-      })
-    }
 
     // =========================================================================
     // PROVIDER 5 (DEFAULT): STRICT CITY-BOUNDED OPENSTREETMAP & POI DISCOVERY
