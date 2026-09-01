@@ -349,11 +349,9 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
             <Sparkles size={14} className="text-emerald-400 light:text-emerald-600 animate-spin-slow" /> #1 Web Development &amp; Software Engineering Agency in Udumalpet (Udumalaipettai)
           </div>
 
-          {/* H1 Title with Primary Local Keywords */}
-          <h1 className="hero-h1-enter hero-h1-glow text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] light:drop-shadow-none">
-            <span className="block text-xs sm:text-sm md:text-base font-bold tracking-widest text-emerald-400 dark:text-emerald-400 light:text-emerald-700 mb-2 normal-case font-mono">
-              Web Development Company in Udumalpet (Udumalaipettai) &bull; Tamil Nadu
-            </span>
+          {/* H1 Title */}
+          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] light:drop-shadow-none">
+            <span className="sr-only">Web Development Company in Udumalpet (Udumalaipettai) - </span>
             Spring Web{' '}
             <span className="hero-shimmer-text text-emerald-400 dark:text-emerald-400 light:text-emerald-700 bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-700 light:via-teal-700 light:to-indigo-700">
               Solutions
