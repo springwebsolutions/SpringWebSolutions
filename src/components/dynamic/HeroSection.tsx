@@ -344,13 +344,16 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
         
         {/* Brand Title Block */}
         <div className="space-y-4 max-w-4xl mx-auto">
-          {/* Badge: Glass capsule */}
+          {/* Badge: Glass capsule with location signal */}
           <div className="hero-badge-enter inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#060913]/90 dark:bg-[#060913]/90 light:bg-white border border-emerald-500/40 light:border-emerald-500/30 text-emerald-400 light:text-emerald-700 text-xs font-extrabold uppercase tracking-widest font-display shadow-2xl light:shadow-md backdrop-blur-md">
-            <Sparkles size={14} className="text-emerald-400 light:text-emerald-600 animate-spin-slow" /> Official Web Engineering &amp; Automation Agency
+            <Sparkles size={14} className="text-emerald-400 light:text-emerald-600 animate-spin-slow" /> #1 Web Development &amp; Software Engineering Agency in Udumalpet (Udumalaipettai)
           </div>
 
-          {/* H1 Title */}
-          <h1 className="hero-h1-enter hero-h1-glow text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] light:drop-shadow-none">
+          {/* H1 Title with Primary Local Keywords */}
+          <h1 className="hero-h1-enter hero-h1-glow text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight font-display text-white dark:text-white light:text-slate-900 leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)] light:drop-shadow-none">
+            <span className="block text-xs sm:text-sm md:text-base font-bold tracking-widest text-emerald-400 dark:text-emerald-400 light:text-emerald-700 mb-2 normal-case font-mono">
+              Web Development Company in Udumalpet (Udumalaipettai) &bull; Tamil Nadu
+            </span>
             Spring Web{' '}
             <span className="hero-shimmer-text text-emerald-400 dark:text-emerald-400 light:text-emerald-700 bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 light:from-emerald-700 light:via-teal-700 light:to-indigo-700">
               Solutions
@@ -363,10 +366,10 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
           {/* H2 Headline */}
           <h2 className="hero-sub-enter text-xl sm:text-2xl md:text-3xl font-extrabold text-white dark:text-white light:text-slate-900 font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] light:drop-shadow-none">
             <span className="sr-only">
-              Helping Businesses Grow Through Websites, Web Apps, Android &amp; iOS Mobile Apps, Windows Desktop Software, Custom ERP &amp; CRM Platforms, and Business Automation
+              #1 Web Development, Custom Software, Mobile Apps, and Digital Marketing in Udumalpet (Udumalaipettai)
             </span>
             <span aria-hidden="true">
-              Helping Businesses Grow Through{' '}
+              Helping Businesses Grow in Udumalpet &amp; Beyond Through{' '}
               <br className="hidden sm:inline" />
               <TypewriterText />
             </span>

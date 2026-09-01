@@ -200,9 +200,12 @@ export const Contact: React.FC = () => {
                       <MapPin size={18} />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Office Location</div>
+                      <div className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Official Postal Address</div>
                       <span className="text-white font-medium text-sm block mt-0.5 light:text-slate-900">
-                        Udumalpet, Tamil Nadu, India
+                        Udumalpet (Udumalaipettai), Tamil Nadu 642126, India
+                      </span>
+                      <span className="text-[11px] text-slate-400 block mt-1">
+                        Serving Udumalpet, Pollachi, Tiruppur, Coimbatore &amp; Tamil Nadu
                       </span>
                     </div>
                   </div>
@@ -405,6 +408,51 @@ export const Contact: React.FC = () => {
             </div>
 
           </div>
+
+          {/* ── Embedded Google Map & Local Entity Association ── */}
+          <div className="pt-8">
+            <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-400 font-display">
+                    <MapPin size={14} /> Official Engineering Hub &amp; Service Coverage
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white font-display">
+                    Udumalpet (Udumalaipettai), Tamil Nadu
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Serving enterprise clients and local businesses across Udumalpet, Pollachi, Tiruppur, and Coimbatore.
+                  </p>
+                </div>
+
+                <a
+                  href="https://maps.google.com/?q=Udumalpet,Tamil+Nadu,642126"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0"
+                >
+                  <span>Open in Google Maps</span>
+                  <MapPin size={14} />
+                </a>
+              </div>
+
+              {/* Responsive Google Map Iframe */}
+              <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-white/10 bg-slate-900 shadow-inner">
+                <iframe
+                  title="Spring Web Solutions Udumalpet Google Map"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62744.13702176465!2d77.21323381660163!3d10.584768310065487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba9d9e685fba3cb%3A0x6b3fcf81cb13426e!2sUdumalaipettai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1709300000000!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={false}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="grayscale contrast-125 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                />
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
 

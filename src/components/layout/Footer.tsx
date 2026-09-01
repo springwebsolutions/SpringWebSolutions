@@ -12,11 +12,12 @@ export const Footer: React.FC = () => {
     {
       heading: 'Engineered Solutions',
       links: [
-        { label: 'Website & Web App Development', href: '/#services' },
-        { label: 'Android & Mobile App Dev', href: '/#services' },
-        { label: 'Windows Desktop Applications', href: '/#services' },
+        { label: 'Web & App Development', href: '/#services' },
+        { label: 'Digital Marketing (Udumalpet)', href: '/digital-marketing-udumalpet' },
+        { label: 'Graphic & Logo Design', href: '/graphic-design-logo-design' },
+        { label: 'Web Hosting & Maintenance', href: '/web-hosting-maintenance' },
         { label: 'Custom CRM & SaaS Engineering', href: '/#services' },
-        { label: 'Technical SEO & Search Growth', href: '/#services' }
+        { label: 'Android & iOS Mobile Apps', href: '/#services' }
       ]
     },
     {
@@ -54,7 +55,7 @@ export const Footer: React.FC = () => {
   const tagLine = siteConfig?.tagline || 'Building High-Speed Websites, Mobile Apps, Windows Software & Cloud Automation Ecosystems.'
   const email = siteConfig?.contact_email || 'hello@springwebsolutions.in'
   const phone = siteConfig?.contact_phone || '+91 80126 22119'
-  const address = siteConfig?.address || 'Udumalpet, Tamil Nadu, India'
+  const address = siteConfig?.address || 'Udumalpet (Udumalaipettai), Tamil Nadu 642126, India'
 
   return (
     <footer className="relative overflow-hidden w-full bg-[#040509] dark:bg-[#040509] light:bg-slate-50 border-t border-white/10 light:border-slate-200 pt-20 pb-12 mt-auto transition-colors duration-300">
@@ -165,7 +166,7 @@ export const Footer: React.FC = () => {
           <div className="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans text-center sm:text-right flex items-center justify-center gap-1.5 flex-wrap">
             <Globe size={13} className="text-emerald-400 light:text-emerald-600 shrink-0" />
             <span>Engineering Web &amp; Software Solutions in </span>
-            <strong className="text-slate-200 dark:text-slate-200 light:text-slate-800 font-semibold">Udumalpet, Tamil Nadu, India</strong>
+            <strong className="text-slate-200 dark:text-slate-200 light:text-slate-800 font-semibold">Udumalpet (Udumalaipettai), Pollachi, Tiruppur, Coimbatore, Tamil Nadu, India</strong>
             <span> &amp; Worldwide.</span>
           </div>
 

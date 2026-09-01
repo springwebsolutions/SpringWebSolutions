@@ -5,20 +5,26 @@ export interface SEOHeadProps {
   description: string
   keywords?: string
   canonicalUrl?: string
+  canonical?: string
   ogImage?: string
   type?: string
   jsonLd?: object | object[]
+  schema?: object | object[]
 }
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
   title,
   description,
-  keywords = 'website development Udumalpet, custom ERP CRM software Udumalpet, app development Udumalpet, software company Coimbatore, web development company Tamil Nadu, custom CRM development India, software agency Udumalpet, Spring Web Solutions',
-  canonicalUrl = typeof window !== 'undefined' ? window.location.href : 'https://www.springwebsolutions.in/',
+  keywords = 'web development company in Udumalpet, website development Udumalaipettai, software company Coimbatore, web development company Tamil Nadu, Spring Web Solutions',
+  canonicalUrl,
+  canonical,
   ogImage = 'https://www.springwebsolutions.in/logo-emblem.png',
   type = 'website',
-  jsonLd
+  jsonLd,
+  schema
 }) => {
+  const activeCanonical = canonical || canonicalUrl || (typeof window !== 'undefined' ? window.location.href : 'https://www.springwebsolutions.in/')
+  const activeSchema = schema || jsonLd
   useEffect(() => {
     // 1. Title
     document.title = title
@@ -56,13 +62,13 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setMeta('author', 'Spring Web Solutions')
 
     // 3. Canonical Link
-    setLink('canonical', canonicalUrl)
+    setLink('canonical', activeCanonical)
 
     // 4. OpenGraph Social Sharing
     setMeta('og:type', type, true)
     setMeta('og:title', title, true)
     setMeta('og:description', description, true)
-    setMeta('og:url', canonicalUrl, true)
+    setMeta('og:url', activeCanonical, true)
     setMeta('og:site_name', 'Spring Web Solutions', true)
     setMeta('og:image', ogImage, true)
 
@@ -73,7 +79,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     setMeta('twitter:image', ogImage)
 
     // 6. Dynamic JSON-LD Structured Data for Search Engine & AI Answer Engine Indexing
-    if (jsonLd) {
+    if (activeSchema) {
       let script = document.getElementById('schema-ld-json') as HTMLScriptElement
       if (!script) {
         script = document.createElement('script')
@@ -81,10 +87,10 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         script.type = 'application/ld+json'
         document.head.appendChild(script)
       }
-      script.text = JSON.stringify(jsonLd)
+      script.text = JSON.stringify(activeSchema)
     }
 
-  }, [title, description, keywords, canonicalUrl, ogImage, type, jsonLd])
+  }, [title, description, keywords, activeCanonical, ogImage, type, activeSchema])
 
   return null
 }

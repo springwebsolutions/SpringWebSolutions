@@ -13,6 +13,9 @@ const Marketplace = lazy(() => import('@/pages/Marketplace'))
 const ProductDetail = lazy(() => import('@/pages/ProductDetail'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const Login = lazy(() => import('@/pages/Login'))
+const DigitalMarketingUdumalpet = lazy(() => import('@/pages/services/DigitalMarketingUdumalpet'))
+const GraphicDesignLogoDesign = lazy(() => import('@/pages/services/GraphicDesignLogoDesign'))
+const WebHostingMaintenance = lazy(() => import('@/pages/services/WebHostingMaintenance'))
 const KBListing = lazy(() => import('@/pages/KBListing'))
 const KBArticle = lazy(() => import('@/pages/KBArticle'))
 const SupportPortal = lazy(() => import('@/pages/SupportPortal'))
@@ -200,6 +203,11 @@ function App() {
           <Route path="/pricing" element={<DynamicPage />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
+
+          {/* Dedicated Local Service Landing Pages (Local SEO Udumalpet) */}
+          <Route path="/digital-marketing-udumalpet" element={<DigitalMarketingUdumalpet />} />
+          <Route path="/graphic-design-logo-design" element={<GraphicDesignLogoDesign />} />
+          <Route path="/web-hosting-maintenance" element={<WebHostingMaintenance />} />
 
           {/* Careers & Jobs Subdomain Portal Routes */}
           <Route path="/careers" element={<CareersHome />} />
