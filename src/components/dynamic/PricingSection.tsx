@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, Zap, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react'
 import { displayRazorpayCheckout } from '@/lib/razorpayService'
+import TiltSpotlightCard from '../ui/TiltSpotlightCard'
+import ProjectEstimator from '../interactive/ProjectEstimator'
 
 interface PricingPlan {
   name: string
@@ -86,7 +88,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
       {/* Background Glow Orbs */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-teal-500/10 blur-[120px] pointer-events-none rounded-full dark:opacity-100 light:opacity-30" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-16 relative z-10">
         
         {/* Title Block */}
         <div className="text-center max-w-3xl mx-auto space-y-4 animate-fade-in-up">
@@ -104,89 +106,95 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
+        {/* Pricing Cards Grid with 3D Tilt & Spotlight */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-4">
           {plans.map((plan, idx) => (
-            <div
-              key={idx}
-              className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 ${
-                plan.isPopular
-                  ? 'dark:bg-gradient-to-b dark:from-emerald-500/15 dark:via-[#080d18] dark:to-[#04060c] light:bg-gradient-to-b light:from-emerald-500/10 light:via-white light:to-emerald-50/40 border-2 border-emerald-500 shadow-2xl dark:shadow-emerald-950/40 light:shadow-emerald-500/10 -translate-y-2'
-                  : 'dark:glass-panel dark:border-white/10 dark:hover:border-white/20 dark:bg-white/[0.02] light:bg-white light:border-slate-200 light:hover:border-slate-300 light:shadow-lg light:hover:shadow-xl'
-              }`}
-            >
-              {plan.isPopular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1 shadow-lg shadow-emerald-500/30">
-                  <Zap size={12} />
-                  <span>Most Popular</span>
-                </div>
-              )}
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-display text-2xl font-bold dark:text-white light:text-slate-900 tracking-tight">{plan.name}</h3>
-                  <p className="text-xs dark:text-slate-400 light:text-slate-600 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
-                </div>
-
-                <div className="py-3 border-y dark:border-white/10 light:border-slate-200 space-y-1">
-                  <div className="flex items-baseline gap-1">
-                    <span className="font-display text-4xl sm:text-5xl font-extrabold dark:text-white light:text-slate-900 tracking-tight">{plan.price}</span>
-                    {plan.period && <span className="text-xs dark:text-slate-400 light:text-slate-500 font-medium">/{plan.period}</span>}
+            <TiltSpotlightCard key={idx} className="h-full rounded-3xl">
+              <div
+                className={`relative rounded-3xl p-8 flex flex-col justify-between h-full transition-all duration-300 ${
+                  plan.isPopular
+                    ? 'dark:bg-gradient-to-b dark:from-emerald-500/15 dark:via-[#080d18] dark:to-[#04060c] light:bg-gradient-to-b light:from-emerald-500/10 light:via-white light:to-emerald-50/40 border-2 border-emerald-500 shadow-2xl dark:shadow-emerald-950/40 light:shadow-emerald-500/10'
+                    : 'dark:glass-panel dark:border-white/10 dark:hover:border-white/20 dark:bg-white/[0.02] light:bg-white light:border-slate-200 light:hover:border-slate-300 light:shadow-lg light:hover:shadow-xl'
+                }`}
+              >
+                {plan.isPopular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1 shadow-lg shadow-emerald-500/30">
+                    <Zap size={12} />
+                    <span>Most Popular</span>
                   </div>
-                  {plan.price !== "Custom Quote" && (
-                    <p className="text-[11px] dark:text-amber-400/90 light:text-amber-700 font-sans leading-tight pt-1 font-medium">
-                      * Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.
-                    </p>
-                  )}
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-display text-2xl font-bold dark:text-white light:text-slate-900 tracking-tight">{plan.name}</h3>
+                    <p className="text-xs dark:text-slate-400 light:text-slate-600 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
+                  </div>
+
+                  <div className="py-3 border-y dark:border-white/10 light:border-slate-200 space-y-1">
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-display text-4xl sm:text-5xl font-extrabold dark:text-white light:text-slate-900 tracking-tight">{plan.price}</span>
+                      {plan.period && <span className="text-xs dark:text-slate-400 light:text-slate-500 font-medium">/{plan.period}</span>}
+                    </div>
+                    {plan.price !== "Custom Quote" && (
+                      <p className="text-[11px] dark:text-amber-400/90 light:text-amber-700 font-sans leading-tight pt-1 font-medium">
+                        * Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Feature List */}
+                  <div className="space-y-3 pt-2">
+                    <div className="text-[11px] font-bold dark:text-slate-400 light:text-slate-500 uppercase tracking-wider">What's included:</div>
+                    <ul className="space-y-2.5">
+                      {plan.features.map((feat, fIdx) => (
+                        <li key={fIdx} className="flex items-start gap-2.5 text-xs dark:text-slate-300 light:text-slate-700 leading-snug">
+                          <span className="h-4 w-4 rounded-full dark:bg-emerald-500/20 dark:border-emerald-500/40 light:bg-emerald-100 light:border-emerald-300 flex items-center justify-center shrink-0 mt-0.5 border">
+                            <Check size={10} className="text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
+                          </span>
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
-                {/* Feature List */}
-                <div className="space-y-3 pt-2">
-                  <div className="text-[11px] font-bold dark:text-slate-400 light:text-slate-500 uppercase tracking-wider">What's included:</div>
-                  <ul className="space-y-2.5">
-                    {plan.features.map((feat, fIdx) => (
-                      <li key={fIdx} className="flex items-start gap-2.5 text-xs dark:text-slate-300 light:text-slate-700 leading-snug">
-                        <span className="h-4 w-4 rounded-full dark:bg-emerald-500/20 dark:border-emerald-500/40 light:bg-emerald-100 light:border-emerald-300 flex items-center justify-center shrink-0 mt-0.5 border">
-                          <Check size={10} className="text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
-                        </span>
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="pt-8 space-y-3">
+                  <Link
+                    to={plan.ctaHref}
+                    className={`w-full py-3 px-6 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      plan.isPopular
+                        ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20'
+                        : 'dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-white light:bg-slate-100 light:hover:bg-slate-200 light:border-slate-300 light:text-slate-900 border'
+                    }`}
+                  >
+                    <span>{plan.ctaText}</span>
+                    <ArrowRight size={14} />
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      const cleanPrice = parseInt(plan.price.replace(/[^0-9]/g, ''), 10) || 5000
+                      displayRazorpayCheckout({
+                        amountInRupees: cleanPrice,
+                        productName: `${plan.name} Plan Deposit`,
+                        productDescription: `Spring Web Solutions — ${plan.name}`,
+                        notes: { planName: plan.name }
+                      })
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 dark:border-emerald-500/30 dark:text-emerald-400 light:bg-emerald-50 light:hover:bg-emerald-100 light:border-emerald-300 light:text-emerald-700 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border"
+                  >
+                    <span>Pay Deposit via Razorpay</span>
+                    <span className="font-mono opacity-80">({plan.price})</span>
+                  </button>
                 </div>
               </div>
-
-              <div className="pt-8 space-y-3">
-                <Link
-                  to={plan.ctaHref}
-                  className={`w-full py-3 px-6 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    plan.isPopular
-                      ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/20'
-                      : 'dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-white light:bg-slate-100 light:hover:bg-slate-200 light:border-slate-300 light:text-slate-900 border'
-                  }`}
-                >
-                  <span>{plan.ctaText}</span>
-                  <ArrowRight size={14} />
-                </Link>
-
-                <button
-                  onClick={() => {
-                    const cleanPrice = parseInt(plan.price.replace(/[^0-9]/g, ''), 10) || 5000
-                    displayRazorpayCheckout({
-                      amountInRupees: cleanPrice,
-                      productName: `${plan.name} Plan Deposit`,
-                      productDescription: `Spring Web Solutions — ${plan.name}`,
-                      notes: { planName: plan.name }
-                    })
-                  }}
-                  className="w-full py-2.5 px-4 rounded-xl dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 dark:border-emerald-500/30 dark:text-emerald-400 light:bg-emerald-50 light:hover:bg-emerald-100 light:border-emerald-300 light:text-emerald-700 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border"
-                >
-                  <span>Pay Deposit via Razorpay</span>
-                  <span className="font-mono opacity-80">({plan.price})</span>
-                </button>
-              </div>
-            </div>
+            </TiltSpotlightCard>
           ))}
+        </div>
+
+        {/* ── Interactive Budget & Timeline Estimator (NavaNala-inspired) ── */}
+        <div className="pt-8">
+          <ProjectEstimator />
         </div>
 
         {/* Bottom SLA & Trust guarantee bar */}

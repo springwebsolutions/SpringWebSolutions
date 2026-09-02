@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Globe, Cpu, Smartphone, Monitor, Activity, Layers } from 'lucide-react'
 import AnimatedBackground from '../ui/AnimatedBackground'
+import TiltSpotlightCard from '../ui/TiltSpotlightCard'
+import ArchitectureVisualizer from '../interactive/ArchitectureVisualizer'
 
 interface ServiceItem {
   title: string
@@ -104,7 +106,7 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
   return (
     <section className="py-20 relative bg-[#060810] dark:bg-[#060810] light:bg-slate-50 border-b border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
       <AnimatedBackground accent="indigo" particleCount={20} />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-24 relative z-10">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-24 relative z-10">
         
         {/* Title Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
@@ -178,49 +180,56 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
                     style={{ background: 'radial-gradient(ellipse at center, rgba(59,130,246,0.35) 0%, rgba(16,185,129,0.15) 60%, transparent 100%)' }}
                   />
 
-                  {/* Main browser-frame card */}
-                  <div className="relative rounded-2xl overflow-hidden border border-white/15 dark:border-white/15 light:border-slate-300 shadow-2xl shadow-black/50 dark:shadow-black/50 light:shadow-slate-300/50 group-hover:border-blue-500/40 transition-all duration-500 group-hover:shadow-blue-500/20 group-hover:shadow-2xl">
+                  {/* Main browser-frame card with 3D cursor-aware tilt & spotlight beam */}
+                  <TiltSpotlightCard className="rounded-2xl">
+                    <div className="relative rounded-2xl overflow-hidden border border-white/15 dark:border-white/15 light:border-slate-300 shadow-2xl shadow-black/50 dark:shadow-black/50 light:shadow-slate-300/50 group-hover:border-emerald-500/40 transition-all duration-500 group-hover:shadow-emerald-500/20 group-hover:shadow-2xl">
 
-                    {/* ── Browser title bar ── */}
-                    <div className="flex items-center gap-2 px-4 h-9 bg-[#0d1117] dark:bg-[#0d1117] light:bg-slate-100 border-b border-white/10 dark:border-white/10 light:border-slate-200">
-                      {/* Traffic-light dots */}
-                      <span className="w-2.5 h-2.5 rounded-full bg-rose-400/80" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
-                      {/* Fake URL bar */}
-                      <div className="flex-1 mx-3 h-4 rounded-full bg-white/8 dark:bg-white/8 light:bg-slate-200 flex items-center px-2">
-                        <span className="text-[9px] text-slate-500 dark:text-slate-500 light:text-slate-400 truncate">springwebsolutions.in</span>
+                      {/* ── Browser title bar ── */}
+                      <div className="flex items-center gap-2 px-4 h-9 bg-[#0d1117] dark:bg-[#0d1117] light:bg-slate-100 border-b border-white/10 dark:border-white/10 light:border-slate-200">
+                        {/* Traffic-light dots */}
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-400/80" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
+                        {/* Fake URL bar */}
+                        <div className="flex-1 mx-3 h-4 rounded-full bg-white/8 dark:bg-white/8 light:bg-slate-200 flex items-center px-2">
+                          <span className="text-[9px] text-slate-500 dark:text-slate-500 light:text-slate-400 truncate">springwebsolutions.in</span>
+                        </div>
+                      </div>
+
+                      {/* ── Illustration canvas (intentional white) ── */}
+                      <div className="relative bg-white aspect-[4/3] flex items-center justify-center overflow-hidden p-6">
+                        {/* Subtle top gradient overlay so white doesn't hard-cut against dark bar */}
+                        <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-slate-50/60 to-transparent pointer-events-none" />
+                        <img
+                          src={service.image}
+                          alt={service.imageAlt || `Custom ${service.title} Service by Spring Web Solutions, Udumalpet, Tamil Nadu, India`}
+                          width={600}
+                          height={450}
+                          loading="lazy"
+                          decoding="async"
+                          className="relative z-10 w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
+                        />
+                        {/* Bottom vignette so img blends down softly */}
+                        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white/80 to-transparent pointer-events-none" />
+                      </div>
+
+                      {/* ── Bottom status bar ── */}
+                      <div className="h-6 bg-[#0d1117] dark:bg-[#0d1117] light:bg-slate-100 border-t border-white/10 dark:border-white/10 light:border-slate-200 flex items-center px-4 gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[9px] text-slate-500 uppercase tracking-widest">springwebsolutions.in</span>
                       </div>
                     </div>
-
-                    {/* ── Illustration canvas (intentional white) ── */}
-                    <div className="relative bg-white aspect-[4/3] flex items-center justify-center overflow-hidden p-6">
-                      {/* Subtle top gradient overlay so white doesn't hard-cut against dark bar */}
-                      <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-slate-50/60 to-transparent pointer-events-none" />
-                      <img
-                        src={service.image}
-                        alt={service.imageAlt || `Custom ${service.title} Service by Spring Web Solutions, Udumalpet, Tamil Nadu, India`}
-                        width={600}
-                        height={450}
-                        loading="lazy"
-                        decoding="async"
-                        className="relative z-10 w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
-                      />
-                      {/* Bottom vignette so img blends down softly */}
-                      <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white/80 to-transparent pointer-events-none" />
-                    </div>
-
-                    {/* ── Bottom status bar ── */}
-                    <div className="h-6 bg-[#0d1117] dark:bg-[#0d1117] light:bg-slate-100 border-t border-white/10 dark:border-white/10 light:border-slate-200 flex items-center px-4 gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                       <span className="text-[9px] text-slate-500 uppercase tracking-widest">springwebsolutions.in</span>
-                    </div>
-                  </div>
+                  </TiltSpotlightCard>
                 </div>
               </div>
 
             </div>
           ))}
+        </div>
+
+        {/* ── Interactive Architecture Pipeline Visualizer ── */}
+        <div className="pt-8">
+          <ArchitectureVisualizer />
         </div>
 
       </div>

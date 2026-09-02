@@ -1,6 +1,7 @@
 import React from 'react'
 import { Search, PenTool, Code2, TestTube2, Rocket, HeartHandshake, ArrowRight, CheckCircle2 } from 'lucide-react'
 import AnimatedBackground from '../ui/AnimatedBackground'
+import ProjectRoadmapStepper from '../interactive/ProjectRoadmapStepper'
 
 const DEFAULT_STEPS = [
   {
@@ -95,7 +96,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content }) => {
       {/* Animated micro-particles background */}
       <AnimatedBackground accent="emerald" particleCount={18} />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 relative z-10 space-y-16">
 
         {/* Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
@@ -111,6 +112,11 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content }) => {
           <p className="text-slate-400 dark:text-slate-400 light:text-slate-600 text-sm sm:text-base font-sans font-light leading-relaxed">
             {subtitle}
           </p>
+        </div>
+
+        {/* ── Interactive 6-Phase Project Roadmap Stepper (NavaNala-inspired) ── */}
+        <div className="pt-2">
+          <ProjectRoadmapStepper />
         </div>
 
         {/* Steps Grid */}

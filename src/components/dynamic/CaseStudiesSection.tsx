@@ -109,7 +109,7 @@ export const CaseStudiesSection: React.FC<{ content?: any; styling?: any }> = ({
   return (
     <section className="py-20 bg-[#040509] dark:bg-[#040509] light:bg-white text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       <AnimatedBackground accent="emerald" particleCount={14} />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-12 relative z-10">
         
         {/* Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">

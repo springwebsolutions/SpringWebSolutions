@@ -139,7 +139,7 @@ export const Contact: React.FC = () => {
         <div className="glow-node glow-emerald -top-20 -left-20" />
         <div className="glow-node glow-indigo bottom-20 -right-20" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+        <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-12 relative z-10">
           
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto space-y-4">
@@ -155,7 +155,7 @@ export const Contact: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl 2xl:max-w-7xl mx-auto">
             
             {/* Left Column: Essential Contact Information */}
             <div className="lg:col-span-4 space-y-6">
@@ -324,6 +324,32 @@ export const Contact: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Live Form Completion Progress Bar (NavaNala-inspired micro-feedback) */}
+                    {(() => {
+                      const nameVal = watch('name') || ''
+                      const emailVal = watch('email') || ''
+                      const descVal = watch('description') || ''
+                      const filledCount = [nameVal.trim(), emailVal.trim(), descVal.trim()].filter(Boolean).length
+                      const progressPct = Math.round((filledCount / 3) * 100)
+
+                      return (
+                        <div className="space-y-1.5 p-3 rounded-2xl bg-white/5 border border-white/10">
+                          <div className="flex items-center justify-between text-[11px] font-mono">
+                            <span className="text-slate-400">Form Completion:</span>
+                            <span className={progressPct === 100 ? 'text-emerald-400 font-bold' : 'text-slate-300'}>
+                              {progressPct}% {progressPct === 100 && '• Ready to Send!'}
+                            </span>
+                          </div>
+                          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-indigo-500 rounded-full transition-all duration-300"
+                              style={{ width: `${progressPct}%` }}
+                            />
+                          </div>
+                        </div>
+                      )
+                    })()}
+
                     {/* Name & Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
@@ -349,12 +375,18 @@ export const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Company & Phone */}
+                    {/* Company & Phone with Character Counter */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Company / Organization</label>
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">Company / Organization</label>
+                          <span className="text-[10px] font-mono text-slate-500">
+                            {(watch('company') || '').length}/100
+                          </span>
+                        </div>
                         <input
                           type="text"
+                          maxLength={100}
                           {...register('company')}
                           className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
                           placeholder="Company Ltd."
@@ -372,13 +404,19 @@ export const Contact: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Project Description */}
+                    {/* Project Description with Character Counter */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">How can we help? *</label>
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider light:text-slate-500">How can we help? *</label>
+                        <span className={`text-[10px] font-mono ${(watch('description') || '').length > 450 ? 'text-amber-400' : 'text-slate-500'}`}>
+                          {(watch('description') || '').length}/500
+                        </span>
+                      </div>
                       <textarea
                         rows={4}
+                        maxLength={500}
                         {...register('description')}
-                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800"
+                        className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-brand-emerald light:bg-white light:border-slate-300 light:text-slate-800 transition-all duration-200"
                         placeholder="Tell us about your project requirements, goals, or current bottlenecks..."
                       />
                       {errors.description && <p className="text-xs text-rose-400">{errors.description.message}</p>}

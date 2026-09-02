@@ -963,3 +963,15 @@ h1, h2, h3, h4, h5, h6 {
 .hover-levitate:hover {
   transform: translateY(-6px);
 }
+
+/* ── Traveling Pulse for Architecture Flow ── */
+@keyframes pulseTravel {
+  0%   { left: 0%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+.animate-pulse-travel {
+  animation: pulseTravel 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
