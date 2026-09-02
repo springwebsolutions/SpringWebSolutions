@@ -88,7 +88,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
       {/* Background Glow Orbs */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-teal-500/10 blur-[120px] pointer-events-none rounded-full dark:opacity-100 light:opacity-30" />
 
-      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-16 relative z-10">
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 space-y-16 relative z-10">
         
         {/* Title Block */}
         <div className="text-center max-w-3xl mx-auto space-y-4 animate-fade-in-up">

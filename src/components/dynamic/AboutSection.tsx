@@ -63,7 +63,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
     <section id="about" className="py-24 bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white border-b border-white/5 light:border-slate-200 transition-colors duration-300 relative overflow-hidden">
       <AnimatedBackground accent="emerald" particleCount={22} />
 
-      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-16 relative z-10">
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 space-y-16 relative z-10">
         
         {/* Header Block */}
         <div className="text-center space-y-4 max-w-4xl mx-auto">

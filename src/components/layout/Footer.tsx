@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
       <div className="absolute top-0 left-1/4 w-[30rem] h-[30rem] rounded-full bg-emerald-500/10 dark:bg-emerald-500/10 light:bg-emerald-400/10 filter blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 right-10 w-[25rem] h-[25rem] rounded-full bg-indigo-600/10 dark:bg-indigo-600/10 light:bg-indigo-400/10 filter blur-[140px] pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 relative z-10 space-y-16">
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 relative z-10 space-y-16">
         
         {/* Large Glassmorphic CTA Banner */}
         <div className="p-8 sm:p-12 rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 light:border-slate-200 shadow-2xl light:shadow-xl backdrop-blur-xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 relative overflow-hidden group">

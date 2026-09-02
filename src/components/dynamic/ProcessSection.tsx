@@ -96,7 +96,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content }) => {
       {/* Animated micro-particles background */}
       <AnimatedBackground accent="emerald" particleCount={18} />
 
-      <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 relative z-10 space-y-16">
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 relative z-10 space-y-16">
 
         {/* Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">

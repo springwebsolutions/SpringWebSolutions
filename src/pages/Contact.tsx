@@ -139,7 +139,7 @@ export const Contact: React.FC = () => {
         <div className="glow-node glow-emerald -top-20 -left-20" />
         <div className="glow-node glow-indigo bottom-20 -right-20" />
 
-        <div className="mx-auto max-w-7xl 2xl:max-w-[1536px] px-4 sm:px-8 lg:px-12 space-y-12 relative z-10">
+        <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 space-y-12 relative z-10">
           
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto space-y-4">
