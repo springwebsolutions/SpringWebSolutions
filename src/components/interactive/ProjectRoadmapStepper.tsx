@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { 
   Search, PenTool, Code2, ShieldCheck, Rocket, HeartHandshake, 
-  CheckCircle2, ArrowRight, Clock, Award, Sparkles, FileCode2
+  CheckCircle2, ArrowRight, ArrowLeft, Clock, Award, FileCode2, ChevronRight
 } from 'lucide-react'
 
 interface Milestone {
@@ -24,7 +24,7 @@ const ROADMAP_STEPS: Milestone[] = [
     shortTitle: 'Discovery',
     dayRange: 'Day 1 – 2',
     icon: Search,
-    color: 'text-emerald-400',
+    color: 'text-emerald-400 dark:text-emerald-400 light:text-emerald-700',
     badge: '24h Turnaround',
     desc: 'Deep technical consultation to audit your business goals, tech requirements, and data flows. We define fixed scope, deliverables, and architecture blueprints with zero guesswork.',
     deliverables: [
@@ -40,7 +40,7 @@ const ROADMAP_STEPS: Milestone[] = [
     shortTitle: 'Design',
     dayRange: 'Day 3 – 5',
     icon: PenTool,
-    color: 'text-indigo-400',
+    color: 'text-indigo-400 dark:text-indigo-400 light:text-indigo-700',
     badge: 'Interactive Mockups',
     desc: 'Our lead designers craft pixel-perfect Figma screens with modern glassmorphism, mobile touch ergonomical layouts, and design tokens approved by you before writing code.',
     deliverables: [
@@ -56,7 +56,7 @@ const ROADMAP_STEPS: Milestone[] = [
     shortTitle: 'Engineering',
     dayRange: 'Day 6 – 10',
     icon: Code2,
-    color: 'text-teal-400',
+    color: 'text-teal-400 dark:text-teal-400 light:text-teal-700',
     badge: 'Live Staging',
     desc: 'Engineered using React 19, Next.js 15, or Kotlin native with daily Git commits. You get a private live staging URL to test real working features as they are built.',
     deliverables: [
@@ -72,7 +72,7 @@ const ROADMAP_STEPS: Milestone[] = [
     shortTitle: 'Testing',
     dayRange: 'Day 11 – 12',
     icon: ShieldCheck,
-    color: 'text-amber-400',
+    color: 'text-amber-400 dark:text-amber-400 light:text-amber-700',
     badge: '100/100 PageSpeed',
     desc: 'Rigorous automated and manual stress tests across iPhone, Android, and desktop browsers. We audit security vulnerabilities, SSL encryption, and optimize assets to achieve sub-second load times.',
     deliverables: [
@@ -88,7 +88,7 @@ const ROADMAP_STEPS: Milestone[] = [
     shortTitle: 'Launch',
     dayRange: 'Day 13 – 14',
     icon: Rocket,
-    color: 'text-rose-400',
+    color: 'text-rose-400 dark:text-rose-400 light:text-rose-700',
     badge: '100% Ownership',
     desc: 'Zero-downtime production deployment to your custom domain with global CDN caching and SSL certificates. Full source code repositories transferred directly to your organization.',
     deliverables: [
@@ -104,7 +104,7 @@ const ROADMAP_STEPS: Milestone[] = [
     shortTitle: 'Growth SLA',
     dayRange: 'Ongoing',
     icon: HeartHandshake,
-    color: 'text-purple-400',
+    color: 'text-purple-400 dark:text-purple-400 light:text-purple-700',
     badge: '99.9% Uptime',
     desc: 'Proactive 24/7 server monitoring, daily automated database snapshots, feature iterations, and guaranteed SLA response windows for enterprise peace of mind.',
     deliverables: [
@@ -121,66 +121,97 @@ export const ProjectRoadmapStepper: React.FC = () => {
   const current = ROADMAP_STEPS[activeStep]
   const Icon = current.icon
 
+  const handlePrev = () => {
+    if (activeStep > 0) setActiveStep(activeStep - 1)
+  }
+
+  const handleNext = () => {
+    if (activeStep < ROADMAP_STEPS.length - 1) setActiveStep(activeStep + 1)
+  }
+
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       
-      {/* ── Interactive Horizontal Progress Stepper ── */}
-      <div className="relative">
-        
-        {/* Background Progress Bar */}
-        <div className="absolute top-6 left-6 right-6 h-1 bg-white/10 rounded-full hidden md:block">
-          <div 
-            className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-indigo-500 rounded-full transition-all duration-500"
-            style={{ width: `${(activeStep / (ROADMAP_STEPS.length - 1)) * 100}%` }}
-          />
+      {/* ── Segmented Progress Bar ── */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between text-xs font-mono">
+          <span className="text-slate-400 dark:text-slate-400 light:text-slate-600 font-medium">
+            Sprint Progress: <strong className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700">Phase 0{activeStep + 1} of 06</strong> ({current.shortTitle})
+          </span>
+          <span className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700 font-bold">
+            {Math.round(((activeStep + 1) / ROADMAP_STEPS.length) * 100)}% Completed
+          </span>
         </div>
 
-        {/* Stepper Buttons Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 relative z-10">
-          {ROADMAP_STEPS.map((step, idx) => {
-            const isPassed = idx <= activeStep
-            const isCurrent = idx === activeStep
-            const StepIcon = step.icon
-
-            return (
-              <button
-                key={step.number}
-                onClick={() => setActiveStep(idx)}
-                className={`p-3.5 rounded-2xl border transition-all duration-300 text-left flex flex-col items-center md:items-start space-y-2 cursor-pointer ${
-                  isCurrent
-                    ? 'border-emerald-500 bg-emerald-950/40 dark:bg-emerald-950/40 light:bg-emerald-50/80 light:border-emerald-500 shadow-xl shadow-emerald-500/20 light:shadow-emerald-500/10 scale-[1.03]'
-                    : isPassed
-                      ? 'border-white/20 dark:border-white/20 light:border-slate-200 bg-slate-900/60 dark:bg-slate-900/60 light:bg-white hover:border-white/30 light:hover:border-slate-300'
-                      : 'border-white/10 dark:border-white/10 light:border-slate-200 bg-slate-900/30 dark:bg-slate-900/30 light:bg-slate-50/60 opacity-70 hover:opacity-100'
+        {/* 6 Clean Progress Segments */}
+        <div className="grid grid-cols-6 gap-2 sm:gap-3">
+          {ROADMAP_STEPS.map((_, idx) => (
+            <div 
+              key={idx}
+              onClick={() => setActiveStep(idx)}
+              className="h-2 rounded-full overflow-hidden bg-white/10 dark:bg-white/10 light:bg-slate-200 cursor-pointer transition-all hover:opacity-80"
+              title={`Jump to Phase 0${idx + 1}`}
+            >
+              <div 
+                className={`h-full rounded-full transition-all duration-300 ${
+                  idx < activeStep 
+                    ? 'bg-emerald-500' 
+                    : idx === activeStep 
+                      ? 'bg-gradient-to-r from-emerald-400 to-teal-400' 
+                      : 'w-0'
                 }`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <div className={`h-8 w-8 rounded-xl flex items-center justify-center transition-all ${
-                    isCurrent
-                      ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/30'
-                      : isPassed
-                        ? 'bg-emerald-500/20 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-100'
-                        : 'bg-white/5 dark:bg-white/5 light:bg-slate-200/70 text-slate-400 light:text-slate-500'
-                  }`}>
-                    <StepIcon size={16} />
-                  </div>
-                  <span className="text-[10px] font-mono font-bold text-slate-400 light:text-slate-500">
-                    {step.number}
-                  </span>
-                </div>
-
-                <div className="w-full text-center md:text-left">
-                  <div className="text-xs font-bold text-white dark:text-white light:text-slate-900 font-display truncate">
-                    {step.shortTitle}
-                  </div>
-                  <div className="text-[10px] font-mono text-emerald-400 dark:text-emerald-400 light:text-emerald-700 truncate">
-                    {step.dayRange}
-                  </div>
-                </div>
-              </button>
-            )
-          })}
+                style={{ width: idx <= activeStep ? '100%' : '0%' }}
+              />
+            </div>
+          ))}
         </div>
+      </div>
+
+      {/* ── Step Selection Tabs ── */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+        {ROADMAP_STEPS.map((step, idx) => {
+          const isSelected = activeStep === idx
+          const isPast = idx < activeStep
+          const StepIcon = step.icon
+
+          return (
+            <button
+              key={step.number}
+              onClick={() => setActiveStep(idx)}
+              className={`p-3 sm:p-4 rounded-2xl border transition-all duration-200 text-left flex flex-col justify-between space-y-2 cursor-pointer ${
+                isSelected
+                  ? 'border-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/40 light:bg-emerald-50/90 shadow-lg shadow-emerald-500/15 scale-[1.02]'
+                  : isPast
+                    ? 'border-white/15 dark:border-white/15 light:border-slate-200 bg-slate-900/50 dark:bg-slate-900/50 light:bg-white hover:border-emerald-500/30'
+                    : 'border-white/10 dark:border-white/10 light:border-slate-200 bg-slate-900/20 dark:bg-slate-900/20 light:bg-slate-50/80 opacity-70 hover:opacity-100 hover:border-white/20'
+              }`}
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className={`h-7 w-7 rounded-lg flex items-center justify-center transition-all ${
+                  isSelected
+                    ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/30'
+                    : isPast
+                      ? 'bg-emerald-500/20 text-emerald-400 dark:text-emerald-400 light:text-emerald-700'
+                      : 'bg-white/5 dark:bg-white/5 light:bg-slate-200/80 text-slate-400'
+                }`}>
+                  <StepIcon size={14} />
+                </div>
+                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-400 light:text-slate-500">
+                  {step.number}
+                </span>
+              </div>
+
+              <div>
+                <div className="text-xs font-bold text-white dark:text-white light:text-slate-900 font-display truncate">
+                  {step.shortTitle}
+                </div>
+                <div className="text-[10px] font-mono text-emerald-400 dark:text-emerald-400 light:text-emerald-700 truncate">
+                  {step.dayRange}
+                </div>
+              </div>
+            </button>
+          )
+        })}
       </div>
 
       {/* ── Active Milestone Detailed Showcase Card ── */}
@@ -188,7 +219,7 @@ export const ProjectRoadmapStepper: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left Description Column */}
-          <div className="lg:col-span-7 space-y-5">
+          <div className="lg:col-span-7 space-y-6">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-50 light:border-emerald-300 text-xs font-mono font-bold">
                 PHASE {current.number} OF 06
@@ -220,6 +251,27 @@ export const ProjectRoadmapStepper: React.FC = () => {
                 <span>{current.clientInvolvement}</span>
               </div>
             </div>
+
+            {/* Previous / Next Stepper Controls */}
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                onClick={handlePrev}
+                disabled={activeStep === 0}
+                className="px-4 py-2 rounded-xl text-xs font-semibold border border-white/15 dark:border-white/15 light:border-slate-300 bg-white/5 dark:bg-white/5 light:bg-white text-slate-300 dark:text-slate-300 light:text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 light:hover:bg-slate-100 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <ArrowLeft size={13} />
+                <span>Previous Phase</span>
+              </button>
+
+              <button
+                onClick={handleNext}
+                disabled={activeStep === ROADMAP_STEPS.length - 1}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-emerald-500/20"
+              >
+                <span>Next Phase</span>
+                <ArrowRight size={13} />
+              </button>
+            </div>
           </div>
 
           {/* Right Deliverables Column */}
@@ -240,13 +292,13 @@ export const ProjectRoadmapStepper: React.FC = () => {
             <div className="pt-3 border-t border-white/10 dark:border-white/10 light:border-slate-200 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500">
               <span className="font-mono">100% Quality Checked</span>
               <a
-                href="https://wa.me/918012622119?text=Hello%20SpringWeb%2C%20I%20would%20like%20to%20discuss%20the%20project%20roadmap%20timeline."
+                href={`https://wa.me/918012622119?text=Hello%20SpringWeb%2C%20I%20would%20like%20to%20discuss%20Phase%20${current.number}%20(${encodeURIComponent(current.title)})%20for%20my%20project.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700 hover:text-emerald-300 light:hover:text-emerald-800 font-bold inline-flex items-center gap-1 transition-colors"
               >
-                <span>Ask about this phase</span>
-                <ArrowRight size={12} />
+                <span>Discuss this phase</span>
+                <ChevronRight size={13} />
               </a>
             </div>
           </div>

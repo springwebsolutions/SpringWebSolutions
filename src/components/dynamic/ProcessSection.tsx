@@ -119,50 +119,6 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({ content }) => {
           <ProjectRoadmapStepper />
         </div>
 
-        {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stepsList.map((step: any) => {
-            const Icon = step.icon
-            return (
-              <div
-                key={step.number}
-                className="group relative rounded-3xl bg-[#06080f] dark:bg-[#06080f] light:bg-white border border-white/8 light:border-slate-200 p-7 space-y-5 hover:border-emerald-500/40 light:hover:border-emerald-500/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10 light:shadow-sm light:hover:shadow-lg transition-all duration-300"
-              >
-                {/* Step number watermark */}
-                <div className="absolute top-5 right-6 text-5xl font-black text-white/4 dark:text-white/4 light:text-slate-900/5 font-display select-none">
-                  {step.number}
-                </div>
-
-                {/* Icon */}
-                <div className={`h-11 w-11 rounded-2xl ${step.bg} border flex items-center justify-center ${step.color} shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
-                  <Icon size={20} />
-                </div>
-
-                {/* Title */}
-                <div className="space-y-2">
-                  <h3 className="text-base font-bold text-white dark:text-white light:text-slate-900 font-display transition-colors">
-                    <span className={`${step.color} font-mono text-xs mr-2 opacity-70`}>{step.number}</span>
-                    {step.title}
-                  </h3>
-                  <p className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-
-                {/* Bullets */}
-                <ul className="space-y-1.5">
-                  {step.bullets.map((b: string) => (
-                    <li key={b} className="flex items-center gap-2 text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 font-sans">
-                      <CheckCircle2 size={12} className={`${step.color} shrink-0`} />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )
-          })}
-        </div>
-
         {/* Bottom CTA */}
         <div className="text-center pt-4">
           <a
