@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { useAuthStore } from '@/stores/authStore'
-import { Menu, X, Sun, Moon, Lock, User, LogOut, LayoutDashboard } from 'lucide-react'
+import { Menu, X, Sun, Moon, Lock, User, LogOut, LayoutDashboard, Gamepad2 } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
 
 export const Navbar: React.FC = () => {
@@ -262,6 +262,17 @@ export const Navbar: React.FC = () => {
 
             {/* Action Buttons (Auth & Theme Switcher) */}
             <div className="hidden md:flex items-center space-x-3">
+              {/* Arcade Quick Launch */}
+              <Link
+                to="/games"
+                className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-300 transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold font-display shadow-sm shadow-emerald-500/10"
+                title="Play HTML5 Arcade Games"
+                aria-label="Play HTML5 Arcade Games"
+              >
+                <Gamepad2 size={16} />
+                <span className="hidden lg:inline">Arcade</span>
+              </Link>
+
               {/* Theme Toggle */}
               <button
                 onClick={() => toggleTheme()}
@@ -335,6 +346,14 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-white/10 light:border-slate-200 bg-[#040509]/98 light:bg-white backdrop-blur-xl p-4 space-y-3 shadow-2xl">
           <div className="space-y-1">
+            <Link
+              to="/games"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2.5 text-base font-bold rounded-lg text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 mb-2"
+            >
+              <Gamepad2 size={18} />
+              <span>🎮 HTML5 Games Arcade</span>
+            </Link>
             {headerLinks.map((link: any, idx: number) => {
               if (link.href.startsWith('http')) {
                 return (

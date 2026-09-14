@@ -23,6 +23,7 @@ const KBListing = lazy(() => import('@/pages/KBListing'))
 const KBArticle = lazy(() => import('@/pages/KBArticle'))
 const SupportPortal = lazy(() => import('@/pages/SupportPortal'))
 const SupportTicketDetail = lazy(() => import('@/pages/SupportTicketDetail'))
+const GamesArcade = lazy(() => import('@/pages/GamesArcade'))
 
 // Careers & Jobs Subdomain Portal (Lazy Loaded)
 const CareersHome = lazy(() => import('@/pages/careers/CareersHome').then(m => ({ default: m.CareersHome })))
@@ -242,6 +243,10 @@ function App() {
           {/* Marketplace */}
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/marketplace/:slug" element={<ProductDetail />} />
+
+          {/* Client-Side HTML5 Interactive Games Arcade */}
+          <Route path="/games" element={<GamesArcade />} />
+          <Route path="/arcade" element={<GamesArcade />} />
 
           {/* Public Client Auth */}
           <Route path="/login" element={<Login />} />
