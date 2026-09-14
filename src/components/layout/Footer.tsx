@@ -13,6 +13,8 @@ export const Footer: React.FC = () => {
       heading: 'Engineered Solutions',
       links: [
         { label: 'Web & App Development', href: '/#services' },
+        { label: 'Trading Bots (Quotex, MT4/5)', href: '/trading-bot-development' },
+        { label: 'Telegram & Workflow Bots', href: '/telegram-bot-development' },
         { label: 'Digital Marketing (Udumalpet)', href: '/digital-marketing-udumalpet' },
         { label: 'Graphic & Logo Design', href: '/graphic-design-logo-design' },
         { label: 'Web Hosting & Maintenance', href: '/web-hosting-maintenance' },

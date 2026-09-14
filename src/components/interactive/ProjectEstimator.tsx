@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { 
   Calculator, Check, MessageSquare, ArrowRight, Sparkles, Clock, 
-  ShieldCheck, Smartphone, Globe, Cpu, Layers, DollarSign
+  ShieldCheck, Smartphone, Globe, Cpu, Layers, DollarSign, Bot, Send
 } from 'lucide-react'
 
 interface ProjectTier {
@@ -21,6 +21,22 @@ const TIERS: ProjectTier[] = [
     baseDays: 5,
     icon: Globe,
     desc: 'Sub-second speed corporate site with SEO, responsive UI & WhatsApp integration.'
+  },
+  {
+    id: 'quotex-bot',
+    name: 'Quotex / Binary Trading Bot',
+    basePrice: 29999,
+    baseDays: 7,
+    icon: Bot,
+    desc: 'Automated WebSocket execution engine with martingale risk rules and sub-80ms reaction.'
+  },
+  {
+    id: 'telegram-bot',
+    name: 'Telegram VIP Paywall & Signal Bot',
+    basePrice: 18999,
+    baseDays: 5,
+    icon: Send,
+    desc: 'Automated signal forwarder, Razorpay/USDT crypto paywall & automated invite links.'
   },
   {
     id: 'webapp',
@@ -58,6 +74,20 @@ interface Addon {
 
 const ADDONS: Addon[] = [
   {
+    id: 'tradingview',
+    name: 'TradingView PineScript Alert Webhook',
+    price: 6500,
+    extraDays: 2,
+    desc: 'Bridge TradingView indicator alerts to auto-execute on Quotex/Brokers'
+  },
+  {
+    id: 'usdt-paywall',
+    name: 'USDT Crypto (TRC20/BEP20) Paywall',
+    price: 4500,
+    extraDays: 2,
+    desc: 'Direct blockchain subscription verification with 0% gateway commission'
+  },
+  {
     id: 'whatsapp',
     name: 'WhatsApp Cloud Automation',
     price: 3500,
@@ -79,18 +109,11 @@ const ADDONS: Addon[] = [
     desc: 'Targeted Udumalpet, Pollachi & Tiruppur keyword ranking + schema'
   },
   {
-    id: 'bilingual',
-    name: 'Tamil & English Dual Language',
-    price: 3500,
-    extraDays: 1,
-    desc: 'Bilingual content localization for regional Tamil Nadu conversion'
-  },
-  {
     id: 'sla',
     name: 'Annual Maintenance & Cloud AMC',
-    price: 9999,
+    price: 8500,
     extraDays: 0,
-    desc: '12 months priority 24/7 SLA, weekly backups & speed tuneups'
+    desc: 'Proactive 24/7 server monitoring, database backups & security patches'
   }
 ]
 

@@ -16,6 +16,9 @@ const Login = lazy(() => import('@/pages/Login'))
 const DigitalMarketingUdumalpet = lazy(() => import('@/pages/services/DigitalMarketingUdumalpet'))
 const GraphicDesignLogoDesign = lazy(() => import('@/pages/services/GraphicDesignLogoDesign'))
 const WebHostingMaintenance = lazy(() => import('@/pages/services/WebHostingMaintenance'))
+const TradingBotDevelopment = lazy(() => import('@/pages/services/TradingBotDevelopment'))
+const TelegramBotAutomation = lazy(() => import('@/pages/services/TelegramBotAutomation'))
+const WorkflowAutomationBots = lazy(() => import('@/pages/services/WorkflowAutomationBots'))
 const KBListing = lazy(() => import('@/pages/KBListing'))
 const KBArticle = lazy(() => import('@/pages/KBArticle'))
 const SupportPortal = lazy(() => import('@/pages/SupportPortal'))
@@ -208,6 +211,14 @@ function App() {
           <Route path="/digital-marketing-udumalpet" element={<DigitalMarketingUdumalpet />} />
           <Route path="/graphic-design-logo-design" element={<GraphicDesignLogoDesign />} />
           <Route path="/web-hosting-maintenance" element={<WebHostingMaintenance />} />
+
+          {/* Bot Engineering & Automation Dedicated Services */}
+          <Route path="/trading-bot-development" element={<TradingBotDevelopment />} />
+          <Route path="/algorithmic-trading-bots" element={<TradingBotDevelopment />} />
+          <Route path="/telegram-bot-development" element={<TelegramBotAutomation />} />
+          <Route path="/telegram-bots-automation" element={<TelegramBotAutomation />} />
+          <Route path="/workflow-automation-bots" element={<WorkflowAutomationBots />} />
+          <Route path="/business-automation-bots" element={<WorkflowAutomationBots />} />
 
           {/* Careers & Jobs Subdomain Portal Routes */}
           <Route path="/careers" element={<CareersHome />} />

@@ -167,6 +167,54 @@ const ARCHITECTURAL_FLOWS: FlowData[] = [
         status: 'optimal'
       }
     ]
+  },
+  {
+    id: 'trading-bot-pipeline',
+    name: 'Quotex & Algorithmic Trading Signal Pipeline',
+    badge: 'Trading Automation',
+    summary: 'Ultra-low-latency execution engine connecting TradingView & PineScript alerts directly to Quotex, Pocket Option, and Telegram VIP channels in <80ms.',
+    nodes: [
+      {
+        id: 'signal-source',
+        label: 'TradingView / PineScript Engine',
+        tech: 'PineScript v5 & Webhook Trigger',
+        role: 'Market structure scans, multi-timeframe indicators, strategy alerts',
+        latency: '< 20ms trigger',
+        throughput: 'Instant Alert',
+        icon: Radio,
+        status: 'optimal'
+      },
+      {
+        id: 'ws-gateway',
+        label: 'Low-Latency WebSocket Gateway',
+        tech: 'Node.js / Python FastAsync',
+        role: 'Real-time JSON payload validation, token authentication, anti-drop queue',
+        latency: '< 15ms queue',
+        throughput: '100k msgs/sec',
+        icon: Zap,
+        status: 'optimal'
+      },
+      {
+        id: 'risk-engine',
+        label: 'Risk & Martingale Rule Engine',
+        tech: 'Capital Preservation Core',
+        role: 'Validates broker payout >80%, calculates Martingale step, checks daily SL/TP',
+        latency: '< 5ms rule check',
+        throughput: 'Zero Bleed Risk',
+        icon: ShieldCheck,
+        status: 'optimal'
+      },
+      {
+        id: 'execution-broker',
+        label: 'Quotex / PocketOption / Exchange API',
+        tech: 'WebSocket Trade Broker API',
+        role: 'Instant CALL/PUT trade placement, expiry synchronization, Telegram VIP broadcast',
+        latency: '< 40ms trade lock',
+        throughput: 'Live Execution',
+        icon: Activity,
+        status: 'active'
+      }
+    ]
   }
 ]
 

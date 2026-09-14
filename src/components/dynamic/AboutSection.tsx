@@ -1,5 +1,5 @@
 import React from 'react'
-import { ShieldCheck, Cpu, Award, Terminal, Smartphone, Monitor, MapPin, Code2, Check, Zap, Globe } from 'lucide-react'
+import { ShieldCheck, Cpu, Award, Terminal, Smartphone, Monitor, MapPin, Code2, Check, Zap, Globe, Bot } from 'lucide-react'
 import AnimatedBackground from '../ui/AnimatedBackground'
 
 interface AboutSectionProps {
@@ -12,7 +12,7 @@ interface AboutSectionProps {
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
   const title = content?.title || "ABOUT SPRINGWEB SOLUTIONS & OUR ENGINEERING ARCHITECTURE"
-  const subtitle = content?.subtitle || "SpringWeb Solutions is a solution engineering agency based in Udumalpet, Tamil Nadu, India. We build high-speed web applications, native Android mobile apps, Windows desktop software, and automated lead CRM ecosystems for global businesses."
+  const subtitle = content?.subtitle || "SpringWeb Solutions is a solution engineering agency based in Udumalpet, Tamil Nadu, India. We build high-speed web applications, automated trading bots, Telegram VIP signal engines, native mobile apps, and enterprise software ecosystems."
 
   const pillars = [
     {
@@ -23,11 +23,25 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
       skills: ["React 19", "Next.js 15", "TypeScript", "Tailwind CSS"]
     },
     {
+      title: "Trading Bots & Signal Engines",
+      role: "Algorithmic & Financial Automation",
+      desc: "Custom automated trading engines for Quotex, Pocket Option, TradingView PineScript alerts, MT4/MT5, and Crypto with sub-80ms WebSocket execution.",
+      icon: Bot,
+      skills: ["Quotex API", "PineScript v5", "WebSockets", "Python Async"]
+    },
+    {
       title: "Android & Mobile App Development",
       role: "Native & Cross-Platform Mobile",
       desc: "High-performance native Android apps (Kotlin) & cross-platform iOS applications engineered for speed, offline synchronization, push notifications, and Google Play Store deployment.",
       icon: Smartphone,
       skills: ["Kotlin", "Android SDK", "Flutter", "Play Store API"]
+    },
+    {
+      title: "Telegram Bots & VIP Paywalls",
+      role: "Community & Channel Automation",
+      desc: "Custom Telegram signal auto-forwarders, automated Razorpay/USDT Crypto VIP subscription paywalls, and interactive Telegram Mini Apps (TMAs).",
+      icon: Zap,
+      skills: ["aiogram 3.x", "Telethon", "USDT TRC20", "Telegram WebApps"]
     },
     {
       title: "Windows Desktop Application Engineering",
@@ -37,25 +51,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ content }) => {
       skills: ["C# .NET", "WinUI 3", "WPF", "MSI Installer"]
     },
     {
-      title: "Custom CRM & Automated Workflows",
-      role: "Backend & Lead Automation",
-      desc: "Building proprietary business databases, Supabase/PostgreSQL integrations, real-time inventory systems, instant WhatsApp lead webhooks, and automated CRM pipelines.",
-      icon: Zap,
-      skills: ["WhatsApp API", "Supabase", "PostgreSQL", "Node.js"]
-    },
-    {
-      title: "Enterprise Software Architecture",
+      title: "Enterprise Architecture & CRM",
       role: "Multi-Platform Cloud Integration",
       desc: "Unified software ecosystems connecting web portals, mobile apps, and Windows desktop clients to a single cloud database with microservices and automated API pipelines.",
       icon: Cpu,
       skills: ["REST APIs", "Microservices", "Cloud Backups", "Data Encryption"]
-    },
-    {
-      title: "Technical SEO & Search Dominance",
-      role: "Organic Indexing & Growth",
-      desc: "Structuring JSON-LD schema markups, canonical architecture, Google Search Console indexing, and local search visibility for Indian and global brands.",
-      icon: ShieldCheck,
-      skills: ["Structured Schema", "Core Web Vitals", "Google Indexing", "Local SEO"]
     }
   ]
 

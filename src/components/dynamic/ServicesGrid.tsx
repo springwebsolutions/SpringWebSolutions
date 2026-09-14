@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Globe, Cpu, Smartphone, Monitor, Activity, Layers } from 'lucide-react'
+import { ArrowRight, Globe, Cpu, Smartphone, Monitor, Activity, Layers, Bot, Send, Zap } from 'lucide-react'
 import AnimatedBackground from '../ui/AnimatedBackground'
 import TiltSpotlightCard from '../ui/TiltSpotlightCard'
 import ArchitectureVisualizer from '../interactive/ArchitectureVisualizer'
@@ -24,6 +24,8 @@ interface ServicesGridProps {
 // Icon mapper helper
 const getServiceIcon = (title: string) => {
   const t = title.toLowerCase()
+  if (t.includes('trading') || t.includes('quotex') || t.includes('bot')) return <Bot className="text-emerald-400" size={24} />
+  if (t.includes('telegram') || t.includes('signal')) return <Send className="text-indigo-400" size={24} />
   if (t.includes('android') || t.includes('mobile') || t.includes('ios')) return <Smartphone className="text-emerald-400" size={24} />
   if (t.includes('windows') || t.includes('desktop')) return <Monitor className="text-indigo-400" size={24} />
   if (t.includes('web') || t.includes('site')) return <Globe className="text-emerald-500" size={24} />
@@ -100,6 +102,38 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
         'AI Search Engine (ChatGPT/Perplexity/Gemini) Indexing'
       ],
       href: '/contact'
+    },
+    {
+      title: 'Algorithmic Trading & Quotex Signal Bots',
+      subtitle: 'Institutional-grade automated trading bots for Quotex, Pocket Option, Binance, MT4/MT5, and TradingView PineScript webhooks with sub-80ms execution.',
+      image: '/cloud_storage_vector.png',
+      imageAlt: 'Algorithmic Trading Bot and Quotex Signal Automation by Spring Web Solutions — TradingView Webhooks, Binary Execution & Risk Management',
+      imageLeft: false,
+      features: [
+        'Quotex & Pocket Option Automated Execution',
+        'TradingView PineScript Alert Webhooks',
+        'Sub-80ms Ultra-Low Latency Order Routing',
+        'Smart Martingale & Capital Protection Safeguards',
+        'Telegram Signal Scrapers & Trade Copiers',
+        'MetaTrader MQL4/MQL5 Expert Advisors (EAs)'
+      ],
+      href: '/trading-bot-development'
+    },
+    {
+      title: 'Custom Telegram Bots & Workflow Automation',
+      subtitle: 'Monetize trading communities with automated VIP paywalls (Razorpay & Crypto USDT), signal auto-forwarders, Telegram Mini Apps, and WhatsApp Cloud API bots.',
+      image: '/web_dev_vector.png',
+      imageAlt: 'Custom Telegram Bot Development and Business Workflow Automation by Spring Web Solutions — VIP Paywalls, Signal Copiers & Telegram Mini Apps',
+      imageLeft: true,
+      features: [
+        'Automated VIP Paywall (Razorpay, UPI & USDT Crypto)',
+        'Telegram Signal Auto-Forwarder & Formatting',
+        'Telegram Mini Apps (React / Next.js inside Telegram)',
+        'WhatsApp Cloud Business API Customer Bots',
+        'Automated Invoicing & GST Receipt Dispatch',
+        '24/7 Lead Capture & CRM Instant Alerts'
+      ],
+      href: '/telegram-bot-development'
     }
   ]
 
@@ -110,6 +144,10 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
         
         {/* Title Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 text-xs font-bold uppercase tracking-widest font-display shadow-lg shadow-emerald-500/10">
+            <Zap size={14} className="text-emerald-400" />
+            <span>Full-Stack Solutions Architecture</span>
+          </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight uppercase">
             {title}
           </h2>
@@ -118,6 +156,100 @@ export const ServicesGrid: React.FC<ServicesGridProps> = ({ content }) => {
               {subtitle}
             </p>
           )}
+        </div>
+
+        {/* ── 6-Flagship Services Grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            {
+              title: 'Quotex & Algorithmic Trading Bots',
+              desc: 'Sub-80ms automated trade execution, TradingView PineScript alert webhooks, martingale risk safeguards, and MT4/MT5 expert advisors.',
+              icon: Bot,
+              color: 'text-emerald-400',
+              borderColor: 'hover:border-emerald-500/50',
+              badge: 'Fast Reaction (<80ms)',
+              href: '/trading-bot-development'
+            },
+            {
+              title: 'Telegram Bots & VIP Paywalls',
+              desc: 'Automated signal forwarders, Razorpay & Crypto (USDT TRC20) subscription paywalls, automated invite links, and Telegram Mini Apps.',
+              icon: Send,
+              color: 'text-indigo-400',
+              borderColor: 'hover:border-indigo-500/50',
+              badge: '0% Middleman Fees',
+              href: '/telegram-bot-development'
+            },
+            {
+              title: 'Business Workflow Automation',
+              desc: 'Official WhatsApp Cloud API customer bots, automated GST invoice dispatch, multi-system database sync, and B2B web scrapers.',
+              icon: Layers,
+              color: 'text-teal-400',
+              borderColor: 'hover:border-teal-500/50',
+              badge: 'Zero Manual Work',
+              href: '/workflow-automation-bots'
+            },
+            {
+              title: 'High-Speed Web Applications',
+              desc: 'React 19 & Next.js 15 corporate websites, high-converting e-commerce storefronts, and client portals with 100/100 Core Web Vitals.',
+              icon: Globe,
+              color: 'text-emerald-500',
+              borderColor: 'hover:border-emerald-500/50',
+              badge: '< 1s Page Load',
+              href: '/contact'
+            },
+            {
+              title: 'Android, iOS & Windows Apps',
+              desc: 'Native Android Kotlin apps, cross-platform Flutter mobile apps, and high-performance C# .NET Windows desktop billing software.',
+              icon: Smartphone,
+              color: 'text-purple-400',
+              borderColor: 'hover:border-purple-500/50',
+              badge: 'Offline Synchronized',
+              href: '/contact'
+            },
+            {
+              title: 'Custom ERP & Operations CRM',
+              desc: 'Tailor-made multi-branch inventory tracking, automated billing, client lead management, and live WhatsApp sales sync.',
+              icon: Cpu,
+              color: 'text-amber-400',
+              borderColor: 'hover:border-amber-500/50',
+              badge: 'Enterprise Security',
+              href: '/contact'
+            }
+          ].map((item, idx) => {
+            const Icon = item.icon
+            return (
+              <Link
+                key={idx}
+                to={item.href}
+                className={`group p-7 rounded-3xl bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white border border-white/10 dark:border-white/10 light:border-slate-200 transition-all duration-300 ${item.borderColor} hover:-translate-y-1.5 hover:shadow-2xl shadow-lg relative overflow-hidden flex flex-col justify-between space-y-6`}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className={`h-12 w-12 rounded-2xl bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform`}>
+                      <Icon size={24} />
+                    </div>
+                    <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 text-slate-400 dark:text-slate-400 light:text-slate-600">
+                      {item.badge}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-bold text-white dark:text-white light:text-slate-900 font-display group-hover:text-emerald-400 dark:group-hover:text-emerald-400 light:group-hover:text-emerald-700 transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 font-light leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 text-xs font-bold text-emerald-400 dark:text-emerald-400 light:text-emerald-700 font-display uppercase tracking-wider group-hover:translate-x-1 transition-transform">
+                  <span>Explore Architecture</span>
+                  <ArrowRight size={14} />
+                </div>
+              </Link>
+            )
+          })}
         </div>
 
         {/* Detailed Service Rows (Inspired by Futureva Technologies) */}

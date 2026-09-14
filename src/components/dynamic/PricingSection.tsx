@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Check, Zap, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react'
+import { Check, Zap, Sparkles, ShieldCheck, ArrowRight, Bot, Send, Globe, Layers } from 'lucide-react'
 import { displayRazorpayCheckout } from '@/lib/razorpayService'
 import TiltSpotlightCard from '../ui/TiltSpotlightCard'
 import ProjectEstimator from '../interactive/ProjectEstimator'
@@ -16,6 +16,184 @@ interface PricingPlan {
   ctaHref: string
 }
 
+interface PricingCategory {
+  id: 'web' | 'trading-bots' | 'telegram-bots'
+  label: string
+  icon: any
+  plans: PricingPlan[]
+}
+
+const PRICING_CATEGORIES: PricingCategory[] = [
+  {
+    id: 'web',
+    label: 'Web & Enterprise Software',
+    icon: Globe,
+    plans: [
+      {
+        name: "Starter Business",
+        tagline: "Essential high-speed digital presence for startups & local brands.",
+        price: "₹24,999",
+        period: "one-time",
+        features: [
+          "High-Speed Responsive Website",
+          "Modern Glassmorphic Dark UI",
+          "Mobile-First Touch Optimization",
+          "On-Page Technical SEO Setup",
+          "Contact & Lead Capture Form",
+          "1 Month Free Technical SLA Support"
+        ],
+        ctaText: "Choose Starter",
+        ctaHref: "/contact?plan=starter"
+      },
+      {
+        name: "Professional Growth",
+        tagline: "Full-scale corporate platform, CMS & lead automation engine.",
+        price: "₹49,999",
+        period: "one-time",
+        isPopular: true,
+        features: [
+          "Everything in Starter Plan",
+          "Custom Dynamic CMS & Admin Panel",
+          "Blog & Knowledge Base System",
+          "WhatsApp & Email API Automations",
+          "Advanced SEO & Speed Tuning",
+          "3 Months Priority Support SLA"
+        ],
+        ctaText: "Start Professional",
+        ctaHref: "/contact?plan=professional"
+      },
+      {
+        name: "Enterprise Software",
+        tagline: "Bespoke SaaS, ERP, CRM, and automated workflow engines.",
+        price: "Custom Quote",
+        period: "based on scope",
+        features: [
+          "Custom React / Node / Python Stack",
+          "Dedicated Supabase / Postgres DB",
+          "Role-Based Access & Security Audit",
+          "Custom API & Webhook Architecture",
+          "Scalable Cloud Deployment (Vercel/AWS)",
+          "Dedicated Account Lead & 24/7 SLA"
+        ],
+        ctaText: "Get Enterprise Quote",
+        ctaHref: "/contact?plan=enterprise"
+      }
+    ]
+  },
+  {
+    id: 'trading-bots',
+    label: 'Trading & Quotex Signal Bots',
+    icon: Bot,
+    plans: [
+      {
+        name: "TradingView Webhook Bot",
+        tagline: "Bridge custom PineScript alerts directly to broker execution.",
+        price: "₹14,999",
+        period: "one-time",
+        features: [
+          "TradingView Webhook Alert Listener",
+          "Sub-second order execution engine (<150ms)",
+          "Supports Crypto (Binance/Bybit) & Forex",
+          "Take-Profit (TP) & Stop-Loss (SL) Automation",
+          "Telegram Instant Execution Alerts",
+          "Cloud Server Setup (24/7 VPS Uptime)"
+        ],
+        ctaText: "Build Webhook Bot",
+        ctaHref: "/trading-bot-development"
+      },
+      {
+        name: "Quotex & Binary Pro Bot",
+        tagline: "Ultra-fast automated execution with payout filters & martingale.",
+        price: "₹29,999",
+        period: "one-time",
+        isPopular: true,
+        features: [
+          "Direct Quotex / Pocket Option WebSocket API",
+          "Sub-80ms Execution Reaction Time",
+          "Smart Martingale & Anti-Martingale Rules",
+          "Auto Payout Filter (>80% Payout Pairs Only)",
+          "Daily Target Profit & Max Loss Auto-Stop",
+          "Telegram VIP Signal Scraper & Auto-Trader"
+        ],
+        ctaText: "Build Quotex Bot",
+        ctaHref: "/trading-bot-development"
+      },
+      {
+        name: "Enterprise Master Bot",
+        tagline: "Multi-account trade copier, signal server & encrypted license keys.",
+        price: "₹59,999",
+        period: "one-time",
+        features: [
+          "Multi-Account Master Trade Copier",
+          "Encrypted License Key Generation Engine",
+          "MT4 / MT5 MQL5 Bridge & Custom Indicators",
+          "Live Web Dashboard with P&L Analytics",
+          "Dedicated Telegram Command Console Bot",
+          "Priority 24/7 SLA & Free Broker API Updates"
+        ],
+        ctaText: "Build Master Engine",
+        ctaHref: "/trading-bot-development"
+      }
+    ]
+  },
+  {
+    id: 'telegram-bots',
+    label: 'Telegram & Workflow Bots',
+    icon: Send,
+    plans: [
+      {
+        name: "Starter Telegram Bot",
+        tagline: "Automated community greeting, FAQ auto-responder & CRM lead alerts.",
+        price: "₹7,999",
+        period: "one-time",
+        features: [
+          "Interactive Custom Menus & Inline Buttons",
+          "Automated Welcome & FAQ Auto-Responder",
+          "Lead Capture & CRM Database Sync",
+          "Admin Broadcast Messaging Console",
+          "24/7 Cloud Hosting Setup Guide",
+          "100% Source Code Rights (Python/Node.js)"
+        ],
+        ctaText: "Build Telegram Bot",
+        ctaHref: "/telegram-bot-development"
+      },
+      {
+        name: "VIP Paywall & Signal Bot",
+        tagline: "Automated signal forwarding & Razorpay/USDT Crypto VIP subscriptions.",
+        price: "₹18,999",
+        period: "one-time",
+        isPopular: true,
+        features: [
+          "Automated Signal Scraper & Channel Forwarder",
+          "Auto-Formatting with Emojis & TP/SL Buttons",
+          "Razorpay, UPI & USDT Crypto Paywall",
+          "Automated Single-Use Invite Link Delivery",
+          "Auto-Kick / Revoke Access on Expiry",
+          "Zero Transaction Fees (Direct to Wallet)"
+        ],
+        ctaText: "Build VIP Paywall Bot",
+        ctaHref: "/telegram-bot-development"
+      },
+      {
+        name: "WhatsApp Business Suite",
+        tagline: "Official Meta WhatsApp Cloud API bot with automated invoicing.",
+        price: "₹24,999",
+        period: "one-time",
+        features: [
+          "Official Meta WhatsApp Cloud API Setup",
+          "Interactive Button Menus & Catalog Order Bot",
+          "Automated GST Invoice Dispatch on WhatsApp",
+          "Multi-Agent Live Support Handoff Chat",
+          "Real-Time CRM Sync & Analytics Dashboard",
+          "High Deliverability & Verified Sender"
+        ],
+        ctaText: "Build WhatsApp Suite",
+        ctaHref: "/workflow-automation-bots"
+      }
+    ]
+  }
+]
+
 interface PricingSectionProps {
   content?: {
     title?: string
@@ -26,62 +204,13 @@ interface PricingSectionProps {
 }
 
 export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
+  const [activeCategory, setActiveCategory] = useState<'web' | 'trading-bots' | 'telegram-bots'>('web')
+
   const title = content?.title || "Transparent & Scalable Investment Plans"
   const subtitle = content?.subtitle || "Choose a package designed for your current scale, or initiate a direct milestone deposit via Razorpay."
 
-  const defaultPlans: PricingPlan[] = [
-    {
-      name: "Starter Business",
-      tagline: "Essential high-speed digital presence for startups & local brands.",
-      price: "₹24,999",
-      period: "one-time",
-      features: [
-        "High-Speed Responsive Website",
-        "Modern Glassmorphic Dark UI",
-        "Mobile-First Touch Optimization",
-        "On-Page Technical SEO Setup",
-        "Contact & Lead Capture Form",
-        "1 Month Free Technical SLA Support"
-      ],
-      ctaText: "Choose Starter",
-      ctaHref: "/contact?plan=starter"
-    },
-    {
-      name: "Professional Growth",
-      tagline: "Full-scale corporate platform, CMS & lead automation engine.",
-      price: "₹49,999",
-      period: "one-time",
-      isPopular: true,
-      features: [
-        "Everything in Starter Plan",
-        "Custom Dynamic CMS & Admin Panel",
-        "Blog & Knowledge Base System",
-        "WhatsApp & Email API Automations",
-        "Advanced SEO & Speed Tuning",
-        "3 Months Priority Support SLA"
-      ],
-      ctaText: "Start Professional",
-      ctaHref: "/contact?plan=professional"
-    },
-    {
-      name: "Enterprise Software",
-      tagline: "Bespoke SaaS, ERP, CRM, and automated workflow engines.",
-      price: "Custom Quote",
-      period: "based on scope",
-      features: [
-        "Custom React / Node / Python Stack",
-        "Dedicated Supabase / Postgres DB",
-        "Role-Based Access & Security Audit",
-        "Custom API & Webhook Architecture",
-        "Scalable Cloud Deployment (Vercel/AWS)",
-        "Dedicated Account Lead & 24/7 SLA"
-      ],
-      ctaText: "Get Enterprise Quote",
-      ctaHref: "/contact?plan=enterprise"
-    }
-  ]
-
-  const plans = content?.plans || defaultPlans
+  const currentCategoryData = PRICING_CATEGORIES.find(c => c.id === activeCategory) || PRICING_CATEGORIES[0]
+  const plans = currentCategoryData.plans
 
   return (
     <section id="pricing" className="py-24 relative dark:bg-[#04060c] light:bg-slate-50 border-b dark:border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
@@ -104,6 +233,28 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
           <p className="text-sm sm:text-base dark:text-slate-400 light:text-slate-600 font-sans font-light leading-relaxed max-w-2xl mx-auto">
             {subtitle}
           </p>
+        </div>
+
+        {/* ── Category Switcher ── */}
+        <div className="flex items-center justify-center gap-3 flex-wrap pt-2">
+          {PRICING_CATEGORIES.map(category => {
+            const CatIcon = category.icon
+            const isActive = activeCategory === category.id
+            return (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`px-5 py-3 rounded-2xl border text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                    : 'bg-white/5 dark:bg-white/5 light:bg-white text-slate-300 dark:text-slate-300 light:text-slate-700 border-white/10 dark:border-white/10 light:border-slate-200 hover:border-emerald-500/30'
+                }`}
+              >
+                <CatIcon size={16} />
+                <span>{category.label}</span>
+              </button>
+            )
+          })}
         </div>
 
         {/* Pricing Cards Grid with 3D Tilt & Spotlight */}
