@@ -410,39 +410,39 @@ export const FloatingContactWidgets: React.FC = () => {
         </div>
       )}
 
-      {/* TWO SEPARATE FLOATING BUTTONS WITH LEVITATION ANIMATION */}
-      <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 animate-float-gentle">
+      {/* ── SLEEK COMPACT FLOATING ACTION STACK ── */}
+      <div className="flex flex-col items-end space-y-2.5 animate-float-gentle">
         
-        {/* BUTTON 1: WhatsApp Button (Direct WhatsApp Link) */}
+        {/* BUTTON 1: WhatsApp Circular / Pill FAB */}
         <button
           onClick={() => handleWhatsAppDirect()}
-          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs shadow-lg shadow-emerald-600/30 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+          className="group relative flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-slate-950 font-bold text-xs shadow-lg shadow-emerald-600/25 hover:scale-105 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
           title="Direct WhatsApp Chat"
           aria-label="Open Direct WhatsApp Chat with Spring Web Solutions"
         >
-          <MessageCircle size={17} className="fill-slate-950 text-[#25D366] animate-bounce" />
-          <span>WhatsApp Us</span>
-          <ArrowUpRight size={13} className="text-slate-950 opacity-80" />
+          <MessageCircle size={16} className="fill-slate-950 text-[#25D366]" />
+          <span className="tracking-tight">WhatsApp Us</span>
+          <ArrowUpRight size={12} className="text-slate-950 opacity-75" />
         </button>
 
-        {/* BUTTON 2: Live Support AI Chatbot Button (In-Chat Bot Responses) */}
+        {/* BUTTON 2: Live Support AI Chatbot Button */}
         <button
           onClick={() => setIsLiveChatOpen(!isLiveChatOpen)}
-          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-white/20"
+          className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer border border-white/20"
           title="Open SpringWeb AI Chatbot"
           aria-label="Toggle SpringWeb AI Chatbot Assistant"
         >
-          <span className="relative flex h-2.5 w-2.5">
+          <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
           </span>
           {isLiveChatOpen ? (
             <span className="flex items-center gap-1">
-              <X size={15} /> Close Chat
+              <X size={14} /> Close Chat
             </span>
           ) : (
             <span className="flex items-center gap-1.5">
-              <Bot size={15} className="animate-pulse" /> AI Assistant
+              <Bot size={14} className="animate-pulse" /> AI Assistant
             </span>
           )}
         </button>

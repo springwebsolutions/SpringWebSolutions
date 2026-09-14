@@ -225,45 +225,64 @@ export const ArchitectureVisualizer: React.FC = () => {
   const activeFlow = ARCHITECTURAL_FLOWS[activeFlowIndex]
   const selectedNode = activeFlow.nodes[selectedNodeIndex] || activeFlow.nodes[0]
 
+  const flowIcons = [Globe, MessageSquare, Layers, Activity]
+
   return (
     <div className="relative p-6 sm:p-10 rounded-3xl border border-white/10 dark:border-white/10 light:border-slate-200 bg-[#080b14]/90 dark:bg-[#080b14]/90 light:bg-white backdrop-blur-2xl shadow-2xl dark:shadow-black/50 light:shadow-slate-200/80 space-y-8 overflow-hidden">
       
       {/* ── Ambient Background Glows ── */}
-      <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-emerald-500/15 filter blur-[100px] pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full bg-indigo-600/15 filter blur-[100px] pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-72 h-72 rounded-full bg-emerald-500/15 filter blur-[100px] pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-72 h-72 rounded-full bg-indigo-600/15 filter blur-[100px] pointer-events-none" />
 
-      {/* ── Header & Tab Switcher ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10 border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-6">
-        <div className="space-y-1.5 max-w-xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-50 light:border-emerald-300 text-[11px] font-bold uppercase tracking-wider font-display">
-            <Cpu size={13} /> Interactive Engineering Architecture
+      {/* ── Section Header ── */}
+      <div className="space-y-4 relative z-10 border-b border-white/10 dark:border-white/10 light:border-slate-200 pb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 light:bg-emerald-50 light:border-emerald-300 text-xs font-bold uppercase tracking-wider font-display">
+            <Cpu size={14} className="text-emerald-400 dark:text-emerald-400 light:text-emerald-600" />
+            <span>Interactive Engineering Architecture</span>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white dark:text-white light:text-slate-900 font-display">
-            Under the Hood: <span className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700">Enterprise Data Flow</span>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 dark:text-slate-400 light:text-slate-500">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Active Pipeline: <strong className="text-emerald-400 dark:text-emerald-400 light:text-emerald-700">{activeFlow.badge}</strong></span>
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white dark:text-white light:text-slate-900 font-display tracking-tight">
+            Under the Hood: <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent">Enterprise Data Flow</span>
           </h3>
-          <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 font-light">
-            Click on any pipeline or node below to inspect real-time throughput, latency, and technology implementations.
+          <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 font-light max-w-3xl">
+            {activeFlow.summary} Click on any node below to inspect execution speed, throughput capacity, and implementation specs.
           </p>
         </div>
 
-        {/* Pipeline Toggle Tabs */}
-        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 dark:border-white/10 light:border-slate-200 shrink-0 flex-wrap">
-          {ARCHITECTURAL_FLOWS.map((flow, idx) => (
-            <button
-              key={flow.id}
-              onClick={() => {
-                setActiveFlowIndex(idx)
-                setSelectedNodeIndex(0)
-              }}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-                activeFlowIndex === idx
-                  ? 'bg-emerald-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25'
-                  : 'text-slate-400 dark:text-slate-400 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-white/5 light:hover:bg-slate-200/60'
-              }`}
-            >
-              <span>{flow.name}</span>
-            </button>
-          ))}
+        {/* ── Pipeline Switcher Tabs (4 Clean Grid Tabs) ── */}
+        <div className="pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 p-1.5 rounded-2xl bg-white/5 dark:bg-white/5 light:bg-slate-100 border border-white/10 dark:border-white/10 light:border-slate-200">
+            {ARCHITECTURAL_FLOWS.map((flow, idx) => {
+              const IconComponent = flowIcons[idx] || Cpu
+              const isActive = activeFlowIndex === idx
+
+              return (
+                <button
+                  key={flow.id}
+                  onClick={() => {
+                    setActiveFlowIndex(idx)
+                    setSelectedNodeIndex(0)
+                  }}
+                  className={`px-4 py-3 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2.5 cursor-pointer text-left ${
+                    isActive
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25 scale-[1.01]'
+                      : 'text-slate-300 dark:text-slate-300 light:text-slate-600 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-white/5 light:hover:bg-slate-200/70'
+                  }`}
+                >
+                  <IconComponent size={16} className={`shrink-0 ${isActive ? 'text-slate-950' : 'text-emerald-400 dark:text-emerald-400 light:text-emerald-600'}`} />
+                  <span className="truncate">{flow.name}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
@@ -301,7 +320,7 @@ export const ArchitectureVisualizer: React.FC = () => {
                 onClick={() => setSelectedNodeIndex(nIdx)}
                 className={`text-left p-5 rounded-2xl border transition-all duration-300 relative z-10 flex flex-col justify-between space-y-3 cursor-pointer group ${
                   isSelected
-                    ? 'border-emerald-500/70 dark:border-emerald-500/70 light:border-emerald-500 bg-gradient-to-b from-emerald-950/50 to-slate-900/80 dark:from-emerald-950/50 dark:to-slate-900/80 light:from-emerald-50 light:to-white shadow-xl shadow-emerald-500/15 light:shadow-emerald-500/10 scale-[1.02]'
+                    ? 'border-emerald-500/80 dark:border-emerald-500/80 light:border-emerald-500 bg-gradient-to-b from-emerald-950/60 to-slate-900/90 dark:from-emerald-950/60 dark:to-slate-900/90 light:from-emerald-50 light:to-white shadow-xl shadow-emerald-500/20 light:shadow-emerald-500/10 scale-[1.02] ring-2 ring-emerald-500/30'
                     : 'border-white/10 dark:border-white/10 light:border-slate-200 bg-slate-900/40 dark:bg-slate-900/40 light:bg-slate-50 hover:border-white/20 dark:hover:border-white/20 light:hover:border-slate-300 hover:bg-slate-900/70 light:hover:bg-slate-100'
                 }`}
               >
@@ -338,7 +357,7 @@ export const ArchitectureVisualizer: React.FC = () => {
         </div>
 
         {/* ── Active Node Deep-Dive Inspection Card ── */}
-        <div className="p-6 rounded-2xl border border-emerald-500/20 dark:border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 dark:bg-emerald-950/20 light:bg-emerald-50/60 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="p-6 rounded-2xl border border-emerald-500/25 dark:border-emerald-500/25 light:border-emerald-200 bg-emerald-950/20 dark:bg-emerald-950/20 light:bg-emerald-50/70 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping inline-block" />
@@ -351,18 +370,18 @@ export const ArchitectureVisualizer: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-6 shrink-0 border-t md:border-t-0 md:border-l border-white/10 dark:border-white/10 light:border-slate-200 pt-4 md:pt-0 md:pl-6">
-            <div>
+          <div className="grid grid-cols-3 gap-4 shrink-0 border-t md:border-t-0 md:border-l border-white/10 dark:border-white/10 light:border-slate-200 pt-4 md:pt-0 md:pl-6">
+            <div className="p-2.5 rounded-xl bg-white/5 dark:bg-white/5 light:bg-white/80 border border-white/5 dark:border-white/5 light:border-slate-200">
               <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-400 light:text-slate-500">Execution Speed</div>
-              <div className="text-base font-mono font-black text-emerald-400 dark:text-emerald-400 light:text-emerald-700">{selectedNode.latency}</div>
+              <div className="text-sm sm:text-base font-mono font-black text-emerald-400 dark:text-emerald-400 light:text-emerald-700 mt-0.5">{selectedNode.latency}</div>
             </div>
-            <div>
+            <div className="p-2.5 rounded-xl bg-white/5 dark:bg-white/5 light:bg-white/80 border border-white/5 dark:border-white/5 light:border-slate-200">
               <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-400 light:text-slate-500">Capacity</div>
-              <div className="text-base font-mono font-black text-indigo-300 dark:text-indigo-300 light:text-indigo-700">{selectedNode.throughput}</div>
+              <div className="text-sm sm:text-base font-mono font-black text-indigo-300 dark:text-indigo-300 light:text-indigo-700 mt-0.5">{selectedNode.throughput}</div>
             </div>
-            <div>
+            <div className="p-2.5 rounded-xl bg-white/5 dark:bg-white/5 light:bg-white/80 border border-white/5 dark:border-white/5 light:border-slate-200">
               <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-400 light:text-slate-500">Status</div>
-              <div className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 dark:bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 border border-emerald-500/30 dark:border-emerald-500/30 light:border-emerald-200 flex items-center gap-1 w-max mt-0.5">
+              <div className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 dark:bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 dark:text-emerald-400 light:text-emerald-700 border border-emerald-500/30 dark:border-emerald-500/30 light:border-emerald-200 flex items-center gap-1 w-max mt-1">
                 <CheckCircle2 size={12} />
                 <span>Optimal</span>
               </div>
