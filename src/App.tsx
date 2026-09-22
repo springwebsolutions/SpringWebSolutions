@@ -31,6 +31,7 @@ const JobListings = lazy(() => import('@/pages/careers/JobListings').then(m => (
 const JobDetail = lazy(() => import('@/pages/careers/JobDetail').then(m => ({ default: m.JobDetail })))
 const CareerGuideListing = lazy(() => import('@/pages/careers/CareerGuideListing').then(m => ({ default: m.CareerGuideListing })))
 const CareerGuideDetail = lazy(() => import('@/pages/careers/CareerGuideDetail').then(m => ({ default: m.CareerGuideDetail })))
+const JobAlertSubscribe = lazy(() => import('@/pages/careers/JobAlertSubscribe').then(m => ({ default: m.JobAlertSubscribe })))
 
 import WhatsAppWidget from '@/components/ui/WhatsAppWidget'
 
@@ -51,6 +52,9 @@ const ContactSubmissions = lazy(() => import('@/pages/admin/ContactSubmissions')
 const AdminJobPostings = lazy(() => import('@/pages/admin/AdminJobPostings').then(m => ({ default: m.AdminJobPostings })))
 const AdminCareerGuides = lazy(() => import('@/pages/admin/AdminCareerGuides').then(m => ({ default: m.AdminCareerGuides })))
 const AdminAdManager = lazy(() => import('@/pages/admin/AdminAdManager').then(m => ({ default: m.AdminAdManager })))
+const AdminJobDiscovery = lazy(() => import('@/pages/admin/AdminJobDiscovery').then(m => ({ default: m.AdminJobDiscovery })))
+const AdminSocialCards = lazy(() => import('@/pages/admin/AdminSocialCards').then(m => ({ default: m.AdminSocialCards })))
+const AdminScrapeMonitor = lazy(() => import('@/pages/admin/AdminScrapeMonitor').then(m => ({ default: m.AdminScrapeMonitor })))
 
 const AdminApplications = lazy(() => import('@/pages/admin/AdminApplications').then(m => ({ default: m.AdminApplications })))
 const SystemHealth = lazy(() => import('@/pages/admin/SystemHealth').then(m => ({ default: m.SystemHealth })))
@@ -140,6 +144,8 @@ function App() {
             <Route path="/jobs/:slug" element={<JobDetail />} />
             <Route path="/career-guides" element={<CareerGuideListing />} />
             <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
+            <Route path="/alerts" element={<JobAlertSubscribe />} />
+            <Route path="/subscribe" element={<JobAlertSubscribe />} />
 
             {/* Knowledge Base moved to Careers domain */}
             <Route path="/kb" element={<KBListing />} />
@@ -173,6 +179,9 @@ function App() {
               <Route path="kb" element={<KBCMS />} />
               <Route path="marketplace" element={<MarketplaceCMS />} />
               <Route path="jobs" element={<AdminJobPostings />} />
+              <Route path="discovery" element={<AdminJobDiscovery />} />
+              <Route path="social-cards" element={<AdminSocialCards />} />
+              <Route path="scrape-monitor" element={<AdminScrapeMonitor />} />
               <Route path="job-applications" element={<AdminApplications />} />
               <Route path="career-guides" element={<AdminCareerGuides />} />
               <Route path="ads" element={<AdminAdManager />} />
@@ -227,6 +236,9 @@ function App() {
           <Route path="/jobs/:slug" element={<JobDetail />} />
           <Route path="/career-guides" element={<CareerGuideListing />} />
           <Route path="/career-guides/:slug" element={<CareerGuideDetail />} />
+          <Route path="/alerts" element={<JobAlertSubscribe />} />
+          <Route path="/careers/alerts" element={<JobAlertSubscribe />} />
+          <Route path="/careers/subscribe" element={<JobAlertSubscribe />} />
 
           {/* Blog System */}
           <Route path="/blog" element={<BlogListing />} />
@@ -248,11 +260,35 @@ function App() {
           <Route path="/games" element={<GamesArcade />} />
           <Route path="/arcade" element={<GamesArcade />} />
 
+          {/* Fallback Main Domain Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="content" element={<ContentManager />} />
+            <Route path="blog" element={<BlogCMS />} />
+            <Route path="kb" element={<KBCMS />} />
+            <Route path="marketplace" element={<MarketplaceCMS />} />
+            <Route path="jobs" element={<AdminJobPostings />} />
+            <Route path="discovery" element={<AdminJobDiscovery />} />
+            <Route path="social-cards" element={<AdminSocialCards />} />
+            <Route path="scrape-monitor" element={<AdminScrapeMonitor />} />
+            <Route path="job-applications" element={<AdminApplications />} />
+            <Route path="career-guides" element={<AdminCareerGuides />} />
+            <Route path="ads" element={<AdminAdManager />} />
+            <Route path="crm" element={<LeadCRM />} />
+            <Route path="media" element={<MediaLibrary />} />
+            <Route path="support" element={<SupportManager />} />
+            <Route path="contacts" element={<ContactSubmissions />} />
+            <Route path="health" element={<SystemHealth />} />
+            <Route path="settings" element={<SiteSettings />} />
+            <Route path="security/2fa" element={<Admin2FASetup />} />
+          </Route>
+
           {/* Public Client Auth */}
           <Route path="/login" element={<Login />} />
 
-          {/* Catch All - Redirect to Homepage */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Catch-all 404 Route */}
+          <Route path="*" element={<DynamicPage />} />
         </Routes>
       </Suspense>
       <WhatsAppWidget />

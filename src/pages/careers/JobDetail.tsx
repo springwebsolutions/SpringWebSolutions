@@ -5,21 +5,28 @@ import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
 import { CareersSeo } from '@/components/seo/CareersSeo'
+import { SocialCardPreview } from '@/components/careers/SocialCardPreview'
 import {
   MapPin, Briefcase, Building2, CheckCircle2, Laptop, ArrowLeft,
-  Share2, Mail, ExternalLink, Calendar, Award
+  Share2, Mail, ExternalLink, Calendar, Award, ShieldCheck, Sparkles,
+  Bell, Image, MessageSquare, Send
 } from 'lucide-react'
+import {
+  LinkedinIcon,
+  TwitterIcon
+} from '@/components/ui/BrandIcons'
 
 export const JobDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
   const { jobs, fetchJobs } = useCareersStore()
+  const [showSocialModal, setShowSocialModal] = useState(false)
 
   useEffect(() => {
     fetchJobs()
   }, [slug])
 
-  const job = jobs.find(j => j.slug === slug || j.id === slug)
+  const job = jobs.find((j) => j.slug === slug || j.id === slug)
 
   useEffect(() => {
     if (job) {
@@ -47,7 +54,7 @@ export const JobDetail: React.FC = () => {
   }
 
   const relatedJobs = jobs
-    .filter(j => j.id !== job.id && (j.niche_category === job.niche_category || j.location_city === job.location_city))
+    .filter((j) => j.id !== job.id && (j.niche_category === job.niche_category || j.location_city === job.location_city))
     .slice(0, 3)
 
   const isInternal = job.is_internal_hiring !== false
@@ -60,7 +67,7 @@ export const JobDetail: React.FC = () => {
     experience: '3 Years',
     expected_salary: '',
     resume_url: '',
-    cover_note: ''
+    cover_note: '',
   })
 
   const handleApply = () => {
@@ -84,43 +91,48 @@ export const JobDetail: React.FC = () => {
     }, 2500)
   }
 
-  const jobPostingSchema = job ? {
-    '@context': 'https://schema.org/',
-    '@type': 'JobPosting',
-    'title': job.title,
-    'description': job.description,
-    'identifier': {
-      '@type': 'PropertyValue',
-      'name': job.company_name,
-      'value': job.id
-    },
-    'datePosted': job.created_at,
-    'employmentType': job.job_type.toUpperCase().replace('-', '_'),
-    'hiringOrganization': {
-      '@type': 'Organization',
-      'name': job.company_name,
-      'sameAs': 'https://careers.springwebsolutions.in',
-      'logo': 'https://www.springwebsolutions.in/logo-emblem.png'
-    },
-    'jobLocation': {
-      '@type': 'Place',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': job.location_city,
-        'addressRegion': job.location_state,
-        'addressCountry': job.location_country
+  const pageUrl = typeof window !== 'undefined' ? window.location.href : `https://careers.springwebsolutions.in/jobs/${job.slug}`
+  const shareText = `Check out this verified job opening: ${job.title} at ${job.company_name} (${job.salary_range})`
+
+  const jobPostingSchema = job
+    ? {
+        '@context': 'https://schema.org/',
+        '@type': 'JobPosting',
+        title: job.title,
+        description: job.description,
+        identifier: {
+          '@type': 'PropertyValue',
+          name: job.company_name,
+          value: job.id,
+        },
+        datePosted: job.created_at,
+        employmentType: job.job_type.toUpperCase().replace('-', '_'),
+        hiringOrganization: {
+          '@type': 'Organization',
+          name: job.company_name,
+          sameAs: 'https://careers.springwebsolutions.in',
+          logo: 'https://www.springwebsolutions.in/logo-emblem.png',
+        },
+        jobLocation: {
+          '@type': 'Place',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: job.location_city,
+            addressRegion: job.location_state,
+            addressCountry: job.location_country,
+          },
+        },
+        applicantLocationRequirements: {
+          '@type': 'Country',
+          name: job.location_country,
+        },
+        jobLocationType: job.is_wfh || job.is_remote ? 'TELECOMMUTE' : undefined,
       }
-    },
-    'applicantLocationRequirements': {
-      '@type': 'Country',
-      'name': job.location_country
-    },
-    'jobLocationType': job.is_wfh || job.is_remote ? 'TELECOMMUTE' : undefined
-  } : undefined
+    : undefined
 
   return (
-    <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans">
-      <CareersSeo 
+    <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+      <CareersSeo
         title={`${job.title} | ${job.company_name} | SpringWeb Careers`}
         description={`${job.title} vacancy at ${job.company_name} in ${job.location_city}, ${job.location_state}. Package: ${job.salary_range}. Work mode: ${job.is_wfh ? '100% WFH' : 'On-Site'}.`}
         canonicalUrl={`https://careers.springwebsolutions.in/jobs/${job.slug}`}
@@ -129,10 +141,9 @@ export const JobDetail: React.FC = () => {
       <CareersNavbar />
 
       <main className="flex-grow py-12">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-10">
-          
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-8">
           {/* Top Breadcrumb & Back button */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <button
               onClick={() => navigate(-1)}
               className="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -141,22 +152,33 @@ export const JobDetail: React.FC = () => {
               <span>Back to Vacancies</span>
             </button>
 
-            <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
-              isInternal 
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' 
-                : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
-            }`}>
-              {isInternal ? '🌟 SpringWeb Direct Opening' : '🏢 Employer Vacancy'}
-            </span>
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-[11px] font-bold px-3 py-1 rounded-full border flex items-center gap-1.5 ${
+                  isInternal
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                    : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30'
+                }`}
+              >
+                <ShieldCheck size={12} />
+                {isInternal ? '🌟 SpringWeb Direct Opening' : '✓ Verified Employer Vacancy'}
+              </span>
 
-            <div className="text-xs text-slate-500 font-mono">
-              Posted: {new Date(job.created_at).toLocaleDateString()}
+              <button
+                onClick={() => setShowSocialModal(true)}
+                className="text-xs text-slate-300 hover:text-white px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Image size={12} className="text-pink-400" />
+                <span>Share Card</span>
+              </button>
             </div>
           </div>
 
           {/* Job Header Hero Card */}
-          <div className="p-8 rounded-3xl glass-panel border border-white/10 space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="p-8 rounded-3xl bg-gradient-to-b from-[#0e1628] to-[#080d19] border border-white/10 space-y-6 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
               <div className="space-y-3">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-display">
@@ -181,30 +203,75 @@ export const JobDetail: React.FC = () => {
                     <MapPin size={14} className="text-emerald-400" />
                     <span>{job.location_city}, {job.location_state}, {job.location_country}</span>
                   </span>
-                  <span className="font-mono text-emerald-400 font-bold">
-                    {job.salary_range}
+                  <span className="font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    💰 {job.salary_range}
                   </span>
                   <span>Experience: {job.experience_level}</span>
                 </div>
               </div>
 
-              <div>
+              <div className="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
                 <button
                   onClick={handleApply}
-                  className="w-full md:w-auto px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Apply Now</span>
                   <ExternalLink size={16} />
                 </button>
               </div>
             </div>
+
+            {/* Quick Social Share Bar */}
+            <div className="pt-4 border-t border-white/5 flex items-center justify-between flex-wrap gap-3 text-xs text-slate-400">
+              <div className="flex items-center gap-2">
+                <span>Share opening:</span>
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + pageUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors"
+                  title="Share on WhatsApp"
+                >
+                  <MessageSquare size={14} />
+                </a>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 transition-colors"
+                  title="Share on LinkedIn"
+                >
+                  <LinkedinIcon size={14} />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-zinc-500/10 hover:bg-zinc-500/20 text-slate-300 transition-colors"
+                  title="Share on X"
+                >
+                  <TwitterIcon size={14} />
+                </a>
+                <a
+                  href={`https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(shareText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 transition-colors"
+                  title="Share on Telegram"
+                >
+                  <Send size={14} />
+                </a>
+              </div>
+
+              <div className="font-mono text-[11px] text-slate-500">
+                Posted: {new Date(job.created_at).toLocaleDateString()}
+              </div>
+            </div>
           </div>
 
           {/* Job Description & Requirements */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
             <div className="lg:col-span-8 space-y-8">
-              
               <div className="p-8 rounded-3xl bg-[#080b14] border border-white/10 space-y-6">
                 <div>
                   <h2 className="text-lg font-bold font-display text-white uppercase tracking-tight mb-3">
@@ -229,23 +296,30 @@ export const JobDetail: React.FC = () => {
                   </ul>
                 </div>
 
-                <div className="pt-6 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-6 border-t border-white/5 flex items-center justify-between flex-wrap gap-4">
                   <button
                     onClick={handleApply}
-                    className="btn-primary text-xs flex items-center gap-1.5"
+                    className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <span>Send Application</span>
-                    <ExternalLink size={13} />
+                    <ExternalLink size={14} />
+                  </button>
+
+                  <button
+                    onClick={() => setShowSocialModal(true)}
+                    className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <Image size={14} className="text-pink-400" />
+                    <span>Generate Social Card</span>
                   </button>
                 </div>
               </div>
 
               {/* In-Article Ad Banner Zone */}
               <AdBanner zoneId="article_bottom" />
-
             </div>
 
-            {/* Sidebar Summary */}
+            {/* Sidebar Summary & Similar Jobs */}
             <aside className="lg:col-span-4 space-y-6">
               <div className="p-6 rounded-3xl bg-[#080b14] border border-white/10 space-y-4 text-xs text-slate-300">
                 <h3 className="font-bold text-white font-display text-sm border-b border-white/5 pb-3">
@@ -269,14 +343,66 @@ export const JobDetail: React.FC = () => {
                     <span className="text-slate-400">Package:</span>
                     <span className="font-semibold text-white">{job.salary_range}</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Verification:</span>
+                    <span className="font-semibold text-emerald-400">✓ Source Verified</span>
+                  </div>
                 </div>
               </div>
+
+              {/* Alert CTA Box */}
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 space-y-3 text-xs">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold">
+                  <Bell size={16} />
+                  <span>Get Similar Job Alerts</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Subscribe to receive daily alerts when new verified {job.niche_category} positions open in India.
+                </p>
+                <Link
+                  to="/alerts"
+                  className="inline-flex items-center justify-center w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all shadow-md shadow-emerald-500/20"
+                >
+                  Subscribe for Free →
+                </Link>
+              </div>
+
+              {/* Similar Jobs */}
+              {relatedJobs.length > 0 && (
+                <div className="p-6 rounded-3xl bg-[#080b14] border border-white/10 space-y-4">
+                  <h3 className="font-bold text-white font-display text-sm border-b border-white/5 pb-3">
+                    Similar Openings
+                  </h3>
+                  <div className="space-y-3">
+                    {relatedJobs.map((rj) => (
+                      <Link
+                        key={rj.id}
+                        to={`/jobs/${rj.slug}`}
+                        className="block p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/5 hover:border-white/10 transition-all group"
+                      >
+                        <div className="font-semibold text-white text-xs group-hover:text-emerald-400 transition-colors line-clamp-1">
+                          {rj.title}
+                        </div>
+                        <div className="text-[11px] text-slate-400 mt-1 flex justify-between">
+                          <span>{rj.company_name}</span>
+                          <span className="text-emerald-400 font-mono">{rj.salary_range}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </aside>
-
           </div>
-
         </div>
       </main>
+
+      {/* Social Card Modal */}
+      {showSocialModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <SocialCardPreview job={job} onClose={() => setShowSocialModal(false)} />
+        </div>
+      )}
 
       {/* Application Modal for SpringWeb Internal Openings */}
       {isApplyModalOpen && (

@@ -120,6 +120,25 @@ export const AdminJobPostings: React.FC = () => {
           Job Vacancies ({jobs.length})
         </Link>
         <Link
+          to={`${prefix}/discovery`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5"
+        >
+          <Sparkles size={12} className="text-emerald-400" />
+          <span>AI Discovery Pipeline</span>
+        </Link>
+        <Link
+          to={`${prefix}/social-cards`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5"
+        >
+          <span>Social Content Cards</span>
+        </Link>
+        <Link
+          to={`${prefix}/scrape-monitor`}
+          className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5"
+        >
+          <span>Scrape Monitor</span>
+        </Link>
+        <Link
           to={`${prefix}/job-applications`}
           className="px-3.5 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.07] hover:bg-white/[0.06] text-slate-400 hover:text-white text-xs font-medium transition-all"
         >

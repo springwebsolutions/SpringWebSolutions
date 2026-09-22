@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { classifyJobCategory, extractExperienceLevel, generateTemplateSummary, generateSlug } from '@/lib/jobNormalizer'
 
 export interface JobPosting {
   id: string
@@ -53,13 +54,106 @@ export interface AdConfig {
   is_active: boolean
 }
 
+// ─── Discovery Pipeline Types ───────────────────────────────────────────────
+
+export interface DiscoveredJob {
+  id: string
+  source_name: string
+  source_url?: string
+  source_id?: string
+  raw_title: string
+  raw_company: string
+  raw_location?: string
+  raw_salary?: string
+  raw_description?: string
+  raw_requirements?: string[]
+  raw_apply_url?: string
+  normalized_title?: string
+  normalized_company?: string
+  fingerprint?: string
+  ai_summary?: string
+  ai_category?: string
+  ai_experience_level?: string
+  ai_salary_parsed?: { min: number | null; max: number | null; currency: string; period: string }
+  ai_location_parsed?: { country: string; state: string; city: string; is_remote: boolean }
+  status: 'discovered' | 'verified' | 'rejected' | 'published' | 'expired'
+  verified_by?: string
+  verified_at?: string
+  rejection_reason?: string
+  published_job_id?: string
+  discovered_at: string
+  expires_at?: string
+  updated_at?: string
+}
+
+export interface ScrapeRun {
+  id: string
+  source_name: string
+  query_params?: Record<string, unknown>
+  status: 'running' | 'completed' | 'failed'
+  jobs_found: number
+  jobs_new: number
+  jobs_duplicate: number
+  jobs_updated: number
+  error_message?: string
+  started_at: string
+  completed_at?: string
+  triggered_by?: string
+}
+
+export interface SocialCard {
+  id: string
+  job_id: string
+  platform: 'instagram' | 'linkedin' | 'twitter' | 'whatsapp' | 'telegram'
+  card_type: 'image' | 'carousel' | 'story' | 'video'
+  card_data: Record<string, unknown>
+  image_url?: string
+  caption?: string
+  status: 'draft' | 'scheduled' | 'published' | 'failed'
+  scheduled_at?: string
+  published_at?: string
+  created_at: string
+}
+
+export interface JobAlert {
+  id: string
+  email: string
+  name?: string
+  keywords: string[]
+  locations: string[]
+  job_types: string[]
+  categories: string[]
+  min_salary?: string
+  frequency: 'instant' | 'daily' | 'weekly'
+  is_active: boolean
+  is_verified: boolean
+  alerts_sent: number
+  last_sent_at?: string
+  created_at: string
+}
+
+export interface DiscoveryStats {
+  total_discovered: number
+  pending_review: number
+  verified: number
+  published: number
+  rejected: number
+  expired: number
+  total_scrape_runs: number
+  last_scrape_at: string | null
+  total_alerts: number
+  total_social_cards: number
+  sources: string[]
+  top_categories: Array<{ category: string; count: number }>
+}
+
 interface CareersState {
   jobs: JobPosting[]
   guides: CareerGuide[]
   adConfigs: AdConfig[]
   loading: boolean
   
-  // Actions
+  // Existing Actions
   fetchJobs: () => Promise<void>
   fetchGuides: () => Promise<void>
   fetchAdConfigs: () => Promise<void>
@@ -73,6 +167,32 @@ interface CareersState {
   deleteGuide: (id: string) => Promise<void>
   
   updateAdConfig: (zone_id: AdConfig['zone_id'], config: Partial<AdConfig>) => Promise<void>
+
+  // ─── Discovery Pipeline State & Actions ─────────────────────────────────
+  discoveredJobs: DiscoveredJob[]
+  scrapeRuns: ScrapeRun[]
+  socialCards: SocialCard[]
+  jobAlerts: JobAlert[]
+  discoveryStats: DiscoveryStats | null
+  discoveryLoading: boolean
+
+  fetchDiscoveredJobs: (status?: string) => Promise<void>
+  fetchScrapeRuns: () => Promise<void>
+  fetchSocialCards: () => Promise<void>
+  fetchJobAlerts: () => Promise<void>
+  fetchDiscoveryStats: () => Promise<void>
+
+  verifyJob: (id: string) => Promise<void>
+  rejectJob: (id: string, reason: string) => Promise<void>
+  publishDiscoveredJob: (id: string, overrides?: Partial<JobPosting>) => Promise<void>
+  expireJob: (id: string) => Promise<void>
+  triggerDiscovery: (query?: string, location?: string, sources?: string[]) => Promise<{ total_new: number; total_found: number }>
+  triggerCategorization: (jobIds?: string[]) => Promise<void>
+
+  addSocialCard: (card: Omit<SocialCard, 'id' | 'created_at'>) => Promise<void>
+  deleteSocialCard: (id: string) => Promise<void>
+
+  addJobAlert: (alert: Omit<JobAlert, 'id' | 'created_at' | 'is_verified' | 'alerts_sent'>) => Promise<void>
 }
 
 // Initial Seeds for Offline & Fallback Access
@@ -509,6 +629,286 @@ export const useCareersStore = create<CareersState>((set, get) => ({
         await supabase.from('ad_configurations').upsert({ zone_id, ...configPartial })
       } catch (e) {
         console.warn('Supabase ad config update fallback to local:', e)
+      }
+    }
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DISCOVERY PIPELINE — State & Actions
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  discoveredJobs: [],
+  scrapeRuns: [],
+  socialCards: [],
+  jobAlerts: [],
+  discoveryStats: null,
+  discoveryLoading: false,
+
+  fetchDiscoveredJobs: async (status?: string) => {
+    if (!isSupabaseConfigured) return
+    try {
+      set({ discoveryLoading: true })
+      let query = supabase
+        .from('discovered_jobs')
+        .select('*')
+        .order('discovered_at', { ascending: false })
+        .limit(500)
+      
+      if (status) {
+        query = query.eq('status', status)
+      }
+      
+      const { data, error } = await query
+      if (!error && data) {
+        set({ discoveredJobs: data })
+      }
+    } catch (e) {
+      console.warn('Failed to fetch discovered jobs:', e)
+    } finally {
+      set({ discoveryLoading: false })
+    }
+  },
+
+  fetchScrapeRuns: async () => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { data, error } = await supabase
+        .from('scrape_runs')
+        .select('*')
+        .order('started_at', { ascending: false })
+        .limit(50)
+      if (!error && data) {
+        set({ scrapeRuns: data })
+      }
+    } catch (e) {
+      console.warn('Failed to fetch scrape runs:', e)
+    }
+  },
+
+  fetchSocialCards: async () => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { data, error } = await supabase
+        .from('social_cards')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100)
+      if (!error && data) {
+        set({ socialCards: data })
+      }
+    } catch (e) {
+      console.warn('Failed to fetch social cards:', e)
+    }
+  },
+
+  fetchJobAlerts: async () => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { data, error } = await supabase
+        .from('job_alerts')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(200)
+      if (!error && data) {
+        set({ jobAlerts: data })
+      }
+    } catch (e) {
+      console.warn('Failed to fetch job alerts:', e)
+    }
+  },
+
+  fetchDiscoveryStats: async () => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { data, error } = await supabase.rpc('get_discovery_stats')
+      if (!error && data) {
+        set({ discoveryStats: data as DiscoveryStats })
+      }
+    } catch (e) {
+      console.warn('Failed to fetch discovery stats:', e)
+    }
+  },
+
+  verifyJob: async (id: string) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { error } = await supabase
+        .from('discovered_jobs')
+        .update({ status: 'verified', verified_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+        .eq('id', id)
+      if (!error) {
+        set({ discoveredJobs: get().discoveredJobs.map(j => j.id === id ? { ...j, status: 'verified' as const, verified_at: new Date().toISOString() } : j) })
+      }
+    } catch (e) {
+      console.warn('Failed to verify job:', e)
+    }
+  },
+
+  rejectJob: async (id: string, reason: string) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const { error } = await supabase
+        .from('discovered_jobs')
+        .update({ status: 'rejected', rejection_reason: reason, verified_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+        .eq('id', id)
+      if (!error) {
+        set({ discoveredJobs: get().discoveredJobs.map(j => j.id === id ? { ...j, status: 'rejected' as const, rejection_reason: reason } : j) })
+      }
+    } catch (e) {
+      console.warn('Failed to reject job:', e)
+    }
+  },
+
+  publishDiscoveredJob: async (id: string, overrides?: Partial<JobPosting>) => {
+    if (!isSupabaseConfigured) return
+    try {
+      const job = get().discoveredJobs.find(j => j.id === id)
+      if (!job) return
+
+      const isRemote = /remote|anywhere|worldwide/i.test(job.raw_location || '')
+      const isWfh = /work from home|wfh|home based/i.test(job.raw_location || '') || isRemote
+      const locationParts = (job.raw_location || 'India').split(',').map(s => s.trim())
+
+      const newJobPosting: JobPosting = {
+        id: `job-${Date.now()}`,
+        title: overrides?.title || job.raw_title,
+        slug: generateSlug(job.raw_title, job.raw_company),
+        company_name: overrides?.company_name || job.raw_company,
+        is_internal_hiring: false,
+        location_country: overrides?.location_country || (locationParts.length > 2 ? locationParts[2] : 'India'),
+        location_state: overrides?.location_state || (locationParts.length > 1 ? locationParts[1] : ''),
+        location_city: overrides?.location_city || locationParts[0] || '',
+        location_area: overrides?.location_area || '',
+        is_remote: overrides?.is_remote ?? isRemote,
+        is_wfh: overrides?.is_wfh ?? isWfh,
+        job_type: overrides?.job_type || 'Full-Time',
+        experience_level: overrides?.experience_level || (job.ai_experience_level as JobPosting['experience_level']) || 'Mid Level',
+        salary_range: job.raw_salary || 'Not Disclosed',
+        niche_category: overrides?.niche_category || job.ai_category || 'General / Other',
+        description: overrides?.description || job.ai_summary || job.raw_description || '',
+        requirements: overrides?.requirements || (Array.isArray(job.raw_requirements) ? job.raw_requirements : []),
+        apply_link_or_email: overrides?.apply_link_or_email || job.raw_apply_url || job.source_url || '',
+        status: 'active',
+        featured: overrides?.featured || false,
+        created_at: new Date().toISOString()
+      }
+
+      // Add to jobs
+      const updatedJobs = [newJobPosting, ...get().jobs]
+      set({ jobs: updatedJobs })
+      localStorage.setItem('springweb_jobs_cache', JSON.stringify(updatedJobs))
+
+      if (isSupabaseConfigured) {
+        try {
+          await supabase.from('job_postings').insert(newJobPosting)
+        } catch (e) {
+          console.warn('Failed to insert job posting into Supabase:', e)
+        }
+      }
+
+      // Update discovered job status
+      await supabase
+        .from('discovered_jobs')
+        .update({ status: 'published', published_job_id: newJobPosting.id, verified_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+        .eq('id', id)
+
+      set({ discoveredJobs: get().discoveredJobs.map(j => j.id === id ? { ...j, status: 'published' as const, published_job_id: newJobPosting.id } : j) })
+    } catch (e) {
+      console.warn('Failed to publish discovered job:', e)
+    }
+  },
+
+  expireJob: async (id: string) => {
+    if (!isSupabaseConfigured) return
+    try {
+      await supabase
+        .from('discovered_jobs')
+        .update({ status: 'expired', updated_at: new Date().toISOString() })
+        .eq('id', id)
+      set({ discoveredJobs: get().discoveredJobs.map(j => j.id === id ? { ...j, status: 'expired' as const } : j) })
+    } catch (e) {
+      console.warn('Failed to expire job:', e)
+    }
+  },
+
+  triggerDiscovery: async (query?: string, location?: string, sources?: string[]) => {
+    try {
+      const apiSecret = import.meta.env.VITE_JOB_DISCOVERY_API_SECRET
+      const res = await fetch('/api/discover-jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-secret': apiSecret || '' },
+        body: JSON.stringify({
+          query: query || 'software developer',
+          location: location || 'India',
+          sources: sources || ['company_ats', 'linkedin', 'indeed', 'naukri', 'adzuna', 'remotive', 'jsearch']
+        })
+      })
+      const data = await res.json()
+      // Refresh discovered jobs after discovery
+      await get().fetchDiscoveredJobs()
+      await get().fetchScrapeRuns()
+      return { total_new: data.total_new || 0, total_found: data.total_found || 0 }
+    } catch (e) {
+      console.warn('Discovery trigger failed:', e)
+      return { total_new: 0, total_found: 0 }
+    }
+  },
+
+  triggerCategorization: async (jobIds?: string[]) => {
+    try {
+      const apiSecret = import.meta.env.VITE_JOB_DISCOVERY_API_SECRET
+      await fetch('/api/categorize-job', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-secret': apiSecret || '' },
+        body: JSON.stringify({ job_ids: jobIds, batch: !jobIds })
+      })
+      await get().fetchDiscoveredJobs()
+    } catch (e) {
+      console.warn('Categorization trigger failed:', e)
+    }
+  },
+
+  addSocialCard: async (cardData) => {
+    const newCard: SocialCard = {
+      ...cardData,
+      id: `card-${Date.now()}`,
+      created_at: new Date().toISOString()
+    }
+    set({ socialCards: [newCard, ...get().socialCards] })
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('social_cards').insert(newCard)
+      } catch (e) {
+        console.warn('Failed to insert social card into Supabase:', e)
+      }
+    }
+  },
+
+  deleteSocialCard: async (id: string) => {
+    set({ socialCards: get().socialCards.filter(c => c.id !== id) })
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('social_cards').delete().eq('id', id)
+      } catch (e) {
+        console.warn('Failed to delete social card from Supabase:', e)
+      }
+    }
+  },
+
+  addJobAlert: async (alertData) => {
+    const newAlert: JobAlert = {
+      ...alertData,
+      id: `alert-${Date.now()}`,
+      is_verified: false,
+      alerts_sent: 0,
+      created_at: new Date().toISOString()
+    }
+    set({ jobAlerts: [newAlert, ...get().jobAlerts] })
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('job_alerts').insert(newAlert)
+      } catch (e) {
+        console.warn('Failed to insert job alert into Supabase:', e)
       }
     }
   }

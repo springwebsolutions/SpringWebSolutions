@@ -39,6 +39,9 @@ const ALL_MODULES: NavItem[] = [
   { label: 'Media Library',          href: '/media',            icon: Image,           desc: 'Images, videos & files',               color: 'text-pink-400' },
   { label: 'Marketplace CMS',        href: '/marketplace',      icon: ShoppingCart,    desc: 'Products & digital goods',             color: 'text-amber-400' },
   { label: 'Job Openings',           href: '/jobs',             icon: Briefcase,       desc: 'Manage job postings',                  color: 'text-emerald-400' },
+  { label: 'AI Job Discovery',       href: '/discovery',        icon: Zap,             desc: 'Multi-source job scraper & verification', color: 'text-emerald-400', badge: 'AI' },
+  { label: 'Social Content Cards',   href: '/social-cards',     icon: Image,           desc: 'Canvas card generator for socials',     color: 'text-pink-400', badge: 'Auto' },
+  { label: 'Scrape Monitor',         href: '/scrape-monitor',   icon: Activity,        desc: 'Audit trail & crawler health',         color: 'text-amber-400' },
   { label: 'Candidate Applications', href: '/job-applications', icon: UserCheck,       desc: 'Review applicants',                    color: 'text-teal-400' },
   { label: 'Knowledge Base',         href: '/kb',               icon: HelpCircle,      desc: 'Help articles & guides',               color: 'text-cyan-400' },
   { label: 'Career Guides',          href: '/career-guides',    icon: FileText,        desc: 'Learning resources',                   color: 'text-blue-400' },
@@ -299,11 +302,14 @@ export const AdminLayout: React.FC = () => {
       ]
     },
     {
-      label: 'Growth & Ads',
-      icon: Briefcase,
+      label: 'AI & Careers Engine',
+      icon: Zap,
       items: [
-        { label: 'Careers & Guides', href: `${prefix}/jobs`, icon: Briefcase, desc: 'Jobs, applications & KB' },
-        { label: 'Ad Manager', href: `${prefix}/ads`, icon: Megaphone, desc: 'Ad slot placements' },
+        { label: 'Job Vacancies', href: `${prefix}/jobs`, icon: Briefcase, desc: 'Manage active job postings' },
+        { label: 'AI Job Discovery', href: `${prefix}/discovery`, icon: Zap, desc: 'Multi-source pipeline & verification', badge: 'AI' },
+        { label: 'Social Cards', href: `${prefix}/social-cards`, icon: Image, desc: 'Instant social card generator' },
+        { label: 'Scrape Monitor', href: `${prefix}/scrape-monitor`, icon: Activity, desc: 'Crawler logs & source health' },
+        { label: 'Ad Placements', href: `${prefix}/ads`, icon: Megaphone, desc: 'Manage banner ad slots' },
       ]
     },
     {

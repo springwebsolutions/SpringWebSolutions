@@ -67,6 +67,18 @@ export const CareersNavbar: React.FC = () => {
             <HelpCircle size={14} />
             <span>Knowledge Base</span>
           </Link>
+
+          <Link
+            to="/alerts"
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              path.startsWith('/alerts')
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                : 'text-slate-300 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Sparkles size={14} className="text-amber-400" />
+            <span>Job Alerts</span>
+          </Link>
         </nav>
 
         {/* Action Buttons & Main Site Switcher */}
