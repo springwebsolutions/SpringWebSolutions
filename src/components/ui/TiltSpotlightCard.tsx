@@ -58,29 +58,31 @@ export const TiltSpotlightCard: React.FC<TiltSpotlightCardProps> = ({
         transform: transformStyle,
         transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)'
       }}
-      className={`relative overflow-hidden group will-change-transform ${className}`}
+      className={`relative group will-change-transform ${className}`}
     >
-      {/* ── Dynamic Radial Spotlight Beam ── */}
-      <div
-        className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-[inherit] z-20"
-        style={{
-          opacity: spotlightPos.opacity,
-          background: `radial-gradient(400px circle at ${spotlightPos.x}px ${spotlightPos.y}px, ${spotlightColor}, transparent 70%)`
-        }}
-        aria-hidden="true"
-      />
+      {/* ── Dynamic Radial Spotlight Beam (Strictly Clipped to Rounded Card Boundary) ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit] z-20">
+        <div
+          className="absolute -inset-px transition-opacity duration-300 rounded-[inherit]"
+          style={{
+            opacity: spotlightPos.opacity,
+            background: `radial-gradient(400px circle at ${spotlightPos.x}px ${spotlightPos.y}px, ${spotlightColor}, transparent 70%)`
+          }}
+          aria-hidden="true"
+        />
 
-      {/* ── Subtle Border Shimmer ── */}
-      <div
-        className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-[inherit] z-10 border border-emerald-500/20 dark:border-emerald-500/20 light:border-emerald-500/40"
-        style={{
-          opacity: isHovered ? 1 : 0
-        }}
-        aria-hidden="true"
-      />
+        {/* ── Subtle Border Shimmer ── */}
+        <div
+          className="absolute -inset-px transition-opacity duration-300 rounded-[inherit] border border-emerald-500/20 dark:border-emerald-500/20 light:border-emerald-500/40"
+          style={{
+            opacity: isHovered ? 1 : 0
+          }}
+          aria-hidden="true"
+        />
+      </div>
 
-      {/* Card Content */}
-      <div className="relative z-10 h-full">
+      {/* Card Content - Unclipped so badges and decorative headers display completely */}
+      <div className="relative z-30 h-full">
         {children}
       </div>
     </div>

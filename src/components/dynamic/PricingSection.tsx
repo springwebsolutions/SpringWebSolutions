@@ -258,7 +258,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
         </div>
 
         {/* Pricing Cards Grid with 3D Tilt & Spotlight */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-8 sm:pt-10">
           {plans.map((plan, idx) => (
             <TiltSpotlightCard key={idx} className="h-full rounded-3xl">
               <div
@@ -269,8 +269,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
                 }`}
               >
                 {plan.isPopular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1 shadow-lg shadow-emerald-500/30">
-                    <Zap size={12} />
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5 shadow-xl shadow-emerald-500/40 z-30 border border-emerald-300/40 whitespace-nowrap">
+                    <Zap size={13} className="fill-slate-950 text-slate-950" />
                     <span>Most Popular</span>
                   </div>
                 )}
