@@ -22,6 +22,7 @@ interface PostDetail {
   reading_time_minutes: number
   seo_title: string | null
   seo_description: string | null
+  seo_keywords?: string | null
   profiles: any
   categories: Array<{ id: string; name: string; slug: string }>
   faqs?: Array<{ question: string; answer: string }>
@@ -264,6 +265,7 @@ export const BlogPost: React.FC = () => {
           reading_time_minutes: curated.reading_time_minutes,
           seo_title: curated.seo_title,
           seo_description: curated.seo_description,
+          seo_keywords: curated.seo_keywords,
           profiles: { full_name: curated.author.name },
           categories: curated.categories,
           faqs: curated.faqs,
@@ -448,7 +450,13 @@ const generateJsonLd = (post: PostDetail) => {
       }
     },
     'datePublished': post.published_at,
-    'dateModified': post.published_at
+    'dateModified': post.published_at,
+    'inLanguage': 'en-IN',
+    'keywords': post.seo_keywords || undefined,
+    'speakable': {
+      '@type': 'SpeakableSpecification',
+      'cssSelector': ['h1', 'p']
+    }
   }
 
   const breadcrumbSchema = {
@@ -552,10 +560,10 @@ const generateJsonLd = (post: PostDetail) => {
       <SEOHead
         title={post.seo_title || `${post.title} | Spring Web Blog`}
         description={post.seo_description || post.excerpt}
-        keywords={isIndiaOffer 
+        keywords={post.seo_keywords || (isIndiaOffer 
           ? 'website development Udumalpet, web design Tiruppur, custom software company Coimbatore, website package ₹15000 India, React NextJS web agency Tamil Nadu, Spring Web Solutions'
-          : 'custom business website development $249, full source code website agency, high speed React web application, AI search engine optimization AEO, Spring Web Solutions'
-        }
+          : 'custom business website development, full source code website agency, high speed React web application, AI search engine optimization AEO, Spring Web Solutions'
+        )}
         canonicalUrl={`https://www.springwebsolutions.in/blog/${post.slug}`}
         ogImage={displayImage}
         type="article"

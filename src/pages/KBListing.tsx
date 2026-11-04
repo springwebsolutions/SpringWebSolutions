@@ -78,6 +78,7 @@ export const KBListing: React.FC = () => {
       <SEOHead
         title="Knowledge Base & Technical Help Guides | Spring Web Solutions"
         description="Explore technical documentation, setup guides, API tutorials, and troubleshooting articles by Spring Web Solutions. Search our help center today!"
+        canonicalUrl="https://www.springwebsolutions.in/kb"
       />
       <CareersNavbar />
 

@@ -104,8 +104,10 @@ export const CareersHome: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans transition-colors duration-300">
       <CareersSeo
-        title="Careers & Job Openings Vault | SpringWeb Solutions (Udumalpet, Tamil Nadu & Remote)"
-        description="Discover software engineering jobs & developer vacancies in Udumalpet, Tamil Nadu, and remote. Apply today to build your career with SpringWeb!"
+        title="2026 Tech Hiring Radar & 13 Role Roadmaps | SpringWeb Careers"
+        description="Verified active software engineering vacancies, direct corporate ATS apply links, transparent INR compensations, and 13 comprehensive IT engineering blueprints."
+        keywords="verified software engineering jobs 2026, tech jobs India, remote developer vacancies, IT career roadmaps, software engineer internships, Cisco, HackerRank, Zoho, Atlassian, SpringWeb Careers"
+        canonicalUrl="https://careers.springwebsolutions.in/"
       />
       <CareersNavbar />
 

@@ -113,6 +113,45 @@ export const KBArticle: React.FC = () => {
               <SEOHead
                 title={article.seo_title || `${article.title} | Spring Web Help Center`}
                 description={article.seo_description || article.content.substring(0, 160).replace(/[#*`]/g, '')}
+                canonicalUrl={`https://www.springwebsolutions.in/kb/${article.slug}`}
+                type="article"
+                publishedTime={article.created_at}
+                jsonLd={{
+                  '@context': 'https://schema.org',
+                  '@graph': [
+                    {
+                      '@type': 'TechArticle',
+                      '@id': `https://www.springwebsolutions.in/kb/${article.slug}#article`,
+                      'headline': article.title,
+                      'description': article.seo_description || article.content.substring(0, 160).replace(/[#*`]/g, ''),
+                      'inLanguage': 'en-IN',
+                      'author': {
+                        '@type': 'Organization',
+                        'name': 'Spring Web Solutions Support Desk',
+                        'url': 'https://www.springwebsolutions.in/'
+                      },
+                      'publisher': {
+                        '@type': 'Organization',
+                        'name': 'Spring Web Solutions',
+                        'logo': 'https://www.springwebsolutions.in/logo-emblem.png'
+                      },
+                      'datePublished': article.created_at,
+                      'speakable': {
+                        '@type': 'SpeakableSpecification',
+                        'cssSelector': ['h1', 'p']
+                      }
+                    },
+                    {
+                      '@type': 'BreadcrumbList',
+                      '@id': `https://www.springwebsolutions.in/kb/${article.slug}#breadcrumb`,
+                      'itemListElement': [
+                        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+                        { '@type': 'ListItem', 'position': 2, 'name': 'Help Center', 'item': 'https://www.springwebsolutions.in/kb' },
+                        { '@type': 'ListItem', 'position': 3, 'name': article.title, 'item': `https://www.springwebsolutions.in/kb/${article.slug}` }
+                      ]
+                    }
+                  ]
+                }}
               />
               
               {/* Left Column - Article Content */}

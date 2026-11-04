@@ -110,12 +110,66 @@ export const CareerGuideListing: React.FC = () => {
     })
   }, [publishedGuides, activeTab, searchQuery])
 
+  // Schema.org ItemList for Google & Answer Engine Optimization (AEO)
+  const guidesSchema = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ItemList',
+        '@id': 'https://careers.springwebsolutions.in/career-guides#itemlist',
+        'name': '13 Production IT Career Roadmaps & Engineering Blueprints (2026 Edition)',
+        'description': 'Exhaustive month-by-month engineering roadmaps, real-world compensation benchmarks, runnable code snippets, and system design decision matrices for 13 tech roles.',
+        'numberOfItems': publishedGuides.length,
+        'itemListElement': publishedGuides.map((g, idx) => ({
+          '@type': 'ListItem',
+          'position': idx + 1,
+          'item': {
+            '@type': 'TechArticle',
+            '@id': `https://careers.springwebsolutions.in/career-guides/${g.slug}`,
+            'headline': g.title,
+            'name': g.title,
+            'url': `https://careers.springwebsolutions.in/career-guides/${g.slug}`,
+            'description': g.excerpt,
+            'inLanguage': 'en-IN',
+            'isAccessibleForFree': true,
+            'educationalLevel': 'Professional / Advanced Engineering',
+            'publisher': {
+              '@type': 'Organization',
+              'name': 'SpringWeb Solutions',
+              'logo': 'https://www.springwebsolutions.in/logo-emblem.png'
+            }
+          }
+        }))
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': 'https://careers.springwebsolutions.in/career-guides#breadcrumb',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': 'https://careers.springwebsolutions.in/'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Career Guides',
+            'item': 'https://careers.springwebsolutions.in/career-guides'
+          }
+        ]
+      }
+    ]
+  }), [publishedGuides])
+
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans">
       <CareersSeo 
         title="13 Production IT Career Roadmaps (2026 Edition) | SpringWeb Careers"
         description="Comprehensive 6-phase engineering roadmaps for Frontend, Backend, Full-Stack, System Architecture, DevOps/SRE, Cloud, Data, ML, Applied AI, Cybersecurity, SDET, and Remote Software Contracts."
+        keywords="IT career roadmaps 2026, software engineer roadmap, system design blueprint, devops roadmap, full stack developer roadmap, applied AI engineering, remote developer guide, Section 44ADA tax, SpringWeb Careers"
         canonicalUrl="https://careers.springwebsolutions.in/career-guides"
+        schemaJson={guidesSchema}
       />
       <CareersNavbar />
 

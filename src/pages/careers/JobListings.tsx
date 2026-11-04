@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
@@ -98,12 +98,77 @@ export const JobListings: React.FC = () => {
     setSearchParams({})
   }
 
+  // Schema.org ItemList for Google & Answer Engine Optimization (AEO)
+  const jobListingsSchema = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ItemList',
+        '@id': 'https://careers.springwebsolutions.in/jobs#itemlist',
+        'name': '2026 Verified Tech Jobs Radar — SpringWeb Careers',
+        'description': 'Active verified software engineering, mobile development, cloud architecture, and data science job openings with transparent INR compensation benchmarks.',
+        'numberOfItems': jobs.length,
+        'itemListElement': jobs.map((j, idx) => ({
+          '@type': 'ListItem',
+          'position': idx + 1,
+          'item': {
+            '@type': 'JobPosting',
+            '@id': `https://careers.springwebsolutions.in/jobs/${j.slug}`,
+            'title': j.title,
+            'name': j.title,
+            'url': `https://careers.springwebsolutions.in/jobs/${j.slug}`,
+            'hiringOrganization': {
+              '@type': 'Organization',
+              'name': j.company_name
+            },
+            'jobLocation': {
+              '@type': 'Place',
+              'address': {
+                '@type': 'PostalAddress',
+                'addressLocality': j.location_city,
+                'addressCountry': 'IN'
+              }
+            },
+            'baseSalary': {
+              '@type': 'MonetaryAmount',
+              'currency': 'INR',
+              'value': {
+                '@type': 'QuantitativeValue',
+                'value': j.salary_range
+              }
+            }
+          }
+        }))
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': 'https://careers.springwebsolutions.in/jobs#breadcrumb',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': 'https://careers.springwebsolutions.in/'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Verified Vacancies',
+            'item': 'https://careers.springwebsolutions.in/jobs'
+          }
+        ]
+      }
+    ]
+  }), [jobs])
+
   return (
     <div className="min-h-screen bg-[#040509] text-white flex flex-col font-sans transition-colors duration-300">
       <CareersSeo 
-        title="Search All Job Vacancies & Remote Roles | SpringWeb Careers"
-        description="Search active software engineering, mobile app, and SEO job vacancies across Tamil Nadu, Pan-India & Remote. Find your dream developer role now!"
+        title="21 Verified Active Software Engineering Jobs 2026 | SpringWeb Careers"
+        description="Search active verified software developer vacancies, remote engineering roles, internships & fresher opportunities across India with direct corporate ATS links."
+        keywords="verified software jobs India, remote developer jobs 2026, tech internships Bengaluru, software engineer freshers, gap friendly developer jobs, Cisco, HackerRank, Zoho, Atlassian, Automattic, SpringWeb Careers"
         canonicalUrl="https://careers.springwebsolutions.in/jobs"
+        schemaJson={jobListingsSchema}
       />
       <CareersNavbar />
 
