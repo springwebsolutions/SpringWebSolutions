@@ -1,5 +1,10 @@
-import React, { useState } from 'react'
-import { DollarSign, CheckCircle2, XCircle, AlertTriangle, Calculator, Sparkles, Trophy, HelpCircle, ArrowRight, ShieldCheck, Flame } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import {
+  DollarSign, CheckCircle2, XCircle, AlertTriangle, Calculator,
+  Sparkles, Trophy, HelpCircle, ArrowRight, ShieldCheck, Flame,
+  Server, Database, Activity, RefreshCw, Layers, Cpu, Lock, Check,
+  BookOpen, Code2, Play, RotateCcw
+} from 'lucide-react'
 
 // ─── 1. INTERACTIVE REMOTE COMPENSATION & SECTION 44ADA TAX CALCULATOR ────────
 export const RemoteCompensationCalculator: React.FC = () => {
@@ -11,13 +16,12 @@ export const RemoteCompensationCalculator: React.FC = () => {
 
   // Section 44ADA: 50% presumptive business expenses deducted automatically
   const presumptiveTaxableIncome = annualInr * 0.5
-  // Rough effective tax calculation under Indian New Tax Regime on the 50% profit
   const section44adaTax = presumptiveTaxableIncome > 1500000 
     ? (presumptiveTaxableIncome - 1500000) * 0.30 + 150000 
     : presumptiveTaxableIncome * 0.15
   const section44adaInHand = annualInr - section44adaTax
 
-  // Traditional Salaried employee with same gross (taxed on full CTC with 75k standard deduction)
+  // Traditional Salaried employee with same gross
   const taxableSalaried = Math.max(0, annualInr - 75000)
   const salariedTax = taxableSalaried > 1500000 
     ? (taxableSalaried - 1500000) * 0.30 + 150000 
@@ -101,355 +105,1091 @@ export const RemoteCompensationCalculator: React.FC = () => {
           <span className="text-xl sm:text-2xl font-black text-teal-300 font-mono block">
             +₹{(taxSaved / 100000).toFixed(2)} Lakhs
           </span>
-          <span className="text-[11px] text-slate-400 font-light">Legally saved each year via 44ADA expenses</span>
+          <span className="text-[11px] text-slate-500 font-mono">Extra cash left in your bank</span>
         </div>
       </div>
 
-      {/* Tier-2 Living Arbitrage Note */}
-      <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 flex items-start gap-3 text-xs text-slate-300 leading-relaxed font-light">
-        <Sparkles size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-slate-300 leading-relaxed">
+        <strong className="text-emerald-400">The Udumalpet / Tier-2 Advantage:</strong> Earning $5,500/mo in Bangalore or Gurgaon typically leaves only ~₹1.8L after 30% TDS, ₹65,000 apartment rent, and metro living costs. Earning that same $5,500 in Udumalpet or Coimbatore under Section 44ADA yields ₹3.7L+ net savings every single month—enabling you to purchase land and achieve financial independence 10 years faster.
+      </div>
+    </div>
+  )
+}
+
+// ─── 2. BYTEBYTEGO-STYLE SYSTEM DESIGN NAPKIN MATH CALCULATOR ─────────────────
+export const SystemDesignNapkinCalculator: React.FC = () => {
+  const [dau, setDau] = useState(5) // in Millions
+  const [reqPerUser, setReqPerUser] = useState(40)
+  const [readRatio, setReadRatio] = useState(10) // 10:1 Read to Write
+  const [payloadKb, setPayloadKb] = useState(10) // Average payload KB
+
+  // Calculations
+  const totalDailyRequests = dau * 1000000 * reqPerUser
+  const avgQps = Math.round(totalDailyRequests / 86400)
+  const peakQps = avgQps * 3 // 3x multiplier for peak hours
+
+  const writeQps = Math.round(avgQps / (readRatio + 1))
+  const readQps = avgQps - writeQps
+
+  const dailyIngestedGb = (totalDailyRequests * (1 / (readRatio + 1)) * payloadKb) / (1024 * 1024)
+  const fiveYearStorageTb = (dailyIngestedGb * 365 * 5 * 3) / 1024 // 3x replication factor
+
+  // 20% Pareto Rule for In-Memory Caching (Redis)
+  const dailyReadVolumeGb = (totalDailyRequests * (readRatio / (readRatio + 1)) * payloadKb) / (1024 * 1024)
+  const cacheRamGb = Math.round(dailyReadVolumeGb * 0.2)
+
+  // Network Bandwidth in Mbps
+  const networkMbps = Math.round((avgQps * payloadKb * 8) / 1024)
+
+  // Architecture Tier recommendation
+  const getArchTier = () => {
+    if (peakQps < 1500) {
+      return {
+        tier: 'Tier 1: Single Robust Node',
+        spec: 'PostgreSQL (16GB RAM) + Next.js App Cluster',
+        cost: '~$80 - $200 / mo',
+        badge: 'Low Complexity'
+      }
+    }
+    if (peakQps < 10000) {
+      return {
+        tier: 'Tier 2: Read-Replicas & Caching',
+        spec: 'Primary Postgres + 2 Read Replicas + Redis Cluster + Cloudflare CDN',
+        cost: '~$450 - $1,200 / mo',
+        badge: 'Intermediate'
+      }
+    }
+    return {
+      tier: 'Tier 3: Distributed Sharding & Event Streaming',
+      spec: 'Database Sharding (Citus/Vitess) + Kafka Event Bus + Multi-region Redis',
+      cost: '~$2,500 - $8,000+ / mo',
+      badge: 'High Concurrency'
+    }
+  }
+
+  const arch = getArchTier()
+
+  return (
+    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#060c1c] via-[#040813] to-[#02050b] border border-cyan-500/30 shadow-2xl space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <strong className="text-white font-bold">The Tier-2 Arbitrage Real-Life Math:</strong> Rent for a luxury 3BHK independent villa in Udumalpet or Pollachi is ~₹15,000/mo vs ₹75,000/mo in Bangalore HSR Layout. That alone puts an extra <span className="text-emerald-300 font-semibold font-mono">₹7,20,000 cash</span> directly into your savings account every single year.
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold uppercase tracking-wider font-mono">
+            <Cpu size={13} />
+            <span>ByteByteGo Interactive: Napkin Math Capacity Planner</span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-white font-display mt-2">
+            System Design Sizing: From QPS to Storage & RAM
+          </h3>
+          <p className="text-xs text-slate-400 font-light mt-1">
+            Simulate system scale to calculate backend IOPS, Redis memory buffers, and multi-year disk volume.
+          </p>
+        </div>
+        <div className="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-mono shrink-0">
+          Peak Multiplier: 3x
+        </div>
+      </div>
+
+      {/* Sliders Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] p-5 rounded-2xl border border-white/5">
+        
+        {/* Slider 1: DAU */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Daily Active Users (DAU):</span>
+            <span className="font-mono font-bold text-cyan-400">{dau} Million Users</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={50}
+            step={1}
+            value={dau}
+            onChange={(e) => setDau(Number(e.target.value))}
+            className="w-full accent-cyan-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>1M</span>
+            <span>25M</span>
+            <span>50M</span>
+          </div>
+        </div>
+
+        {/* Slider 2: Requests per user */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Requests / User / Day:</span>
+            <span className="font-mono font-bold text-cyan-400">{reqPerUser} requests</span>
+          </div>
+          <input
+            type="range"
+            min={10}
+            max={200}
+            step={10}
+            value={reqPerUser}
+            onChange={(e) => setReqPerUser(Number(e.target.value))}
+            className="w-full accent-cyan-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>10 reqs</span>
+            <span>100 reqs</span>
+            <span>200 reqs</span>
+          </div>
+        </div>
+
+        {/* Slider 3: Read to Write Ratio */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Read-to-Write Ratio:</span>
+            <span className="font-mono font-bold text-cyan-400">{readRatio}:1 ({(100 / (readRatio + 1)).toFixed(0)}% Writes)</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={50}
+            step={1}
+            value={readRatio}
+            onChange={(e) => setReadRatio(Number(e.target.value))}
+            className="w-full accent-cyan-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>1:1 (Equal)</span>
+            <span>10:1 (Typical API)</span>
+            <span>50:1 (Read-Heavy)</span>
+          </div>
+        </div>
+
+        {/* Slider 4: Payload Size */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Avg Request Payload:</span>
+            <span className="font-mono font-bold text-cyan-400">{payloadKb} KB</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={100}
+            step={5}
+            value={payloadKb}
+            onChange={(e) => setPayloadKb(Number(e.target.value))}
+            className="w-full accent-cyan-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>1 KB (JSON)</span>
+            <span>50 KB</span>
+            <span>100 KB (Payload)</span>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Napkin Math Output Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="p-4 rounded-2xl bg-[#020713] border border-white/10 space-y-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Peak QPS</span>
+          <span className="text-xl sm:text-2xl font-black text-cyan-300 font-mono">
+            {peakQps.toLocaleString()}
+          </span>
+          <span className="text-[10px] text-slate-500 font-mono block">Avg: {avgQps.toLocaleString()} QPS</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#020713] border border-white/10 space-y-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Redis Cache RAM</span>
+          <span className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
+            {cacheRamGb} GB
+          </span>
+          <span className="text-[10px] text-slate-500 font-mono block">20% Pareto buffer</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#020713] border border-white/10 space-y-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">5-Year Storage</span>
+          <span className="text-xl sm:text-2xl font-black text-amber-300 font-mono">
+            {fiveYearStorageTb.toFixed(1)} TB
+          </span>
+          <span className="text-[10px] text-slate-500 font-mono block">With 3x replica factor</span>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-[#020713] border border-white/10 space-y-1">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Egress Bandwidth</span>
+          <span className="text-xl sm:text-2xl font-black text-purple-300 font-mono">
+            {networkMbps > 1000 ? `${(networkMbps / 1000).toFixed(2)} Gbps` : `${networkMbps} Mbps`}
+          </span>
+          <span className="text-[10px] text-slate-500 font-mono block">Continuous throughput</span>
+        </div>
+      </div>
+
+      {/* Recommended Architecture Box */}
+      <div className="p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="space-y-1 text-center sm:text-left">
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
+            <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded bg-cyan-500 text-slate-950">
+              {arch.badge}
+            </span>
+            <span className="text-sm font-bold text-white font-display">{arch.tier}</span>
+          </div>
+          <p className="text-xs text-slate-300 font-mono">{arch.spec}</p>
+        </div>
+        <div className="text-right shrink-0">
+          <span className="text-[11px] text-slate-500 block">Est. Infrastructure Cost</span>
+          <span className="text-sm font-bold text-emerald-400 font-mono">{arch.cost}</span>
         </div>
       </div>
     </div>
   )
 }
 
-// ─── 2. INTERACTIVE ARCHITECTURE & SKILL READINESS CHECKLIST ──────────────────
-interface ChecklistProps {
-  guideSlug: string
+// ─── 3. INTERACTIVE TOKEN BUCKET RATE LIMITER SIMULATOR ───────────────────────
+export const InteractiveTokenBucketSimulator: React.FC = () => {
+  const [capacity, setCapacity] = useState(20)
+  const [refillRate, setRefillRate] = useState(5) // tokens per sec
+  const [tokens, setTokens] = useState(20)
+  const [incomingRate, setIncomingRate] = useState(8) // requests per sec
+  const [acceptedCount, setAcceptedCount] = useState(0)
+  const [droppedCount, setDroppedCount] = useState(0)
+  const [isRunning, setIsRunning] = useState(false)
+
+  // Simulation tick
+  useEffect(() => {
+    if (!isRunning) return
+
+    const interval = setInterval(() => {
+      // 1. Refill tokens
+      setTokens(prev => Math.min(capacity, prev + (refillRate * 0.2)))
+
+      // 2. Consume incoming requests
+      const incomingThisTick = incomingRate * 0.2
+      setTokens(prev => {
+        if (prev >= incomingThisTick) {
+          setAcceptedCount(c => c + Math.round(incomingThisTick))
+          return prev - incomingThisTick
+        } else {
+          const accepted = Math.floor(prev)
+          const dropped = Math.round(incomingThisTick - accepted)
+          setAcceptedCount(c => c + accepted)
+          setDroppedCount(d => d + Math.max(1, dropped))
+          return 0
+        }
+      })
+    }, 200)
+
+    return () => clearInterval(interval)
+  }, [isRunning, capacity, refillRate, incomingRate])
+
+  const handleReset = () => {
+    setIsRunning(false)
+    setTokens(capacity)
+    setAcceptedCount(0)
+    setDroppedCount(0)
+  }
+
+  const fillPercentage = Math.min(100, Math.max(0, (tokens / capacity) * 100))
+
+  return (
+    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#140b08] via-[#0d0705] to-[#04060c] border border-amber-500/30 shadow-2xl space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider font-mono">
+            <Activity size={13} />
+            <span>Interactive Simulator: Token Bucket Rate Limiter</span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-white font-display mt-2">
+            Simulate Traffic Bursts & HTTP 429 Drops
+          </h3>
+          <p className="text-xs text-slate-400 font-light mt-1">
+            See why Redis Token Bucket algorithms protect payment gateways and high-concurrency APIs from crashing.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsRunning(!isRunning)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+              isRunning 
+                ? 'bg-amber-500 text-slate-950 hover:bg-amber-400' 
+                : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400'
+            }`}
+          >
+            <Play size={14} className={isRunning ? 'fill-slate-950' : ''} />
+            <span>{isRunning ? 'Pause Traffic' : 'Start Simulation'}</span>
+          </button>
+          <button
+            onClick={handleReset}
+            className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300 transition-colors"
+            title="Reset Counters"
+          >
+            <RotateCcw size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* Visual Token Tank Display */}
+      <div className="p-6 rounded-2xl bg-[#050302] border border-white/10 space-y-4">
+        <div className="flex items-center justify-between text-xs font-mono">
+          <span className="text-slate-400">Current Bucket Fill:</span>
+          <span className="text-amber-400 font-bold">{tokens.toFixed(1)} / {capacity} Tokens ({fillPercentage.toFixed(0)}%)</span>
+        </div>
+
+        {/* Visual Progress Bar simulating Token Level */}
+        <div className="w-full h-8 bg-slate-900 rounded-xl overflow-hidden border border-white/10 relative">
+          <div
+            className="h-full transition-all duration-200 bg-gradient-to-r from-amber-600 via-amber-500 to-emerald-400"
+            style={{ width: `${fillPercentage}%` }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center text-[11px] font-mono font-bold text-white tracking-widest drop-shadow-md">
+            {tokens < 3 ? 'BUCKET EXHAUSTED (DROPPING)' : 'AVAILABLE TOKEN BUFFER'}
+          </div>
+        </div>
+
+        {/* Live Counters */}
+        <div className="grid grid-cols-2 gap-4 pt-2">
+          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+            <span className="text-xs font-mono text-emerald-300 flex items-center gap-1.5">
+              <CheckCircle2 size={14} />
+              <span>Accepted 200 OK:</span>
+            </span>
+            <span className="text-lg font-black text-emerald-400 font-mono">{acceptedCount}</span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between">
+            <span className="text-xs font-mono text-rose-300 flex items-center gap-1.5">
+              <XCircle size={14} />
+              <span>Dropped 429 Too Many:</span>
+            </span>
+            <span className="text-lg font-black text-rose-400 font-mono">{droppedCount}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Sliders */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-white/[0.02] p-5 rounded-2xl border border-white/5">
+        
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Bucket Capacity:</span>
+            <span className="font-mono font-bold text-amber-400">{capacity} tokens</span>
+          </div>
+          <input
+            type="range"
+            min={10}
+            max={50}
+            step={5}
+            value={capacity}
+            onChange={(e) => setCapacity(Number(e.target.value))}
+            className="w-full accent-amber-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <span className="text-[10px] text-slate-500 block">Max allowed burst volume</span>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Refill Rate:</span>
+            <span className="font-mono font-bold text-emerald-400">+{refillRate} tokens/sec</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={20}
+            step={1}
+            value={refillRate}
+            onChange={(e) => setRefillRate(Number(e.target.value))}
+            className="w-full accent-emerald-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <span className="text-[10px] text-slate-500 block">Tokens added back per second</span>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs font-medium text-slate-200">
+            <span>Incoming Traffic Burst:</span>
+            <span className="font-mono font-bold text-rose-400">{incomingRate} req/sec</span>
+          </div>
+          <input
+            type="range"
+            min={1}
+            max={35}
+            step={1}
+            value={incomingRate}
+            onChange={(e) => setIncomingRate(Number(e.target.value))}
+            className="w-full accent-rose-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+          />
+          <span className="text-[10px] text-slate-500 block">Simulated incoming user requests</span>
+        </div>
+
+      </div>
+
+      <div className="text-xs text-slate-400 font-mono bg-white/[0.02] p-4 rounded-xl border border-white/5 leading-relaxed">
+        <strong className="text-amber-400">Production Takeaway:</strong> Notice how increasing the traffic burst beyond the refill rate empties the bucket in seconds. In production Redis architecture, this check is executed in a single atomic <code className="text-emerald-300">EVAL</code> Lua script to avoid race conditions across distributed microservices.
+      </div>
+    </div>
+  )
 }
 
-export const ArchitectureReadinessChecklist: React.FC<ChecklistProps> = ({ guideSlug }) => {
-  const checklists: Record<string, { title: string; items: string[] }> = {
-    'full-stack-developer-roadmap-2026': {
-      title: 'Full-Stack Production Readiness Diagnostic',
-      items: [
-        'I write strict TypeScript with zero `any` and understand conditional types (infer)',
-        'I know how React 19 Server Components differ from client-side hydration',
-        'I use TanStack Query for cache invalidation rather than storing server data in Redux',
-        'I design PostgreSQL schemas with B-Tree indexes, composite keys, and foreign constraints',
-        'I prevent double-spending in database transactions using `SELECT ... FOR UPDATE`',
-        'I build multi-stage Dockerfiles that compile production images under 80 MB',
-        'I have automated GitHub Actions CI/CD deploying directly to Vercel or AWS'
-      ]
+// ─── 4. JUNIOR VS STAFF ARCHITECT CODE DIFF EXPLORER ──────────────────────────
+export const ArchitectCodeDiffViewer: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'concurrency' | 'database' | 'resilience' | 'ai'>('concurrency')
+
+  const codeData = {
+    concurrency: {
+      title: 'Handling 10,000 Concurrent Webhook Requests',
+      juniorTitle: 'Junior / Tutorial Approach (Unbounded Memory Crash)',
+      juniorCode: `// ❌ JUNIOR: Fires all promises simultaneously without backpressure
+app.post('/api/webhook-batch', async (req, res) => {
+  const orders = req.body.orders; // 10,000 items
+  
+  // CRASH: Node.js event loop runs out of memory (OOM)
+  // Database connection pool immediately throws ECONNREFUSED
+  const results = await Promise.all(
+    orders.map(order => processPayment(order))
+  );
+  
+  res.json({ success: true, count: results.length });
+});`,
+      seniorTitle: 'Staff Architect Approach (BullMQ + Worker Pool + Backpressure)',
+      seniorCode: `// ✅ STAFF ARCHITECT: Durable queue + Concurrency Pool + Rate Limited
+import { Queue } from 'bullmq';
+
+const paymentQueue = new Queue('payments', { connection: redisClient });
+
+app.post('/api/webhook-batch', async (req, res) => {
+  const { orders } = orderBatchSchema.parse(req.body);
+  
+  // Fast 202 Accepted: Ingest to Redis within 8ms
+  await paymentQueue.addBulk(
+    orders.map(o => ({ name: 'process-order', data: o, opts: { attempts: 3, backoff: { type: 'exponential', delay: 1000 } } }))
+  );
+  
+  // Workers scale independently with concurrency: 25
+  res.status(202).json({ status: 'queued', batchSize: orders.length });
+});`
     },
-    'system-design-microservices-interview-masterclass': {
-      title: 'Distributed System Design Mastery Audit',
-      items: [
-        'I can calculate back-of-the-envelope RPS, disk IOPS, and memory requirements in 5 minutes',
-        'I understand why Redis token bucket rate limiters prevent DDoS spikes on API gateways',
-        'I can explain the exact tradeoff between Cache-Aside vs Write-Through caching patterns',
-        'I know how to resolve cache stampede (thundering herd) with mutex locks or XFetch',
-        'I can design an idempotent order execution API using unique client transaction UUIDs',
-        'I understand how database read-replicas differ from horizontal sharding strategies'
-      ]
+    database: {
+      title: 'Preventing Double-Spending During Flash Sales',
+      juniorTitle: 'Junior Approach (Race Condition Double-Spend Vulnerability)',
+      juniorCode: `// ❌ JUNIOR: Read-then-write race condition
+async function buyProduct(userId, productId) {
+  const product = await db.products.findUnique({ where: { id: productId } });
+  
+  if (product.stock > 0) {
+    // RACE: 50 requests reach here simultaneously before stock decreases!
+    // Result: 50 orders sold for 1 remaining item!
+    await db.orders.create({ data: { userId, productId } });
+    await db.products.update({ where: { id: productId }, data: { stock: product.stock - 1 } });
+    return { success: true };
+  }
+  throw new Error("Out of stock");
+}`,
+      seniorTitle: 'Staff Architect Approach (Atomic Conditional Decrement & Row Lock)',
+      seniorCode: `// ✅ STAFF ARCHITECT: Single atomic SQL statement with WHERE stock > 0
+async function buyProduct(userId, productId) {
+  return await prisma.$transaction(async (tx) => {
+    // Atomic test-and-set: Decrement ONLY if stock > 0 at that exact millisecond
+    const updated = await tx.$executeRaw\`
+      UPDATE "Product" 
+      SET stock = stock - 1, updated_at = NOW()
+      WHERE id = \${productId} AND stock > 0
+    \`;
+
+    if (updated === 0) {
+      throw new OutOfStockError("Item sold out during checkout lock");
+    }
+
+    return await tx.order.create({ data: { userId, productId, status: 'CONFIRMED' } });
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead });
+}`
     },
-    'remote-software-engineer-playbook-tier2-tier3-india': {
-      title: 'Global Remote Engineer Readiness Checklist',
-      items: [
-        'My GitHub has 2+ deployed, non-tutorial production repos with clean architecture diagrams',
-        'I have written a concise 3-paragraph value-first cold email targeting startup founders',
-        'I have tested asynchronous communication via detailed Loom videos & written PR descriptions',
-        'I understand Section 44ADA presumptive taxation and how FIRC remittance certificates work',
-        'I have an active Wise or direct SWIFT bank account configured for zero-loss forex conversion'
-      ]
+    database_n1: {
+      title: 'Optimizing N+1 Database Loops',
+      juniorTitle: 'Junior Approach (400 Database Queries for 1 Page)',
+      juniorCode: `// ❌ JUNIOR: Fires a separate SQL query inside every loop iteration
+const users = await db.users.findMany(); // 1 query
+for (const user of users) {
+  // N queries! 100 users = 101 round trips to PostgreSQL!
+  user.posts = await db.posts.findMany({ where: { authorId: user.id } });
+}`,
+      seniorTitle: 'Staff Architect Approach (Dataloader Batching / SQL JOIN)',
+      seniorCode: `// ✅ STAFF ARCHITECT: Single query using SQL JOIN or CTE
+const usersWithPosts = await db.users.findMany({
+  include: {
+    posts: {
+      select: { id: true, title: true, createdAt: true },
+      take: 5
+    }
+  }
+}); // Exactly 1 optimized SQL query executed!`
     },
-    'devops-cloud-engineering-blueprint-2026': {
-      title: 'DevOps & Kubernetes Production Readiness Audit',
-      items: [
-        'I use multi-stage Docker builds to strip build compilers from runtime container images',
-        'I understand Kubernetes Pod lifecycle, Deployment replica sets, and Ingress routing',
-        'I write reusable Terraform (HCL) modules for VPCs, private subnets, and RDS databases',
-        'I have configured Prometheus metrics and Grafana dashboards for latency & 5xx alerts',
-        'I implement blue-green or canary zero-downtime rolling deployments via GitHub Actions'
-      ]
+    resilience: {
+      title: '3rd-Party API Failure (Stripe/Payment Gateway Down)',
+      juniorTitle: 'Junior Approach (Uncaught Hanging Thread / Cascading Failure)',
+      juniorCode: `// ❌ JUNIOR: Hangs forever when third-party provider experiences downtime
+async function chargeCustomer(customerId, amount) {
+  // No timeout! If Stripe takes 60 seconds to answer,
+  // all web server threads block until the entire application crashes.
+  const response = await fetch('https://api.stripe.com/v1/charges', {
+    method: 'POST',
+    body: JSON.stringify({ customerId, amount })
+  });
+  return await response.json();
+}`,
+      seniorTitle: 'Staff Architect Approach (AbortController Timeout + Circuit Breaker)',
+      seniorCode: `// ✅ STAFF ARCHITECT: 2.5s Timeout + Exponential Backoff with Jitter
+async function chargeCustomerWithBreaker(customerId, amount) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2500); // 2.5s strict SLA
+
+  try {
+    return await circuitBreaker.fire(async () => {
+      const res = await fetch('https://api.stripe.com/v1/charges', {
+        signal: controller.signal,
+        headers: { 'Idempotency-Key': generateUUID() } // Prevent duplicate charges
+      });
+      return await res.json();
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}`
     },
-    'applied-ai-engineering-rag-vector-databases': {
-      title: 'Applied AI Engineering Competency Checklist',
-      items: [
-        'I understand chunking strategies (semantic, recursive) and token limits for LLM embeddings',
-        'I have executed cosine similarity `<=>` queries using PostgreSQL `pgvector`',
-        'I know how to enforce deterministic JSON outputs using Zod schema function calling',
-        'I have built an autonomous multi-step agent workflow that calls custom external APIs',
-        'I implement prompt caching and streaming Server-Sent Events (SSE) to minimize user latency'
-      ]
+    ai: {
+      title: 'Production LLM Guardrails & Hallucination Defense',
+      juniorTitle: 'Junior Approach (Raw Unvalidated String Output)',
+      juniorCode: `// ❌ JUNIOR: Assumes LLM will always return valid JSON
+const response = await openai.chat.completions.create({
+  model: 'gpt-4o',
+  messages: [{ role: 'user', content: 'Give me user JSON data' }]
+});
+
+// CRASH: When LLM outputs "Sure, here is your JSON: '''json..."
+// JSON.parse throws SyntaxError in production!
+const data = JSON.parse(response.choices[0].message.content);`,
+      seniorTitle: 'Staff Architect Approach (Structured Outputs + Zod Schema Fallback)',
+      seniorCode: `// ✅ STAFF ARCHITECT: Guaranteed JSON Schema Enforcement + Fallback Model
+import { z } from 'zod';
+import { zodResponseFormat } from 'openai/helpers/zod';
+
+const UserResponseSchema = z.object({
+  userId: z.string().uuid(),
+  tier: z.enum(['FREE', 'PRO', 'ENTERPRISE']),
+  confidenceScore: z.number().min(0).max(1)
+});
+
+const completion = await openai.beta.chat.completions.parse({
+  model: 'gpt-4o-2024-08-06',
+  response_format: zodResponseFormat(UserResponseSchema, 'user_analysis'),
+  max_tokens: 500,
+  temperature: 0.1 // Deterministic low entropy for production
+});
+
+// 100% type-safe parsed payload guaranteed by OpenAI grammar engine
+const validatedData = completion.choices[0].message.parsed;`
     }
   }
 
-  const currentChecklist = checklists[guideSlug] || checklists['full-stack-developer-roadmap-2026']
-  const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({})
+  const active = codeData[activeTab]
 
-  const toggleItem = (idx: number) => {
-    setCheckedItems(prev => ({ ...prev, [idx]: !prev[idx] }))
+  return (
+    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#080d1a] via-[#050812] to-[#030509] border border-indigo-500/30 shadow-2xl space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider font-mono">
+            <Code2 size={13} />
+            <span>Interactive Code Inspector: Junior vs. Staff Architect</span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-white font-display mt-2">
+            Production Code Invariants: What Makes Code Staff-Grade?
+          </h3>
+          <p className="text-xs text-slate-400 font-light mt-1">
+            Compare fragile tutorial-style code with resilient, high-concurrency production implementations.
+          </p>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {[
+          { id: 'concurrency', label: '1. Concurrency (10k RPS)' },
+          { id: 'database', label: '2. Race Conditions' },
+          { id: 'resilience', label: '3. API Circuit Breaker' },
+          { id: 'ai', label: '4. Production LLM Guardrail' }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+              activeTab === tab.id
+                ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30'
+                : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <h4 className="text-sm font-bold text-slate-200 font-display flex items-center gap-2">
+        <Sparkles size={14} className="text-indigo-400" />
+        <span>Scenario: {active.title}</span>
+      </h4>
+
+      {/* Code Comparison Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        
+        {/* Junior Box */}
+        <div className="rounded-2xl border border-rose-500/30 bg-[#070304] overflow-hidden flex flex-col justify-between">
+          <div className="px-4 py-2.5 bg-rose-500/10 border-b border-rose-500/20 flex items-center justify-between">
+            <span className="text-[11px] font-mono font-bold text-rose-400 flex items-center gap-1.5">
+              <XCircle size={13} />
+              <span>{active.juniorTitle}</span>
+            </span>
+            <span className="text-[10px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded font-mono">Tutorial Hell</span>
+          </div>
+          <pre className="p-4 text-xs font-mono text-rose-200/90 leading-relaxed overflow-x-auto flex-grow bg-black/40">
+            <code>{active.juniorCode}</code>
+          </pre>
+        </div>
+
+        {/* Staff Architect Box */}
+        <div className="rounded-2xl border border-emerald-500/40 bg-[#020704] overflow-hidden flex flex-col justify-between shadow-xl">
+          <div className="px-4 py-2.5 bg-emerald-500/10 border-b border-emerald-500/20 flex items-center justify-between">
+            <span className="text-[11px] font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+              <CheckCircle2 size={13} />
+              <span>{active.seniorTitle}</span>
+            </span>
+            <span className="text-[10px] bg-emerald-500 text-slate-950 font-extrabold px-2 py-0.5 rounded font-mono">Top 1% Tier</span>
+          </div>
+          <pre className="p-4 text-xs font-mono text-emerald-300 leading-relaxed overflow-x-auto flex-grow bg-black/40">
+            <code>{active.seniorCode}</code>
+          </pre>
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+// ─── 5. INTERACTIVE FLASHCARD STUDY DECK (ByteByteGo & Interview Style) ───────
+export const InteractiveFlashcardsDeck: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isFlipped, setIsFlipped] = useState(false)
+  const [masteredCount, setMasteredCount] = useState(0)
+
+  const cards = [
+    {
+      category: 'Distributed Systems',
+      question: 'What is Split-Brain in a distributed cluster and how is it prevented?',
+      answer: 'Split-Brain occurs when network partitioning divides a cluster into two isolated sub-clusters, each believing the other is dead and electing its own leader, resulting in concurrent divergent data writes. It is prevented by enforcing Quorum consensus (Q = N/2 + 1) with odd node counts (e.g. Raft/Paxos).'
+    },
+    {
+      category: 'Database Internals',
+      question: 'Why does PostgreSQL use a Write-Ahead Log (WAL) before updating disk pages?',
+      answer: 'Disk writes to random B-tree pages are slow. WAL appends transaction changes sequentially to an append-only log file on disk first (O(1) sequential I/O). Once the WAL entry is flushed (fsync), the transaction is guaranteed ACID durable even if power cuts immediately.'
+    },
+    {
+      category: 'High Concurrency',
+      question: 'What is the "Thundering Herd" cache problem and what are the two production solutions?',
+      answer: 'When a popular cached key (e.g., flash sale inventory) expires, thousands of concurrent requests miss the cache simultaneously and slam the database. Solutions: 1) Mutex locking (only 1 thread regenerates cache, others wait); 2) Probabilistic early expiration (XFetch algorithm recalculates cache before hard TTL).'
+    },
+    {
+      category: 'AI Engineering',
+      question: 'Why is Chunk Overlap critical in RAG vector retrieval pipelines?',
+      answer: 'Splitting text into discrete chunks (e.g., 500 tokens) risks cutting crucial sentences in half right at the boundary. Chunk Overlap (e.g., 50-100 tokens) ensures semantic continuity is preserved across chunks so embeddings capture complete thoughts.'
+    },
+    {
+      category: 'DevOps & SRE',
+      question: 'What is the mathematical difference between P95 and P99 latency?',
+      answer: 'P95 latency is the threshold under which 95% of requests complete. P99 measures the slowest 1% tail latency. Because a single web page often triggers 40+ microservice queries, a 1% failure or delay rate (P99) affects over 33% of end users!'
+    }
+  ]
+
+  const current = cards[currentIndex]
+
+  const handleNext = (mastered: boolean) => {
+    if (mastered) setMasteredCount(c => c + 1)
+    setIsFlipped(false)
+    setCurrentIndex((prev) => (prev + 1) % cards.length)
   }
 
-  const completedCount = Object.values(checkedItems).filter(Boolean).length
-  const totalCount = currentChecklist.items.length
-  const percent = Math.round((completedCount / totalCount) * 100)
+  return (
+    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#0b0c16] to-[#04060c] border border-purple-500/30 shadow-2xl space-y-6">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <span className="text-[11px] font-mono text-purple-400 font-bold uppercase tracking-wider block">
+            Technical Interview Trainer
+          </span>
+          <h3 className="text-xl font-bold text-white font-display mt-1">
+            System Design & Architecture Flashcards
+          </h3>
+        </div>
+        <div className="text-right">
+          <span className="text-xs font-mono text-purple-300">
+            Card {currentIndex + 1} of {cards.length}
+          </span>
+          <div className="text-[11px] text-slate-500 font-mono">Mastered: {masteredCount}</div>
+        </div>
+      </div>
+
+      {/* Flip Card Container */}
+      <div
+        onClick={() => setIsFlipped(!isFlipped)}
+        className="min-h-[200px] p-8 rounded-2xl bg-[#030408] border border-white/10 hover:border-purple-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-inner relative group"
+      >
+        <div className="flex items-center justify-between text-xs">
+          <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono text-[10px] font-bold uppercase">
+            {current.category}
+          </span>
+          <span className="text-[11px] text-slate-500 font-mono flex items-center gap-1 group-hover:text-purple-400 transition-colors">
+            <RefreshCw size={12} />
+            <span>Click card to {isFlipped ? 'see question' : 'reveal answer'}</span>
+          </span>
+        </div>
+
+        <div className="py-6 text-center">
+          {!isFlipped ? (
+            <div className="space-y-2">
+              <span className="text-xs text-slate-500 uppercase tracking-widest font-mono">Question</span>
+              <p className="text-base sm:text-lg font-bold text-white leading-relaxed font-display">
+                {current.question}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2 animate-fade-in">
+              <span className="text-xs text-emerald-400 uppercase tracking-widest font-mono font-bold">Senior Architect Answer</span>
+              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans font-light">
+                {current.answer}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="text-[10px] text-slate-600 text-center font-mono">
+          Tap anywhere to flip card
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center justify-between gap-4 pt-2">
+        <button
+          onClick={() => handleNext(false)}
+          className="w-1/2 py-2.5 rounded-xl border border-white/10 hover:bg-white/5 text-xs font-semibold text-slate-300 transition-colors cursor-pointer"
+        >
+          Review Later
+        </button>
+        <button
+          onClick={() => handleNext(true)}
+          className="w-1/2 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-lg shadow-purple-600/20 cursor-pointer"
+        >
+          I Knew This (+1 Mastered)
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── 6. INTERACTIVE READINESS DIAGNOSTIC CHECKLIST ────────────────────────────
+export const ArchitectureReadinessChecklist: React.FC<{ guideSlug: string }> = ({ guideSlug }) => {
+  const getItemsForSlug = (slug: string) => {
+    if (slug.includes('devops')) {
+      return [
+        { id: '1', text: 'I write multi-stage Dockerfiles with non-root distroless base images' },
+        { id: '2', text: 'I configure Kubernetes PodDisruptionBudgets and HPA metrics' },
+        { id: '3', text: 'I store cloud state in encrypted remote Terraform S3 backends with DynamoDB locking' },
+        { id: '4', text: 'I set up Prometheus alertmanager rules with P99 SLO thresholds' },
+        { id: '5', text: 'I implement zero-downtime Canary or Blue/Green deployments via ArgoCD' }
+      ]
+    }
+    if (slug.includes('system-design')) {
+      return [
+        { id: '1', text: 'I can calculate napkin-math QPS, storage, and bandwidth in under 3 minutes' },
+        { id: '2', text: 'I design Redis cache-aside patterns with mutex locking to stop thundering herds' },
+        { id: '3', text: 'I implement database sharding using consistent hashing rings' },
+        { id: '4', text: 'I use Kafka consumer groups with dead-letter queues (DLQ) for guaranteed delivery' },
+        { id: '5', text: 'I design idempotent APIs using unique idempotency keys in Redis' }
+      ]
+    }
+    if (slug.includes('ai-engineering')) {
+      return [
+        { id: '1', text: 'I implement semantic sliding-window text chunking with token overlap' },
+        { id: '2', text: 'I write SQL hybrid search queries combining pgvector cosine distance + BM25 text rank' },
+        { id: '3', text: 'I enforce structured schema parsing using Zod models with low temperature' },
+        { id: '4', text: 'I build autonomous agent workflows using LangGraph state machines' },
+        { id: '5', text: 'I implement prompt caching and token cost guardrails in production' }
+      ]
+    }
+    if (slug.includes('remote')) {
+      return [
+        { id: '1', text: 'I maintain a polished GitHub portfolio with live production demos on custom domains' },
+        { id: '2', text: 'I write structured asynchronous RFC design docs rather than relying on Slack chats' },
+        { id: '3', text: 'I have an active GST registration and filed an LUT (Letter of Undertaking) for 0% export' },
+        { id: '4', text: 'I receive USD international inward remittances with automatic digital FIRC certificates' },
+        { id: '5', text: 'I file taxes under Section 44ADA with a 50% legal expense deduction shield' }
+      ]
+    }
+    return [
+      { id: '1', text: 'I write strict TypeScript without using "any" or loose type assertions' },
+      { id: '2', text: 'I understand React 19 Server Components vs Client boundary hydration' },
+      { id: '3', text: 'I write composite PostgreSQL B-Tree indexes and analyze EXPLAIN ANALYZE query plans' },
+      { id: '4', text: 'I execute atomic multi-row transactions with row-level locking to prevent race conditions' },
+      { id: '5', text: 'I implement rate limiting and optimistic UI mutations with rollback states' }
+    ]
+  }
+
+  const items = getItemsForSlug(guideSlug)
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
+
+  const toggleItem = (id: string) => {
+    setCheckedItems(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  const checkedCount = Object.values(checkedItems).filter(Boolean).length
+  const scorePercent = Math.round((checkedCount / items.length) * 100)
 
   const getRank = () => {
-    if (percent === 100) return { label: 'Principal Architect Caliber', color: 'text-emerald-400', badge: 'Ready for Top 1% Roles' }
-    if (percent >= 70) return { label: 'Senior Production Engineer', color: 'text-teal-300', badge: 'Ready for Tier-1 Startups' }
-    if (percent >= 40) return { label: 'Solid Mid-Level Developer', color: 'text-indigo-400', badge: '2-3 Milestones Left' }
-    return { label: 'Aspiring Foundation Builder', color: 'text-amber-400', badge: 'Focus on Phase 1 & 2' }
+    if (scorePercent === 100) return { title: 'Staff Production Architect', color: 'text-emerald-400', bg: 'bg-emerald-500/10' }
+    if (scorePercent >= 60) return { title: 'Senior Production Engineer', color: 'text-cyan-400', bg: 'bg-cyan-500/10' }
+    if (scorePercent >= 40) return { title: 'Mid-Level Developer', color: 'text-amber-400', bg: 'bg-amber-500/10' }
+    return { title: 'Junior / Tutorial Trainee', color: 'text-rose-400', bg: 'bg-rose-500/10' }
   }
 
   const rank = getRank()
 
   return (
-    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-[#060812] border border-white/10 shadow-2xl space-y-6">
+    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#070d18] to-[#03060c] border border-emerald-500/30 shadow-2xl space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider font-mono">
-            <CheckCircle2 size={13} />
-            <span>Interactive Self-Audit Checklist</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-mono">
+            <Trophy size={13} />
+            <span>Interactive Diagnostic: Production Readiness Checklist</span>
           </div>
           <h3 className="text-xl sm:text-2xl font-black text-white font-display mt-2">
-            {currentChecklist.title}
+            Where Do You Rank Against Senior Engineers?
           </h3>
           <p className="text-xs text-slate-400 font-light mt-1">
-            Check off competencies you can confidently defend in a live technical interview.
+            Check off the capabilities you have personally shipped to production in real client codebases.
           </p>
         </div>
+
         <div className="text-right shrink-0">
-          <span className="text-[11px] text-slate-400 font-mono block">Your Readiness Score</span>
-          <span className="text-2xl font-black text-emerald-400 font-mono">{percent}%</span>
+          <span className="text-[11px] text-slate-500 font-mono block">Current Score</span>
+          <span className="text-2xl font-black text-emerald-400 font-mono">{scorePercent}%</span>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-white/5">
-        <div 
-          className="bg-gradient-to-r from-emerald-500 via-teal-400 to-indigo-500 h-full rounded-full transition-all duration-500"
-          style={{ width: `${percent}%` }}
+      <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-white/5">
+        <div
+          className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300"
+          style={{ width: `${scorePercent}%` }}
         />
       </div>
 
-      <div className="flex items-center justify-between text-xs pt-1">
-        <span className="text-slate-400 font-light">Completed: <strong className="text-white">{completedCount}</strong> of {totalCount} competencies</span>
-        <span className={`font-bold font-mono ${rank.color} flex items-center gap-1.5`}>
-          <Trophy size={13} />
-          {rank.label} ({rank.badge})
-        </span>
-      </div>
-
-      {/* Interactive Checkbox Items */}
-      <div className="space-y-2.5 pt-2">
-        {currentChecklist.items.map((item, idx) => {
-          const isChecked = !!checkedItems[idx]
+      {/* Checklist items */}
+      <div className="space-y-3">
+        {items.map((item) => {
+          const isChecked = !!checkedItems[item.id]
           return (
             <button
-              key={idx}
-              type="button"
-              onClick={() => toggleItem(idx)}
-              className={`w-full p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all cursor-pointer ${
+              key={item.id}
+              onClick={() => toggleItem(item.id)}
+              className={`w-full p-4 rounded-2xl border text-left flex items-start gap-3.5 transition-all cursor-pointer ${
                 isChecked
-                  ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-200'
-                  : 'bg-white/[0.02] border-white/5 hover:border-white/20 text-slate-300'
+                  ? 'bg-emerald-500/10 border-emerald-500/40 text-white'
+                  : 'bg-white/[0.02] border-white/5 text-slate-300 hover:bg-white/5 hover:border-white/10'
               }`}
             >
-              <span className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+              <span className={`h-5 w-5 rounded-lg flex items-center justify-center shrink-0 mt-0.5 border transition-colors ${
                 isChecked
-                  ? 'bg-emerald-500 border-emerald-400 text-slate-950 font-black'
-                  : 'border-slate-600 bg-slate-900/50'
+                  ? 'bg-emerald-500 border-emerald-400 text-slate-950'
+                  : 'border-white/20 bg-white/5 text-transparent'
               }`}>
-                {isChecked && <CheckCircle2 size={13} strokeWidth={3} />}
+                <Check size={13} strokeWidth={3} />
               </span>
               <span className="text-xs sm:text-sm font-medium leading-relaxed">
-                {item}
+                {item.text}
               </span>
             </button>
           )
         })}
       </div>
+
+      {/* Rank Verdict Card */}
+      <div className={`p-5 rounded-2xl border flex items-center justify-between gap-4 ${rank.bg} border-white/10`}>
+        <div className="space-y-0.5">
+          <span className="text-[11px] text-slate-400 font-mono block">Assessed Industry Level:</span>
+          <h4 className={`text-base sm:text-lg font-black font-display ${rank.color}`}>
+            {rank.title}
+          </h4>
+        </div>
+        <div className="text-right text-xs font-mono text-slate-300">
+          {checkedCount} / {items.length} Production Invariants Met
+        </div>
+      </div>
     </div>
   )
 }
 
-// ─── 3. SENIOR ARCHITECT TECHNICAL SCENARIO QUIZ ──────────────────────────────
-interface QuizProps {
-  guideSlug: string
-}
-
-export const SeniorArchitectScenarioQuiz: React.FC<QuizProps> = ({ guideSlug }) => {
-  const quizzes: Record<string, {
-    question: string
-    scenario: string
-    options: { text: string; isCorrect: boolean; explanation: string }[]
-  }> = {
-    'full-stack-developer-roadmap-2026': {
-      scenario: 'High-Concurrency E-Commerce Flash Sale',
-      question: 'Two users click "Buy Last Unit" at the exact same millisecond. If your API runs `SELECT quantity FROM items WHERE id = 1` followed by `UPDATE items SET quantity = quantity - 1`, what occurs?',
+// ─── 7. SENIOR ARCHITECT SCENARIO QUIZ ────────────────────────────────────────
+export const SeniorArchitectScenarioQuiz: React.FC<{ guideSlug: string }> = ({ guideSlug }) => {
+  const getScenarioForSlug = (slug: string) => {
+    if (slug.includes('devops')) {
+      return {
+        title: 'Production Incident: Pod Eviction Cascade During Traffic Surge',
+        situation: 'At 01:45 AM, your Kubernetes cluster experiences a 4x sudden ingress traffic surge. Your worker pods suddenly start getting terminated with OOMKilled status. As pods die, remaining pods take more traffic and also get evicted in a rapid domino effect.',
+        question: 'What is the root cause and the immediate production mitigation?',
+        options: [
+          {
+            text: 'Increase container memory limits without requests, and restart the deployment',
+            correct: false,
+            explanation: 'Setting unbounded limits allows pods to starve the underlying EC2/Kubelet node memory, causing the whole node to become NotReady.'
+          },
+          {
+            text: 'Set realistic memory requests = limits, define a PodDisruptionBudget (PDB), and configure Horizontal Pod Autoscaler (HPA) to scale on CPU/Memory thresholds before reaching 75%',
+            correct: true,
+            explanation: 'Guaranteed QoS (requests = limits) prevents node memory starvation, while PDB guarantees a minimum available pool during scaling churn.'
+          },
+          {
+            text: 'Switch from Docker containers to raw PM2 processes on the host virtual machine',
+            correct: false,
+            explanation: 'PM2 on a single VM removes auto-healing, multi-node scheduling, and load balancing across failure zones.'
+          }
+        ]
+      }
+    }
+    if (slug.includes('system-design')) {
+      return {
+        title: 'Architecture Scenario: Redis Cache Failure Shuts Down PostgreSQL',
+        situation: 'A popular news article or product goes viral. Your primary Redis cache cluster node crashes due to an out-of-memory error. In less than 15 seconds, your backend response times surge from 35ms to 8,500ms, and PostgreSQL connection pools max out at 500/500.',
+        question: 'How do you design the cache layer so database collapse is mathematically impossible?',
+        options: [
+          {
+            text: 'Increase PostgreSQL max_connections from 500 to 5,000 in postgresql.conf',
+            correct: false,
+            explanation: 'PostgreSQL allocates memory per connection (~5-10MB). 5,000 connections will trigger kernel OOM killer and cause complete database corruption.'
+          },
+          {
+            text: 'Implement a Distributed Mutex Lock (via Redis/Postgres advisory lock) so only 1 thread fetches from DB upon cache miss, combined with circuit breaker and stale-while-revalidate caching',
+            correct: true,
+            explanation: 'A single query populates the cache while all other concurrent requests receive stale data or wait on the mutex, completely shielding the database from the thundering herd.'
+          },
+          {
+            text: 'Remove the Redis cache completely and add 10 read replicas to PostgreSQL',
+            correct: false,
+            explanation: 'Replicas still experience disk I/O bottlenecks and incur high cloud costs without matching Redis sub-millisecond memory latency.'
+          }
+        ]
+      }
+    }
+    return {
+      title: 'Database Concurrency Scenario: Flash Sale Final Item Race Condition',
+      situation: 'Your e-commerce client has exactly 1 remaining PlayStation 5 in stock. Two customers click "Confirm Payment" at the exact same millisecond across two different AWS availability zones.',
+      question: 'Which database technique prevents both customers from purchasing the same item?',
       options: [
         {
-          text: 'The database automatically halts the second transaction because PostgreSQL is ACID compliant.',
-          isCorrect: false,
-          explanation: 'Incorrect! Default Read Committed isolation allows both transactions to read quantity = 1, leading to an overselling race condition where inventory drops to -1.'
+          text: 'Check stock > 0 in JavaScript memory, sleep for 50ms, then insert the order',
+          correct: false,
+          explanation: 'JavaScript thread sleeps do not provide transactional cross-process isolation. Both threads will read stock = 1 and sell the item twice.'
         },
         {
-          text: 'A Race Condition occurs, resulting in both orders completing and inventory selling past zero.',
-          isCorrect: true,
-          explanation: 'Correct! Without an explicit row-level lock (`SELECT ... FOR UPDATE`) or an atomic constraint (`WHERE quantity > 0`), both concurrent reads see 1 item in stock and both succeed.'
+          text: 'Use atomic SQL conditional update: UPDATE products SET stock = stock - 1 WHERE id = $1 AND stock > 0, inside a SERIALIZABLE transaction',
+          correct: true,
+          explanation: 'The database engine utilizes row-level locking. The first transaction succeeds with 1 row updated; the second transaction finds 0 matching rows and safely aborts.'
         },
         {
-          text: 'The API Gateway triggers a 429 Too Many Requests status code.',
-          isCorrect: false,
-          explanation: 'Incorrect. Rate limiting limits request volume per IP; it cannot detect application-level inventory concurrency.'
-        }
-      ]
-    },
-    'system-design-microservices-interview-masterclass': {
-      scenario: 'Cache Stampede / Thundering Herd Problem',
-      question: 'Your Redis cluster crashes for 30 seconds during a cricket World Cup final. Millions of users reload the live score page simultaneously. What immediate failure mode hits your backend?',
-      options: [
-        {
-          text: 'Cache Stampede: Millions of cache-miss queries simultaneously hit the primary database, exhausting connection pools and causing a total site blackout.',
-          isCorrect: true,
-          explanation: 'Correct! When the cache layer is down, every incoming request falls through to the database. Without probabilistic early refresh or mutex locking, database connection pools crash in seconds.'
-        },
-        {
-          text: 'PostgreSQL automatically spins up 500 read replicas to handle the surge.',
-          isCorrect: false,
-          explanation: 'Incorrect. Database replication requires infrastructure provisioning time and cannot react to sub-second thundering herd spikes.'
-        },
-        {
-          text: 'Cloudflare buffers the database write locks and serves stale HTML.',
-          isCorrect: false,
-          explanation: 'Incorrect. CDN edge caches only serve cached static assets; dynamic API routes without cache-headers hit origin servers directly.'
-        }
-      ]
-    },
-    'remote-software-engineer-playbook-tier2-tier3-india': {
-      scenario: 'Contractor Invoicing & Compliance',
-      question: 'You earn $6,000/month as an independent contractor from a US Delaware company into your Indian bank account. Under Section 44ADA, how much of your gross income is considered taxable profit?',
-      options: [
-        {
-          text: '100% of income is taxed under the highest 30% slab rate without deductions.',
-          isCorrect: false,
-          explanation: 'Incorrect. That is true only for salaried employees. Contractors eligible for Section 44ADA can deduct 50% as presumed business expenses.'
-        },
-        {
-          text: 'Exactly 50% is treated as taxable profit; the other 50% is treated as presumed expenses with zero receipts required.',
-          isCorrect: true,
-          explanation: 'Correct! Section 44ADA allows eligible professionals earning up to ₹75 Lakhs to declare a flat 50% profit margin, dramatically lowering their effective tax.'
-        },
-        {
-          text: 'Foreign remittances are completely tax-free in India under SEZ export subsidies.',
-          isCorrect: false,
-          explanation: 'Incorrect. Zero-rated GST applies to export of services, but personal Income Tax is still strictly mandatory.'
-        }
-      ]
-    },
-    'devops-cloud-engineering-blueprint-2026': {
-      scenario: 'Kubernetes Rolling Deployment Outage',
-      question: 'You push a new container version to your Kubernetes cluster. The container crashes on boot due to a missing environment variable. What does Kubernetes do if configured properly?',
-      options: [
-        {
-          text: 'It halts the rolling update because the Readiness Probe fails, leaving your existing healthy pods serving live traffic uninterrupted.',
-          isCorrect: true,
-          explanation: 'Correct! If Readiness and Liveness probes are configured, Kubernetes detects that the new pods never reach ready state and preserves the previous healthy ReplicaSet.'
-        },
-        {
-          text: 'It terminates all old pods immediately, displaying a 500 Error to users.',
-          isCorrect: false,
-          explanation: 'Incorrect. That only happens if you set maxUnavailable = 100% and have zero readiness probe checks.'
-        },
-        {
-          text: 'Docker restarts the host operating system automatically.',
-          isCorrect: false,
-          explanation: 'Incorrect. Pod failures are isolated within container namespaces; they never reboot the host node.'
-        }
-      ]
-    },
-    'applied-ai-engineering-rag-vector-databases': {
-      scenario: 'Vector Search vs Exact Match Queries',
-      question: 'A user searches for "automobile mechanics in Udumalpet". Your database only contains documents labeled "car repair workshops in Udumalpet". Why does semantic vector search succeed where standard SQL `LIKE` fails?',
-      options: [
-        {
-          text: 'Vector embeddings map words into high-dimensional semantic space where "automobile" and "car" have high cosine similarity regardless of exact string spelling.',
-          isCorrect: true,
-          explanation: 'Correct! Embeddings capture semantic meaning rather than lexical tokens. Cosine similarity evaluates contextual closeness in 1536-dimensional vector space.'
-        },
-        {
-          text: 'PostgreSQL runs a brute-force regex against Google Translate APIs.',
-          isCorrect: false,
-          explanation: 'Incorrect. Semantic search is completely offline math (dot product or cosine angle distance) computed directly on stored vectors.'
-        },
-        {
-          text: 'The LLM automatically rewrites the database table schema before every query.',
-          isCorrect: false,
-          explanation: 'Incorrect. The database schema remains static; the vector index computes distance metrics.'
+          text: 'Store the inventory count in local browser localStorage of each customer',
+          correct: false,
+          explanation: 'LocalStorage is client-side only and has zero knowledge of other customers.'
         }
       ]
     }
   }
 
-  const currentQuiz = quizzes[guideSlug] || quizzes['full-stack-developer-roadmap-2026']
+  const scenario = getScenarioForSlug(guideSlug)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
 
   return (
-    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-[#070b16] border border-emerald-500/20 shadow-2xl space-y-5">
-      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-mono w-max">
-        <HelpCircle size={13} />
-        <span>Senior Architect Scenario Challenge</span>
+    <div className="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#100c1e] to-[#04060c] border border-indigo-500/30 shadow-2xl space-y-6">
+      <div className="border-b border-white/10 pb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider font-mono">
+          <HelpCircle size={13} />
+          <span>Interactive Interview Scenario Challenge</span>
+        </div>
+        <h3 className="text-xl sm:text-2xl font-black text-white font-display mt-2">
+          {scenario.title}
+        </h3>
+        <p className="text-xs text-slate-300 font-light mt-2 leading-relaxed bg-white/[0.03] p-4 rounded-xl border border-white/5">
+          <strong className="text-amber-400 font-mono">Incident Brief:</strong> {scenario.situation}
+        </p>
       </div>
 
-      <div>
-        <span className="text-[11px] text-slate-500 uppercase tracking-widest font-mono font-bold block mb-1">
-          {currentQuiz.scenario}
-        </span>
-        <h4 className="text-base sm:text-lg font-bold text-white font-display leading-snug">
-          {currentQuiz.question}
-        </h4>
-      </div>
+      <div className="space-y-3">
+        <div className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+          Senior Architect Decision: {scenario.question}
+        </div>
 
-      <div className="space-y-3 pt-2">
-        {currentQuiz.options.map((opt, idx) => {
+        {scenario.options.map((opt, idx) => {
           const isSelected = selectedOption === idx
+          let optStyle = 'bg-white/[0.02] border-white/5 text-slate-300 hover:bg-white/5'
+
+          if (hasSubmitted) {
+            if (opt.correct) {
+              optStyle = 'bg-emerald-500/15 border-emerald-500/60 text-emerald-200'
+            } else if (isSelected) {
+              optStyle = 'bg-rose-500/15 border-rose-500/60 text-rose-200'
+            }
+          } else if (isSelected) {
+            optStyle = 'bg-indigo-500/20 border-indigo-500/60 text-white'
+          }
+
           return (
-            <div key={idx} className="space-y-2">
-              <button
-                type="button"
-                onClick={() => setSelectedOption(idx)}
-                className={`w-full p-4 rounded-2xl border text-left text-xs sm:text-sm transition-all cursor-pointer flex items-start gap-3 ${
-                  isSelected
-                    ? opt.isCorrect
-                      ? 'bg-emerald-500/15 border-emerald-400 text-white font-semibold'
-                      : 'bg-rose-500/15 border-rose-400 text-white font-semibold'
-                    : 'bg-white/[0.02] border-white/10 hover:border-white/20 text-slate-300'
-                }`}
-              >
-                <span className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold ${
-                  isSelected
-                    ? opt.isCorrect
-                      ? 'bg-emerald-500 border-emerald-400 text-slate-950'
-                      : 'bg-rose-500 border-rose-400 text-white'
-                    : 'border-slate-600 bg-slate-900/60 text-slate-400'
-                }`}>
+            <button
+              key={idx}
+              onClick={() => {
+                if (!hasSubmitted) setSelectedOption(idx)
+              }}
+              className={`w-full p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col gap-2 ${optStyle}`}
+            >
+              <div className="flex items-start gap-3">
+                <span className="h-5 w-5 rounded-full border border-current flex items-center justify-center shrink-0 mt-0.5 text-xs font-mono font-bold">
                   {String.fromCharCode(65 + idx)}
                 </span>
-                <span className="leading-relaxed">{opt.text}</span>
-              </button>
+                <span className="text-xs sm:text-sm font-medium leading-relaxed">
+                  {opt.text}
+                </span>
+              </div>
 
-              {isSelected && (
-                <div className={`p-4 rounded-xl text-xs leading-relaxed animate-fade-in ${
-                  opt.isCorrect 
-                    ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300' 
-                    : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
-                }`}>
-                  <strong className="block font-bold mb-1">
-                    {opt.isCorrect ? '✓ Correct Architectural Insight:' : '✗ Common Pitfall:'}
+              {hasSubmitted && (
+                <div className="mt-2 pt-2 border-t border-white/10 text-xs font-light leading-relaxed pl-8">
+                  <strong className={opt.correct ? 'text-emerald-400' : 'text-rose-400'}>
+                    {opt.correct ? '✓ Senior Architect Reasoning: ' : '✗ Production Pitfall: '}
                   </strong>
-                  {opt.explanation}
+                  <span>{opt.explanation}</span>
                 </div>
               )}
-            </div>
+            </button>
           )
         })}
       </div>
+
+      {!hasSubmitted ? (
+        <button
+          onClick={() => {
+            if (selectedOption !== null) setHasSubmitted(true)
+          }}
+          disabled={selectedOption === null}
+          className="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-indigo-600/30 cursor-pointer disabled:cursor-not-allowed"
+        >
+          Submit Architecture Decision
+        </button>
+      ) : (
+        <div className="flex items-center justify-between text-xs font-mono pt-2">
+          <span className="text-slate-400">Decision evaluated against Production SRE Standards</span>
+          <button
+            onClick={() => {
+              setHasSubmitted(false)
+              setSelectedOption(null)
+            }}
+            className="text-indigo-400 hover:underline"
+          >
+            Retry Challenge
+          </button>
+        </div>
+      )}
     </div>
   )
 }
-

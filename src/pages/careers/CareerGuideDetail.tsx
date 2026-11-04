@@ -8,6 +8,10 @@ import { CareersSeo } from '@/components/seo/CareersSeo'
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer'
 import {
   RemoteCompensationCalculator,
+  SystemDesignNapkinCalculator,
+  InteractiveTokenBucketSimulator,
+  ArchitectCodeDiffViewer,
+  InteractiveFlashcardsDeck,
   ArchitectureReadinessChecklist,
   SeniorArchitectScenarioQuiz
 } from '@/components/careers/InteractiveCareerToolkit'
@@ -237,12 +241,32 @@ export const CareerGuideDetail: React.FC = () => {
                 </div>
               )}
 
-              {/* Interactive Section 2: Technical Readiness Diagnostic Checklist */}
+              {/* Interactive Section 2: ByteByteGo System Design Napkin Math Calculator */}
+              <div id="napkin-calculator" className="pt-2">
+                <SystemDesignNapkinCalculator />
+              </div>
+
+              {/* Interactive Section 3: Token Bucket Rate Limiter Simulator */}
+              <div id="token-bucket-simulator" className="pt-2">
+                <InteractiveTokenBucketSimulator />
+              </div>
+
+              {/* Interactive Section 4: Junior vs Staff Architect Code Diff Viewer */}
+              <div id="code-diff-viewer" className="pt-2">
+                <ArchitectCodeDiffViewer />
+              </div>
+
+              {/* Interactive Section 5: Technical Interview Flashcards Deck */}
+              <div id="flashcards-deck" className="pt-2">
+                <InteractiveFlashcardsDeck />
+              </div>
+
+              {/* Interactive Section 6: Technical Readiness Diagnostic Checklist */}
               <div id="readiness-diagnostic" className="pt-2">
                 <ArchitectureReadinessChecklist guideSlug={guide.slug} />
               </div>
 
-              {/* Interactive Section 3: Scenario-based Interview Quiz */}
+              {/* Interactive Section 7: Scenario-based Interview Quiz */}
               <div id="scenario-challenge" className="pt-2">
                 <SeniorArchitectScenarioQuiz guideSlug={guide.slug} />
               </div>
@@ -336,14 +360,58 @@ export const CareerGuideDetail: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <a
+                    href="#napkin-calculator"
+                    className="w-full p-3 rounded-xl bg-white/[0.03] hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 transition-all flex items-center justify-between text-xs text-slate-300 hover:text-cyan-400 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>🧮</span>
+                      <span className="font-medium">ByteByteGo Capacity Planner</span>
+                    </span>
+                    <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+
+                  <a
+                    href="#token-bucket-simulator"
+                    className="w-full p-3 rounded-xl bg-white/[0.03] hover:bg-amber-500/10 border border-white/5 hover:border-amber-500/30 transition-all flex items-center justify-between text-xs text-slate-300 hover:text-amber-400 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>⏱️</span>
+                      <span className="font-medium">Rate Limiter Simulator</span>
+                    </span>
+                    <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+
+                  <a
+                    href="#code-diff-viewer"
+                    className="w-full p-3 rounded-xl bg-white/[0.03] hover:bg-indigo-500/10 border border-white/5 hover:border-indigo-500/30 transition-all flex items-center justify-between text-xs text-slate-300 hover:text-indigo-400 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>⚡</span>
+                      <span className="font-medium">Junior vs Staff Code Diff</span>
+                    </span>
+                    <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+
+                  <a
+                    href="#flashcards-deck"
+                    className="w-full p-3 rounded-xl bg-white/[0.03] hover:bg-purple-500/10 border border-white/5 hover:border-purple-500/30 transition-all flex items-center justify-between text-xs text-slate-300 hover:text-purple-400 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>🃏</span>
+                      <span className="font-medium">System Design Flashcards</span>
+                    </span>
+                    <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+
                   {(guide.slug.includes('remote') || guide.slug.includes('full-stack')) && (
                     <a
                       href="#interactive-calculator"
                       className="w-full p-3 rounded-xl bg-white/[0.03] hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 transition-all flex items-center justify-between text-xs text-slate-300 hover:text-emerald-400 group"
                     >
                       <span className="flex items-center gap-2">
-                        <span>🧮</span>
-                        <span className="font-medium">Section 44ADA Calculator</span>
+                        <span>💵</span>
+                        <span className="font-medium">Section 44ADA Tax Tool</span>
                       </span>
                       <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                     </a>
