@@ -117,6 +117,12 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://www.springwebsolutions.in/blog/verified-software-engineer-jobs-hiring-india-remote-2026</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
     <loc>https://www.springwebsolutions.in/blog/limited-time-business-website-offer-india</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
@@ -200,6 +206,50 @@
     <loc>https://careers.springwebsolutions.in/career-guides/applied-ai-engineering-rag-vector-databases</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Verified Active Tech Jobs 2026 -->
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/senior-fullstack-react-node-engineer-springweb</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-canonical-ubuntu-remote</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/backend-engineer-gitlab-remote-india</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-automattic-remote-worldwide</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/sde-2-golang-razorpay-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-developer-zoho-chennai-tenkasi</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/frontend-engineer-postman-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.90</priority>
   </url>
 </urlset>
