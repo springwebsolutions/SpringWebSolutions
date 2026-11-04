@@ -800,16 +800,23 @@ Here is your **verified active hiring radar**, complete with direct application 
 
 ---
 
-## 1. Verified Active Software Engineering Vacancies (From Internships to Senior Staff)
+## 1. Verified Active Software Engineering Vacancies (From Internships to Staff, Career Switchers & Gap Friendly)
 
 | Category | Company | Open Role | Workplace Model | Verified Compensation Benchmark | Direct ATS Application Link |
 |---|---|---|---|---|---|
 | **Internship** | **Cisco Systems** | Software Engineer Intern (Cloud & Networks) | Bengaluru (Hybrid) | ₹50,000 / month Stipend + PPO | [Cisco Careers Portal](https://www.cisco.com/c/en/us/about/careers.html) |
 | **Internship** | **HackerRank** | SDE Intern (Full-Stack & Algorithms) | Bengaluru / Remote | ₹40,000 / month Stipend | [HackerRank Careers](https://www.hackerrank.com/careers/) |
 | **Internship** | **Swiggy** | Software Engineering Intern (Logistics) | Bengaluru (Hybrid) | ₹45,000 / month Stipend | [Swiggy Careers Portal](https://careers.swiggy.com/) |
-| **Fresher / Entry** | **Zoho Corporation** | Graduate Software Developer (Java / C++) | Chennai / Tenkasi | ₹6,50,000 – ₹9,50,000 / yr | [Zoho Careers Portal](https://careers.zohocorp.com) |
+| **Gap & Switch Friendly** | **Zoho Corporation** | Software Developer (Skill-First / No Degree) | Chennai / Tenkasi | ₹6,50,000 – ₹9,50,000 / yr | [Zoho Careers Portal](https://careers.zohocorp.com) |
+| **Gap & Switch Friendly** | **Thoughtworks** | Associate Software Consultant (Vapasi Track) | Bengaluru / Hybrid | ₹8,50,000 – ₹14,00,000 / yr | [Thoughtworks Careers](https://www.thoughtworks.com/careers/jobs) |
+| **Gap & Switch Friendly** | **Red Hat / IBM** | Technical Support Engineer (Linux & Cloud) | Pune / Bengaluru | ₹7,00,000 – ₹12,00,000 / yr | [Red Hat Careers](https://www.redhat.com/en/jobs) |
 | **Fresher / Entry** | **Hexaware Tech** | Graduate Engineer Trainee (Full-Stack) | Coimbatore / Chennai | ₹4,50,000 – ₹7,00,000 / yr | [Hexaware Careers](https://jobs.hexaware.com/) |
-| **Fresher / Entry** | **Freshworks** | Associate Software Engineer (Early Careers) | Chennai (Hybrid) | ₹7,50,000 – ₹11,00,000 / yr | [Freshworks Careers](https://www.freshworks.com/company/careers/) |
+| **Fresher / Entry** | **TCS** | Cloud & Infrastructure Operations Analyst | Chennai / Pan-India | ₹3,80,000 – ₹6,50,000 / yr | [TCS Careers Portal](https://www.tcs.com/careers) |
+| **Data & AI** | **Fractal Analytics** | Associate Data Engineer & Analyst | Bengaluru / Mumbai | ₹9,00,000 – ₹16,00,000 / yr | [Fractal AI Careers](https://fractal.ai/careers/) |
+| **Cybersecurity** | **CrowdStrike** | Associate Threat Hunter / SOC Analyst L1 | Pune / Remote | ₹10,00,000 – ₹18,00,000 / yr | [CrowdStrike Careers](https://www.crowdstrike.com/careers/) |
+| **QA Automation** | **BrowserStack** | SDET / QA Automation Engineer | Mumbai / Remote | ₹14,00,000 – ₹24,00,000 / yr | [BrowserStack Careers](https://www.browserstack.com/careers) |
+| **Mobile Apps** | **Jio Platforms** | Mobile Application Engineer (Android/Flutter) | Mumbai / Hybrid | ₹8,00,000 – ₹15,00,000 / yr | [Jio Careers Portal](https://careers.jio.com/) |
+| **Mid-Level** | **Freshworks** | Associate Software Engineer (Customer SaaS) | Chennai (Hybrid) | ₹7,50,000 – ₹11,00,000 / yr | [Freshworks Careers](https://www.freshworks.com/company/careers/) |
 | **Mid-Level** | **PhonePe** | Backend Engineer (Payments Core) | Bengaluru (Hybrid) | ₹18,00,000 – ₹30,00,000 / yr | [PhonePe Careers](https://www.phonepe.com/careers/) |
 | **Mid-Level** | **CRED** | SDET / QA Automation Engineer | Bengaluru (Hybrid) | ₹18,00,000 – ₹32,00,000 / yr | [CRED Careers](https://cred.club/careers) |
 | **Mid-Level** | **Postman** | Frontend API Platform Engineer | Bengaluru / Hybrid | ₹22,00,000 – ₹36,00,000 / yr | [Postman Workday Portal](https://postman.wd108.myworkdayjobs.com/careers) |

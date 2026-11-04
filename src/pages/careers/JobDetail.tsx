@@ -200,6 +200,11 @@ export const JobDetail: React.FC = () => {
                         <Laptop size={12} /> Work From Home
                       </span>
                     )}
+                    {job.gap_friendly && (
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                        <CheckCircle2 size={12} /> Gap &amp; Switch Friendly
+                      </span>
+                    )}
                   </div>
 
                   <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
@@ -216,6 +221,13 @@ export const JobDetail: React.FC = () => {
                     </span>
                     <span>Experience: {job.experience_level}</span>
                   </div>
+
+                  {job.education_gap_notes && (
+                    <div className="p-3 rounded-2xl bg-emerald-500/[0.06] border border-emerald-500/20 text-xs text-emerald-300 flex items-center gap-2.5">
+                      <Sparkles size={14} className="text-emerald-400 shrink-0" />
+                      <span><strong>Education Gap &amp; Switch Policy:</strong> {job.education_gap_notes}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

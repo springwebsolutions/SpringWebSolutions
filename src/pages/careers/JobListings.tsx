@@ -23,6 +23,7 @@ export const JobListings: React.FC = () => {
   const [selectedExpLevel, setSelectedExpLevel] = useState('all')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [isWfhOnly, setIsWfhOnly] = useState(searchParams.get('wfh') === 'true')
+  const [isGapFriendlyOnly, setIsGapFriendlyOnly] = useState(searchParams.get('gap') === 'true')
   const [detectingGps, setDetectingGps] = useState(false)
 
   const handleDetectGps = (e: React.MouseEvent) => {
@@ -78,8 +79,9 @@ export const JobListings: React.FC = () => {
     const matchesExp = selectedExpLevel === 'all' || job.experience_level.toLowerCase().includes(selectedExpLevel.toLowerCase())
     const matchesCategory = selectedCategory === 'all' || job.niche_category === selectedCategory
     const matchesWfh = !isWfhOnly || job.is_wfh || job.is_remote
+    const matchesGap = !isGapFriendlyOnly || job.gap_friendly || job.career_switch_friendly
 
-    return matchesKeyword && matchesCountry && matchesCity && matchesJobType && matchesExp && matchesCategory && matchesWfh
+    return matchesKeyword && matchesCountry && matchesCity && matchesJobType && matchesExp && matchesCategory && matchesWfh && matchesGap
   })
 
   const resetFilters = () => {
@@ -90,6 +92,7 @@ export const JobListings: React.FC = () => {
     setSelectedExpLevel('all')
     setSelectedCategory('all')
     setIsWfhOnly(false)
+    setIsGapFriendlyOnly(false)
     setSearchParams({})
   }
 
@@ -240,15 +243,43 @@ export const JobListings: React.FC = () => {
                     className="w-full px-3 py-2.5 rounded-xl bg-[#080b14] border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
                   >
                     <option value="all">All Experience Levels</option>
-                    <option value="Intern">Internships &amp; Freshers (0-1 Yrs)</option>
-                    <option value="Entry">Graduate / Early Careers (0-2 Yrs)</option>
+                    <option value="Intern">Internships &amp; College Students</option>
+                    <option value="Entry">Freshers &amp; Early Careers (0-2 Yrs)</option>
                     <option value="Mid">Mid Level (2-5 Yrs)</option>
                     <option value="Senior">Senior &amp; Staff (5+ Yrs)</option>
                   </select>
                 </div>
 
-                {/* Remote / WFH Checkbox */}
-                <div className="pt-2 border-t border-white/5">
+                {/* IT Domain Filter */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">IT Domain / Stack</label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#080b14] border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+                  >
+                    <option value="all">All IT Domains</option>
+                    <option value="Software Engineering">Software Engineering &amp; Web</option>
+                    <option value="Cloud & Infrastructure">Cloud, DevOps &amp; IT Ops</option>
+                    <option value="Data & AI">Data Engineering &amp; AI</option>
+                    <option value="Cybersecurity">Cybersecurity &amp; SOC</option>
+                    <option value="QA & Testing">QA &amp; SDET Automation</option>
+                    <option value="Mobile Development">Mobile Apps (Android &amp; iOS)</option>
+                  </select>
+                </div>
+
+                {/* Pathway Badges: Gap Friendly & WFH */}
+                <div className="pt-2 border-t border-white/5 space-y-2.5">
+                  <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer hover:text-white transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={isGapFriendlyOnly}
+                      onChange={(e) => setIsGapFriendlyOnly(e.target.checked)}
+                      className="h-4 w-4 rounded bg-white/10 border-white/20 text-emerald-500 focus:ring-0 cursor-pointer"
+                    />
+                    <span className="font-semibold text-emerald-400">Career Switch &amp; Gap Friendly Only</span>
+                  </label>
+
                   <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer hover:text-white transition-colors">
                     <input
                       type="checkbox"
@@ -314,16 +345,31 @@ export const JobListings: React.FC = () => {
                           </div>
                         </div>
 
-                        {job.is_wfh && (
-                          <span className="px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-max">
-                            <Laptop size={11} /> Remote / WFH
-                          </span>
-                        )}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {job.gap_friendly && (
+                            <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-max">
+                              <CheckCircle2 size={11} /> Gap &amp; Switch Friendly
+                            </span>
+                          )}
+
+                          {job.is_wfh && (
+                            <span className="px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-max">
+                              <Laptop size={11} /> Remote / WFH
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 font-light">
                         {job.description}
                       </p>
+
+                      {job.education_gap_notes && (
+                        <div className="p-2.5 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/15 text-[11px] text-emerald-300 font-mono flex items-center gap-2">
+                          <Sparkles size={12} className="text-emerald-400 shrink-0" />
+                          <span>{job.education_gap_notes}</span>
+                        </div>
+                      )}
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-white/5 text-xs text-slate-400">
                         <div className="flex items-center gap-4 flex-wrap">

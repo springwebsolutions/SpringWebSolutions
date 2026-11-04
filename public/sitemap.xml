@@ -209,7 +209,7 @@
     <priority>0.90</priority>
   </url>
 
-  <!-- Verified Active Tech Jobs 2026 (Internships, Freshers, Mid-Level, Senior & Remote) -->
+  <!-- Verified Active Tech Jobs 2026 (From Internships to Staff, Career Switchers & Gap Friendly) -->
   <url>
     <loc>https://careers.springwebsolutions.in/jobs/software-engineer-intern-cisco-bengaluru</loc>
     <lastmod>2026-11-04</lastmod>
@@ -232,10 +232,76 @@
     <loc>https://careers.springwebsolutions.in/jobs/graduate-software-developer-zoho-chennai-tenkasi</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.95</priority>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-consultant-thoughtworks-india</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/remote-software-engineer-canonical-india</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-automattic-remote-india</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/backend-engineer-gitlab-remote-india</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/technical-support-engineer-redhat-pune-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://careers.springwebsolutions.in/jobs/graduate-engineer-trainee-hexaware-coimbatore-chennai</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/cloud-infrastructure-analyst-tcs-chennai</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/associate-data-engineer-fractal-bengaluru-mumbai</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/associate-threat-hunter-crowdstrike-pune-remote</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/sdet-automation-engineer-browserstack-mumbai</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/sdet-automation-engineer-cred-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/mobile-engineer-jio-platforms-mumbai</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
@@ -253,31 +319,7 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://careers.springwebsolutions.in/jobs/sdet-automation-engineer-cred-bengaluru</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-2-atlassian-remote-india</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-canonical-ubuntu-remote</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://careers.springwebsolutions.in/jobs/backend-engineer-gitlab-remote-india</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-automattic-remote-worldwide</loc>
+    <loc>https://careers.springwebsolutions.in/jobs/frontend-engineer-postman-bengaluru</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
@@ -289,13 +331,7 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://careers.springwebsolutions.in/jobs/software-developer-zoho-chennai-tenkasi</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://careers.springwebsolutions.in/jobs/frontend-engineer-postman-bengaluru</loc>
+    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-2-atlassian-remote-india</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>

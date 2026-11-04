@@ -157,6 +157,72 @@ const BrandVectors: Record<string, (size: number) => React.ReactNode> = {
       <rect width="40" height="40" rx="8" fill="#0c2340" />
       <polygon points="23,9 12,23 18,23 15,31 28,17 21,17" fill="#3395ff" />
     </svg>
+  ),
+
+  // Thoughtworks - Coral red & violet tech mark
+  thoughtworks: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#1b0028" />
+      <path d="M12 14h16v4h-6v12h-4V18h-6v-4z" fill="#f2617a" />
+      <circle cx="28" cy="26" r="3" fill="#ffb400" />
+    </svg>
+  ),
+
+  // Red Hat - Fedora red shadowman badge
+  redhat: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#111111" />
+      <path d="M10 24c3-1 8-2 10-2s7 1 10 2c-1 3-5 5-10 5s-9-2-10-5z" fill="#e00" />
+      <path d="M16 22c0-3 2-6 4-6s4 3 4 6h-8z" fill="#e00" />
+      <path d="M14 23c2.5-.5 4-.8 6-.8s3.5.3 6 .8c-2 1.5-4 2-6 2s-4-.5-6-2z" fill="#ffffff" />
+    </svg>
+  ),
+
+  // BrowserStack - Blue testing cloud nodes
+  browserstack: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#0b1b36" />
+      <circle cx="16" cy="20" r="6" fill="#0080ff" />
+      <circle cx="24" cy="20" r="6" fill="#00c853" fillOpacity="0.85" />
+    </svg>
+  ),
+
+  // Fractal Analytics - AI geometric neural node
+  fractal: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#04202c" />
+      <polygon points="20,10 28,16 28,26 20,32 12,26 12,16" fill="none" stroke="#00e676" strokeWidth="2" />
+      <circle cx="20" cy="21" r="3.5" fill="#00e676" />
+    </svg>
+  ),
+
+  // CrowdStrike - Falcon red threat hunter badge
+  crowdstrike: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#1a0505" />
+      <path d="M12 28l16-16-4 16-6-6-6 6z" fill="#ff2a2a" />
+    </svg>
+  ),
+
+  // Jio Platforms - Vibrant blue & red digital telecom mark
+  jio: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#0a2885" />
+      <circle cx="20" cy="20" r="11" fill="#e11b22" />
+      <text x="20" y="24" fontSize="12" fontWeight="900" fill="#ffffff" textAnchor="middle" fontFamily="sans-serif">
+        Jio
+      </text>
+    </svg>
+  ),
+
+  // TCS / Tata - Signature blue global mark
+  tcs: (s: number) => (
+    <svg width={s} height={s} viewBox="0 0 40 40" fill="none" className="shrink-0">
+      <rect width="40" height="40" rx="8" fill="#001d4a" />
+      <text x="20" y="25" fontSize="11" fontWeight="bold" fill="#00a8e8" textAnchor="middle" fontFamily="sans-serif">
+        TCS
+      </text>
+    </svg>
   )
 }
 
@@ -176,6 +242,13 @@ const findBrandKey = (name: string): string | null => {
   if (lower.includes('gitlab')) return 'gitlab'
   if (lower.includes('automattic')) return 'automattic'
   if (lower.includes('razorpay')) return 'razorpay'
+  if (lower.includes('thoughtworks')) return 'thoughtworks'
+  if (lower.includes('red hat') || lower.includes('redhat') || lower.includes('ibm')) return 'redhat'
+  if (lower.includes('browserstack')) return 'browserstack'
+  if (lower.includes('fractal')) return 'fractal'
+  if (lower.includes('crowdstrike') || lower.includes('quick heal')) return 'crowdstrike'
+  if (lower.includes('jio')) return 'jio'
+  if (lower.includes('tcs') || lower.includes('tata')) return 'tcs'
   return null
 }
 
