@@ -43,7 +43,7 @@ export const CURATED_BLOG_POSTS: BlogPostItem[] = [
     seo_title: 'Why Off-the-Shelf ERPs Fail Small Businesses | Custom Software Guide',
     seo_description: 'Discover why off-the-shelf ERP systems fail small and scaling businesses in India. Compare costs, data ownership, workflows, and learn when to build custom ERP software.',
     seo_keywords: 'custom ERP software development india, why ERP implementations fail, bespoke ERP vs zoho, custom CRM tamil nadu, software company udumalpet, business software tiruppur',
-    featured_image: '/cloud_storage_vector.png',
+    featured_image: '/blog-custom-erp.jpg',
     published_at: '2026-10-15T09:00:00Z',
     reading_time_minutes: 8,
     is_featured: true,
@@ -189,7 +189,7 @@ Speak directly with our senior software architects in Udumalpet. We will review 
     seo_title: 'Why Slow WordPress Websites Kill Conversions | React vs WordPress',
     seo_description: 'Discover why slow WordPress sites destroy sales conversions and Google rankings. Learn how switching to custom React and Next.js delivers sub-second speeds and 100% code ownership.',
     seo_keywords: 'slow wordpress website fixes, react vs wordpress for business, website speed conversion rate, custom web development udumalpet, web designers tamil nadu, spring web solutions',
-    featured_image: '/web_dev_vector.png',
+    featured_image: '/blog-react-speed.jpg',
     published_at: '2026-10-22T10:00:00Z',
     reading_time_minutes: 7,
     is_featured: false,
@@ -324,7 +324,7 @@ Spring Web Solutions designs, engineers, and deploys custom React and Next.js di
     seo_title: 'Building TradingView Webhook Trading Bots | Broker Automation Guide',
     seo_description: 'Learn how to build automated trading bots using TradingView webhooks, WebSocket order routing, and Quotex/crypto execution with sub-80ms latency and strict risk management.',
     seo_keywords: 'tradingview webhook bot development, quotex automated trading bot, algorithmic trading bot india, python trading bot developer, binance bybit webhook bot, spring web solutions',
-    featured_image: '/hero_bg_springweb.png',
+    featured_image: '/blog-trading-bots.jpg',
     published_at: '2026-10-28T14:00:00Z',
     reading_time_minutes: 9,
     is_featured: false,
@@ -467,7 +467,7 @@ Whether you want to automate a proven PineScript indicator or engineer a high-sp
     seo_title: 'Automate Business Operations With WhatsApp Cloud API | SpringWeb',
     seo_description: 'Learn how to automate customer support, order updates, automated GST invoicing, and lead follow-ups using official Meta WhatsApp Cloud API and custom webhooks.',
     seo_keywords: 'whatsapp cloud api automation, whatsapp business bot development india, automated invoice whatsapp, business workflow automation tamil nadu, spring web solutions udumalpet',
-    featured_image: '/cloud_storage_vector.png',
+    featured_image: '/blog-whatsapp-automation.jpg',
     published_at: '2026-11-01T11:00:00Z',
     reading_time_minutes: 7,
     is_featured: false,
@@ -590,7 +590,7 @@ Spring Web Solutions engineers custom automation scripts, database sync tools, a
     seo_title: 'Local Business SEO Playbook: Tier-2 & Tier-3 Cities India | SpringWeb',
     seo_description: 'Step-by-step local SEO playbook for businesses in Tier-2 and Tier-3 Indian cities like Udumalpet, Pollachi, and Tiruppur. Rank top 3 on Google Maps and drive high-intent calls.',
     seo_keywords: 'local seo agency udumalpet, google business profile ranking pollachi, local seo tiruppur, digital marketing coimbatore, seo company tamil nadu, spring web solutions',
-    featured_image: '/seo_analytics_vector.png',
+    featured_image: '/blog-local-seo.jpg',
     published_at: '2026-11-03T08:30:00Z',
     reading_time_minutes: 8,
     is_featured: false,
@@ -723,3 +723,4 @@ Spring Web Solutions provides end-to-end local SEO dominance, technical search a
     `
   }
 ]
+
