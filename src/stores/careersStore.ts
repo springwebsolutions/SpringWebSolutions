@@ -454,9 +454,9 @@ export const useCareersStore = create<CareersState>((set, get) => ({
         .select('*')
         .order('created_at', { ascending: false })
       if (!error && data && data.length > 0) {
-        // Merge so that our rich curated guides are always available alongside any DB-created guides
-        const dbSlugs = new Set(data.map((d: any) => d.slug))
-        const combined = [...data, ...CAREER_GUIDES_DATA.filter(g => !dbSlugs.has(g.slug))]
+        // Prioritize our rich, authoritative curated guides so latest content always renders
+        const curatedSlugs = new Set(CAREER_GUIDES_DATA.map(g => g.slug))
+        const combined = [...CAREER_GUIDES_DATA, ...data.filter((d: any) => !curatedSlugs.has(d.slug))]
         set({ guides: combined })
         localStorage.setItem('springweb_guides_cache', JSON.stringify(combined))
       } else {

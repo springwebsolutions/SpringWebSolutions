@@ -82,6 +82,78 @@ export const CareerGuideDetail: React.FC = () => {
 
   // Blueprint specs lookup
   const getBlueprintSpecs = (guideSlug: string) => {
+    if (guideSlug.includes('frontend')) {
+      return {
+        level: 'Mid to Staff UI Architect',
+        compensation: '₹16L – ₹35L+ / $75k–$130k USD',
+        readTime: '~9 min read',
+        stack: 'React 19, Next.js 15, Web Vitals, Tailwind v4, Zustand',
+        domain: 'Frontend & UI Performance'
+      }
+    }
+    if (guideSlug.includes('backend')) {
+      return {
+        level: 'Mid to Staff API Architect',
+        compensation: '₹20L – ₹45L+ / $90k–$160k USD',
+        readTime: '~10 min read',
+        stack: 'Node.js, Go, PostgreSQL, Redis, Apache Kafka, gRPC',
+        domain: 'High-Concurrency Backends'
+      }
+    }
+    if (guideSlug.includes('cloud-architect')) {
+      return {
+        level: 'Senior to Enterprise Cloud Architect',
+        compensation: '₹24L – ₹55L+ / $110k–$190k USD',
+        readTime: '~9 min read',
+        stack: 'AWS, Terraform, Multi-Region VPC, FinOps, Transit Gateway',
+        domain: 'Cloud Solutions Architecture'
+      }
+    }
+    if (guideSlug.includes('data-engineer')) {
+      return {
+        level: 'Senior to Staff Data Architect',
+        compensation: '₹22L – ₹48L+ / $95k–$165k USD',
+        readTime: '~10 min read',
+        stack: 'Apache Spark, Snowflake, dbt, Apache Kafka, Parquet',
+        domain: 'Data Lakehouse & Streaming'
+      }
+    }
+    if (guideSlug.includes('machine-learning')) {
+      return {
+        level: 'Senior to Staff ML Engineer',
+        compensation: '₹24L – ₹50L+ / $105k–$180k USD',
+        readTime: '~9 min read',
+        stack: 'PyTorch, vLLM, MLOps, Triton, Feast, AWQ/GGUF',
+        domain: 'Machine Learning & MLOps'
+      }
+    }
+    if (guideSlug.includes('cybersecurity')) {
+      return {
+        level: 'Senior AppSec & Penetration Tester',
+        compensation: '₹20L – ₹45L+ / $95k–$165k USD',
+        readTime: '~8 min read',
+        stack: 'OWASP Top 10, DevSecOps, STRIDE, Burp Suite, TLS 1.3',
+        domain: 'Application Security & PenTesting'
+      }
+    }
+    if (guideSlug.includes('sdet-qa')) {
+      return {
+        level: 'Senior SDET & Quality Architect',
+        compensation: '₹16L – ₹35L+ / $75k–$135k USD',
+        readTime: '~8 min read',
+        stack: 'Playwright, k6 Load Tests, Pact Contract Testing, CI/CD',
+        domain: 'Test Automation & Quality SRE'
+      }
+    }
+    if (guideSlug.includes('mobile')) {
+      return {
+        level: 'Senior to Staff Mobile Architect',
+        compensation: '₹18L – ₹40L+ / $85k–$150k USD',
+        readTime: '~9 min read',
+        stack: 'React Native, TurboModules, Swift, Kotlin, SQLite Sync',
+        domain: 'Mobile Application Engineering'
+      }
+    }
     if (guideSlug.includes('devops')) {
       return {
         level: 'Mid to Principal SRE',

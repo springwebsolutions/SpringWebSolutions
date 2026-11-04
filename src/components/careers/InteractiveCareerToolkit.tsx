@@ -884,6 +884,78 @@ export const InteractiveFlashcardsDeck: React.FC = () => {
 // ─── 6. INTERACTIVE READINESS DIAGNOSTIC CHECKLIST ────────────────────────────
 export const ArchitectureReadinessChecklist: React.FC<{ guideSlug: string }> = ({ guideSlug }) => {
   const getItemsForSlug = (slug: string) => {
+    if (slug.includes('frontend')) {
+      return [
+        { id: '1', text: 'I profile and optimize Interaction to Next Paint (INP) to sub-100ms on real mobile devices' },
+        { id: '2', text: 'I build accessible, WCAG 2.1 AA-compliant design system components with ARIA primitives' },
+        { id: '3', text: 'I leverage React 19 Actions and useOptimistic for instant zero-latency UI updates' },
+        { id: '4', text: 'I eliminate Layout Shifts (CLS) using CSS containment and explicit aspect-ratio reserves' },
+        { id: '5', text: 'I configure automated Webpack/Vite bundle analysis to keep initial JS bundles under 120KB' }
+      ]
+    }
+    if (slug.includes('backend')) {
+      return [
+        { id: '1', text: 'I execute atomic multi-row SQL transactions with deterministic row locks to prevent deadlocks' },
+        { id: '2', text: 'I analyze PostgreSQL EXPLAIN ANALYZE query plans and design composite B-Tree/GIN indexes' },
+        { id: '3', text: 'I implement distributed Redis rate limiters using atomic EVAL Lua scripts' },
+        { id: '4', text: 'I design Kafka consumer groups with dead-letter queues (DLQ) for guaranteed event delivery' },
+        { id: '5', text: 'I protect downstream services with circuit breakers, timeouts, and exponential backoff' }
+      ]
+    }
+    if (slug.includes('cloud')) {
+      return [
+        { id: '1', text: 'I provision multi-AZ virtual private clouds (VPCs) with Terraform and remote state locking' },
+        { id: '2', text: 'I enforce least-privilege Zero-Trust IAM roles without static long-lived API access keys' },
+        { id: '3', text: 'I design multi-region disaster recovery architectures with sub-15 minute RTO and RPO' },
+        { id: '4', text: 'I implement FinOps strategies: Graviton ARM instances, Savings Plans, and S3 lifecycle rules' },
+        { id: '5', text: 'I configure AWS Transit Gateways and centralized VPC peering with security group isolation' }
+      ]
+    }
+    if (slug.includes('data-engineer')) {
+      return [
+        { id: '1', text: 'I architect Medallion Lakehouses (Bronze, Silver, Gold) using Parquet column-stores' },
+        { id: '2', text: 'I optimize Apache Spark jobs by eliminating data skew, partition spills, and shuffle bottlenecks' },
+        { id: '3', text: 'I build automated data quality test suites in dbt with freshness and schema assertions' },
+        { id: '4', text: 'I design real-time Change Data Capture (CDC) streaming pipelines via Debezium and Kafka' },
+        { id: '5', text: 'I implement partition pruning and clustering keys to reduce Snowflake and BigQuery scan costs' }
+      ]
+    }
+    if (slug.includes('machine-learning')) {
+      return [
+        { id: '1', text: 'I quantize open-source models using AWQ and GGUF to reduce VRAM footprints by 65%' },
+        { id: '2', text: 'I deploy production inference engines using vLLM and NVIDIA Triton with continuous batching' },
+        { id: '3', text: 'I configure Feast feature stores to eliminate training-serving skew in production' },
+        { id: '4', text: 'I set up automated data drift and concept drift monitoring pipelines using Evidently AI' },
+        { id: '5', text: 'I build CI/CD model deployment pipelines with automated shadow evaluation and rollback' }
+      ]
+    }
+    if (slug.includes('cybersecurity')) {
+      return [
+        { id: '1', text: 'I perform architectural threat modeling on new features using the STRIDE methodology' },
+        { id: '2', text: 'I integrate automated SAST (Semgrep) and DAST (OWASP ZAP) security checks into GitHub Actions' },
+        { id: '3', text: 'I audit web applications for OWASP Top 10 vulnerabilities (SQLi, IDOR, SSRF, XSS, CSRF)' },
+        { id: '4', text: 'I enforce strict Content Security Policies (CSP), HSTS, and TLS 1.3 cryptographic suites' },
+        { id: '5', text: 'I configure automated container image vulnerability scanning using Trivy and Grype' }
+      ]
+    }
+    if (slug.includes('sdet')) {
+      return [
+        { id: '1', text: 'I write resilient Playwright end-to-end test harnesses that run in parallel across CI matrixes' },
+        { id: '2', text: 'I author distributed load and stress testing scripts using k6 with strict P95 latency thresholds' },
+        { id: '3', text: 'I implement consumer-driven contract testing between microservices using Pact' },
+        { id: '4', text: 'I build automated flaky test quarantine and retry mechanisms to maintain green CI pipelines' },
+        { id: '5', text: 'I mock third-party external services and payment gateways using WireMock or MSW' }
+      ]
+    }
+    if (slug.includes('mobile')) {
+      return [
+        { id: '1', text: 'I build offline-first mobile applications with automatic local SQLite and cloud syncing' },
+        { id: '2', text: 'I write native JNI/C++ TurboModules for React Native New Architecture' },
+        { id: '3', text: 'I profile and tune mobile apps to maintain a stutter-free 60-120 FPS on budget Android devices' },
+        { id: '4', text: 'I implement universal deep linking (Apple Universal Links & Android App Links)' },
+        { id: '5', text: 'I automate store deployments and code signing using Fastlane and GitHub Actions' }
+      ]
+    }
     if (slug.includes('devops')) {
       return [
         { id: '1', text: 'I write multi-stage Dockerfiles with non-root distroless base images' },
