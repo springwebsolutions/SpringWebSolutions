@@ -9,6 +9,7 @@ import {
   Share2, MessageSquare, AlertCircle 
 } from 'lucide-react'
 import SEOHead from '@/components/seo/SEOHead'
+import { CURATED_BLOG_POSTS, type BlogPostItem } from '@/data/blogPosts'
 
 interface PostDetail {
   id: string
@@ -23,6 +24,7 @@ interface PostDetail {
   seo_description: string | null
   profiles: any
   categories: Array<{ id: string; name: string; slug: string }>
+  faqs?: Array<{ question: string; answer: string }>
 }
 
 const detectInitialCurrencyMode = (): 'INR' | 'USD' => {
@@ -236,7 +238,45 @@ export const BlogPost: React.FC = () => {
 
   useEffect(() => {
     const fetchPostDetail = async () => {
-      // Direct resolution for dedicated SEO posts
+      // Direct resolution for curated high-value editorial posts
+      const curated = CURATED_BLOG_POSTS.find(p => p.slug === slug)
+      if (curated) {
+        const mappedCurated: PostDetail = {
+          id: curated.id,
+          title: curated.title,
+          slug: curated.slug,
+          content: curated.content,
+          excerpt: curated.excerpt,
+          featured_image: curated.featured_image,
+          published_at: curated.published_at,
+          reading_time_minutes: curated.reading_time_minutes,
+          seo_title: curated.seo_title,
+          seo_description: curated.seo_description,
+          profiles: { full_name: curated.author.name },
+          categories: curated.categories,
+          faqs: curated.faqs,
+        }
+        setPost(mappedCurated)
+        document.title = curated.seo_title || curated.title
+
+        const otherCurated = CURATED_BLOG_POSTS
+          .filter(p => p.slug !== slug)
+          .slice(0, 3)
+          .map(p => ({
+            id: p.id,
+            title: p.title,
+            slug: p.slug,
+            featured_image: p.featured_image,
+            published_at: p.published_at,
+            reading_time_minutes: p.reading_time_minutes
+          }))
+        setRelated(otherCurated)
+
+        setLoading(false)
+        return
+      }
+
+      // Direct resolution for dedicated SEO launch offer posts
       if (slug === 'limited-time-business-website-offer-india' || slug === 'exclusive-limited-time-business-package-inr') {
         setPost(OFFER_POST_INR)
         document.title = OFFER_POST_INR.seo_title || OFFER_POST_INR.title
@@ -407,6 +447,22 @@ const generateJsonLd = (post: PostDetail) => {
       { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.springwebsolutions.in/blog' },
       { '@type': 'ListItem', position: 3, name: post.title, item: `https://www.springwebsolutions.in/blog/${post.slug}` },
     ],
+  }
+
+  if (post.faqs && post.faqs.length > 0) {
+    const customFaqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': post.faqs.map(f => ({
+        '@type': 'Question',
+        'name': f.question,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': f.answer
+        }
+      }))
+    }
+    return [articleSchema, breadcrumbSchema, customFaqSchema]
   }
 
   if (!isOffer) return [articleSchema, breadcrumbSchema]

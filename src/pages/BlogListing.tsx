@@ -20,8 +20,23 @@ interface Post {
 }
 
 import SEOHead from '@/components/seo/SEOHead'
+import { CURATED_BLOG_POSTS } from '@/data/blogPosts'
+
+const CURATED_AS_POSTS: Post[] = CURATED_BLOG_POSTS.map(p => ({
+  id: p.id,
+  title: p.title,
+  slug: p.slug,
+  excerpt: p.excerpt,
+  featured_image: p.featured_image,
+  published_at: p.published_at,
+  reading_time_minutes: p.reading_time_minutes,
+  is_featured: p.is_featured,
+  profiles: { full_name: p.author.name },
+  categories: p.categories.map(c => ({ name: c.name, slug: c.slug }))
+}))
 
 const DEFAULT_POSTS: Post[] = [
+  ...CURATED_AS_POSTS,
   {
     id: 'post-promo-inr',
     title: 'Limited Time Launch Offer: Complete Business Website for Just ₹15,000',
@@ -30,7 +45,7 @@ const DEFAULT_POSTS: Post[] = [
     featured_image: '/offer-banner-inr.jpg',
     published_at: '2026-08-04T12:00:00Z',
     reading_time_minutes: 4,
-    is_featured: true,
+    is_featured: false,
     profiles: { full_name: 'Spring Web Engineering Team' },
     categories: [
       { name: 'Promotions & Offers', slug: 'promotions' },
@@ -54,12 +69,18 @@ const DEFAULT_POSTS: Post[] = [
   }
 ]
 
+const INITIAL_CATEGORIES = [
+  { id: 'cat-software', name: 'Custom Software & ERP', slug: 'custom-software' },
+  { id: 'cat-web', name: 'Web Development', slug: 'web-development' },
+  { id: 'cat-bots', name: 'Bot Engineering & Algorithmic Trading', slug: 'bot-engineering' },
+  { id: 'cat-automation', name: 'Workflow Automation', slug: 'automation' },
+  { id: 'cat-seo', name: 'Digital Marketing & SEO', slug: 'digital-marketing' },
+  { id: 'cat-promotions', name: 'Promotions & Offers', slug: 'promotions' },
+]
+
 export const BlogListing: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS)
-  const [categories, setCategories] = useState<any[]>([
-    { id: 'cat-1', name: 'Promotions & Offers', slug: 'promotions' },
-    { id: 'cat-2', name: 'Web Development', slug: 'web-development' }
-  ])
+  const [categories, setCategories] = useState<any[]>(INITIAL_CATEGORIES)
   const [tags, setTags] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   
