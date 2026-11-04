@@ -206,18 +206,22 @@ interface PricingSectionProps {
 export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
   const [activeCategory, setActiveCategory] = useState<'web' | 'trading-bots' | 'telegram-bots'>('web')
 
-  const title = content?.title || "Transparent & Scalable Investment Plans"
-  const subtitle = content?.subtitle || "Choose a package designed for your current scale, or initiate a direct milestone deposit via Razorpay."
+  const title = (content?.title && content.title.trim().length > 0) 
+    ? content.title 
+    : "Transparent & Scalable Investment Plans"
+  const subtitle = (content?.subtitle && content.subtitle.trim().length > 0) 
+    ? content.subtitle 
+    : "Choose a package designed for your current scale, or initiate a direct milestone deposit via Razorpay."
 
   const currentCategoryData = PRICING_CATEGORIES.find(c => c.id === activeCategory) || PRICING_CATEGORIES[0]
   const plans = currentCategoryData.plans
 
   return (
-    <section id="pricing" className="py-24 relative dark:bg-[#04060c] light:bg-slate-50 border-b dark:border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
+    <section id="pricing" className="py-16 sm:py-20 relative dark:bg-[#04060c] light:bg-slate-50 border-b dark:border-white/5 light:border-slate-200 transition-colors duration-300 overflow-hidden">
       {/* Background Glow Orbs */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-teal-500/10 blur-[120px] pointer-events-none rounded-full dark:opacity-100 light:opacity-30" />
 
-      <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 space-y-16 relative z-10">
+      <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14 relative z-10 space-y-10">
         
         {/* Title Block */}
         <div className="text-center max-w-3xl mx-auto space-y-4 animate-fade-in-up">
@@ -235,81 +239,83 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
           </p>
         </div>
 
-        {/* ── Category Switcher ── */}
-        <div className="flex items-center justify-center gap-3 flex-wrap pt-2">
-          {PRICING_CATEGORIES.map(category => {
-            const CatIcon = category.icon
-            const isActive = activeCategory === category.id
-            return (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`px-5 py-3 rounded-2xl border text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20 scale-[1.02]'
-                    : 'bg-white/5 dark:bg-white/5 light:bg-white text-slate-300 dark:text-slate-300 light:text-slate-700 border-white/10 dark:border-white/10 light:border-slate-200 hover:border-emerald-500/30'
-                }`}
-              >
-                <CatIcon size={16} />
-                <span>{category.label}</span>
-              </button>
-            )
-          })}
-        </div>
+        {/* ── Category Switcher & Pricing Cards (Unified Compact Layout) ── */}
+        <div className="space-y-6">
+          {/* Category Switcher Tabs */}
+          <div className="flex items-center justify-center gap-2.5 sm:gap-3 flex-wrap">
+            {PRICING_CATEGORIES.map(category => {
+              const CatIcon = category.icon
+              const isActive = activeCategory === category.id
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setActiveCategory(category.id)}
+                  className={`px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl border text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                      : 'bg-white/5 dark:bg-white/5 light:bg-white text-slate-300 dark:text-slate-300 light:text-slate-700 border-white/10 dark:border-white/10 light:border-slate-200 hover:border-emerald-500/30'
+                  }`}
+                >
+                  <CatIcon size={16} />
+                  <span>{category.label}</span>
+                </button>
+              )
+            })}
+          </div>
 
-        {/* Pricing Cards Grid with 3D Tilt & Spotlight */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch pt-8 sm:pt-10">
-          {plans.map((plan, idx) => (
-            <TiltSpotlightCard key={idx} className="h-full rounded-3xl">
-              <div
-                className={`relative rounded-3xl p-8 flex flex-col justify-between h-full transition-all duration-300 ${
-                  plan.isPopular
-                    ? 'dark:bg-gradient-to-b dark:from-emerald-500/15 dark:via-[#080d18] dark:to-[#04060c] light:bg-gradient-to-b light:from-emerald-500/10 light:via-white light:to-emerald-50/40 border-2 border-emerald-500 shadow-2xl dark:shadow-emerald-950/40 light:shadow-emerald-500/10'
-                    : 'dark:glass-panel dark:border-white/10 dark:hover:border-white/20 dark:bg-white/[0.02] light:bg-white light:border-slate-200 light:hover:border-slate-300 light:shadow-lg light:hover:shadow-xl'
-                }`}
-              >
-                {plan.isPopular && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5 shadow-xl shadow-emerald-500/40 z-30 border border-emerald-300/40 whitespace-nowrap">
-                    <Zap size={13} className="fill-slate-950 text-slate-950" />
-                    <span>Most Popular</span>
-                  </div>
-                )}
-
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-display text-2xl font-bold dark:text-white light:text-slate-900 tracking-tight">{plan.name}</h3>
-                    <p className="text-xs dark:text-slate-400 light:text-slate-600 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
-                  </div>
-
-                  <div className="py-3 border-y dark:border-white/10 light:border-slate-200 space-y-1">
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-display text-4xl sm:text-5xl font-extrabold dark:text-white light:text-slate-900 tracking-tight">{plan.price}</span>
-                      {plan.period && <span className="text-xs dark:text-slate-400 light:text-slate-500 font-medium">/{plan.period}</span>}
+          {/* Pricing Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch pt-4">
+            {plans.map((plan, idx) => (
+              <TiltSpotlightCard key={idx} className="h-full rounded-3xl">
+                <div
+                  className={`relative rounded-3xl p-8 flex flex-col justify-between h-full transition-all duration-300 ${
+                    plan.isPopular
+                      ? 'dark:bg-gradient-to-b dark:from-emerald-500/15 dark:via-[#080d18] dark:to-[#04060c] light:bg-gradient-to-b light:from-emerald-500/10 light:via-white light:to-emerald-50/40 border-2 border-emerald-500 shadow-2xl dark:shadow-emerald-950/40 light:shadow-emerald-500/10'
+                      : 'dark:glass-panel dark:border-white/10 dark:hover:border-white/20 dark:bg-white/[0.02] light:bg-white light:border-slate-200 light:hover:border-slate-300 light:shadow-lg light:hover:shadow-xl'
+                  }`}
+                >
+                  {plan.isPopular && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5 shadow-xl shadow-emerald-500/40 z-30 border border-emerald-300/40 whitespace-nowrap">
+                      <Zap size={13} className="fill-slate-950 text-slate-950" />
+                      <span>Most Popular</span>
                     </div>
-                    {plan.price !== "Custom Quote" && (
-                      <p className="text-[11px] dark:text-amber-400/90 light:text-amber-700 font-sans leading-tight pt-1 font-medium">
-                        * Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.
-                      </p>
-                    )}
+                  )}
+
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="font-display text-2xl font-bold dark:text-white light:text-slate-900 tracking-tight">{plan.name}</h3>
+                      <p className="text-xs dark:text-slate-400 light:text-slate-600 mt-1 min-h-[32px] font-light leading-relaxed">{plan.tagline}</p>
+                    </div>
+
+                    <div className="py-3 border-y dark:border-white/10 light:border-slate-200 space-y-1">
+                      <div className="flex items-baseline gap-1">
+                        <span className="font-display text-4xl sm:text-5xl font-extrabold dark:text-white light:text-slate-900 tracking-tight">{plan.price}</span>
+                        {plan.period && <span className="text-xs dark:text-slate-400 light:text-slate-500 font-medium">/{plan.period}</span>}
+                      </div>
+                      {plan.price !== "Custom Quote" && (
+                        <p className="text-[11px] dark:text-amber-400/90 light:text-amber-700 font-sans leading-tight pt-1 font-medium">
+                          * Extra charges may apply based on domain requirement if requested domain cost exceeds standard expectations.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Feature List */}
+                    <div className="space-y-3 pt-2">
+                      <div className="text-[11px] font-bold dark:text-slate-400 light:text-slate-500 uppercase tracking-wider">What's included:</div>
+                      <ul className="space-y-2.5">
+                        {plan.features.map((feat, fIdx) => (
+                          <li key={fIdx} className="flex items-start gap-2.5 text-xs dark:text-slate-300 light:text-slate-700 leading-snug">
+                            <span className="h-4 w-4 rounded-full dark:bg-emerald-500/20 dark:border-emerald-500/40 light:bg-emerald-100 light:border-emerald-300 flex items-center justify-center shrink-0 mt-0.5 border">
+                              <Check size={10} className="text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
+                            </span>
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
-                  {/* Feature List */}
-                  <div className="space-y-3 pt-2">
-                    <div className="text-[11px] font-bold dark:text-slate-400 light:text-slate-500 uppercase tracking-wider">What's included:</div>
-                    <ul className="space-y-2.5">
-                      {plan.features.map((feat, fIdx) => (
-                        <li key={fIdx} className="flex items-start gap-2.5 text-xs dark:text-slate-300 light:text-slate-700 leading-snug">
-                          <span className="h-4 w-4 rounded-full dark:bg-emerald-500/20 dark:border-emerald-500/40 light:bg-emerald-100 light:border-emerald-300 flex items-center justify-center shrink-0 mt-0.5 border">
-                            <Check size={10} className="text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
-                          </span>
-                          <span>{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="pt-8 space-y-3">
+                  <div className="pt-8 space-y-3">
                   <Link
                     to={plan.ctaHref}
                     className={`w-full py-3 px-6 rounded-xl font-bold text-xs text-center flex items-center justify-center gap-2 transition-all cursor-pointer ${
@@ -342,6 +348,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ content }) => {
             </TiltSpotlightCard>
           ))}
         </div>
+      </div>
 
         {/* ── Interactive Budget & Timeline Estimator (NavaNala-inspired) ── */}
         <div className="pt-8">

@@ -104,9 +104,10 @@ function normalizeMarkdown(raw: string): string {
 
   // 2. Fix collapsed table rows where rows are concatenated with `| |` or `||` on a single line
   // Example: "| H1 | H2 | |---|---| | R1 | R2 |" -> split into newlines
-  text = text.replace(/\|\s*\|\s*(?=[-|:])/g, '|\n|')
-  text = text.replace(/\|\s*\|\s*(?=\S)/g, '|\n|')
-  text = text.replace(/\|\|(?=\S)/g, '|\n|')
+  text = text.replace(/\|\s*\|\s*/g, '|\n| ')
+
+  // 3. Ensure headings concatenated onto a previous line get a clean newline break
+  text = text.replace(/([^\n])\s*(#{1,4}\s+[^\n]+)/g, '$1\n\n$2\n')
 
   return text
 }
