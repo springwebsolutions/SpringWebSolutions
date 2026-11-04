@@ -10,7 +10,7 @@ import { CompanyLogo } from '@/components/careers/CompanyLogo'
 import {
   MapPin, Briefcase, Building2, CheckCircle2, Laptop, ArrowLeft,
   Share2, Mail, ExternalLink, Calendar, Award, ShieldCheck, Sparkles,
-  Bell, Image, MessageSquare, Send
+  Bell, Image, MessageSquare, Send, Banknote, Clock
 } from 'lucide-react'
 import {
   LinkedinIcon,
@@ -211,15 +211,26 @@ export const JobDetail: React.FC = () => {
                     {job.title}
                   </h1>
 
-                  <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
-                    <span className="flex items-center gap-1">
-                      <MapPin size={14} className="text-emerald-400" />
-                      <span>{job.location_city}, {job.location_state}, {job.location_country}</span>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-300 flex-wrap pt-2">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-slate-200">
+                      <MapPin size={13} className="text-emerald-400" />
+                      <span>{job.location_city}, {job.location_country}</span>
                     </span>
-                    <span className="font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                      💰 {job.salary_range}
+
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/10 to-teal-500/15 border border-emerald-500/35 text-emerald-300 font-mono font-bold shadow-sm">
+                      <Banknote size={14} className="text-emerald-400" />
+                      <span>{job.salary_range}</span>
                     </span>
-                    <span>Experience: {job.experience_level}</span>
+
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-slate-300">
+                      <Briefcase size={13} className="text-slate-400" />
+                      <span>{job.experience_level}</span>
+                    </span>
+
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-slate-300">
+                      <Clock size={13} className="text-slate-400" />
+                      <span>{job.job_type}</span>
+                    </span>
                   </div>
 
                   {job.education_gap_notes && (
@@ -342,31 +353,67 @@ export const JobDetail: React.FC = () => {
 
             {/* Sidebar Summary & Similar Jobs */}
             <aside className="lg:col-span-4 space-y-6">
-              <div className="p-6 rounded-3xl bg-[#080b14] border border-white/10 space-y-4 text-xs text-slate-300">
-                <h3 className="font-bold text-white font-display text-sm border-b border-white/5 pb-3">
-                  Job Summary
-                </h3>
+              <div className="p-6 rounded-3xl bg-[#080b14] border border-white/10 space-y-5 text-xs text-slate-300 shadow-xl">
+                <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                  <h3 className="font-bold text-white font-display text-sm uppercase tracking-wider flex items-center gap-2">
+                    <Sparkles size={14} className="text-emerald-400" />
+                    <span>Job Summary</span>
+                  </h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-bold">
+                    Direct ATS
+                  </span>
+                </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Category:</span>
-                    <span className="font-semibold text-white">{job.niche_category}</span>
+                {/* Featured Compensation Callout - Solves all Package UI alignment issues */}
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500/[0.12] via-emerald-500/[0.04] to-transparent border border-emerald-500/25 space-y-2">
+                  <div className="flex items-center justify-between text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-widest">
+                    <span className="flex items-center gap-1.5">
+                      <Banknote size={13} className="text-emerald-400" />
+                      <span>Offered Package</span>
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                      Verified
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Location:</span>
-                    <span className="font-semibold text-white">{job.location_city}</span>
+                  <div className="text-base sm:text-lg font-black text-white font-mono leading-snug break-words">
+                    {job.salary_range}
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Remote/WFH:</span>
-                    <span className="font-semibold text-emerald-400">{job.is_wfh ? 'Yes (WFH)' : 'On-Site'}</span>
+                  <div className="text-[10px] text-slate-400 flex items-center gap-1 pt-1.5 border-t border-emerald-500/15">
+                    <CheckCircle2 size={11} className="text-emerald-400 shrink-0" />
+                    <span>100% verified pay scale, direct company payroll</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Package:</span>
-                    <span className="font-semibold text-white">{job.salary_range}</span>
+                </div>
+
+                {/* Metadata Key-Value List */}
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center justify-between gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-slate-400 font-medium">Category</span>
+                    <span className="font-semibold text-white text-right">{job.niche_category}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Verification:</span>
-                    <span className="font-semibold text-emerald-400">✓ Source Verified</span>
+                  <div className="flex items-center justify-between gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-slate-400 font-medium">Location</span>
+                    <span className="font-semibold text-white text-right">{job.location_city}, {job.location_country}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-slate-400 font-medium">Work Arrangement</span>
+                    <span className="font-semibold text-emerald-400 text-right">
+                      {job.is_wfh ? '100% Remote / WFH' : job.is_remote ? 'Remote' : 'On-Site / Hybrid'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-slate-400 font-medium">Experience Tier</span>
+                    <span className="font-semibold text-white text-right">{job.experience_level}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3 py-1.5 border-b border-white/5">
+                    <span className="text-slate-400 font-medium">Employment Type</span>
+                    <span className="font-semibold text-white text-right">{job.job_type}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3 py-1.5">
+                    <span className="text-slate-400 font-medium">Verification</span>
+                    <span className="font-semibold text-emerald-400 text-right flex items-center gap-1">
+                      <ShieldCheck size={12} className="text-emerald-400" />
+                      <span>✓ Official ATS Source</span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -420,8 +467,13 @@ export const JobDetail: React.FC = () => {
 
       {/* Social Card Modal */}
       {showSocialModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <SocialCardPreview job={job} onClose={() => setShowSocialModal(false)} />
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={() => setShowSocialModal(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-2xl">
+            <SocialCardPreview job={job} onClose={() => setShowSocialModal(false)} />
+          </div>
         </div>
       )}
 

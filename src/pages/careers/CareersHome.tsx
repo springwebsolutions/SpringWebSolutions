@@ -9,7 +9,8 @@ import { CareersSeo } from '@/components/seo/CareersSeo'
 import { POPULAR_INDIA_LOCATIONS } from '@/data/indiaLocations'
 import {
   Search, MapPin, Briefcase, Globe, Sparkles, Building2, CheckCircle2,
-  BookOpen, ArrowRight, Laptop, Filter, ChevronRight, Award, Zap, LocateFixed, Loader2
+  BookOpen, ArrowRight, Laptop, Filter, ChevronRight, Award, Zap, LocateFixed, Loader2,
+  Banknote
 } from 'lucide-react'
 
 export const CareersHome: React.FC = () => {
@@ -571,13 +572,14 @@ export const CareersHome: React.FC = () => {
                   </div>
 
                   <div className="space-y-4 pt-4 border-t border-white/5">
-                    <div className="flex items-center justify-between text-xs text-slate-400 flex-wrap gap-2">
-                      <span className="flex items-center gap-1">
+                    <div className="flex items-center justify-between text-xs text-slate-400 flex-wrap gap-2.5">
+                      <span className="flex items-center gap-1 text-slate-300">
                         <MapPin size={13} className="text-emerald-400" />
                         <span>{job.location_city}, {job.location_country}</span>
                       </span>
-                      <span className="font-mono font-bold text-emerald-400">
-                        {job.salary_range}
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 font-mono font-bold text-emerald-400 text-xs">
+                        <Banknote size={12} className="text-emerald-400" />
+                        <span>{job.salary_range}</span>
                       </span>
                     </div>
 

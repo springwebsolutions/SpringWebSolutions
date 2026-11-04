@@ -8,7 +8,8 @@ import { CompanyLogo } from '@/components/careers/CompanyLogo'
 import { CareersSeo } from '@/components/seo/CareersSeo'
 import {
   Search, MapPin, Briefcase, Filter, Laptop, ArrowRight,
-  Sparkles, CheckCircle2, ChevronRight, RefreshCw, Building2, LocateFixed, Loader2
+  Sparkles, CheckCircle2, ChevronRight, RefreshCw, Building2, LocateFixed, Loader2,
+  Banknote
 } from 'lucide-react'
 
 export const JobListings: React.FC = () => {
@@ -422,13 +423,14 @@ export const JobListings: React.FC = () => {
                       )}
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-white/5 text-xs text-slate-400">
-                        <div className="flex items-center gap-4 flex-wrap">
-                          <span className="flex items-center gap-1">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="flex items-center gap-1 text-slate-300">
                             <MapPin size={13} className="text-emerald-400" />
-                            <span>{job.location_city}, {job.location_state}, {job.location_country}</span>
+                            <span>{job.location_city}, {job.location_country}</span>
                           </span>
-                          <span className="font-mono text-emerald-400 font-bold">
-                            {job.salary_range}
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 font-mono text-emerald-400 font-bold text-xs">
+                            <Banknote size={12} className="text-emerald-400" />
+                            <span>{job.salary_range}</span>
                           </span>
                         </div>
 
