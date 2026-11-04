@@ -196,33 +196,33 @@ interface CareersState {
   addJobAlert: (alert: Omit<JobAlert, 'id' | 'created_at' | 'is_verified' | 'alerts_sent'>) => Promise<void>
 }
 
-// Verified Active Job Openings for India & Global Remote (Updated 2026)
+// Verified Active Job Openings for India & Global Remote (Updated 2026 - 100% External Real Vacancies)
 const SEED_JOBS: JobPosting[] = [
   {
-    id: 'job-springweb-fullstack-2026',
-    title: 'Senior Full-Stack React & Node Engineer',
-    slug: 'senior-fullstack-react-node-engineer-springweb',
-    company_name: 'SpringWeb Solutions',
-    company_logo: '/logo-emblem.png',
-    is_internal_hiring: true,
+    id: 'job-atlassian-software-engineer-2026',
+    title: 'Software Engineer II (Distributed Cloud Systems)',
+    slug: 'software-engineer-2-atlassian-remote-india',
+    company_name: 'Atlassian',
+    company_logo: 'https://wac-cdn.atlassian.com/assets/img/favicons/atlassian/favicon.png',
+    is_internal_hiring: false,
     location_country: 'India',
-    location_state: 'Tamil Nadu',
-    location_city: 'Udumalpet',
-    location_area: 'Udumalpet Tech Hub / Remote India',
+    location_state: 'Karnataka',
+    location_city: 'Bengaluru / Remote',
+    location_area: 'Team Anywhere / Remote All-India',
     is_remote: true,
     is_wfh: true,
     job_type: 'Full-Time',
     experience_level: 'Mid Level',
-    salary_range: '₹12,00,000 - ₹20,00,000 / year',
+    salary_range: '₹28,00,000 - ₹45,00,000 / year + RSUs',
     niche_category: 'Software Engineering',
-    description: 'SpringWeb Solutions is directly hiring a Senior Full-Stack React, Next.js, and Node.js Engineer to lead architecture on high-performance web systems, custom ERP engines, and real-time WebSocket signal bots. Work remotely from anywhere in India or at our engineering office in Udumalpet, Tamil Nadu.',
+    description: "Atlassian is actively hiring Software Engineers in India under their 'Team Anywhere' model. Work on distributed Jira / Confluence cloud services, AWS microservices, and AI-driven workflow engines remotely from anywhere in India.",
     requirements: [
-      '3+ years building production applications with React 19, Next.js 15, and TypeScript',
-      'Strong expertise in Node.js, Express, PostgreSQL, Supabase, and REST/WebSocket APIs',
-      'Obsession with sub-100ms Core Web Vitals (INP/LCP) and type-safe architecture',
-      'Ability to work independently with async written communication'
+      '2-5 years experience developing in Java, Kotlin, Python, or Golang',
+      'Solid foundation in distributed systems, asynchronous event streaming (Kafka), and microservices',
+      'Experience with AWS cloud services (DynamoDB, ECS/EKS, S3, IAM)',
+      '100% remote flexibility with home office setup allowance'
     ],
-    apply_link_or_email: 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20am%20applying%20for%20the%20Senior%20Full-Stack%20Engineer%20role.',
+    apply_link_or_email: 'https://www.atlassian.com/company/careers/all-jobs',
     status: 'active',
     featured: true,
     created_at: new Date().toISOString()
