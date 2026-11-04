@@ -114,23 +114,33 @@ export const CareersFooter: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/jobs?q=Cloud" className="hover:text-emerald-400 transition-colors">
+                  Cloud, DevOps &amp; SRE
+                </Link>
+              </li>
+              <li>
+                <Link to="/jobs?q=Data" className="hover:text-emerald-400 transition-colors">
+                  Data Engineering &amp; AI
+                </Link>
+              </li>
+              <li>
+                <Link to="/jobs?q=Cybersecurity" className="hover:text-emerald-400 transition-colors">
+                  Cybersecurity &amp; SOC Ops
+                </Link>
+              </li>
+              <li>
+                <Link to="/jobs?q=QA" className="hover:text-emerald-400 transition-colors">
+                  QA &amp; SDET Automation
+                </Link>
+              </li>
+              <li>
                 <Link to="/jobs?q=Android" className="hover:text-emerald-400 transition-colors">
                   Android &amp; iOS Mobile Apps
                 </Link>
               </li>
               <li>
-                <Link to="/jobs?q=Desktop" className="hover:text-emerald-400 transition-colors">
-                  Windows Desktop (.NET / C#)
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs?q=SEO" className="hover:text-emerald-400 transition-colors">
-                  Technical SEO &amp; Growth
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs?q=Automation" className="hover:text-emerald-400 transition-colors">
-                  Business Automation &amp; Data
+                <Link to="/jobs?gap=true" className="hover:text-emerald-400 transition-colors text-emerald-400 font-semibold flex items-center gap-1">
+                  <span>✓ Career Switch &amp; Gap Friendly</span>
                 </Link>
               </li>
             </ul>

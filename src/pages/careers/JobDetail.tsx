@@ -236,7 +236,7 @@ export const JobDetail: React.FC = () => {
                   onClick={handleApply}
                   className="px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Apply Now</span>
+                  <span>Apply on Official Portal</span>
                   <ExternalLink size={16} />
                 </button>
               </div>
@@ -322,7 +322,7 @@ export const JobDetail: React.FC = () => {
                     onClick={handleApply}
                     className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 cursor-pointer"
                   >
-                    <span>Send Application</span>
+                    <span>Apply on {job.company_name} ATS</span>
                     <ExternalLink size={14} />
                   </button>
 

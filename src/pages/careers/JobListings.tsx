@@ -25,6 +25,7 @@ export const JobListings: React.FC = () => {
   const [isWfhOnly, setIsWfhOnly] = useState(searchParams.get('wfh') === 'true')
   const [isGapFriendlyOnly, setIsGapFriendlyOnly] = useState(searchParams.get('gap') === 'true')
   const [detectingGps, setDetectingGps] = useState(false)
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false)
 
   const handleDetectGps = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -122,11 +123,24 @@ export const JobListings: React.FC = () => {
             </p>
           </div>
 
+          {/* Mobile Filter Toggle Button */}
+          <div className="lg:hidden flex items-center justify-between p-4 rounded-2xl bg-[#080b14] border border-white/10 shadow-lg">
+            <button
+              type="button"
+              onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+              className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs transition-all flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-500/20"
+            >
+              <Filter size={14} />
+              <span>{mobileFilterOpen ? 'Hide Filters' : 'Filter Openings (Location, Tech, Gap Friendly)'}</span>
+            </button>
+            <span className="text-xs font-mono text-emerald-400 font-bold">{filteredJobs.length} Vacancies</span>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Sidebar Filters & Ad Slot */}
             <aside className="lg:col-span-4 space-y-6">
-              <div className="p-6 rounded-3xl glass-panel border border-white/10 space-y-6">
+              <div className={`${mobileFilterOpen ? 'block' : 'hidden lg:block'} p-6 rounded-3xl glass-panel border border-white/10 space-y-6 shadow-xl`}>
                 
                 <div className="flex items-center justify-between border-b border-white/5 pb-4">
                   <div className="flex items-center gap-2 font-bold text-sm text-white font-display">
@@ -301,10 +315,46 @@ export const JobListings: React.FC = () => {
             {/* Main Job Results Feed */}
             <div className="lg:col-span-8 space-y-6">
               
+              {/* Quick Filter Chips Bar */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+                {[
+                  { label: 'All Roles', count: jobs.length, active: selectedCategory === 'all' && selectedExpLevel === 'all' && !isGapFriendlyOnly && !isWfhOnly, action: resetFilters },
+                  { label: '🎓 Interns & Freshers', count: jobs.filter(j => j.experience_level.includes('Entry') || j.job_type === 'Internship').length, active: selectedExpLevel === 'Entry' || selectedExpLevel === 'Intern', action: () => { resetFilters(); setSelectedExpLevel('Entry') } },
+                  { label: '🔄 Gap & Switch Friendly', count: jobs.filter(j => j.gap_friendly || j.career_switch_friendly).length, active: isGapFriendlyOnly, action: () => { resetFilters(); setIsGapFriendlyOnly(true) } },
+                  { label: '💻 100% Remote WFH', count: jobs.filter(j => j.is_wfh || j.is_remote).length, active: isWfhOnly, action: () => { resetFilters(); setIsWfhOnly(true) } },
+                  { label: '☁️ Cloud & DevOps', count: jobs.filter(j => j.niche_category === 'Cloud & Infrastructure').length, active: selectedCategory === 'Cloud & Infrastructure', action: () => { resetFilters(); setSelectedCategory('Cloud & Infrastructure') } },
+                  { label: '🤖 Data & AI', count: jobs.filter(j => j.niche_category === 'Data & AI').length, active: selectedCategory === 'Data & AI', action: () => { resetFilters(); setSelectedCategory('Data & AI') } },
+                  { label: '🛡️ Cybersecurity', count: jobs.filter(j => j.niche_category === 'Cybersecurity').length, active: selectedCategory === 'Cybersecurity', action: () => { resetFilters(); setSelectedCategory('Cybersecurity') } },
+                  { label: '🧪 QA Automation', count: jobs.filter(j => j.niche_category === 'QA & Testing').length, active: selectedCategory === 'QA & Testing', action: () => { resetFilters(); setSelectedCategory('QA & Testing') } },
+                  { label: '📱 Mobile Apps', count: jobs.filter(j => j.niche_category === 'Mobile Development').length, active: selectedCategory === 'Mobile Development', action: () => { resetFilters(); setSelectedCategory('Mobile Development') } }
+                ].map((chip, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={chip.action}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                      chip.active
+                        ? 'bg-emerald-500 text-slate-950 border-emerald-400 font-bold shadow-md shadow-emerald-500/20'
+                        : 'bg-[#080b14] text-slate-300 border-white/10 hover:border-emerald-500/40 hover:text-white'
+                    }`}
+                  >
+                    <span>{chip.label}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${chip.active ? 'bg-slate-950/20 text-slate-950 font-bold' : 'bg-white/5 text-slate-400'}`}>
+                      {chip.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
               <div className="flex items-center justify-between border-b border-white/5 pb-4">
                 <div className="text-xs font-mono text-slate-400">
                   Showing <span className="font-bold text-emerald-400">{filteredJobs.length}</span> active postings
                 </div>
+                {(keyword || selectedCity !== 'all' || selectedJobType !== 'all' || selectedExpLevel !== 'all' || selectedCategory !== 'all' || isWfhOnly || isGapFriendlyOnly) && (
+                  <button onClick={resetFilters} className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-mono cursor-pointer">
+                    <RefreshCw size={11} /> Clear active filters
+                  </button>
+                )}
               </div>
 
               {filteredJobs.length === 0 ? (

@@ -332,54 +332,161 @@ export const CareersHome: React.FC = () => {
                 Active Hiring Practice Areas
               </h2>
               <p className="text-xs text-slate-400 font-light">
-                Discover vacancies across specialized tech stacks with verified employer logo tags.
+                Discover vacancies across all specialized software disciplines with verified corporate employer links.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="group p-8 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-xl space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              {/* Domain 1: Full-Stack Web */}
+              <div className="group p-7 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-xl space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-2.5 flex items-center justify-center text-emerald-400">
-                    <Laptop size={24} />
+                  <div className="h-11 w-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-2 flex items-center justify-center text-emerald-400">
+                    <Laptop size={22} />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase font-mono">
-                    React &amp; Node
+                    React 19 &amp; Node.js
                   </span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
                     Full-Stack Web Engineering
                   </h3>
                   <p className="text-xs text-slate-400 font-light leading-relaxed">
-                    Enterprise SaaS platforms, React/Next.js frontends, Node.js REST microservices, and cloud databases.
+                    Enterprise SaaS platforms, React/Next.js frontends, high-concurrency Node/Go APIs, and PostgreSQL microservices.
                   </p>
                   <div className="pt-2">
                     <Link to="/jobs?q=Software" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
-                      <span>Explore Web Engineering Roles</span>
+                      <span>Explore Web Roles</span>
                       <ChevronRight size={13} />
                     </Link>
                   </div>
                 </div>
               </div>
 
-              <div className="group p-8 rounded-3xl bg-[#080b14] border border-white/10 hover:border-blue-500/40 transition-all duration-300 shadow-xl space-y-5">
+              {/* Domain 2: Cloud, DevOps & SRE */}
+              <div className="group p-7 rounded-3xl bg-[#080b14] border border-white/10 hover:border-cyan-500/40 transition-all duration-300 shadow-xl space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 p-2.5 flex items-center justify-center text-blue-400">
-                    <Briefcase size={24} />
+                  <div className="h-11 w-11 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 p-2 flex items-center justify-center text-cyan-400">
+                    <Globe size={22} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-bold uppercase font-mono">
+                    K8s &amp; Terraform
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-cyan-400 transition-colors">
+                    Cloud, DevOps &amp; SRE
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    Kubernetes pod orchestration, multi-AZ cloud architecture on AWS/GCP, infrastructure as code, and CI/CD pipelines.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=Cloud" className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                      <span>Explore Cloud &amp; SRE Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Domain 3: Data Engineering & AI */}
+              <div className="group p-7 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="h-11 w-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-2 flex items-center justify-center text-emerald-400">
+                    <Zap size={22} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase font-mono">
+                    Python &amp; PySpark
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
+                    Data Engineering &amp; Applied AI
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    Distributed data lakehouses, Apache Spark pipelines, dbt data modeling, vector databases, and production RAG agents.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=Data" className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                      <span>Explore Data &amp; AI Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Domain 4: Cybersecurity & SOC */}
+              <div className="group p-7 rounded-3xl bg-[#080b14] border border-white/10 hover:border-red-500/40 transition-all duration-300 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="h-11 w-11 rounded-2xl bg-red-500/10 border border-red-500/20 p-2 flex items-center justify-center text-red-400">
+                    <Award size={22} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase font-mono">
+                    SIEM &amp; Threat Hunting
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-red-400 transition-colors">
+                    Cybersecurity &amp; SOC Ops
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    Security Operations Center analysis, telemetry threat hunting, endpoint incident response, and application pen-testing.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=Cybersecurity" className="text-xs font-bold text-red-400 hover:text-red-300 flex items-center gap-1">
+                      <span>Explore Security Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Domain 5: QA & Test Automation */}
+              <div className="group p-7 rounded-3xl bg-[#080b14] border border-white/10 hover:border-amber-500/40 transition-all duration-300 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="h-11 w-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 p-2 flex items-center justify-center text-amber-400">
+                    <CheckCircle2 size={22} />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase font-mono">
+                    Playwright &amp; SDET
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-white font-display group-hover:text-amber-400 transition-colors">
+                    QA &amp; SDET Automation
+                  </h3>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed">
+                    Automated browser and mobile test grids, REST contract validation, k6 performance benchmarks, and CI/CD test gates.
+                  </p>
+                  <div className="pt-2">
+                    <Link to="/jobs?q=QA" className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                      <span>Explore QA &amp; SDET Roles</span>
+                      <ChevronRight size={13} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Domain 6: Mobile Apps */}
+              <div className="group p-7 rounded-3xl bg-[#080b14] border border-white/10 hover:border-blue-500/40 transition-all duration-300 shadow-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="h-11 w-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 p-2 flex items-center justify-center text-blue-400">
+                    <Briefcase size={22} />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold uppercase font-mono">
                     Kotlin &amp; Flutter
                   </span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <h3 className="text-lg font-bold text-white font-display group-hover:text-blue-400 transition-colors">
-                    Mobile App Development
+                    Mobile App Engineering
                   </h3>
                   <p className="text-xs text-slate-400 font-light leading-relaxed">
-                    Native Kotlin Android apps, iOS Swift mobile clients, and cross-platform Flutter applications.
+                    High-scale Kotlin Android apps with Jetpack Compose, cross-platform Flutter engines, and native iOS client architectures.
                   </p>
                   <div className="pt-2">
-                    <Link to="/jobs?q=Android" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                    <Link to="/jobs?q=Mobile" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">
                       <span>Explore Mobile Developer Roles</span>
                       <ChevronRight size={13} />
                     </Link>
@@ -387,30 +494,6 @@ export const CareersHome: React.FC = () => {
                 </div>
               </div>
 
-              <div className="group p-8 rounded-3xl bg-[#080b14] border border-white/10 hover:border-purple-500/40 transition-all duration-300 shadow-xl space-y-5">
-                <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 p-2.5 flex items-center justify-center text-purple-400">
-                    <Building2 size={24} />
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase font-mono">
-                    .NET &amp; SEO
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-white font-display group-hover:text-purple-400 transition-colors">
-                    Desktop &amp; Growth Engineering
-                  </h3>
-                  <p className="text-xs text-slate-400 font-light leading-relaxed">
-                    C# .NET WPF desktop applications, automated POS solutions, technical SEO, and analytics suites.
-                  </p>
-                  <div className="pt-2">
-                    <Link to="/jobs?q=Desktop" className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1">
-                      <span>Explore Desktop &amp; SEO Roles</span>
-                      <ChevronRight size={13} />
-                    </Link>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -441,31 +524,50 @@ export const CareersHome: React.FC = () => {
                   className="p-6 rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 space-y-5 flex flex-col justify-between group"
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
                         <CompanyLogo
                           companyName={job.company_name}
                           logoUrl={job.company_logo}
                           size="md"
                         />
-                        <div>
-                          <div className="text-xs text-slate-400 font-medium">{job.company_name}</div>
-                          <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-bold text-emerald-400">{job.company_name}</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10 font-mono">
+                              {job.niche_category}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors leading-snug">
                             {job.title}
                           </h3>
                         </div>
                       </div>
                       
-                      {job.is_wfh && (
-                        <span className="px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 whitespace-nowrap">
-                          <Laptop size={11} /> WFH / Remote
-                        </span>
-                      )}
+                      <div className="flex flex-col items-end gap-1.5 shrink-0">
+                        {job.gap_friendly && (
+                          <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 whitespace-nowrap">
+                            <CheckCircle2 size={10} /> Gap Friendly
+                          </span>
+                        )}
+                        {job.is_wfh && (
+                          <span className="px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 whitespace-nowrap">
+                            <Laptop size={10} /> WFH Remote
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-light">
                       {job.description}
                     </p>
+
+                    {job.education_gap_notes && (
+                      <div className="p-2.5 rounded-xl bg-emerald-500/[0.04] border border-emerald-500/15 text-[11px] text-emerald-300 font-mono flex items-center gap-1.5">
+                        <Sparkles size={11} className="text-emerald-400 shrink-0" />
+                        <span className="line-clamp-1">{job.education_gap_notes}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="space-y-4 pt-4 border-t border-white/5">
