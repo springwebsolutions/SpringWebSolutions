@@ -48,8 +48,8 @@ export const CURATED_BLOG_POSTS: BlogPostItem[] = [
     reading_time_minutes: 8,
     is_featured: true,
     author: {
-      name: 'S. Shanmugam',
-      role: 'Lead Systems Architect, Spring Web Solutions',
+      name: 'Spring Web Engineering Team',
+      role: 'Enterprise Architecture Division',
     },
     categories: [
       { id: 'cat-software', name: 'Custom Software & ERP', slug: 'custom-software' },
