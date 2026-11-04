@@ -143,7 +143,38 @@ export const Portfolio: React.FC = () => {
     <div className="min-h-screen bg-[#040509] dark:bg-[#040509] light:bg-slate-50 text-slate-900 dark:text-white transition-colors duration-300 flex flex-col">
       <SEOHead
         title="Client Portfolio & Web Engineering Case Studies | Spring Web Solutions"
-        description="Browse our portfolio of completed web applications, ERP/CRM portals, and mobile apps built for clients worldwide. Explore our case studies today!"
+        description="Browse Spring Web Solutions portfolio — live web apps, event venues, e-commerce storefronts & enterprise SaaS case studies from Udumalpet, Tamil Nadu & India."
+        canonical="https://www.springwebsolutions.in/portfolio"
+        keywords="web development portfolio udumalpet, software engineering case studies india, website design portfolio tamil nadu, spring web solutions projects"
+        schema={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'CollectionPage',
+              '@id': 'https://www.springwebsolutions.in/portfolio#webpage',
+              url: 'https://www.springwebsolutions.in/portfolio',
+              name: 'Client Portfolio & Engineering Case Studies — Spring Web Solutions',
+              description: 'Live web applications, e-commerce storefronts, event venue portals, and enterprise SaaS systems built by Spring Web Solutions for clients across Udumalpet, Tamil Nadu, India, and globally.',
+              isPartOf: { '@id': 'https://www.springwebsolutions.in/#website' },
+              breadcrumb: {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.springwebsolutions.in/' },
+                  { '@type': 'ListItem', position: 2, name: 'Portfolio', item: 'https://www.springwebsolutions.in/portfolio' },
+                ],
+              },
+            },
+            {
+              '@type': 'ItemList',
+              name: 'Spring Web Solutions Project Portfolio',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Kirthi Senthil Mahal — Wedding Hall Web Portal', url: 'https://kirthi-senthil-mahal.vercel.app/' },
+                { '@type': 'ListItem', position: 2, name: 'Everest Group — Organic Honey B2B Storefront', url: 'https://everest-group-of-companies.vercel.app/' },
+                { '@type': 'ListItem', position: 3, name: 'SpringWeb Operations Suite — Custom CMS & CRM', url: 'https://suite.springwebsolutions.in/' },
+              ],
+            },
+          ],
+        }}
       />
       <Navbar />
 

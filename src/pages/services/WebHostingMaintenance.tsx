@@ -12,22 +12,111 @@ import {
 export const WebHostingMaintenance: React.FC = () => {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Service',
-    'name': 'Website Hosting, Cloud Servers & AMC Maintenance Services in Udumalpet',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'Spring Web Solutions',
-      'telephone': '+91-80126-22119',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Udumalpet',
-        'addressRegion': 'Tamil Nadu',
-        'postalCode': '642126',
-        'addressCountry': 'IN'
-      }
-    },
-    'areaServed': ['Udumalpet', 'Udumalaipettai', 'Pollachi', 'Tiruppur', 'Coimbatore', 'Tamil Nadu'],
-    'description': 'Managed high-speed cloud web hosting, annual website maintenance contracts (AMC), 24/7 uptime monitoring, automated backups, and SSL security for businesses in Udumalpet and Tamil Nadu.'
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': 'https://www.springwebsolutions.in/web-hosting-maintenance#service',
+        'name': 'Website Hosting, Cloud Servers & AMC Maintenance Services in Udumalpet',
+        'url': 'https://www.springwebsolutions.in/web-hosting-maintenance',
+        'provider': {
+          '@type': 'LocalBusiness',
+          '@id': 'https://www.springwebsolutions.in/#organization',
+          'name': 'Spring Web Solutions',
+          'telephone': '+91-80126-22119',
+          'email': 'hello@springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Udumalpet Main Road',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN',
+          },
+          'geo': { '@type': 'GeoCoordinates', 'latitude': 10.5847, 'longitude': 77.2472 },
+          'openingHours': 'Mo-Sa 09:00-19:00',
+          'priceRange': '$$',
+        },
+        'areaServed': [
+          { '@type': 'City', 'name': 'Udumalpet' },
+          { '@type': 'City', 'name': 'Udumalaipettai' },
+          { '@type': 'City', 'name': 'Pollachi' },
+          { '@type': 'City', 'name': 'Tiruppur' },
+          { '@type': 'City', 'name': 'Coimbatore' },
+          { '@type': 'AdministrativeArea', 'name': 'Tamil Nadu' },
+        ],
+        'description': 'Managed high-speed cloud web hosting, annual website maintenance contracts (AMC), 24/7 uptime monitoring, automated backups, and SSL security for businesses in Udumalpet and Tamil Nadu.',
+        'offers': [
+          {
+            '@type': 'Offer',
+            'name': 'Starter Hosting & Security',
+            'price': '3999',
+            'priceCurrency': 'INR',
+            'priceSpecification': { '@type': 'UnitPriceSpecification', 'price': '3999', 'priceCurrency': 'INR', 'unitText': 'year' },
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Full AMC & Maintenance Pro',
+            'price': '14999',
+            'priceCurrency': 'INR',
+            'priceSpecification': { '@type': 'UnitPriceSpecification', 'price': '14999', 'priceCurrency': 'INR', 'unitText': 'year' },
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Enterprise Dedicated Cloud',
+            'price': '29999',
+            'priceCurrency': 'INR',
+            'priceSpecification': { '@type': 'UnitPriceSpecification', 'price': '29999', 'priceCurrency': 'INR', 'unitText': 'year' },
+            'availability': 'https://schema.org/InStock',
+          },
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Web Hosting & Maintenance Udumalpet', 'item': 'https://www.springwebsolutions.in/web-hosting-maintenance' },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'Which is the best website hosting company in Udumalpet?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions provides the best managed cloud website hosting in Udumalpet, with NVMe SSD storage, free SSL, Cloudflare CDN, automated backups, 99.9% uptime SLA, and 24/7 monitoring — starting at ₹3,999/year.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'What is an Annual Maintenance Contract (AMC) for websites?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': "An Annual Maintenance Contract (AMC) is a yearly service agreement where Spring Web Solutions handles all your website's content updates, security patches, speed optimization, and technical support. The AMC Pro package starts at ₹14,999/year.",
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Does Spring Web Solutions provide SSL certificates with hosting?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. All Spring Web Solutions hosting plans include free automated SSL certificates (HTTPS), Cloudflare CDN edge caching, and daily offsite backups as standard inclusions.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'How fast is Spring Web Solutions web hosting?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions uses NVMe high-speed SSD storage with Cloudflare global CDN to deliver sub-1-second page load times. All hosting plans include continuous speed optimization and Core Web Vitals performance monitoring.',
+            },
+          },
+        ],
+      },
+    ],
   }
 
   const packages = [
@@ -104,9 +193,9 @@ export const WebHostingMaintenance: React.FC = () => {
     <div className="min-h-screen bg-[#040509] text-slate-100 flex flex-col selection:bg-teal-500/30 selection:text-teal-300">
       <SEOHead
         title="Web Hosting & Annual Website Maintenance (AMC) in Udumalpet"
-        description="#1 Cloud Web Hosting & Website Maintenance AMC Company in Udumalpet (Udumalaipettai), Pollachi, Tiruppur. 99.9% Uptime, Daily Backups, SSL & 24/7 Security."
-        canonical="/web-hosting-maintenance"
-        keywords="web hosting udumalpet, website maintenance amc udumalaipettai, cloud servers pollachi, website support tiruppur, website amc tamil nadu, ssl certificate hosting udumalpet"
+        description="Best Cloud Web Hosting & AMC in Udumalpet — NVMe SSD, 99.9% Uptime, SSL, Daily Backups & 24/7 Security. Plans from ₹3,999/year. Free consultation!"
+        canonical="https://www.springwebsolutions.in/web-hosting-maintenance"
+        keywords="web hosting udumalpet, website maintenance amc udumalaipettai, cloud servers pollachi, website support tiruppur, website amc tamil nadu, ssl certificate hosting udumalpet, website annual maintenance contract india"
         schema={schema}
       />
 

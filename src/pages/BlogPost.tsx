@@ -399,7 +399,17 @@ const generateJsonLd = (post: PostDetail) => {
     'dateModified': post.published_at
   }
 
-  if (!isOffer) return articleSchema
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.springwebsolutions.in/' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.springwebsolutions.in/blog' },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `https://www.springwebsolutions.in/blog/${post.slug}` },
+    ],
+  }
+
+  if (!isOffer) return [articleSchema, breadcrumbSchema]
 
   const offerSchema = {
     '@context': 'https://schema.org',
@@ -466,7 +476,7 @@ const generateJsonLd = (post: PostDetail) => {
     ]
   }
 
-  return [articleSchema, offerSchema, faqSchema]
+  return [articleSchema, breadcrumbSchema, offerSchema, faqSchema]
 }
 
   return (
@@ -481,6 +491,8 @@ const generateJsonLd = (post: PostDetail) => {
         canonicalUrl={`https://www.springwebsolutions.in/blog/${post.slug}`}
         ogImage={displayImage}
         type="article"
+        publishedTime={post.published_at}
+        author={post.profiles?.full_name || 'Spring Web Solutions'}
         jsonLd={generateJsonLd(post)}
       />
       

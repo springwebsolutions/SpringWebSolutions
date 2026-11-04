@@ -14,7 +14,7 @@ Disallow: /health
 Disallow: /settings
 Disallow: /security
 
-# AI Search & Answer Engine Crawlers (AEO Enabled)
+# AI Search & Answer Engine Crawlers (AEO Explicitly Enabled)
 User-agent: GPTBot
 Allow: /
 
@@ -27,13 +27,28 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
 User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
 Allow: /
 
 User-agent: Applebot-Extended
 Allow: /
 
-# Googlebot Search & Image Crawler Allow Directives for Favicon & Logos
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+# Googlebot Search & Image Crawler Allow Directives for Favicon & Branding Assets
 User-agent: Googlebot
 Allow: /logo-emblem.png
 Allow: /logo.png

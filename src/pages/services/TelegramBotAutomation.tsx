@@ -15,22 +15,94 @@ export const TelegramBotAutomation: React.FC = () => {
 
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Service',
-    'name': 'Custom Telegram Bot Development & Signal Automation',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'Spring Web Solutions',
-      'telephone': '+91-80126-22119',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Udumalpet',
-        'addressRegion': 'Tamil Nadu',
-        'postalCode': '642126',
-        'addressCountry': 'IN'
-      }
-    },
-    'areaServed': ['Global', 'India', 'Tamil Nadu', 'Udumalpet', 'Coimbatore', 'Bangalore', 'Dubai'],
-    'description': 'Custom Telegram bots for trading signal auto-forwarders, automated VIP channel paywalls, Razorpay/USDT crypto subscription bots, Telegram Mini Apps, and CRM lead notification systems.'
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': 'https://www.springwebsolutions.in/telegram-bot-development#service',
+        'name': 'Custom Telegram Bot Development & Signal Automation',
+        'url': 'https://www.springwebsolutions.in/telegram-bot-development',
+        'provider': {
+          '@type': 'LocalBusiness',
+          '@id': 'https://www.springwebsolutions.in/#organization',
+          'name': 'Spring Web Solutions',
+          'telephone': '+91-80126-22119',
+          'email': 'hello@springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Udumalpet Main Road',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN',
+          },
+        },
+        'areaServed': [
+          { '@type': 'Country', 'name': 'India' },
+          { '@type': 'Country', 'name': 'Global' },
+        ],
+        'description': 'Custom Telegram bots for trading signal auto-forwarders, automated VIP channel paywalls, Razorpay/USDT crypto subscription bots, Telegram Mini Apps, and CRM lead notification systems.',
+        'offers': [
+          {
+            '@type': 'Offer',
+            'name': 'Starter Telegram Bot',
+            'price': '7999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'VIP Paywall & Signal Forwarder',
+            'price': '18999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Telegram Bot Development', 'item': 'https://www.springwebsolutions.in/telegram-bot-development' },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'How much does it cost to build a custom Telegram bot?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions offers Telegram bot development starting at ₹7,999 for a Starter Bot with auto-responder and lead capture, and ₹18,999 for a full VIP Paywall with Razorpay/USDT subscriptions and signal forwarding.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Can Spring Web Solutions build a Telegram trading signal bot?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions specializes in Telegram signal auto-forwarder bots that parse signals from source channels and auto-post them with custom formatting, TP/SL buttons, and risk labels to target channels — with or without trade execution integration.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Does Spring Web Solutions build Telegram VIP paywall bots?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions builds fully automated VIP channel paywall bots with Razorpay INR subscriptions or USDT crypto payments, auto-invite management, subscription expiry enforcement, and renewal reminders.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'What is a Telegram Mini App and can Spring Web Solutions build one?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'A Telegram Mini App (TMA) is a full web application embedded inside the Telegram chat interface, used for dashboards, trading panels, and e-commerce. Yes, Spring Web Solutions engineers custom Telegram Mini Apps with React.js and Supabase backend.',
+            },
+          },
+        ],
+      },
+    ],
   }
 
   const packages = [
@@ -112,8 +184,11 @@ export const TelegramBotAutomation: React.FC = () => {
   return (
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
-        title="Custom Telegram Bot Development & Signal Automation | SpringWeb Solutions"
-        description="Engineering custom Telegram bots: VIP subscription paywalls with Razorpay/Crypto USDT, trading signal auto-forwarders, Telegram Mini Apps, and CRM automation bots."
+        title="Custom Telegram Bot Development & Signal Automation | Spring Web Solutions"
+        description="Custom Telegram bots: VIP paywalls with Razorpay/USDT Crypto, trading signal forwarders, Telegram Mini Apps & CRM bots. From ₹7,999. 100% source code ownership."
+        canonical="https://www.springwebsolutions.in/telegram-bot-development"
+        keywords="telegram bot development india, telegram signal bot, telegram vip paywall bot, telegram mini app developer, telegram trading bot, razorpay subscription telegram bot, telegram automation india"
+        schema={schema}
       />
       <Navbar />
 

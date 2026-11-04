@@ -15,22 +15,105 @@ export const TradingBotDevelopment: React.FC = () => {
 
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Service',
-    'name': 'Algorithmic Trading Bot & Quotex Signal Bot Development',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'Spring Web Solutions',
-      'telephone': '+91-80126-22119',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Udumalpet',
-        'addressRegion': 'Tamil Nadu',
-        'postalCode': '642126',
-        'addressCountry': 'IN'
-      }
-    },
-    'areaServed': ['Global', 'India', 'Tamil Nadu', 'Udumalpet', 'Coimbatore', 'Bangalore', 'Dubai'],
-    'description': 'Custom automated algorithmic trading bots, Quotex & Pocket Option WebSocket trade execution, TradingView PineScript webhook bots, Telegram signal copiers, and MT4/MT5 expert advisors.'
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': 'https://www.springwebsolutions.in/trading-bot-development#service',
+        'name': 'Algorithmic Trading Bot & Quotex Signal Bot Development',
+        'url': 'https://www.springwebsolutions.in/trading-bot-development',
+        'provider': {
+          '@type': 'LocalBusiness',
+          '@id': 'https://www.springwebsolutions.in/#organization',
+          'name': 'Spring Web Solutions',
+          'telephone': '+91-80126-22119',
+          'email': 'hello@springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Udumalpet Main Road',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN',
+          },
+        },
+        'areaServed': [
+          { '@type': 'Country', 'name': 'India' },
+          { '@type': 'Country', 'name': 'Global' },
+          { '@type': 'City', 'name': 'Udumalpet' },
+          { '@type': 'City', 'name': 'Coimbatore' },
+          { '@type': 'City', 'name': 'Bangalore' },
+          { '@type': 'City', 'name': 'Dubai' },
+        ],
+        'description': 'Custom automated algorithmic trading bots, Quotex & Pocket Option WebSocket trade execution, TradingView PineScript webhook bots, Telegram signal copiers, and MT4/MT5 expert advisors.',
+        'offers': [
+          {
+            '@type': 'Offer',
+            'name': 'TradingView Webhook Bot',
+            'price': '14999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Quotex / Pocket Option Signal Bot',
+            'price': '24999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Full Algorithmic Trading Suite',
+            'price': '49999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Trading Bot Development', 'item': 'https://www.springwebsolutions.in/trading-bot-development' },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'What is an algorithmic trading bot and how does it work?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'An algorithmic trading bot is an automated software system that executes buy/sell trades on platforms like Binance, Bybit, Quotex, Pocket Option, or MT4/MT5 based on pre-programmed rules or signals. Spring Web Solutions builds custom trading bots with sub-150ms execution speed.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'How much does it cost to build a Quotex or TradingView bot?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions offers trading bot development starting at ₹14,999 for a TradingView Webhook Bot, ₹24,999 for a Quotex/Pocket Option Signal Bot, and ₹49,999 for a Full Algorithmic Trading Suite with multi-exchange support.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Does Spring Web Solutions build Telegram signal copier bots?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions builds Telegram signal auto-copier bots that parse trading signals from Telegram channels and automatically execute trades on Quotex, Binance, Bybit, or other connected broker platforms.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Can Spring Web Solutions build a trading bot for crypto and forex?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions develops trading bots for both cryptocurrency exchanges (Binance, Bybit, OKX) and forex/binary brokers (MT4, MT5, Quotex, Pocket Option), with custom risk management, TP/SL automation, and 24/7 cloud hosting.',
+            },
+          },
+        ],
+      },
+    ],
   }
 
   const packages = [
@@ -113,8 +196,11 @@ export const TradingBotDevelopment: React.FC = () => {
   return (
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
-        title="Algorithmic Trading Bot & Quotex Signal Bot Development | SpringWeb Solutions"
-        description="Engineering custom automated trading bots for Quotex, Pocket Option, TradingView Webhooks, Telegram signal copiers, Binance, and MT4/MT5. Sub-second execution with built-in risk management."
+        title="Algorithmic Trading Bot & Quotex Signal Bot Development | Spring Web Solutions"
+        description="Custom automated trading bots — Quotex, Pocket Option, TradingView Webhooks, Telegram signal copiers, Binance & MT4/MT5. Sub-80ms execution. From ₹14,999."
+        canonical="https://www.springwebsolutions.in/trading-bot-development"
+        keywords="trading bot development india, quotex signal bot, algorithmic trading bot, tradingview webhook bot, telegram signal copier, crypto trading bot india, mt4 expert advisor development"
+        schema={schema}
       />
       <Navbar />
 

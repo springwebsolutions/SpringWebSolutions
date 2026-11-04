@@ -12,22 +12,108 @@ import {
 export const GraphicDesignLogoDesign: React.FC = () => {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Service',
-    'name': 'Graphic Design, Logo Design & Brand Identity in Udumalpet',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'Spring Web Solutions',
-      'telephone': '+91-80126-22119',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Udumalpet',
-        'addressRegion': 'Tamil Nadu',
-        'postalCode': '642126',
-        'addressCountry': 'IN'
-      }
-    },
-    'areaServed': ['Udumalpet', 'Udumalaipettai', 'Pollachi', 'Tiruppur', 'Coimbatore', 'Tamil Nadu'],
-    'description': 'Professional logo design, brand identity systems, vector branding, business cards, brochures, and UI/UX design in Udumalpet and Tamil Nadu.'
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': 'https://www.springwebsolutions.in/graphic-design-logo-design#service',
+        'name': 'Graphic Design, Logo Design & Brand Identity in Udumalpet',
+        'url': 'https://www.springwebsolutions.in/graphic-design-logo-design',
+        'provider': {
+          '@type': 'LocalBusiness',
+          '@id': 'https://www.springwebsolutions.in/#organization',
+          'name': 'Spring Web Solutions',
+          'telephone': '+91-80126-22119',
+          'email': 'hello@springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Udumalpet Main Road',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN',
+          },
+          'geo': { '@type': 'GeoCoordinates', 'latitude': 10.5847, 'longitude': 77.2472 },
+          'openingHours': 'Mo-Sa 09:00-19:00',
+          'priceRange': '$$',
+        },
+        'areaServed': [
+          { '@type': 'City', 'name': 'Udumalpet' },
+          { '@type': 'City', 'name': 'Udumalaipettai' },
+          { '@type': 'City', 'name': 'Pollachi' },
+          { '@type': 'City', 'name': 'Tiruppur' },
+          { '@type': 'City', 'name': 'Coimbatore' },
+          { '@type': 'AdministrativeArea', 'name': 'Tamil Nadu' },
+        ],
+        'description': 'Professional logo design, brand identity systems, vector branding, business cards, brochures, and UI/UX design in Udumalpet and Tamil Nadu.',
+        'offers': [
+          {
+            '@type': 'Offer',
+            'name': 'Essential Brand Identity',
+            'price': '4999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Corporate Branding Suite',
+            'price': '11999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Full UI/UX & Digital Brand',
+            'price': '24999',
+            'priceCurrency': 'INR',
+            'availability': 'https://schema.org/InStock',
+          },
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Graphic Design & Logo Design Udumalpet', 'item': 'https://www.springwebsolutions.in/graphic-design-logo-design' },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'Which is the best logo design company in Udumalpet?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions is the top-rated graphic design and logo creation company in Udumalpet, delivering professional vector logos, brand identity systems, brochures, and UI/UX design for businesses across Tamil Nadu.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'How much does logo design cost in Udumalpet?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions offers logo design starting at ₹4,999 for the Essential Brand Identity package (3 logo concepts, full vector files, business card design), ₹11,999 for Corporate Branding Suite, and ₹24,999 for Full UI/UX & Digital Brand System.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Does Spring Web Solutions provide brand identity design for Tamil Nadu businesses?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions creates complete brand identity systems including logo design, color palettes, typography, stationery, packaging, and digital brand style guides for businesses in Udumalpet, Pollachi, Tiruppur, Coimbatore, and across Tamil Nadu.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'What file formats are delivered for logo designs?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'All logos are delivered in full high-resolution vector formats including AI, SVG, EPS, PDF, and high-DPI PNG/JPG files, with 100% commercial copyright ownership transferred to your business.',
+            },
+          },
+        ],
+      },
+    ],
   }
 
   const packages = [
@@ -104,9 +190,9 @@ export const GraphicDesignLogoDesign: React.FC = () => {
     <div className="min-h-screen bg-[#040509] text-slate-100 flex flex-col selection:bg-indigo-500/30 selection:text-indigo-300">
       <SEOHead
         title="Graphic Design & Logo Design Company in Udumalpet (Udumalaipettai)"
-        description="#1 Graphic Design & Logo Creation Company in Udumalpet (Udumalaipettai), Pollachi, Tiruppur. Modern Vector Logos, Brand Identity, Brochures & UI/UX Design."
-        canonical="/graphic-design-logo-design"
-        keywords="graphic design udumalpet, logo design udumalaipettai, brand identity pollachi, brochure design tiruppur, ui ux design company udumalpet, vector logo design tamil nadu"
+        description="#1 Graphic Design & Logo Creation in Udumalpet — Vector Logos, Brand Identity, Brochures & UI/UX. Packages from ₹4,999. 100% commercial copyright ownership."
+        canonical="https://www.springwebsolutions.in/graphic-design-logo-design"
+        keywords="graphic design udumalpet, logo design udumalaipettai, brand identity pollachi, brochure design tiruppur, ui ux design company udumalpet, vector logo design tamil nadu, logo design company udumalpet"
         schema={schema}
       />
 

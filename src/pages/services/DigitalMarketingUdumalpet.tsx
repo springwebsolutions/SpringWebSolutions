@@ -12,22 +12,111 @@ import {
 export const DigitalMarketingUdumalpet: React.FC = () => {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Service',
-    'name': 'Digital Marketing & Google Ads in Udumalpet (Udumalaipettai)',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'Spring Web Solutions',
-      'telephone': '+91-80126-22119',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Udumalpet',
-        'addressRegion': 'Tamil Nadu',
-        'postalCode': '642126',
-        'addressCountry': 'IN'
-      }
-    },
-    'areaServed': ['Udumalpet', 'Udumalaipettai', 'Pollachi', 'Tiruppur', 'Coimbatore', 'Tamil Nadu'],
-    'description': 'ROI-driven digital marketing, Google Ads PPC management, Meta & Instagram Ads, local SEO, and conversion optimization for businesses in Udumalpet and Tamil Nadu.'
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': 'https://www.springwebsolutions.in/digital-marketing-udumalpet#service',
+        'name': 'Digital Marketing & Google Ads in Udumalpet (Udumalaipettai)',
+        'url': 'https://www.springwebsolutions.in/digital-marketing-udumalpet',
+        'provider': {
+          '@type': 'LocalBusiness',
+          '@id': 'https://www.springwebsolutions.in/#organization',
+          'name': 'Spring Web Solutions',
+          'telephone': '+91-80126-22119',
+          'email': 'hello@springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Udumalpet Main Road',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN',
+          },
+          'geo': { '@type': 'GeoCoordinates', 'latitude': 10.5847, 'longitude': 77.2472 },
+          'openingHours': 'Mo-Sa 09:00-19:00',
+          'priceRange': '$$',
+        },
+        'areaServed': [
+          { '@type': 'City', 'name': 'Udumalpet' },
+          { '@type': 'City', 'name': 'Udumalaipettai' },
+          { '@type': 'City', 'name': 'Pollachi' },
+          { '@type': 'City', 'name': 'Tiruppur' },
+          { '@type': 'City', 'name': 'Coimbatore' },
+          { '@type': 'AdministrativeArea', 'name': 'Tamil Nadu' },
+        ],
+        'description': 'ROI-driven digital marketing, Google Ads PPC management, Meta & Instagram Ads, local SEO, Google Business Profile optimization, and conversion optimization for businesses in Udumalpet and Tamil Nadu.',
+        'offers': [
+          {
+            '@type': 'Offer',
+            'name': 'Local Business Booster',
+            'price': '9999',
+            'priceCurrency': 'INR',
+            'priceSpecification': { '@type': 'UnitPriceSpecification', 'price': '9999', 'priceCurrency': 'INR', 'unitText': 'month' },
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Regional Growth & Ads',
+            'price': '19999',
+            'priceCurrency': 'INR',
+            'priceSpecification': { '@type': 'UnitPriceSpecification', 'price': '19999', 'priceCurrency': 'INR', 'unitText': 'month' },
+            'availability': 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            'name': 'Enterprise Market Dominance',
+            'price': '34999',
+            'priceCurrency': 'INR',
+            'priceSpecification': { '@type': 'UnitPriceSpecification', 'price': '34999', 'priceCurrency': 'INR', 'unitText': 'month' },
+            'availability': 'https://schema.org/InStock',
+          },
+        ],
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Digital Marketing Udumalpet', 'item': 'https://www.springwebsolutions.in/digital-marketing-udumalpet' },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'Which is the best digital marketing company in Udumalpet?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions is the top-rated digital marketing agency in Udumalpet (Udumalaipettai), offering Google Ads PPC, Meta & Instagram Ads, local SEO, and Google Business Profile optimization for businesses across Tamil Nadu.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'How much does Google Ads management cost in Udumalpet?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Spring Web Solutions offers digital marketing packages starting from ₹9,999/month for local businesses in Udumalpet, ₹19,999/month for regional growth campaigns, and ₹34,999/month for enterprise omnichannel marketing.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Does Spring Web Solutions manage Instagram Ads for Udumalpet businesses?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions manages Meta (Instagram & Facebook) Ads, retargeting campaigns, A/B creative testing, and conversion tracking for businesses in Udumalpet, Pollachi, Tiruppur, Coimbatore, and across Tamil Nadu.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'What is Google Business Profile optimization and why does it matter?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Google Business Profile (GBP) optimization ensures your business appears in the Local Map Pack (top 3 Google Maps results) when potential customers search for your services in Udumalpet and nearby areas. Spring Web Solutions provides full GMB setup and ongoing optimization.',
+            },
+          },
+        ],
+      },
+    ],
   }
 
   const packages = [
@@ -104,9 +193,9 @@ export const DigitalMarketingUdumalpet: React.FC = () => {
     <div className="min-h-screen bg-[#040509] text-slate-100 flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300">
       <SEOHead
         title="Digital Marketing Agency in Udumalpet (Udumalaipettai) | Google & Meta Ads"
-        description="#1 Digital Marketing Agency in Udumalpet (Udumalaipettai), Pollachi & Tiruppur. Google Ads, Meta Ads, Local SEO, and High-ROI Lead Generation. Get free consultation!"
-        canonical="/digital-marketing-udumalpet"
-        keywords="digital marketing udumalpet, google ads company udumalpet, meta ads udumalaipettai, seo agency udumalpet, local seo pollachi, lead generation tiruppur, digital marketing company tamil nadu"
+        description="#1 Digital Marketing Agency in Udumalpet — Google Ads, Meta Ads, Local SEO, GMB Optimization & Lead Generation. Packages from ₹9,999/mo. Free consultation!"
+        canonical="https://www.springwebsolutions.in/digital-marketing-udumalpet"
+        keywords="digital marketing udumalpet, google ads company udumalpet, meta ads udumalaipettai, seo agency udumalpet, local seo pollachi, lead generation tiruppur, digital marketing company tamil nadu, google business profile optimization udumalpet"
         schema={schema}
       />
 

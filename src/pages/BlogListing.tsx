@@ -139,9 +139,36 @@ export const BlogListing: React.FC = () => {
   return (
     <div className="min-h-screen page-bg flex flex-col justify-between">
       <SEOHead
-        title="Digital Growth Hub | Spring Web Solutions Blog"
-        description="Roadmaps, optimization insights, and software architecture guides by Spring Web Solution engineers."
+        title="Software Engineering & Web Insights Blog | Spring Web Solutions"
+        description="Explore software architecture guides, web development tutorials, SEO roadmaps & business automation insights written by Spring Web Solutions engineers."
+        canonical="https://www.springwebsolutions.in/blog"
+        keywords="web development blog, software engineering guides, react tutorials, technical seo blog india, spring web solutions blog udumalpet"
         ogImage="https://www.springwebsolutions.in/logo-emblem.png"
+        schema={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'Blog',
+              '@id': 'https://www.springwebsolutions.in/blog#blog',
+              url: 'https://www.springwebsolutions.in/blog',
+              name: 'Spring Web Solutions Digital Growth Hub Blog',
+              description: 'Software architecture guides, modern web frameworks, SEO strategies, and business automation insights from senior software engineers.',
+              publisher: {
+                '@type': 'Organization',
+                '@id': 'https://www.springwebsolutions.in/#organization',
+                name: 'Spring Web Solutions',
+                logo: 'https://www.springwebsolutions.in/logo-emblem.png',
+              },
+            },
+            {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.springwebsolutions.in/' },
+                { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.springwebsolutions.in/blog' },
+              ],
+            },
+          ],
+        }}
       />
       
       <Navbar />

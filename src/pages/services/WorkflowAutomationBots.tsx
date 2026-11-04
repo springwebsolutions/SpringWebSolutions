@@ -13,22 +13,82 @@ import {
 export const WorkflowAutomationBots: React.FC = () => {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Service',
-    'name': 'Business Workflow Automation & Custom WhatsApp Bots',
-    'provider': {
-      '@type': 'LocalBusiness',
-      'name': 'Spring Web Solutions',
-      'telephone': '+91-80126-22119',
-      'address': {
-        '@type': 'PostalAddress',
-        'addressLocality': 'Udumalpet',
-        'addressRegion': 'Tamil Nadu',
-        'postalCode': '642126',
-        'addressCountry': 'IN'
-      }
-    },
-    'areaServed': ['Global', 'India', 'Tamil Nadu', 'Udumalpet', 'Coimbatore', 'Tiruppur', 'Pollachi'],
-    'description': 'Custom business workflow automation: WhatsApp Cloud API bots, automated lead webhooks, invoice generation, web scrapers, and database synchronizers.'
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': 'https://www.springwebsolutions.in/workflow-automation-bots#service',
+        'name': 'Business Workflow Automation & Custom WhatsApp Bots',
+        'url': 'https://www.springwebsolutions.in/workflow-automation-bots',
+        'provider': {
+          '@type': 'LocalBusiness',
+          '@id': 'https://www.springwebsolutions.in/#organization',
+          'name': 'Spring Web Solutions',
+          'telephone': '+91-80126-22119',
+          'email': 'hello@springwebsolutions.in',
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Udumalpet Main Road',
+            'addressLocality': 'Udumalpet',
+            'addressRegion': 'Tamil Nadu',
+            'postalCode': '642126',
+            'addressCountry': 'IN',
+          },
+        },
+        'areaServed': [
+          { '@type': 'Country', 'name': 'India' },
+          { '@type': 'Country', 'name': 'Global' },
+          { '@type': 'City', 'name': 'Udumalpet' },
+          { '@type': 'City', 'name': 'Coimbatore' },
+          { '@type': 'City', 'name': 'Tiruppur' },
+          { '@type': 'City', 'name': 'Pollachi' },
+        ],
+        'description': 'Custom business workflow automation: WhatsApp Cloud API bots, automated lead webhooks, invoice generation, web scrapers, and database synchronizers.',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Workflow Automation Bots', 'item': 'https://www.springwebsolutions.in/workflow-automation-bots' },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'What is business workflow automation and how can it help my company?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Business workflow automation eliminates repetitive manual tasks — like sending invoices, following up with leads, syncing database records, or notifying teams on WhatsApp — using custom bots and scripts. Spring Web Solutions builds fully automated workflows that save hours of manual work every day.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Can Spring Web Solutions build a WhatsApp Business API bot?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions integrates the official Meta WhatsApp Cloud API to build automated bots that handle catalog browsing, order booking, payment collection, and 24/7 customer support — without any third-party tools.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Does Spring Web Solutions automate GST invoice generation?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Yes. Spring Web Solutions builds automated GST-compliant invoice generation systems that create PDF invoices upon order completion and dispatch them via WhatsApp and email instantly — integrated with your existing sales or ERP workflow.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'What is a web scraper and can Spring Web Solutions build one?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'A web scraper is an automated tool that extracts data from websites — such as B2B contacts, pricing data, or market leads. Spring Web Solutions builds high-speed, undetectable custom scrapers that deliver structured data directly into your CRM or Google Sheets.',
+            },
+          },
+        ],
+      },
+    ],
   }
 
   const useCases = [
@@ -116,8 +176,11 @@ export const WorkflowAutomationBots: React.FC = () => {
   return (
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
-        title="Business Workflow Automation & Custom WhatsApp Bots | SpringWeb Solutions"
-        description="Automate repetitive business processes: WhatsApp Cloud API bots, automated PDF invoice generation, multi-system database sync, and high-speed B2B lead scrapers."
+        title="Business Workflow Automation & Custom WhatsApp Bots | Spring Web Solutions"
+        description="Custom workflow automation: WhatsApp Cloud API bots, automated GST invoicing, multi-system DB sync & B2B lead scrapers. Eliminate manual tasks 24/7. Contact us!"
+        canonical="https://www.springwebsolutions.in/workflow-automation-bots"
+        keywords="workflow automation india, whatsapp business api bot india, business automation bots, automated invoice generation, web scraper india, database sync automation, whatsapp bot development udumalpet"
+        schema={schema}
       />
       <Navbar />
 

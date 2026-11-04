@@ -129,8 +129,91 @@ export const Contact: React.FC = () => {
   return (
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
-        title="Contact Us & Project Consultation | Spring Web Solutions (Udumalpet & Global)"
-        description="Need web development, ERP/CRM software, or app engineering? Contact Spring Web Solutions in Udumalpet today to request your free consultation!"
+        title="Contact Us & Project Consultation | Spring Web Solutions Udumalpet"
+        description="Contact Spring Web Solutions in Udumalpet, Tamil Nadu. Book a free consultation for website development, custom ERP/CRM software, mobile apps & automation."
+        canonical="https://www.springwebsolutions.in/contact"
+        keywords="contact spring web solutions, hire web developers udumalpet, web agency contact tamil nadu, software consultation coimbatore, request quote web development india"
+        schema={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'ContactPage',
+              '@id': 'https://www.springwebsolutions.in/contact#webpage',
+              url: 'https://www.springwebsolutions.in/contact',
+              name: 'Contact Spring Web Solutions — Free Project Consultation',
+              description: 'Contact Spring Web Solutions for website development, mobile apps, ERP/CRM software, and business automation inquiries in Udumalpet, Tamil Nadu, and globally.',
+              isPartOf: { '@id': 'https://www.springwebsolutions.in/#website' },
+              breadcrumb: {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.springwebsolutions.in/' },
+                  { '@type': 'ListItem', position: 2, name: 'Contact Us', item: 'https://www.springwebsolutions.in/contact' },
+                ],
+              },
+            },
+            {
+              '@type': 'LocalBusiness',
+              '@id': 'https://www.springwebsolutions.in/#organization',
+              name: 'Spring Web Solutions',
+              telephone: '+91-80126-22119',
+              email: 'hello@springwebsolutions.in',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'Udumalpet Main Road',
+                addressLocality: 'Udumalpet',
+                addressRegion: 'Tamil Nadu',
+                postalCode: '642126',
+                addressCountry: 'IN',
+              },
+              geo: { '@type': 'GeoCoordinates', latitude: 10.5847, longitude: 77.2472 },
+              openingHours: 'Mo-Sa 09:00-19:00',
+              contactPoint: [
+                {
+                  '@type': 'ContactPoint',
+                  telephone: '+91-80126-22119',
+                  contactType: 'customer support',
+                  areaServed: 'IN',
+                  availableLanguage: ['English', 'Tamil'],
+                },
+                {
+                  '@type': 'ContactPoint',
+                  email: 'sales@springwebsolutions.in',
+                  contactType: 'sales',
+                  availableLanguage: ['English', 'Tamil'],
+                },
+              ],
+            },
+            {
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'How can I get a project quote from Spring Web Solutions?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'You can submit the contact form on this page with your project requirements, budget, and timeline, call us directly at +91-80126-22119, or message us on WhatsApp for an immediate response within 2-4 business hours.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Where is Spring Web Solutions office located?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Our engineering office is located in Udumalpet (Udumalaipettai), Tamil Nadu, 642126, India. We serve clients locally across Udumalpet, Pollachi, Tiruppur, Coimbatore, statewide across Tamil Nadu, and globally.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Does Spring Web Solutions provide free technical consultations?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes. We offer free initial technical discovery calls to analyze your software requirements, tech stack recommendations, project architecture, and cost breakdown before any commitment.',
+                  },
+                },
+              ],
+            },
+          ],
+        }}
       />
       <Navbar />
 

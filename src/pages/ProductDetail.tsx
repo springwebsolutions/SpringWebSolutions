@@ -212,12 +212,51 @@ export const ProductDetail: React.FC = () => {
     )
   }
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Product',
+        '@id': `https://www.springwebsolutions.in/marketplace/${product.slug}#product`,
+        'name': product.name,
+        'description': product.short_description,
+        'image': product.product_screenshots?.[0]?.image_url || 'https://www.springwebsolutions.in/logo-emblem.png',
+        'brand': {
+          '@type': 'Brand',
+          'name': 'Spring Web Solutions',
+        },
+        'offers': {
+          '@type': 'Offer',
+          'url': `https://www.springwebsolutions.in/marketplace/${product.slug}`,
+          'price': product.is_free ? '0' : String(product.price || 0),
+          'priceCurrency': 'INR',
+          'availability': 'https://schema.org/InStock',
+          'seller': {
+            '@type': 'Organization',
+            'name': 'Spring Web Solutions',
+          },
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.springwebsolutions.in/' },
+          { '@type': 'ListItem', position: 2, name: 'Marketplace', item: 'https://www.springwebsolutions.in/marketplace' },
+          { '@type': 'ListItem', position: 3, name: product.name, item: `https://www.springwebsolutions.in/marketplace/${product.slug}` },
+        ],
+      },
+    ],
+  }
+
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
       <SEOHead
         title={product.seo_title || `${product.name} | Spring Web Marketplace`}
         description={product.seo_description || product.short_description}
+        canonical={`https://www.springwebsolutions.in/marketplace/${product.slug}`}
         ogImage={product.product_screenshots?.[0]?.image_url || 'https://www.springwebsolutions.in/logo-emblem.png'}
+        type="product"
+        schema={productSchema}
       />
       <Navbar />
 

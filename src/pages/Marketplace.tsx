@@ -141,8 +141,42 @@ export const Marketplace: React.FC = () => {
   return (
     <div className="min-h-screen page-bg flex flex-col">
       <SEOHead
-        title="Software Marketplace & Digital Product Store | Spring Web Solutions"
-        description="Browse and buy ready-to-deploy website templates, ERP/CRM modules, app source codes, and automation tools by Spring Web Solutions. Explore our store!"
+        title="Software Marketplace & Digital Products | Spring Web Solutions"
+        description="Ready-to-deploy website templates, ERP modules, automation scripts & developer toolkits by Spring Web Solutions. Direct instant download with source code."
+        canonical="https://www.springwebsolutions.in/marketplace"
+        keywords="software marketplace, website templates india, erp modules download, developer toolkits, react ui kits, spring web solutions marketplace"
+        schema={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'CollectionPage',
+              '@id': 'https://www.springwebsolutions.in/marketplace#webpage',
+              url: 'https://www.springwebsolutions.in/marketplace',
+              name: 'Spring Web Solutions Software Marketplace & Download Center',
+              description: 'Official digital products vault offering verified source codes, website templates, ERP modules, and workflow automation tools.',
+              isPartOf: { '@id': 'https://www.springwebsolutions.in/#website' },
+              breadcrumb: {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.springwebsolutions.in/' },
+                  { '@type': 'ListItem', position: 2, name: 'Marketplace', item: 'https://www.springwebsolutions.in/marketplace' },
+                ],
+              },
+            },
+            {
+              '@type': 'OfferCatalog',
+              name: 'Digital Products Catalog',
+              itemListElement: products.slice(0, 10).map((p, idx) => ({
+                '@type': 'Offer',
+                position: idx + 1,
+                name: p.name,
+                price: String(p.price || 0),
+                priceCurrency: 'INR',
+                url: `https://www.springwebsolutions.in/marketplace/${p.slug}`,
+              })),
+            },
+          ],
+        }}
       />
       <Navbar />
 

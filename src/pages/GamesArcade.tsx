@@ -288,9 +288,23 @@ export const GamesArcade: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#04060e] text-white selection:bg-emerald-500 selection:text-slate-950 font-sans pb-24">
       <SEOHead
-        title="Interactive HTML5 Games Arcade (10 Games) | Spring Web Solutions"
-        description="Play 10 free, client-side HTML5 arcade games built with Canvas animations and Web Audio synthesis: Cyber Runner, Flap, Tetris Block Drop, Tower Stack, Galaxy Defender, Cyber Snake, 2048, and Pong."
-        canonicalUrl="https://springwebsolutions.in/games"
+        title="Interactive HTML5 Games Arcade | Spring Web Solutions"
+        description="Play 10 free, instant client-side HTML5 arcade games built with Canvas animations & Web Audio: Cyber Runner, Flappy, Tetris, Tower Stack, Galaxy Defender & more."
+        canonical="https://www.springwebsolutions.in/games"
+        keywords="html5 games, browser games, free online arcade, retro games web, canvas games javascript"
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'Spring Web Solutions Interactive HTML5 Games Arcade',
+          url: 'https://www.springwebsolutions.in/games',
+          applicationCategory: 'GameApplication',
+          operatingSystem: 'All',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+          },
+        }}
       />
 
       {/* ── Ambient Background Glows ── */}

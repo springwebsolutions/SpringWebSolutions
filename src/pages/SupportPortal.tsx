@@ -142,8 +142,18 @@ export const SupportPortal: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#070a13] flex flex-col dark:bg-[#070a13] light:bg-[#f8fafc]">
       <SEOHead
-        title="Customer Support Portal & Help Desk | Spring Web Solutions"
-        description="Access technical support, submit help desk tickets, and track resolutions for Spring Web Solutions apps. Log in to get expert assistance today!"
+        title="Customer Support Desk & Ticket Portal | Spring Web Solutions"
+        description="Spring Web Solutions client technical support desk. Submit support tickets, track bug resolutions, request software updates, and reach our engineering team."
+        canonical="https://www.springwebsolutions.in/support"
+        keywords="spring web solutions support, client portal, software helpdesk udumalpet, technical support tickets"
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'ContactPage',
+          name: 'Spring Web Solutions Support Desk',
+          url: 'https://www.springwebsolutions.in/support',
+          description: 'Client technical support desk and ticket resolution center.',
+          isPartOf: { '@id': 'https://www.springwebsolutions.in/#website' },
+        }}
       />
       <Navbar />
 
