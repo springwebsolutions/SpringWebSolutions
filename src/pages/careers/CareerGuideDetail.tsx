@@ -6,7 +6,12 @@ import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
 import { CareersSeo } from '@/components/seo/CareersSeo'
 import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer'
-import { BookOpen, ArrowLeft, Calendar, User, Tag, ArrowRight, Share2, Sparkles } from 'lucide-react'
+import {
+  RemoteCompensationCalculator,
+  ArchitectureReadinessChecklist,
+  SeniorArchitectScenarioQuiz
+} from '@/components/careers/InteractiveCareerToolkit'
+import { BookOpen, ArrowLeft, Calendar, User, Tag, ArrowRight, Share2, Sparkles, Trophy } from 'lucide-react'
 
 export const CareerGuideDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -135,6 +140,41 @@ export const CareerGuideDetail: React.FC = () => {
             {/* Markdown rendered body with tables, headings, code blocks */}
             <div className="py-2">
               <MarkdownRenderer content={guide.content} />
+            </div>
+
+            {/* Interactive Section 1: Remote Calculator (Contextually injected for remote/fullstack roadmaps) */}
+            {(guide.slug.includes('remote') || guide.slug.includes('full-stack')) && (
+              <RemoteCompensationCalculator />
+            )}
+
+            {/* Interactive Section 2: Technical Readiness Checklist */}
+            <ArchitectureReadinessChecklist guideSlug={guide.slug} />
+
+            {/* Interactive Section 3: Scenario-based Interview Quiz */}
+            <SeniorArchitectScenarioQuiz guideSlug={guide.slug} />
+
+            {/* Senior Architect Mentorship Callout */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950/40 via-[#070b14] to-indigo-950/30 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+              <div className="space-y-2 text-center sm:text-left">
+                <span className="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block">
+                  Engineering Mentorship & Code Reviews
+                </span>
+                <h4 className="text-lg sm:text-xl font-bold text-white font-display">
+                  Stuck in Tutorial Hell or Preparing for Tier-1 Product Rounds?
+                </h4>
+                <p className="text-xs text-slate-400 font-light max-w-xl leading-relaxed">
+                  Connect directly with the software architects at SpringWeb Solutions in Udumalpet. We review your GitHub repos, critique your system design blueprints, and guide your journey from junior debugger to high-earning production engineer.
+                </p>
+              </div>
+              <a
+                href="https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20read%20your%20educational%20career%20guide%20and%20want%20to%20discuss%20mentorship%20and%20open%20engineering%20roles."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary text-xs shrink-0 py-3.5 px-6 font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+              >
+                <span>WhatsApp Engineering Lead</span>
+                <ArrowRight size={14} />
+              </a>
             </div>
 
             {/* Tags */}
