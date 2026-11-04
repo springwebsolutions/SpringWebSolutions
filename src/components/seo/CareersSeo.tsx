@@ -142,26 +142,26 @@ export const CareersSeo: React.FC<CareersSeoProps> = ({
           'mainEntity': [
             {
               '@type': 'Question',
-              'name': 'What software engineering jobs are available at SpringWeb Solutions in Udumalpet, Tamil Nadu?',
+              'name': 'Does SpringWeb Solutions currently have internal software engineering job vacancies?',
               'acceptedAnswer': {
                 '@type': 'Answer',
-                'text': 'SpringWeb Solutions offers software developer vacancies in Web Development (React/TypeScript), Custom ERP/CRM Engineering (Node.js/Supabase), Mobile App Development (Android/iOS), and Windows Desktop Software for candidates in Udumalpet, Tiruppur, Coimbatore, statewide across Tamil Nadu, nationally across India, and Global Remote.'
+                'text': 'SpringWeb Solutions does not currently have open internal vacancies. SpringWeb maintains the Careers Vault and 13 comprehensive educational career guides as a free public service curating 100% verified external tech vacancies across top product firms in India and global remote teams.'
               }
             },
             {
               '@type': 'Question',
-              'name': 'Does SpringWeb Careers list remote software jobs for candidates across India and worldwide?',
+              'name': 'What verified software engineering opportunities are curated on SpringWeb Careers in 2026?',
               'acceptedAnswer': {
                 '@type': 'Answer',
-                'text': 'Yes, SpringWeb Careers features both on-site developer positions at Headquarters in Udumalpet, Tamil Nadu, as well as remote software engineering vacancies open to candidates across India and internationally.'
+                'text': 'SpringWeb Careers features 21 verified active tech openings with transparent 100% INR compensation benchmarks from top companies including Cisco, HackerRank, Swiggy, Zoho, Thoughtworks, Canonical (Ubuntu), GitLab, Automattic, Red Hat, Hexaware, TCS, Fractal, CrowdStrike, BrowserStack, CRED, Jio, Freshworks, PhonePe, Postman, Razorpay, and Atlassian.'
               }
             },
             {
               '@type': 'Question',
-              'name': 'Where can I access free educational software engineering career guides and interview prep roadmaps?',
+              'name': 'Where can candidates access free IT career roadmaps, system design blueprints, and interview guides?',
               'acceptedAnswer': {
                 '@type': 'Answer',
-                'text': 'SpringWeb Careers Portal provides free educational guides, full-stack software developer roadmaps, and interview preparation resources at https://careers.springwebsolutions.in/career-guides.'
+                'text': 'SpringWeb Careers provides 13 free educational blueprints covering Full-Stack, Frontend, Backend, DevOps, System Design, Applied AI, Cybersecurity, SDET, Cloud Architecture, Data Engineering, MLOps, Mobile Apps, and Global Remote Contracting at https://careers.springwebsolutions.in/career-guides.'
               }
             }
           ]

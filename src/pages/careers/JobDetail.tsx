@@ -95,39 +95,82 @@ export const JobDetail: React.FC = () => {
   const pageUrl = typeof window !== 'undefined' ? window.location.href : `https://careers.springwebsolutions.in/jobs/${job.slug}`
   const shareText = `Check out this verified job opening: ${job.title} at ${job.company_name} (${job.salary_range})`
 
+  // Calculate validThrough for Google Jobs (6 months expiration from posting)
+  const validThroughDate = new Date(job ? new Date(job.created_at).getTime() + 180 * 24 * 60 * 60 * 1000 : Date.now()).toISOString()
+
   const jobPostingSchema = job
     ? {
         '@context': 'https://schema.org/',
-        '@type': 'JobPosting',
-        title: job.title,
-        description: job.description,
-        identifier: {
-          '@type': 'PropertyValue',
-          name: job.company_name,
-          value: job.id,
-        },
-        datePosted: job.created_at,
-        employmentType: job.job_type.toUpperCase().replace('-', '_'),
-        hiringOrganization: {
-          '@type': 'Organization',
-          name: job.company_name,
-          sameAs: 'https://careers.springwebsolutions.in',
-          logo: 'https://www.springwebsolutions.in/logo-emblem.png',
-        },
-        jobLocation: {
-          '@type': 'Place',
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: job.location_city,
-            addressRegion: job.location_state,
-            addressCountry: job.location_country,
+        '@graph': [
+          {
+            '@type': 'JobPosting',
+            '@id': `https://careers.springwebsolutions.in/jobs/${job.slug}#jobposting`,
+            title: job.title,
+            description: `${job.description}\n\nKey Qualifications:\n${job.requirements.join('\n')}`,
+            identifier: {
+              '@type': 'PropertyValue',
+              name: job.company_name,
+              value: job.id,
+            },
+            datePosted: job.created_at,
+            validThrough: validThroughDate,
+            employmentType: job.job_type === 'Internship' ? 'INTERN' : 'FULL_TIME',
+            directApply: true,
+            hiringOrganization: {
+              '@type': 'Organization',
+              name: job.company_name,
+              sameAs: 'https://careers.springwebsolutions.in',
+              logo: 'https://www.springwebsolutions.in/logo-emblem.png',
+            },
+            jobLocation: {
+              '@type': 'Place',
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: job.location_city,
+                addressRegion: job.location_state,
+                addressCountry: 'IN',
+              },
+            },
+            applicantLocationRequirements: {
+              '@type': 'Country',
+              name: 'India',
+            },
+            jobLocationType: job.is_wfh || job.is_remote ? 'TELECOMMUTE' : undefined,
+            baseSalary: {
+              '@type': 'MonetaryAmount',
+              currency: 'INR',
+              value: {
+                '@type': 'QuantitativeValue',
+                unitText: job.salary_range.includes('/ month') ? 'MONTH' : 'YEAR',
+                value: job.salary_range
+              }
+            }
           },
-        },
-        applicantLocationRequirements: {
-          '@type': 'Country',
-          name: job.location_country,
-        },
-        jobLocationType: job.is_wfh || job.is_remote ? 'TELECOMMUTE' : undefined,
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `https://careers.springwebsolutions.in/jobs/${job.slug}#breadcrumb`,
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'SpringWeb Careers',
+                item: 'https://careers.springwebsolutions.in/'
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Verified Jobs',
+                item: 'https://careers.springwebsolutions.in/jobs'
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: job.title,
+                item: `https://careers.springwebsolutions.in/jobs/${job.slug}`
+              }
+            ]
+          }
+        ]
       }
     : undefined
 

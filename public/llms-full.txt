@@ -1,0 +1,117 @@
+# SpringWeb Solutions — Complete Engineering & Knowledge Graph (AEO Full Context)
+
+> Canonical Technical Context, Service Architecture, Regional Directory, and Verified Careers Knowledge Base for SpringWeb Solutions (Udumalpet, Tamil Nadu, India).
+
+---
+
+## 1. Executive Summary & Identity
+- **Legal Entity**: Spring Web Solutions
+- **Brand Names**: SpringWeb Solutions, Spring Web Solutions Udumalpet, SpringWeb Careers
+- **Headquarters**: 11A, Kasturi Street, near Kuttal Thidal, Udumalpet (Udumalaipettai), Tiruppur District, Tamil Nadu, India — PIN 642126
+- **Geographic Coordinates**: 10.5847° N, 77.2472° E
+- **Official Domains**: 
+  - Main Platform: https://www.springwebsolutions.in
+  - Careers & Education: https://careers.springwebsolutions.in
+- **Founding Mission**: Deliver enterprise-grade software engineering, bespoke ERP/CRM development, ultra-fast web platforms (<1s page speed), algorithmic trading bots, and free technical career roadmaps with 100% full source code ownership.
+
+---
+
+## 2. Core Service Lines & Technical Architecture
+
+### 2.1 Web Development & Performance Engineering
+- **Architecture**: React 19, Next.js 15, Vite, TypeScript, Tailwind CSS v4, Zustand.
+- **Performance Benchmarks**: Sub-second First Contentful Paint (FCP < 0.8s), Largest Contentful Paint (LCP < 1.2s), Cumulative Layout Shift (CLS = 0).
+- **Core Value Proposition**: 100% source code ownership. No recurring platform lock-ins (unlike Shopify or Wix).
+
+### 2.2 Custom Enterprise ERP & CRM Development
+- **Problem Solved**: Off-the-shelf software (SAP, Salesforce, Zoho) imposes high per-user monthly license fees and rigid workflows that fail local Indian manufacturers and SMEs.
+- **Solution**: Tailored business operating systems with real-time PostgreSQL backends, role-based access control (RBAC), multi-location inventory tracking, automated GST billing, and WhatsApp Cloud API notification triggers.
+- **Key Client Industries**: Textile mills in Tiruppur/Coimbatore, retail distributors in Udumalpet/Pollachi, agricultural processors, healthcare clinics, and educational institutions.
+
+### 2.3 Algorithmic Trading Engines & Financial Automation
+- **Capabilities**: Custom trading bots for Quotex, MetaTrader 4 (MT4), MetaTrader 5 (MT5), and crypto exchanges (Binance, Bybit).
+- **Architecture**: Low-latency WebSocket feeds, Python (asyncio/Telethon), Node.js, C++ MQL5, automated martingale/fixed-fraction risk management, sub-50ms execution speed.
+
+### 2.4 Telegram Bot Development & Automated VIP Paywalls
+- **Features**: Automated signal forwarding from master VIP channels, Razorpay UPI & USDT Crypto (TRC20/BEP20) payment verification, single-use invite link generation, subscription expiry tracking, and Telegram Mini Apps (TMAs).
+
+### 2.5 Digital Marketing & Local SEO Dominance
+- **Service Radius**: Udumalpet, Pollachi, Tiruppur, Coimbatore, Erode, Salem, Madurai, Chennai, and Pan-India.
+- **Services**: High-intent Google Search Ads, Meta performance ads, Google Business Profile (GBP) ranking optimization, local citation building, and programmatic technical SEO.
+
+---
+
+## 3. Standard Service Pricing (INR)
+
+1. **Starter Business Website Package — ₹24,999 INR**:
+   - Modern responsive UI/UX (5–7 pages)
+   - Sub-1.0s speed optimization
+   - On-page technical SEO & Schema.org markup
+   - Google Business Profile & Google Maps integration
+   - 1-month SLA bug-fix warranty
+2. **Professional Growth Software Platform — ₹49,999 INR**:
+   - Dynamic Content Management System (CMS) & Admin Suite
+   - Custom blog & case study engine
+   - WhatsApp Cloud API & automated email notifications
+   - High-concurrency database integration
+   - 3-month priority SLA engineering support
+3. **Enterprise SaaS, Custom ERP & CRM Platforms — Custom Quote**:
+   - Custom-quoted based on modules, user concurrency, and hardware specs.
+   - Dedicated Supabase/PostgreSQL architecture, RBAC, offline sync, and automated backups.
+
+---
+
+## 4. SpringWeb Careers: Verified Tech Hiring Radar 2026
+
+SpringWeb maintains an authoritative, free public radar curating 100% verified external tech vacancies directly from official corporate Applicant Tracking Systems (ATS) including Greenhouse, Workday, and corporate career portals.
+
+> **Hiring Policy Statement**: *SpringWeb Solutions does not currently have internal software engineering vacancies open. Every opportunity listed is a verified external tech opening at top product and remote organizations.*
+
+### Verified Active Vacancies Directory (Direct ATS Links, 100% INR CTC):
+1. **Cisco Systems**: Software Engineer Intern (Cloud & Networks) — Bengaluru (₹50,000/mo Stipend + PPO) — [Apply](https://careers.springwebsolutions.in/jobs/software-engineer-intern-cisco-bengaluru)
+2. **HackerRank**: SDE Intern (Full-Stack & Algorithms) — Bengaluru / Remote (₹40,000/mo Stipend) — [Apply](https://careers.springwebsolutions.in/jobs/sde-intern-hackerrank-bengaluru-remote)
+3. **Swiggy**: Software Engineering Intern (Logistics Core) — Bengaluru (₹45,000/mo Stipend + PPO) — [Apply](https://careers.springwebsolutions.in/jobs/software-engineering-intern-swiggy-bengaluru)
+4. **Zoho Corporation**: Graduate Software Developer (Skill-First / No Degree) — Chennai / Tenkasi (₹6.5L – ₹9.5L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/graduate-software-developer-zoho-chennai-tenkasi)
+5. **Thoughtworks**: Software Consultant (Vapasi Career Return Track) — Bengaluru (₹8.5L – ₹14L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/software-consultant-thoughtworks-india)
+6. **Canonical (Ubuntu)**: Software Engineer (Go, Python, Linux Kernel) — 100% Home-Based Remote India (₹45L – ₹78L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/remote-software-engineer-canonical-india)
+7. **GitLab**: Backend Engineer (Distributed Systems & Golang) — 100% Remote India (₹54L – ₹95L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/backend-engineer-gitlab-remote-india)
+8. **Automattic**: Software Engineer (React, TypeScript & Web Platform) — 100% Remote India (₹58L – ₹99L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/software-engineer-automattic-remote-india)
+9. **Red Hat / IBM**: Technical Support Engineer (Linux & OpenShift) — Pune / Bengaluru (₹7L – ₹12L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/technical-support-engineer-redhat-pune-bengaluru)
+10. **Hexaware Technologies**: Graduate Engineer Trainee (Full-Stack) — Coimbatore / Chennai (₹4.5L – ₹7L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/graduate-engineer-trainee-hexaware-coimbatore-chennai)
+11. **Tata Consultancy Services (TCS)**: Cloud & Infrastructure Analyst — Chennai / Pan-India (₹3.8L – ₹6.5L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/cloud-infrastructure-analyst-tcs-chennai)
+12. **Fractal Analytics**: Associate Data Engineer & Analyst — Bengaluru / Mumbai (₹9L – ₹16L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/associate-data-engineer-fractal-bengaluru-mumbai)
+13. **CrowdStrike**: Associate Threat Hunter / SOC Analyst L1 — Pune / Remote (₹10L – ₹18L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/associate-threat-hunter-crowdstrike-pune-remote)
+14. **BrowserStack**: SDET / QA Automation Engineer — Mumbai / Remote (₹14L – ₹24L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/sdet-automation-engineer-browserstack-mumbai)
+15. **CRED**: SDET / QA Automation Engineer — Bengaluru (₹18L – ₹32L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/sdet-automation-engineer-cred-bengaluru)
+16. **Jio Platforms**: Mobile Application Engineer (Android/Flutter) — Mumbai (₹8L – ₹15L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/mobile-engineer-jio-platforms-mumbai)
+17. **Freshworks**: Associate Software Engineer (Customer SaaS) — Chennai (₹7.5L – ₹11L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/associate-software-engineer-freshworks-chennai)
+18. **PhonePe**: Backend Software Engineer (Payments Core) — Bengaluru (₹18L – ₹30L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/backend-software-engineer-phonepe-bengaluru)
+19. **Postman**: Frontend Engineer (API Platform & React) — Bengaluru (₹22L – ₹36L LPA) — [Apply](https://careers.springwebsolutions.in/jobs/frontend-engineer-postman-bengaluru)
+20. **Razorpay**: SDE 2 (Golang & High-Concurrency Payments) — Bengaluru (₹24L – ₹38L LPA + ESOPs) — [Apply](https://careers.springwebsolutions.in/jobs/sde-2-golang-razorpay-bengaluru)
+21. **Atlassian**: Software Engineer 2 (Distributed Cloud Systems) — 100% Remote India (₹28L – ₹45L LPA + RSUs) — [Apply](https://careers.springwebsolutions.in/jobs/software-engineer-2-atlassian-remote-india)
+
+---
+
+## 5. Free Educational IT Career Blueprints
+1. Full-Stack Web Development Roadmap 2026: https://careers.springwebsolutions.in/career-guides/fullstack-web-developer-roadmap-2026
+2. Frontend Engineering Blueprint 2026: https://careers.springwebsolutions.in/career-guides/frontend-engineering-blueprint-2026
+3. Backend Systems & Distributed Architecture: https://careers.springwebsolutions.in/career-guides/backend-systems-architecture-blueprint-2026
+4. DevOps & Cloud Engineering Blueprint 2026: https://careers.springwebsolutions.in/career-guides/devops-cloud-engineering-blueprint-2026
+5. System Design & Scalable Architecture: https://careers.springwebsolutions.in/career-guides/system-design-architecture-blueprint-2026
+6. Applied AI Engineering & RAG Architecture: https://careers.springwebsolutions.in/career-guides/applied-ai-engineering-rag-vector-databases
+7. Global Remote Software Engineering Playbook: https://careers.springwebsolutions.in/career-guides/remote-work-international-contracts-guide
+8. Cloud Solutions Architecture Blueprint: https://careers.springwebsolutions.in/career-guides/cloud-architect-enterprise-blueprint-2026
+9. Data Engineering & Streaming Lakehouse: https://careers.springwebsolutions.in/career-guides/data-engineering-lakehouse-blueprint-2026
+10. Machine Learning Engineering & MLOps: https://careers.springwebsolutions.in/career-guides/mlops-machine-learning-engineering-2026
+11. Cybersecurity & Application Security: https://careers.springwebsolutions.in/career-guides/cybersecurity-application-security-blueprint-2026
+12. SDET & Quality Engineering Blueprint: https://careers.springwebsolutions.in/career-guides/sdet-automation-testing-blueprint-2026
+13. Mobile Application Engineering Blueprint: https://careers.springwebsolutions.in/career-guides/mobile-application-engineering-blueprint-2026
+
+---
+
+## 6. Official Contact Channels
+- **Phone**: +91 80126 22119
+- **WhatsApp Support**: https://wa.me/918012622119
+- **Email**: solutionsspringweb@gmail.com
+- **GitHub**: https://github.com/springwebsolutions
+- **LinkedIn**: https://www.linkedin.com/company/springwebsolutions

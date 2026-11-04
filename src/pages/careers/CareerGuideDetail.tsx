@@ -61,23 +61,66 @@ export const CareerGuideDetail: React.FC = () => {
 
   const articleSchema = guide ? {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    'headline': guide.title,
-    'description': guide.excerpt || guide.content.substring(0, 160),
-    'image': guide.cover_image ? `https://careers.springwebsolutions.in${guide.cover_image}` : undefined,
-    'author': {
-      '@type': 'Person',
-      'name': guide.author || 'SpringWeb Career Experts'
-    },
-    'publisher': {
-      '@type': 'Organization',
-      'name': 'SpringWeb Solutions',
-      'logo': {
-        '@type': 'ImageObject',
-        'url': 'https://www.springwebsolutions.in/logo-emblem.png'
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        '@id': `https://careers.springwebsolutions.in/career-guides/${guide.slug}#article`,
+        'headline': guide.title,
+        'description': guide.excerpt || guide.content.substring(0, 160),
+        'image': guide.cover_image ? `https://careers.springwebsolutions.in${guide.cover_image}` : 'https://www.springwebsolutions.in/logo-emblem.png',
+        'inLanguage': 'en-IN',
+        'isAccessibleForFree': true,
+        'educationalLevel': 'Professional / Advanced Engineering',
+        'proficiencyLevel': 'Mid-Level to Staff Architect',
+        'about': {
+          '@type': 'Thing',
+          'name': guide.category || guide.title
+        },
+        'author': {
+          '@type': 'Organization',
+          'name': 'SpringWeb Solutions Engineering Council',
+          'url': 'https://www.springwebsolutions.in'
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'SpringWeb Solutions',
+          'logo': {
+            '@type': 'ImageObject',
+            'url': 'https://www.springwebsolutions.in/logo-emblem.png'
+          }
+        },
+        'datePublished': guide.created_at,
+        'dateModified': guide.created_at,
+        'speakable': {
+          '@type': 'SpeakableSpecification',
+          'cssSelector': ['h1', 'p']
+        }
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `https://careers.springwebsolutions.in/career-guides/${guide.slug}#breadcrumb`,
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'SpringWeb Careers',
+            'item': 'https://careers.springwebsolutions.in/'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Educational Career Guides',
+            'item': 'https://careers.springwebsolutions.in/career-guides'
+          },
+          {
+            '@type': 'ListItem',
+            'position': 3,
+            'name': guide.title,
+            'item': `https://careers.springwebsolutions.in/career-guides/${guide.slug}`
+          }
+        ]
       }
-    },
-    'datePublished': guide.created_at
+    ]
   } : undefined
 
   // Blueprint specs lookup
