@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import { classifyJobCategory, extractExperienceLevel, generateTemplateSummary, generateSlug } from '@/lib/jobNormalizer'
+import { CAREER_GUIDES_DATA } from '@/data/careerGuides'
 
 export interface JobPosting {
   id: string
@@ -362,57 +363,7 @@ const SEED_JOBS: JobPosting[] = [
   }
 ]
 
-const SEED_GUIDES: CareerGuide[] = [
-  {
-    id: 'guide-1',
-    title: 'How to Land Remote Software Engineering Jobs from India in 2026',
-    slug: 'land-remote-software-jobs-india-2026',
-    excerpt: 'A comprehensive roadmap for developers in Tier-2 and Tier-3 cities in India to secure high-paying remote global positions.',
-    content: `## The Rise of Remote Engineering
-
-With international companies looking for top software talent worldwide, developers in cities like Udumalpet, Coimbatore, and Tiruppur can now secure high-paying US/EU remote contracts without relocating.
-
-### 1. Build Proof of Work
-Having a generic resume is no longer enough. Build 2-3 production-ready applications with clean GitHub code repositories, live Vercel/Supabase demos, and modern UI design.
-
-### 2. Master Asynchronous Communication
-Remote engineering relies heavily on written clarity in Slack, GitHub pull requests, and documentation.
-
-### 3. Key Platforms for Global Remote Hiring
-- GitHub Jobs & Open Source Contributions
-- LinkedIn Advanced Filters (Filter by 'Remote Worldwide')
-- SpringWeb Career Portal & Job Vault`,
-    category: 'Career Guidance',
-    author: 'SpringWeb Career Team',
-    tags: ['Remote Work', 'Software Jobs', 'Career Roadmap', 'Global Opportunities'],
-    cover_image: '/software-engineering.png',
-    status: 'published',
-    created_at: new Date().toISOString()
-  },
-  {
-    id: 'guide-2',
-    title: 'Native Android (Kotlin) vs Cross-Platform (Flutter) in 2026: Career Outlook',
-    slug: 'kotlin-vs-flutter-career-outlook-2026',
-    excerpt: 'Which framework offers better job security, salary packages, and growth in mobile application development?',
-    content: `## The Mobile Development Landscape
-
-Mobile app development remains one of the highest demand sectors in IT. Here is a breakdown of Native Android vs Flutter in 2026.
-
-### Native Android (Kotlin)
-- **Best for**: Enterprise apps, IoT, low-level hardware integration, and high-performance banking apps.
-- **Average India Package**: ₹6 LPA - ₹22 LPA depending on experience.
-
-### Flutter (Dart)
-- **Best for**: Startups, MVP launches, cross-platform iOS/Android code sharing.
-- **Average India Package**: ₹5 LPA - ₹18 LPA.`,
-    category: 'Job Market Trends',
-    author: 'Tech Careers Desk',
-    tags: ['Android', 'Kotlin', 'Flutter', 'Mobile Dev', 'Salaries'],
-    cover_image: '/app-dev.png',
-    status: 'published',
-    created_at: new Date().toISOString()
-  }
-]
+const SEED_GUIDES: CareerGuide[] = CAREER_GUIDES_DATA
 
 const SEED_ADS: AdConfig[] = [
   {
@@ -492,7 +443,10 @@ export const useCareersStore = create<CareersState>((set, get) => ({
   },
 
   fetchGuides: async () => {
-    if (!isSupabaseConfigured) return
+    if (!isSupabaseConfigured) {
+      set({ guides: CAREER_GUIDES_DATA })
+      return
+    }
     try {
       set({ loading: true })
       const { data, error } = await supabase
@@ -500,11 +454,18 @@ export const useCareersStore = create<CareersState>((set, get) => ({
         .select('*')
         .order('created_at', { ascending: false })
       if (!error && data && data.length > 0) {
-        set({ guides: data })
-        localStorage.setItem('springweb_guides_cache', JSON.stringify(data))
+        // Merge so that our rich curated guides are always available alongside any DB-created guides
+        const dbSlugs = new Set(data.map((d: any) => d.slug))
+        const combined = [...data, ...CAREER_GUIDES_DATA.filter(g => !dbSlugs.has(g.slug))]
+        set({ guides: combined })
+        localStorage.setItem('springweb_guides_cache', JSON.stringify(combined))
+      } else {
+        set({ guides: CAREER_GUIDES_DATA })
+        localStorage.setItem('springweb_guides_cache', JSON.stringify(CAREER_GUIDES_DATA))
       }
     } catch (e) {
       console.warn('Guides fetch fallback to seed:', e)
+      set({ guides: CAREER_GUIDES_DATA })
     } finally {
       set({ loading: false })
     }

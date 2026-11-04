@@ -49,18 +49,31 @@ export const CareerGuideListing: React.FC = () => {
               <Link
                 key={guide.id}
                 to={`/career-guides/${guide.slug}`}
-                className="rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:-translate-y-1 transition-all overflow-hidden flex flex-col justify-between group"
+                className="rounded-3xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 hover:-translate-y-1 transition-all overflow-hidden flex flex-col justify-between group shadow-xl"
               >
-                <div className="p-6 space-y-4">
-                  <div className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider w-max">
-                    {guide.category}
+                <div>
+                  {guide.cover_image && (
+                    <div className="aspect-[16/9] w-full overflow-hidden bg-[#04060c] border-b border-white/10">
+                      <img
+                        src={guide.cover_image}
+                        alt={guide.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+
+                  <div className="p-6 space-y-3">
+                    <div className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider w-max">
+                      {guide.category}
+                    </div>
+                    <h2 className="text-xl font-bold text-white font-display group-hover:text-emerald-400 transition-colors line-clamp-2">
+                      {guide.title}
+                    </h2>
+                    <p className="text-xs text-slate-400 font-light leading-relaxed line-clamp-3">
+                      {guide.excerpt}
+                    </p>
                   </div>
-                  <h2 className="text-xl font-bold text-white font-display group-hover:text-emerald-400 transition-colors line-clamp-2">
-                    {guide.title}
-                  </h2>
-                  <p className="text-xs text-slate-400 font-light leading-relaxed line-clamp-3">
-                    {guide.excerpt}
-                  </p>
                 </div>
 
                 <div className="p-6 pt-0 flex items-center justify-between text-xs text-slate-500 border-t border-white/5 mt-4">

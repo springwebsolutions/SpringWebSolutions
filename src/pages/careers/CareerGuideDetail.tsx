@@ -5,7 +5,8 @@ import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
 import { CareersSeo } from '@/components/seo/CareersSeo'
-import { BookOpen, ArrowLeft, Calendar, User, Tag } from 'lucide-react'
+import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer'
+import { BookOpen, ArrowLeft, Calendar, User, Tag, ArrowRight, Share2, Sparkles } from 'lucide-react'
 
 export const CareerGuideDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -41,11 +42,16 @@ export const CareerGuideDetail: React.FC = () => {
     )
   }
 
+  const relatedGuides = guides
+    .filter(g => g.id !== guide.id && g.status === 'published')
+    .slice(0, 3)
+
   const articleSchema = guide ? {
     '@context': 'https://schema.org',
     '@type': 'Article',
     'headline': guide.title,
     'description': guide.excerpt || guide.content.substring(0, 160),
+    'image': guide.cover_image ? `https://careers.springwebsolutions.in${guide.cover_image}` : undefined,
     'author': {
       '@type': 'Person',
       'name': guide.author || 'SpringWeb Career Experts'
@@ -79,31 +85,65 @@ export const CareerGuideDetail: React.FC = () => {
             <span>Back to All Guides</span>
           </Link>
 
-          <article className="p-8 sm:p-12 rounded-3xl bg-[#080b14] border border-white/10 space-y-8">
+          <article className="p-8 sm:p-12 rounded-3xl bg-[#080b14] border border-white/10 space-y-8 shadow-2xl">
+            {/* Header info */}
             <div className="space-y-4 border-b border-white/5 pb-8">
-              <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-display">
-                {guide.category}
-              </span>
-              <h1 className="text-3xl sm:text-5xl font-black text-white font-display leading-tight">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-display">
+                  {guide.category}
+                </span>
+                <span className="text-[11px] text-slate-500 font-mono flex items-center gap-1">
+                  <Sparkles size={11} className="text-emerald-400" />
+                  Engineering Blueprint
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-black text-white font-display leading-tight tracking-tight">
                 {guide.title}
               </h1>
 
-              <div className="flex items-center gap-4 text-xs text-slate-400 pt-2">
-                <span className="flex items-center gap-1"><User size={13} /> {guide.author}</span>
-                <span className="flex items-center gap-1"><Calendar size={13} /> {new Date(guide.created_at).toLocaleDateString()}</span>
+              {guide.excerpt && (
+                <p className="text-sm sm:text-base text-slate-300 font-light leading-relaxed">
+                  {guide.excerpt}
+                </p>
+              )}
+
+              <div className="flex items-center gap-4 text-xs text-slate-400 pt-2 border-t border-white/5">
+                <span className="flex items-center gap-1.5 font-medium text-slate-300">
+                  <User size={13} className="text-emerald-400" />
+                  {guide.author}
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-400">
+                  <Calendar size={13} />
+                  {new Date(guide.created_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}
+                </span>
               </div>
             </div>
 
-            <div className="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line font-light">
-              {guide.content}
+            {/* Featured Image */}
+            {guide.cover_image && (
+              <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#04060c] shadow-2xl aspect-[16/9]">
+                <img
+                  src={guide.cover_image}
+                  alt={guide.title}
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
+              </div>
+            )}
+
+            {/* Markdown rendered body with tables, headings, code blocks */}
+            <div className="py-2">
+              <MarkdownRenderer content={guide.content} />
             </div>
 
+            {/* Tags */}
             {guide.tags && guide.tags.length > 0 && (
               <div className="pt-6 border-t border-white/5 flex items-center gap-2 flex-wrap">
                 <Tag size={13} className="text-emerald-400" />
                 {guide.tags.map((tag, i) => (
-                  <span key={i} className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] text-slate-300">
-                    {tag}
+                  <span key={i} className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] text-slate-300 font-mono">
+                    #{tag}
                   </span>
                 ))}
               </div>
@@ -111,6 +151,52 @@ export const CareerGuideDetail: React.FC = () => {
           </article>
 
           <AdBanner zoneId="article_bottom" />
+
+          {/* Related Guides Recommendation Panel */}
+          {relatedGuides.length > 0 && (
+            <div className="space-y-6 pt-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl sm:text-2xl font-bold font-display text-white">
+                  Recommended Educational Guides
+                </h3>
+                <Link to="/career-guides" className="text-xs text-emerald-400 hover:underline flex items-center gap-1 font-semibold">
+                  <span>View All Roadmaps</span>
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedGuides.map((rel) => (
+                  <Link
+                    key={rel.id}
+                    to={`/career-guides/${rel.slug}`}
+                    className="p-5 rounded-2xl bg-[#080b14] border border-white/10 hover:border-emerald-500/40 transition-all flex flex-col justify-between group"
+                  >
+                    <div className="space-y-3">
+                      {rel.cover_image && (
+                        <div className="rounded-xl overflow-hidden aspect-[16/9] border border-white/5 mb-2 bg-[#04060c]">
+                          <img src={rel.cover_image} alt={rel.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        </div>
+                      )}
+                      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider font-display">
+                        {rel.category}
+                      </span>
+                      <h4 className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors line-clamp-2">
+                        {rel.title}
+                      </h4>
+                      <p className="text-xs text-slate-400 line-clamp-2 font-light">
+                        {rel.excerpt}
+                      </p>
+                    </div>
+                    <div className="pt-4 mt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                      <span>{rel.author}</span>
+                      <ArrowRight size={12} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
         </div>
       </main>
