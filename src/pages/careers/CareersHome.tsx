@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CompanyLogo } from '@/components/careers/CompanyLogo'
 import { CareersSeo } from '@/components/seo/CareersSeo'
 import { POPULAR_INDIA_LOCATIONS } from '@/data/indiaLocations'
 import {
@@ -442,13 +443,11 @@ export const CareersHome: React.FC = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center font-bold text-emerald-400 shrink-0">
-                          {job.company_logo ? (
-                            <img src={job.company_logo} alt={job.company_name} className="h-full w-full object-contain" />
-                          ) : (
-                            job.company_name.charAt(0)
-                          )}
-                        </div>
+                        <CompanyLogo
+                          companyName={job.company_name}
+                          logoUrl={job.company_logo}
+                          size="md"
+                        />
                         <div>
                           <div className="text-xs text-slate-400 font-medium">{job.company_name}</div>
                           <h3 className="text-lg font-bold text-white font-display group-hover:text-emerald-400 transition-colors">
