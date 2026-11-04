@@ -209,7 +209,55 @@
     <priority>0.90</priority>
   </url>
 
-  <!-- Verified Active Tech Jobs 2026 -->
+  <!-- Verified Active Tech Jobs 2026 (Internships, Freshers, Mid-Level, Senior & Remote) -->
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-engineer-intern-cisco-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/sde-intern-hackerrank-bengaluru-remote</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/software-engineering-intern-swiggy-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/graduate-software-developer-zoho-chennai-tenkasi</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/graduate-engineer-trainee-hexaware-coimbatore-chennai</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/associate-software-engineer-freshworks-chennai</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/backend-software-engineer-phonepe-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://careers.springwebsolutions.in/jobs/sdet-automation-engineer-cred-bengaluru</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
   <url>
     <loc>https://careers.springwebsolutions.in/jobs/software-engineer-2-atlassian-remote-india</loc>
     <lastmod>2026-11-04</lastmod>

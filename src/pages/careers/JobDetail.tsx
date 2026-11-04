@@ -6,6 +6,7 @@ import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
 import { CareersSeo } from '@/components/seo/CareersSeo'
 import { SocialCardPreview } from '@/components/careers/SocialCardPreview'
+import { CompanyLogo } from '@/components/careers/CompanyLogo'
 import {
   MapPin, Briefcase, Building2, CheckCircle2, Laptop, ArrowLeft,
   Share2, Mail, ExternalLink, Calendar, Award, ShieldCheck, Sparkles,
@@ -179,34 +180,42 @@ export const JobDetail: React.FC = () => {
             <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-display">
-                    {job.company_name}
-                  </span>
-                  <span className="px-2.5 py-1 rounded-full bg-white/5 text-slate-300 text-xs border border-white/10">
-                    {job.job_type}
-                  </span>
-                  {job.is_wfh && (
-                    <span className="px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                      <Laptop size={12} /> Work From Home
+              <div className="flex items-start gap-5">
+                <CompanyLogo
+                  companyName={job.company_name}
+                  logoUrl={job.company_logo}
+                  size="lg"
+                  className="mt-1 shadow-lg"
+                />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider font-display">
+                      {job.company_name}
                     </span>
-                  )}
-                </div>
+                    <span className="px-2.5 py-1 rounded-full bg-white/5 text-slate-300 text-xs border border-white/10">
+                      {job.job_type}
+                    </span>
+                    {job.is_wfh && (
+                      <span className="px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                        <Laptop size={12} /> Work From Home
+                      </span>
+                    )}
+                  </div>
 
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
-                  {job.title}
-                </h1>
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display">
+                    {job.title}
+                  </h1>
 
-                <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
-                  <span className="flex items-center gap-1">
-                    <MapPin size={14} className="text-emerald-400" />
-                    <span>{job.location_city}, {job.location_state}, {job.location_country}</span>
-                  </span>
-                  <span className="font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    💰 {job.salary_range}
-                  </span>
-                  <span>Experience: {job.experience_level}</span>
+                  <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
+                    <span className="flex items-center gap-1">
+                      <MapPin size={14} className="text-emerald-400" />
+                      <span>{job.location_city}, {job.location_state}, {job.location_country}</span>
+                    </span>
+                    <span className="font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      💰 {job.salary_range}
+                    </span>
+                    <span>Experience: {job.experience_level}</span>
+                  </div>
                 </div>
               </div>
 

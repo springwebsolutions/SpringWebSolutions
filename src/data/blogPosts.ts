@@ -757,7 +757,7 @@ Spring Web Solutions provides end-to-end local SEO dominance, technical search a
     seo_title: 'Verified Software Engineering Jobs India & Remote (2026) | SpringWeb',
     seo_description: 'Explore verified active software engineer openings in India and 100% remote. Direct application links for Atlassian, Canonical, GitLab, Automattic, Razorpay, Zoho & Postman.',
     seo_keywords: 'software engineer jobs india 2026, remote developer jobs, atlassian remote india, canonical hiring india, gitlab remote engineering, razorpay sde hiring, zoho careers',
-    featured_image: '/blog-verified-tech-jobs-2026.jpg',
+    featured_image: '/blog-verified-tech-jobs-2026.jpg?v=2026.2',
     published_at: '2026-11-04T12:00:00Z',
     reading_time_minutes: 8,
     is_featured: true,
@@ -800,17 +800,24 @@ Here is your **verified active hiring radar**, complete with direct application 
 
 ---
 
-## 1. Verified Active Software Engineering Vacancies (At-A-Glance)
+## 1. Verified Active Software Engineering Vacancies (From Internships to Senior Staff)
 
-| Company | Open Role | Workplace Model | Verified Compensation Benchmark | Direct ATS Application Link |
-|---|---|---|---|---|
-| **Atlassian** | Software Engineer II (Distributed Cloud) | 100% Remote India (Team Anywhere) | ₹28,00,000 – ₹45,00,000 + RSUs | [Atlassian Careers Portal](https://www.atlassian.com/company/careers/all-jobs) |
-| **Canonical (Ubuntu)** | Software Engineer (Go/Python/Linux) | 100% Remote (Home-Based India) | $55,000 – $95,000 USD (~₹45L–₹78L) | [Canonical Careers Portal](https://canonical.com/careers) |
-| **GitLab** | Backend Engineer (Distributed Systems) | 100% Remote India | $65,000 – $115,000 USD (~₹54L–₹95L) | [GitLab Greenhouse ATS](https://boards.greenhouse.io/gitlab) |
-| **Automattic** | Full-Stack Software Engineer | 100% Remote Worldwide | $70,000 – $120,000 USD (~₹58L–₹99L) | [Automattic Work With Us](https://automattic.com/work-with-us/) |
-| **Razorpay** | SDE II (Golang & Payments Core) | Bengaluru / Flexible Hybrid | ₹24,00,000 – ₹38,00,000 + ESOPs | [Razorpay Greenhouse ATS](https://boards.greenhouse.io/razorpay) |
-| **Postman** | Frontend API Platform Engineer | Bengaluru / Hybrid | ₹22,00,000 – ₹36,00,000 / yr | [Postman Workday Portal](https://postman.wd108.myworkdayjobs.com/careers) |
-| **Zoho Corporation** | Software Developer (Cloud SaaS) | Chennai / Tenkasi / Madurai | ₹8,50,000 – ₹18,00,000 / yr | [Zoho Careers Portal](https://careers.zohocorp.com) |
+| Category | Company | Open Role | Workplace Model | Verified Compensation Benchmark | Direct ATS Application Link |
+|---|---|---|---|---|---|
+| **Internship** | **Cisco Systems** | Software Engineer Intern (Cloud & Networks) | Bengaluru (Hybrid) | ₹50,000 / month Stipend + PPO | [Cisco Careers Portal](https://www.cisco.com/c/en/us/about/careers.html) |
+| **Internship** | **HackerRank** | SDE Intern (Full-Stack & Algorithms) | Bengaluru / Remote | ₹40,000 / month Stipend | [HackerRank Careers](https://www.hackerrank.com/careers/) |
+| **Internship** | **Swiggy** | Software Engineering Intern (Logistics) | Bengaluru (Hybrid) | ₹45,000 / month Stipend | [Swiggy Careers Portal](https://careers.swiggy.com/) |
+| **Fresher / Entry** | **Zoho Corporation** | Graduate Software Developer (Java / C++) | Chennai / Tenkasi | ₹6,50,000 – ₹9,50,000 / yr | [Zoho Careers Portal](https://careers.zohocorp.com) |
+| **Fresher / Entry** | **Hexaware Tech** | Graduate Engineer Trainee (Full-Stack) | Coimbatore / Chennai | ₹4,50,000 – ₹7,00,000 / yr | [Hexaware Careers](https://jobs.hexaware.com/) |
+| **Fresher / Entry** | **Freshworks** | Associate Software Engineer (Early Careers) | Chennai (Hybrid) | ₹7,50,000 – ₹11,00,000 / yr | [Freshworks Careers](https://www.freshworks.com/company/careers/) |
+| **Mid-Level** | **PhonePe** | Backend Engineer (Payments Core) | Bengaluru (Hybrid) | ₹18,00,000 – ₹30,00,000 / yr | [PhonePe Careers](https://www.phonepe.com/careers/) |
+| **Mid-Level** | **CRED** | SDET / QA Automation Engineer | Bengaluru (Hybrid) | ₹18,00,000 – ₹32,00,000 / yr | [CRED Careers](https://cred.club/careers) |
+| **Mid-Level** | **Postman** | Frontend API Platform Engineer | Bengaluru / Hybrid | ₹22,00,000 – ₹36,00,000 / yr | [Postman Workday Portal](https://postman.wd108.myworkdayjobs.com/careers) |
+| **Mid-Level** | **Razorpay** | SDE II (Golang & Payments Core) | Bengaluru / Flexible Hybrid | ₹24,00,000 – ₹38,00,000 + ESOPs | [Razorpay Greenhouse ATS](https://boards.greenhouse.io/razorpay) |
+| **Senior & Remote** | **Atlassian** | Software Engineer II (Distributed Cloud) | 100% Remote India (Team Anywhere) | ₹28,00,000 – ₹45,00,000 + RSUs | [Atlassian Careers Portal](https://www.atlassian.com/company/careers/all-jobs) |
+| **Senior & Remote** | **Canonical (Ubuntu)** | Software Engineer (Go/Python/Linux) | 100% Remote (Home-Based India) | $55,000 – $95,000 USD (~₹45L–₹78L) | [Canonical Careers Portal](https://canonical.com/careers) |
+| **Senior & Remote** | **GitLab** | Backend Engineer (Distributed Systems) | 100% Remote India | $65,000 – $115,000 USD (~₹54L–₹95L) | [GitLab Greenhouse ATS](https://boards.greenhouse.io/gitlab) |
+| **Senior & Remote** | **Automattic** | Full-Stack Software Engineer | 100% Remote Worldwide | $70,000 – $120,000 USD (~₹58L–₹99L) | [Automattic Work With Us](https://automattic.com/work-with-us/) |
 
 ---
 

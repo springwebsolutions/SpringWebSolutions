@@ -293,7 +293,7 @@ export const CareerGuideDetail: React.FC = () => {
               {guide.cover_image && (
                 <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#04060c] shadow-2xl aspect-[16/9]">
                   <img
-                    src={guide.cover_image}
+                    src={`${guide.cover_image}?v=2026.2`}
                     alt={guide.title}
                     className="w-full h-full object-cover"
                     loading="eager"

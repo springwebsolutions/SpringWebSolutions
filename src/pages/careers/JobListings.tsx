@@ -4,6 +4,7 @@ import { useCareersStore } from '@/stores/careersStore'
 import { CareersNavbar } from '@/components/careers/CareersNavbar'
 import { CareersFooter } from '@/components/careers/CareersFooter'
 import { AdBanner } from '@/components/careers/AdBanner'
+import { CompanyLogo } from '@/components/careers/CompanyLogo'
 import { CareersSeo } from '@/components/seo/CareersSeo'
 import {
   Search, MapPin, Briefcase, Filter, Laptop, ArrowRight,
@@ -19,6 +20,7 @@ export const JobListings: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState('all')
   const [selectedCity, setSelectedCity] = useState(searchParams.get('loc') || 'all')
   const [selectedJobType, setSelectedJobType] = useState('all')
+  const [selectedExpLevel, setSelectedExpLevel] = useState('all')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [isWfhOnly, setIsWfhOnly] = useState(searchParams.get('wfh') === 'true')
   const [detectingGps, setDetectingGps] = useState(false)
@@ -73,10 +75,11 @@ export const JobListings: React.FC = () => {
       (selectedCity === 'Udumalpet' && job.location_city === 'Udumalpet')
 
     const matchesJobType = selectedJobType === 'all' || job.job_type === selectedJobType
+    const matchesExp = selectedExpLevel === 'all' || job.experience_level.toLowerCase().includes(selectedExpLevel.toLowerCase())
     const matchesCategory = selectedCategory === 'all' || job.niche_category === selectedCategory
     const matchesWfh = !isWfhOnly || job.is_wfh || job.is_remote
 
-    return matchesKeyword && matchesCountry && matchesCity && matchesJobType && matchesCategory && matchesWfh
+    return matchesKeyword && matchesCountry && matchesCity && matchesJobType && matchesExp && matchesCategory && matchesWfh
   })
 
   const resetFilters = () => {
@@ -84,6 +87,7 @@ export const JobListings: React.FC = () => {
     setSelectedCountry('all')
     setSelectedCity('all')
     setSelectedJobType('all')
+    setSelectedExpLevel('all')
     setSelectedCategory('all')
     setIsWfhOnly(false)
     setSearchParams({})
@@ -227,6 +231,22 @@ export const JobListings: React.FC = () => {
                   </select>
                 </div>
 
+                {/* Experience Level Filter */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Experience Level</label>
+                  <select
+                    value={selectedExpLevel}
+                    onChange={(e) => setSelectedExpLevel(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#080b14] border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+                  >
+                    <option value="all">All Experience Levels</option>
+                    <option value="Intern">Internships &amp; Freshers (0-1 Yrs)</option>
+                    <option value="Entry">Graduate / Early Careers (0-2 Yrs)</option>
+                    <option value="Mid">Mid Level (2-5 Yrs)</option>
+                    <option value="Senior">Senior &amp; Staff (5+ Yrs)</option>
+                  </select>
+                </div>
+
                 {/* Remote / WFH Checkbox */}
                 <div className="pt-2 border-t border-white/5">
                   <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer hover:text-white transition-colors">
@@ -276,13 +296,11 @@ export const JobListings: React.FC = () => {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 p-1.5 flex items-center justify-center font-bold text-emerald-400 shrink-0">
-                            {job.company_logo ? (
-                              <img src={job.company_logo} alt={job.company_name} className="h-full w-full object-contain" />
-                            ) : (
-                              job.company_name.charAt(0)
-                            )}
-                          </div>
+                          <CompanyLogo
+                            companyName={job.company_name}
+                            logoUrl={job.company_logo}
+                            size="md"
+                          />
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <span className="text-xs font-bold text-emerald-400">{job.company_name}</span>

@@ -225,7 +225,7 @@ export const CareerGuideListing: React.FC = () => {
                       {guide.cover_image && (
                         <div className="aspect-[16/9] w-full overflow-hidden bg-[#04060c] border-b border-white/10 relative">
                           <img
-                            src={guide.cover_image}
+                            src={`${guide.cover_image}?v=2026.2`}
                             alt={guide.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="lazy"
