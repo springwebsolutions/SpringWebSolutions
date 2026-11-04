@@ -85,7 +85,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('frontend')) {
       return {
         level: 'Mid to Staff UI Architect',
-        compensation: '₹16L – ₹35L+ / $75k–$130k USD',
+        compensation: '₹16L – ₹35L+ LPA',
         readTime: '~9 min read',
         stack: 'React 19, Next.js 15, Web Vitals, Tailwind v4, Zustand',
         domain: 'Frontend & UI Performance'
@@ -94,7 +94,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('backend')) {
       return {
         level: 'Mid to Staff API Architect',
-        compensation: '₹20L – ₹45L+ / $90k–$160k USD',
+        compensation: '₹20L – ₹45L+ LPA',
         readTime: '~10 min read',
         stack: 'Node.js, Go, PostgreSQL, Redis, Apache Kafka, gRPC',
         domain: 'High-Concurrency Backends'
@@ -103,7 +103,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('cloud-architect')) {
       return {
         level: 'Senior to Enterprise Cloud Architect',
-        compensation: '₹24L – ₹55L+ / $110k–$190k USD',
+        compensation: '₹24L – ₹55L+ LPA',
         readTime: '~9 min read',
         stack: 'AWS, Terraform, Multi-Region VPC, FinOps, Transit Gateway',
         domain: 'Cloud Solutions Architecture'
@@ -112,7 +112,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('data-engineer')) {
       return {
         level: 'Senior to Staff Data Architect',
-        compensation: '₹22L – ₹48L+ / $95k–$165k USD',
+        compensation: '₹22L – ₹48L+ LPA',
         readTime: '~10 min read',
         stack: 'Apache Spark, Snowflake, dbt, Apache Kafka, Parquet',
         domain: 'Data Lakehouse & Streaming'
@@ -121,7 +121,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('machine-learning')) {
       return {
         level: 'Senior to Staff ML Engineer',
-        compensation: '₹24L – ₹50L+ / $105k–$180k USD',
+        compensation: '₹24L – ₹50L+ LPA',
         readTime: '~9 min read',
         stack: 'PyTorch, vLLM, MLOps, Triton, Feast, AWQ/GGUF',
         domain: 'Machine Learning & MLOps'
@@ -130,7 +130,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('cybersecurity')) {
       return {
         level: 'Senior AppSec & Penetration Tester',
-        compensation: '₹20L – ₹45L+ / $95k–$165k USD',
+        compensation: '₹20L – ₹45L+ LPA',
         readTime: '~8 min read',
         stack: 'OWASP Top 10, DevSecOps, STRIDE, Burp Suite, TLS 1.3',
         domain: 'Application Security & PenTesting'
@@ -139,7 +139,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('sdet-qa')) {
       return {
         level: 'Senior SDET & Quality Architect',
-        compensation: '₹16L – ₹35L+ / $75k–$135k USD',
+        compensation: '₹16L – ₹35L+ LPA',
         readTime: '~8 min read',
         stack: 'Playwright, k6 Load Tests, Pact Contract Testing, CI/CD',
         domain: 'Test Automation & Quality SRE'
@@ -148,7 +148,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('mobile')) {
       return {
         level: 'Senior to Staff Mobile Architect',
-        compensation: '₹18L – ₹40L+ / $85k–$150k USD',
+        compensation: '₹18L – ₹40L+ LPA',
         readTime: '~9 min read',
         stack: 'React Native, TurboModules, Swift, Kotlin, SQLite Sync',
         domain: 'Mobile Application Engineering'
@@ -157,7 +157,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('devops')) {
       return {
         level: 'Mid to Principal SRE',
-        compensation: '₹22L – ₹50L+ / $70k–$130k USD',
+        compensation: '₹22L – ₹50L+ LPA',
         readTime: '~9 min read',
         stack: 'Docker, K8s, Terraform, ArgoCD, Prometheus',
         domain: 'Infrastructure & Cloud'
@@ -166,7 +166,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('system-design')) {
       return {
         level: 'Senior to Staff Architect',
-        compensation: '₹28L – ₹65L+ / $90k–$180k USD',
+        compensation: '₹28L – ₹65L+ LPA',
         readTime: '~11 min read',
         stack: 'Redis, Kafka, PostgreSQL, CDN, Consistent Hashing',
         domain: 'High-Concurrency Backends'
@@ -175,7 +175,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('remote')) {
       return {
         level: 'Mid to Lead Independent Contractor',
-        compensation: '$4,000 – $14,000 / month USD',
+        compensation: '₹35L – ₹1.2 Cr+ LPA',
         readTime: '~8 min read',
         stack: 'Wise FIRC, Sec 44ADA, Async RFCs, Loom, US Tax W-8BEN',
         domain: 'Global Remote Contracts'
@@ -184,7 +184,7 @@ export const CareerGuideDetail: React.FC = () => {
     if (guideSlug.includes('ai-engineering')) {
       return {
         level: 'Full-Stack to Applied AI Engineer',
-        compensation: '₹20L – ₹48L+ / $65k–$140k USD',
+        compensation: '₹20L – ₹48L+ LPA',
         readTime: '~8 min read',
         stack: 'pgvector, OpenAI API, LangGraph, Python, TypeScript',
         domain: 'Applied GenAI & RAG'
@@ -192,7 +192,7 @@ export const CareerGuideDetail: React.FC = () => {
     }
     return {
       level: 'Junior to Senior Full-Stack Engineer',
-      compensation: '₹14L – ₹35L+ / $45k–$95k USD',
+      compensation: '₹14L – ₹35L+ LPA',
       readTime: '~10 min read',
       stack: 'React, Next.js, Node.js, PostgreSQL, Tailwind, TypeScript',
       domain: 'Production Web Systems'

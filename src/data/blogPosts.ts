@@ -774,7 +774,7 @@ Spring Web Solutions provides end-to-end local SEO dominance, technical search a
     faqs: [
       {
         question: 'Which top tech companies are actively hiring 100% remote software engineers in India?',
-        answer: 'Global distributed pioneers like Canonical (creators of Ubuntu), GitLab, Automattic (WordPress.com/WooCommerce), and Atlassian (Team Anywhere) actively hire software engineers across India on full-time home-based remote contracts with compensation ranging from ₹28L to $120,000 USD per year.'
+        answer: 'Global distributed pioneers like Canonical (creators of Ubuntu), GitLab, Automattic (WordPress.com/WooCommerce), and Atlassian (Team Anywhere) actively hire software engineers across India on full-time home-based remote contracts with compensation ranging from ₹28L to ₹99L LPA.'
       },
       {
         question: 'What technical skills are in highest demand for software developers in 2026?',
@@ -822,9 +822,9 @@ Here is your **verified active hiring radar**, complete with direct application 
 | **Mid-Level** | **Postman** | Frontend API Platform Engineer | Bengaluru / Hybrid | ₹22,00,000 – ₹36,00,000 / yr | [Postman Workday Portal](https://postman.wd108.myworkdayjobs.com/careers) |
 | **Mid-Level** | **Razorpay** | SDE II (Golang & Payments Core) | Bengaluru / Flexible Hybrid | ₹24,00,000 – ₹38,00,000 + ESOPs | [Razorpay Greenhouse ATS](https://boards.greenhouse.io/razorpay) |
 | **Senior & Remote** | **Atlassian** | Software Engineer II (Distributed Cloud) | 100% Remote India (Team Anywhere) | ₹28,00,000 – ₹45,00,000 + RSUs | [Atlassian Careers Portal](https://www.atlassian.com/company/careers/all-jobs) |
-| **Senior & Remote** | **Canonical (Ubuntu)** | Software Engineer (Go/Python/Linux) | 100% Remote (Home-Based India) | $55,000 – $95,000 USD (~₹45L–₹78L) | [Canonical Careers Portal](https://canonical.com/careers) |
-| **Senior & Remote** | **GitLab** | Backend Engineer (Distributed Systems) | 100% Remote India | $65,000 – $115,000 USD (~₹54L–₹95L) | [GitLab Greenhouse ATS](https://boards.greenhouse.io/gitlab) |
-| **Senior & Remote** | **Automattic** | Full-Stack Software Engineer | 100% Remote Worldwide | $70,000 – $120,000 USD (~₹58L–₹99L) | [Automattic Work With Us](https://automattic.com/work-with-us/) |
+| **Senior & Remote** | **Canonical (Ubuntu)** | Software Engineer (Go/Python/Linux) | 100% Remote (Home-Based India) | ₹45,00,000 – ₹78,00,000 / yr (₹45L–₹78L) | [Canonical Careers Portal](https://canonical.com/careers) |
+| **Senior & Remote** | **GitLab** | Backend Engineer (Distributed Systems) | 100% Remote India | ₹54,00,000 – ₹95,00,000 / yr (₹54L–₹95L) | [GitLab Greenhouse ATS](https://boards.greenhouse.io/gitlab) |
+| **Senior & Remote** | **Automattic** | Full-Stack Software Engineer | 100% Remote Worldwide | ₹58,00,000 – ₹99,00,000 / yr (₹58L–₹99L) | [Automattic Work With Us](https://automattic.com/work-with-us/) |
 
 ---
 

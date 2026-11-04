@@ -378,7 +378,7 @@ const SEED_JOBS: JobPosting[] = [
     is_wfh: true,
     job_type: 'Full-Time',
     experience_level: 'Mid Level',
-    salary_range: '$55,000 - $95,000 / year USD (~₹45L - ₹78L LPA)',
+    salary_range: '₹45,00,000 - ₹78,00,000 / year (₹45L - ₹78L LPA)',
     niche_category: 'Cloud & Infrastructure',
     description: 'Canonical is the company behind Ubuntu Linux. We evaluate candidates through rigorous written aptitude and coding tests rather than traditional degrees or resume pedigrees. Career switchers with strong Linux and open-source contributions are strongly encouraged to apply.',
     requirements: [
@@ -410,7 +410,7 @@ const SEED_JOBS: JobPosting[] = [
     is_wfh: true,
     job_type: 'Full-Time',
     experience_level: 'Senior Level',
-    salary_range: '$70,000 - $120,000 / year USD (~₹58L - ₹99L LPA)',
+    salary_range: '₹58,00,000 - ₹99,00,000 / year (₹58L - ₹99L LPA)',
     niche_category: 'Software Engineering',
     description: 'Automattic powers WordPress.com, WooCommerce, and Tumblr. We do not do traditional whiteboard interviews: candidates build a real paid trial project. Career gaps, self-taught engineers, and career switchers are evaluated purely on the code delivered.',
     requirements: [
@@ -442,7 +442,7 @@ const SEED_JOBS: JobPosting[] = [
     is_wfh: true,
     job_type: 'Full-Time',
     experience_level: 'Mid Level',
-    salary_range: '$65,000 - $115,000 / year USD (~₹54L - ₹95L LPA)',
+    salary_range: '₹54,00,000 - ₹95,00,000 / year (₹54L - ₹95L LPA)',
     niche_category: 'Software Engineering',
     description: 'GitLab is the world largest all-remote company. We evaluate candidates through async technical discussions, public code merges, and system design RFCs. Career switchers and engineers returning after a gap with strong demonstrable code are welcome.',
     requirements: [
@@ -928,7 +928,7 @@ const SEED_ADS: AdConfig[] = [
 
 export const useCareersStore = create<CareersState>((set, get) => ({
   jobs: (() => {
-    const local = localStorage.getItem('springweb_jobs_cache_v2026')
+    const local = localStorage.getItem('springweb_jobs_cache_v2026_inr_inr')
     return local ? JSON.parse(local) : SEED_JOBS
   })(),
   guides: (() => {
@@ -944,7 +944,7 @@ export const useCareersStore = create<CareersState>((set, get) => ({
   fetchJobs: async () => {
     if (!isSupabaseConfigured) {
       set({ jobs: SEED_JOBS })
-      localStorage.setItem('springweb_jobs_cache_v2026', JSON.stringify(SEED_JOBS))
+      localStorage.setItem('springweb_jobs_cache_v2026_inr', JSON.stringify(SEED_JOBS))
       return
     }
     try {
@@ -959,15 +959,15 @@ export const useCareersStore = create<CareersState>((set, get) => ({
         const seedSlugs = new Set(SEED_JOBS.map(j => j.slug))
         const combined = [...SEED_JOBS, ...data.filter((d: any) => !seedSlugs.has(d.slug))]
         set({ jobs: combined })
-        localStorage.setItem('springweb_jobs_cache_v2026', JSON.stringify(combined))
+        localStorage.setItem('springweb_jobs_cache_v2026_inr', JSON.stringify(combined))
       } else {
         set({ jobs: SEED_JOBS })
-        localStorage.setItem('springweb_jobs_cache_v2026', JSON.stringify(SEED_JOBS))
+        localStorage.setItem('springweb_jobs_cache_v2026_inr', JSON.stringify(SEED_JOBS))
       }
     } catch (e) {
       console.warn('Jobs fetch fallback to seed:', e)
       set({ jobs: SEED_JOBS })
-      localStorage.setItem('springweb_jobs_cache_v2026', JSON.stringify(SEED_JOBS))
+      localStorage.setItem('springweb_jobs_cache_v2026_inr', JSON.stringify(SEED_JOBS))
     } finally {
       set({ loading: false })
     }
