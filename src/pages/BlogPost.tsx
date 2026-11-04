@@ -572,142 +572,224 @@ const generateJsonLd = (post: PostDetail) => {
 
       <Navbar />
 
-      <main className="flex-grow py-12">
-        <article className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8">
+      <main className="flex-grow py-8 sm:py-12">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 space-y-8">
           
-          {/* Breadcrumbs / Back button */}
-          <Link to="/blog" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
-            <ArrowLeft size={13} />
-            <span>Back to digital growth hub</span>
-          </Link>
+          {/* Top Breadcrumb and Status */}
+          <div className="flex items-center justify-between gap-4 flex-wrap pb-2 border-b border-white/5 dark:border-white/5 light:border-slate-200">
+            <Link to="/blog" className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors light:text-slate-500 light:hover:text-slate-800">
+              <ArrowLeft size={13} />
+              <span>Back to Digital Growth Hub</span>
+            </Link>
 
-          {/* Categories tag */}
-          <div className="flex flex-wrap gap-2">
-            {post.categories.map(cat => (
-              <span key={cat.id} className="px-2.5 py-1 rounded bg-brand-emerald/10 text-brand-emerald text-xs font-semibold uppercase tracking-wider">
-                {cat.name}
-              </span>
-            ))}
-          </div>
-
-          {/* Title Header */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight light:text-slate-900">
-            {post.title}
-          </h1>
-
-          {/* Post Metadata row */}
-          <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400 border-y border-white/5 py-4 dark:border-white/5 light:border-slate-200">
-            <span className="flex items-center gap-1.5">
-              <User size={14} className="text-brand-emerald" />
-              <span>By {post.profiles?.full_name || 'Spring Web Engineering Team'}</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Calendar size={14} className="text-brand-emerald" />
-              <span>{new Date(post.published_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Clock size={14} className="text-brand-emerald" />
-              <span>{post.reading_time_minutes} min read</span>
+            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              Spring Web Engineering Editorial
             </span>
           </div>
 
-          {/* Cross-linking Region Switcher Callout for Dedicated SEO Posts */}
-          {isOfferPost && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl dark:bg-white/5 light:bg-slate-100 border dark:border-white/10 light:border-slate-200">
-              <div className="space-y-0.5 text-center sm:text-left">
-                <div className="text-xs font-bold dark:text-white light:text-slate-900 flex items-center justify-center sm:justify-start gap-1.5">
-                  <span>Regional Package Options</span>
-                </div>
-                <div className="text-[11px] dark:text-slate-400 light:text-slate-600">
-                  {isIndiaOffer 
-                    ? 'Currently viewing Indian Rupee (₹15,000) offer for Udumalpet, Tamil Nadu & India.' 
-                    : 'Currently viewing Global International ($249 USD) package for worldwide businesses.'
-                  }
-                </div>
+          {/* ── 12-Column Expansive Editorial Layout (No Dead Side Space) ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* ── Main Article Column (8 Cols) ── */}
+            <article className="lg:col-span-8 p-6 sm:p-10 rounded-3xl bg-[#080b14] border border-white/10 space-y-8 shadow-2xl light:bg-white light:border-slate-200">
+              
+              {/* Categories tag */}
+              <div className="flex flex-wrap gap-2">
+                {post.categories.map(cat => (
+                  <span key={cat.id} className="px-2.5 py-1 rounded-full bg-brand-emerald/10 text-brand-emerald text-xs font-semibold uppercase tracking-wider">
+                    {cat.name}
+                  </span>
+                ))}
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                {isIndiaOffer ? (
-                  <Link
-                    to="/blog/limited-time-business-website-offer-global"
-                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 hover:border-emerald-500"
-                  >
-                    <span>View Global $249 Offer &rarr;</span>
-                  </Link>
-                ) : (
-                  <Link
-                    to="/blog/limited-time-business-website-offer-india"
-                    className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 hover:border-emerald-500"
-                  >
-                    <span>View India ₹15,000 Offer &rarr;</span>
-                  </Link>
-                )}
+
+              {/* Title Header */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight light:text-slate-900">
+                {post.title}
+              </h1>
+
+              {/* Post Metadata row */}
+              <div className="flex flex-wrap items-center gap-6 text-xs text-slate-400 border-y border-white/5 py-4 dark:border-white/5 light:border-slate-200">
+                <span className="flex items-center gap-1.5">
+                  <User size={14} className="text-brand-emerald" />
+                  <span>By {post.profiles?.full_name || 'Spring Web Engineering Team'}</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar size={14} className="text-brand-emerald" />
+                  <span>{new Date(post.published_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock size={14} className="text-brand-emerald" />
+                  <span>{post.reading_time_minutes} min read</span>
+                </span>
               </div>
-            </div>
-          )}
 
-          {/* Featured Image / Offer Banner */}
-          {post.featured_image && (
-            <div className="rounded-3xl overflow-hidden dark:bg-white/2 light:bg-white border dark:border-white/10 light:border-slate-200 shadow-2xl">
-              <img
-                src={post.featured_image}
-                alt={post.title}
-                className="w-full h-auto object-contain max-h-[850px] mx-auto"
-              />
-            </div>
-          )}
-
-          {/* Direct WhatsApp Offer Claim Callout */}
-          {isOfferPost && (
-            <div className="p-6 rounded-3xl dark:bg-gradient-to-r dark:from-emerald-500/15 dark:via-[#0c1626] dark:to-[#070a13] light:bg-emerald-50 border-2 border-emerald-500 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-              <div className="space-y-1">
-                <div className="text-xs font-extrabold uppercase tracking-widest text-emerald-500 dark:text-emerald-400 flex items-center gap-1.5 justify-center sm:justify-start">
-                  <span>First 15 Customers Only &bull; Exclusive Launch Rate</span>
+              {/* Cross-linking Region Switcher Callout for Dedicated SEO Posts */}
+              {isOfferPost && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl dark:bg-white/5 light:bg-slate-100 border dark:border-white/10 light:border-slate-200">
+                  <div className="space-y-0.5 text-center sm:text-left">
+                    <div className="text-xs font-bold dark:text-white light:text-slate-900 flex items-center justify-center sm:justify-start gap-1.5">
+                      <span>Regional Package Options</span>
+                    </div>
+                    <div className="text-[11px] dark:text-slate-400 light:text-slate-600">
+                      {isIndiaOffer 
+                        ? 'Currently viewing Indian Rupee (₹15,000) offer for Udumalpet, Tamil Nadu & India.' 
+                        : 'Currently viewing Global International ($249 USD) package for worldwide businesses.'
+                      }
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {isIndiaOffer ? (
+                      <Link
+                        to="/blog/limited-time-business-website-offer-global"
+                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 hover:border-emerald-500"
+                      >
+                        <span>View Global $249 Offer &rarr;</span>
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/blog/limited-time-business-website-offer-india"
+                        className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border dark:bg-white/5 dark:text-slate-300 dark:border-white/10 dark:hover:bg-white/10 light:bg-white light:border-slate-300 light:text-slate-700 hover:border-emerald-500"
+                      >
+                        <span>View India ₹15,000 Offer &rarr;</span>
+                      </Link>
+                    )}
+                  </div>
                 </div>
-                <h3 className="text-xl font-extrabold dark:text-white light:text-slate-900">
-                  {isIndiaOffer ? 'Lock In Your Website for Just ₹15,000 !' : 'Lock In Your Website for Just $249 !'}
+              )}
+
+              {/* Featured Image / Offer Banner */}
+              {post.featured_image && (
+                <div className="rounded-2xl overflow-hidden dark:bg-[#04060c] light:bg-white border dark:border-white/10 light:border-slate-200 shadow-2xl aspect-[16/9]">
+                  <img
+                    src={post.featured_image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Direct WhatsApp Offer Claim Callout */}
+              {isOfferPost && (
+                <div className="p-6 rounded-3xl dark:bg-gradient-to-r dark:from-emerald-500/15 dark:via-[#0c1626] dark:to-[#070a13] light:bg-emerald-50 border-2 border-emerald-500 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+                  <div className="space-y-1">
+                    <div className="text-xs font-extrabold uppercase tracking-widest text-emerald-500 dark:text-emerald-400 flex items-center gap-1.5 justify-center sm:justify-start">
+                      <span>First 15 Customers Only &bull; Exclusive Launch Rate</span>
+                    </div>
+                    <h3 className="text-xl font-extrabold dark:text-white light:text-slate-900">
+                      {isIndiaOffer ? 'Lock In Your Website for Just ₹15,000 !' : 'Lock In Your Website for Just $249 !'}
+                    </h3>
+                    <p className="text-xs dark:text-slate-400 light:text-slate-600 max-w-xl">
+                      Flat one-time payment. Includes 100% source code & database ownership, guaranteed &lt; 1.0s load speed, technical SEO, and direct senior engineer support.
+                    </p>
+                  </div>
+                  <a
+                    href={isIndiaOffer
+                      ? 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20Limited%20Time%20Business%20Website%20Offer!'
+                      : 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20$249%20Global%20Business%20Website%20Offer!'
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary text-xs font-bold py-3.5 px-6 shrink-0 flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+                  >
+                    <MessageSquare size={16} />
+                    <span>{isIndiaOffer ? 'Message on WhatsApp (₹15,000 Offer)' : 'Message on WhatsApp ($249 Offer)'}</span>
+                  </a>
+                </div>
+              )}
+
+              {/* Main article content parsed via custom parser */}
+              <div className="py-4">
+                <MarkdownRenderer content={post.content} />
+              </div>
+
+              {/* Social share widget drawer */}
+              <div className="border-t border-white/5 pt-8 light:border-slate-200 space-y-4">
+                <h3 className="font-display font-semibold text-sm text-slate-300 light:text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <Share2 size={15} />
+                  <span>Share Article</span>
                 </h3>
-                <p className="text-xs dark:text-slate-400 light:text-slate-600 max-w-xl">
-                  Flat one-time payment. Includes 100% source code & database ownership, guaranteed &lt; 1.0s load speed, technical SEO, and direct senior engineer support.
-                </p>
+                <div className="flex space-x-2">
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${shareTitle}%20${shareUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all text-slate-300 light:bg-slate-100 light:border-slate-200 light:text-slate-600 flex items-center justify-center gap-2 text-xs font-medium"
+                    title="Share on WhatsApp"
+                  >
+                    <MessageSquare size={16} />
+                    <span>Share via WhatsApp</span>
+                  </a>
+                </div>
               </div>
-              <a
-                href={isIndiaOffer
-                  ? 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20%E2%82%B915,000%20Limited%20Time%20Business%20Website%20Offer!'
-                  : 'https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20want%20to%20claim%20the%20$249%20Global%20Business%20Website%20Offer!'
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary text-xs font-bold py-3.5 px-6 shrink-0 flex items-center gap-2 shadow-lg shadow-emerald-500/20"
-              >
-                <MessageSquare size={16} />
-                <span>{isIndiaOffer ? 'Message on WhatsApp (₹15,000 Offer)' : 'Message on WhatsApp ($249 Offer)'}</span>
-              </a>
-            </div>
-          )}
+            </article>
 
-          {/* Main article content parsed via custom parser */}
-          <div className="py-4">
-            <MarkdownRenderer content={post.content} />
-          </div>
+            {/* ── Sticky Right Sidebar (4 Cols) ── */}
+            <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+              
+              {/* Card 1: Promotional Launch Offer Box */}
+              <div className="p-6 rounded-3xl bg-gradient-to-b from-[#0a1222] to-[#080b14] border border-emerald-500/30 shadow-xl space-y-4 light:bg-emerald-50 light:border-emerald-200">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3 light:border-emerald-200">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1.5 light:text-emerald-700">
+                    <span>⚡ Launch Spotlight</span>
+                  </span>
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded light:bg-emerald-100 light:text-emerald-800">
+                    100% Code Ownership
+                  </span>
+                </div>
 
-          {/* Social share widget drawer */}
-          <div className="border-t border-white/5 pt-8 light:border-slate-200 space-y-4">
-            <h3 className="font-display font-semibold text-sm text-slate-300 light:text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Share2 size={15} />
-              <span>Share Article</span>
-            </h3>
-            <div className="flex space-x-2">
-              <a
-                href={`https://api.whatsapp.com/send?text=${shareTitle}%20${shareUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2.5 rounded-lg bg-white/5 border border-white/10 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all text-slate-300 light:bg-slate-100 light:border-slate-200 light:text-slate-600 flex items-center justify-center gap-2 text-xs font-medium"
-                title="Share on WhatsApp"
-              >
-                <MessageSquare size={16} />
-                <span>Share via WhatsApp</span>
-              </a>
-            </div>
+                <div className="space-y-2">
+                  <h4 className="text-base font-bold text-white light:text-slate-900">
+                    High-Performance Business Website
+                  </h4>
+                  <p className="text-xs text-slate-400 font-light leading-relaxed light:text-slate-600">
+                    No monthly SaaS rent. Sub-second load speed, modern React architecture, and direct senior engineer support from Udumalpet.
+                  </p>
+                </div>
+
+                <div className="py-2 flex items-baseline gap-2">
+                  <span className="text-2xl font-black text-emerald-400 light:text-emerald-600 font-display">
+                    {isIndiaOffer ? '₹15,000' : '$249 USD'}
+                  </span>
+                  <span className="text-xs text-slate-500 line-through">₹35,000</span>
+                  <span className="text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded font-mono">
+                    Limited 15 Slots
+                  </span>
+                </div>
+
+                <a
+                  href="https://wa.me/918012622119?text=Hi%20SpringWeb,%20I%20am%20reading%20your%20editorial%20article%20and%20want%20to%20discuss%20a%20high-performance%20website%20for%20my%20business."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 cursor-pointer"
+                >
+                  <MessageSquare size={14} />
+                  <span>Claim Launch Offer on WhatsApp</span>
+                </a>
+              </div>
+
+              {/* Card 2: Quick Consultation */}
+              <div className="p-6 rounded-3xl bg-[#080b14] border border-white/10 shadow-xl space-y-4 light:bg-white light:border-slate-200">
+                <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-bold light:text-slate-500">
+                  Direct Engineering Support
+                </div>
+                <h4 className="text-sm font-bold text-white light:text-slate-900">
+                  Have a Question About Custom Architecture?
+                </h4>
+                <p className="text-xs text-slate-400 font-light leading-relaxed light:text-slate-600">
+                  Speak directly with software engineers in Udumalpet, Tamil Nadu. We answer queries regarding ERP architecture, trading bots, and website migrations.
+                </p>
+                <div className="pt-1">
+                  <Link
+                    to="/contact"
+                    className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all light:bg-slate-100 light:text-slate-900 light:border-slate-300 light:hover:bg-slate-200"
+                  >
+                    <span>Request Free Project Scoping</span>
+                    <ArrowLeft className="rotate-180" size={13} />
+                  </Link>
+                </div>
+              </div>
+
+            </aside>
           </div>
 
           {/* Related Articles block */}
@@ -742,7 +824,7 @@ const generateJsonLd = (post: PostDetail) => {
             </div>
           )}
 
-        </article>
+        </div>
       </main>
 
       <Footer />

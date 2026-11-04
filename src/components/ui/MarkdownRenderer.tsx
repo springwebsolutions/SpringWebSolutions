@@ -97,8 +97,23 @@ type BlockType =
   | { type: 'ol'; items: string[] }
   | { type: 'paragraph'; text: string }
 
+function normalizeMarkdown(raw: string): string {
+  if (!raw) return ''
+  // 1. Unescape literal \n if double-escaped in JSON/database
+  let text = raw.replace(/\r\n/g, '\n').replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n')
+
+  // 2. Fix collapsed table rows where rows are concatenated with `| |` or `||` on a single line
+  // Example: "| H1 | H2 | |---|---| | R1 | R2 |" -> split into newlines
+  text = text.replace(/\|\s*\|\s*(?=[-|:])/g, '|\n|')
+  text = text.replace(/\|\s*\|\s*(?=\S)/g, '|\n|')
+  text = text.replace(/\|\|(?=\S)/g, '|\n|')
+
+  return text
+}
+
 function parseMarkdownBlocks(markdown: string): BlockType[] {
-  const lines = markdown.replace(/\r\n/g, '\n').split('\n')
+  const normalized = normalizeMarkdown(markdown)
+  const lines = normalized.split('\n')
   const blocks: BlockType[] = []
   let i = 0
 

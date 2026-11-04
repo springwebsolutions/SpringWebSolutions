@@ -452,3 +452,4 @@ export const SeniorArchitectScenarioQuiz: React.FC<QuizProps> = ({ guideSlug }) 
     </div>
   )
 }
+
