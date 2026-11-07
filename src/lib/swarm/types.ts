@@ -14,7 +14,7 @@ export interface SwarmAdminConfig {
 
 export const DEFAULT_SWARM_CONFIG: SwarmAdminConfig = {
   is_enabled: true,
-  trigger_frequency: 'first_visit_session',
+  trigger_frequency: 'every_visit',
   sound_enabled: true,
   default_speed: '2x',
   show_floating_badge: false,

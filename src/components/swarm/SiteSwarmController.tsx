@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
 import { SwarmStudioCanvas, type RealDomTargets } from './SwarmStudioCanvas'
 import type { SwarmAdminConfig } from '@/lib/swarm/types'
 import { DEFAULT_SWARM_CONFIG } from '@/lib/swarm/types'
 
 export const SiteSwarmController: React.FC = () => {
+  const location = useLocation()
   const { siteConfig } = usePageBuilderStore()
 
   // Read admin config with local cache fallback for instant reactivity
@@ -22,49 +24,62 @@ export const SiteSwarmController: React.FC = () => {
   const [isActive, setIsActive] = useState<boolean>(false)
   const targetsRef = useRef<RealDomTargets | null>(null)
   const originalStylesRef = useRef<Map<HTMLElement, { opacity: string; transform: string; transition: string }>>(new Map())
-  const hasTriggeredRef = useRef<boolean>(false)
+  const hasActivatedRouteRef = useRef<string | null>(null)
 
-  // Restore real DOM elements
+  // Restore real DOM elements to full visibility and native interactivity
   const restoreDom = useCallback(() => {
     originalStylesRef.current.forEach((st, el) => {
       el.style.opacity = st.opacity
       el.style.transform = st.transform
       el.style.transition = st.transition
     })
+    originalStylesRef.current.clear()
   }, [])
 
-  // Complete and dismiss animation
+  // Complete and dismiss animation cleanly
   const dismissAnimation = useCallback(() => {
     restoreDom()
     setIsActive(false)
     try {
-      sessionStorage.setItem('sw_swarm_rebuilt', '1')
+      if (swarmConfig.trigger_frequency === 'first_visit_session') {
+        sessionStorage.setItem('sw_swarm_rebuilt', '1')
+      }
     } catch (e) {}
-  }, [restoreDom])
+  }, [restoreDom, swarmConfig.trigger_frequency])
 
-  // Auto-trigger on visitor landing
+  // Route-aware and DOM-ready autonomous trigger
   useEffect(() => {
-    if (!swarmConfig.is_enabled || hasTriggeredRef.current) return
-    hasTriggeredRef.current = true
+    // Only run on public homepage/landing
+    const isPublicPage = location.pathname === '/' || location.pathname === ''
+    if (!isPublicPage) return
 
+    if (!swarmConfig.is_enabled) return
+    if (hasActivatedRouteRef.current === location.key) return
+
+    // Check crawlers and reduced motion
     if (typeof window === 'undefined' || typeof document === 'undefined') return
     const isBot = /bot|googlebot|crawler|spider|robot|crawling|lighthouse/i.test(navigator.userAgent)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (isBot || prefersReducedMotion) return
 
+    // Trigger frequency governance
     if (swarmConfig.trigger_frequency === 'manual_only') return
 
     if (swarmConfig.trigger_frequency === 'first_visit_session') {
       try {
         const alreadySeen = sessionStorage.getItem('sw_swarm_rebuilt')
-        if (alreadySeen) return
+        if (alreadySeen === '1') return
       } catch (e) {}
     }
 
-    // Wait for real page content to mount
-    let attempts = 0
-    const checkDomReady = () => {
-      attempts++
+    let observer: MutationObserver | null = null
+    let pollInterval: any = null
+    let timeoutTimer: any = null
+    let isCancelled = false
+
+    const tryActivate = () => {
+      if (isCancelled || isActive || hasActivatedRouteRef.current === location.key) return
+
       const header = (document.querySelector('nav') || document.querySelector('header')) as HTMLElement | null
       const badge = document.querySelector('.hero-badge-enter') as HTMLElement | null
       const h1 = (document.querySelector('.hero-h1-enter') || document.querySelector('h1')) as HTMLElement | null
@@ -75,7 +90,14 @@ export const SiteSwarmController: React.FC = () => {
       const cards = Array.from(document.querySelectorAll<HTMLElement>('.hero-terminal-box .grid > div'))
       const services = (document.querySelector('#services') || document.querySelector('section#services')) as HTMLElement | null
 
-      if (h1 && terminal) {
+      // Ready when primary headline and header/terminal exist
+      if (h1 && (header || terminal)) {
+        if (observer) observer.disconnect()
+        if (pollInterval) clearInterval(pollInterval)
+        if (timeoutTimer) clearTimeout(timeoutTimer)
+
+        hasActivatedRouteRef.current = location.key
+
         const targets: RealDomTargets = {
           header,
           badge,
@@ -88,7 +110,7 @@ export const SiteSwarmController: React.FC = () => {
           services,
         }
 
-        // Cache original styles & apply initial zero-opacity
+        // Cache original styles & apply zero-opacity mask in-place
         const elsToMask: Array<HTMLElement | null> = [
           header, badge, h1, sub, p, cta, terminal, ...cards, services
         ]
@@ -108,14 +130,32 @@ export const SiteSwarmController: React.FC = () => {
 
         targetsRef.current = targets
         setIsActive(true)
-      } else if (attempts < 20) {
-        setTimeout(checkDomReady, 100)
       }
     }
 
-    const timer = setTimeout(checkDomReady, 150)
-    return () => clearTimeout(timer)
-  }, [swarmConfig])
+    // Check immediately
+    tryActivate()
+
+    // MutationObserver to catch dynamic hydration immediately as elements appear
+    observer = new MutationObserver(() => {
+      tryActivate()
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
+
+    // Polling fallback (every 60ms for up to 8s)
+    pollInterval = setInterval(tryActivate, 60)
+    timeoutTimer = setTimeout(() => {
+      if (observer) observer.disconnect()
+      if (pollInterval) clearInterval(pollInterval)
+    }, 8000)
+
+    return () => {
+      isCancelled = true
+      if (observer) observer.disconnect()
+      if (pollInterval) clearInterval(pollInterval)
+      if (timeoutTimer) clearTimeout(timeoutTimer)
+    }
+  }, [location.pathname, location.key, swarmConfig.is_enabled, swarmConfig.trigger_frequency, isActive])
 
   if (!swarmConfig.is_enabled || !isActive || !targetsRef.current) {
     return null
@@ -124,8 +164,8 @@ export const SiteSwarmController: React.FC = () => {
   return (
     <SwarmStudioCanvas
       targets={targetsRef.current}
-      speed={swarmConfig.default_speed || '2x'}
-      soundEnabled={swarmConfig.sound_enabled ?? true}
+      speed={swarmConfig.default_speed}
+      soundEnabled={swarmConfig.sound_enabled}
       onComplete={dismissAnimation}
       onDismiss={dismissAnimation}
     />

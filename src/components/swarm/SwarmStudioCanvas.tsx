@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react'
 import type { SpringCursorState, AgentPersonaId, LaserGuide, DistanceRuler, StudioBox, GhostCard } from '@/lib/swarm/types'
 import { AGENT_PERSONAS } from '@/lib/swarm/types'
@@ -74,8 +75,19 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
         onDismiss()
       }
     }
+    const handlePointerDismiss = () => {
+      onDismiss()
+    }
+
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener('click', handlePointerDismiss, { capture: true })
+    window.addEventListener('touchend', handlePointerDismiss, { capture: true })
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('click', handlePointerDismiss, { capture: true })
+      window.removeEventListener('touchend', handlePointerDismiss, { capture: true })
+    }
   }, [onDismiss])
 
   // Lock body scroll during animation to prevent drift
