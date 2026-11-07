@@ -34,6 +34,7 @@ const CareerGuideDetail = lazy(() => import('@/pages/careers/CareerGuideDetail')
 const JobAlertSubscribe = lazy(() => import('@/pages/careers/JobAlertSubscribe').then(m => ({ default: m.JobAlertSubscribe })))
 
 import WhatsAppWidget from '@/components/ui/WhatsAppWidget'
+const SwarmFloatingTrigger = lazy(() => import('@/components/swarm/SwarmFloatingTrigger').then(m => ({ default: m.SwarmFloatingTrigger })))
 
 // SpringWeb Operations Suite Admin Views (Lazy Loaded for Bundle Optimization)
 import { AdminLayout } from '@/components/layout/AdminLayout'
@@ -292,6 +293,9 @@ function App() {
         </Routes>
       </Suspense>
       <WhatsAppWidget />
+      <Suspense fallback={null}>
+        <SwarmFloatingTrigger />
+      </Suspense>
     </Router>
   )
 }

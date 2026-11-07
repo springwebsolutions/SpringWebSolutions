@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { DEFAULT_SWARM_CONFIG, type SwarmAdminConfig } from '@/lib/swarm/types'
 
 export interface PageData {
   id: string
@@ -491,7 +492,8 @@ const DEFAULT_SITE_CONFIG = {
   address: "Udumalpet, Tamil Nadu",
   social_links: {
     github: "https://github.com/springwebsolutions"
-  }
+  },
+  swarm_config: DEFAULT_SWARM_CONFIG
 }
 
 export const getSharedSectionStates = (): Record<string, boolean> => {

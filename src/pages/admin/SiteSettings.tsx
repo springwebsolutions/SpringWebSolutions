@@ -6,8 +6,10 @@ import { Link } from 'react-router-dom'
 import { 
   Settings, Save, Download, ShieldCheck, Mail, Send,
   Loader2, CheckCircle, AlertCircle, FileSpreadsheet, FileJson, Menu, Plus, Trash2, 
-  MessageSquare, Bot, ToggleLeft, ToggleRight, ExternalLink, Shield, Smartphone, ChevronRight
+  MessageSquare, Bot, ToggleLeft, ToggleRight, ExternalLink, Shield, Smartphone, ChevronRight,
+  Zap, Volume2, VolumeX, Sparkles, Activity
 } from 'lucide-react'
+import { DEFAULT_SWARM_CONFIG, type SwarmAdminConfig, AGENT_PERSONAS } from '@/lib/swarm/types'
 
 export const SiteSettings: React.FC = () => {
   const { siteConfig, navigation, fetchSettings, saveNavigation } = usePageBuilderStore()
@@ -16,6 +18,17 @@ export const SiteSettings: React.FC = () => {
   const [headerMenu, setHeaderMenu] = useState<Array<{ label: string; href: string }>>([])
   const [navSaving, setNavSaving] = useState(false)
   const [navSuccess, setNavSuccess] = useState(false)
+
+  // Autonomous Swarm Simulation Governance State
+  const [swarmConfig, setSwarmConfig] = useState<SwarmAdminConfig>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const cached = localStorage.getItem('springweb_swarm_config')
+        if (cached) return JSON.parse(cached)
+      }
+    } catch (e) {}
+    return DEFAULT_SWARM_CONFIG
+  })
 
   // General details
   const [companyName, setCompanyName] = useState('')
@@ -75,6 +88,11 @@ export const SiteSettings: React.FC = () => {
       setResendApiKey(resend.api_key || '')
       setResendFromEmail(resend.from_email || 'hello@springwebsolutions.in')
       setResendNotifyEmail(resend.notify_email || 'sales@springwebsolutions.in')
+
+      const swarm = (siteConfig as any).swarm_config
+      if (swarm) {
+        setSwarmConfig(swarm)
+      }
     }
     if (navigation && navigation.header_menu) {
       setHeaderMenu(JSON.parse(JSON.stringify(navigation.header_menu)))
@@ -142,7 +160,12 @@ export const SiteSettings: React.FC = () => {
         whatsapp_number: whatsapp,
         address,
         social_links: socialLinks,
-        resend_config: resendConfig
+        resend_config: resendConfig,
+        swarm_config: swarmConfig
+      }
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('springweb_swarm_config', JSON.stringify(swarmConfig))
       }
 
       const { error } = await supabase
@@ -486,6 +509,196 @@ export const SiteSettings: React.FC = () => {
                 {testEmailLoading ? <Loader2 className="animate-spin" size={14} /> : <Send size={14} className="text-brand-emerald" />}
                 <span>Send Test Resend Email</span>
               </button>
+            </div>
+          </div>
+
+          {/* Autonomous Engineering Swarm Governance Card */}
+          <div className="border-t border-white/5 pt-6 space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h4 className="font-display font-bold text-white text-sm flex items-center gap-2">
+                  <Zap size={16} className="text-cyan-400" />
+                  <span>Autonomous Engineering Swarm Controls</span>
+                </h4>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Multi-cursor AI flocking simulation (inspired by Swarm Rebuild) with branded engineering personas.
+                </p>
+              </div>
+
+              {/* Master Toggle */}
+              <button
+                type="button"
+                onClick={() => setSwarmConfig(prev => ({ ...prev, is_enabled: !prev.is_enabled }))}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+                  swarmConfig.is_enabled
+                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
+                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                }`}
+              >
+                {swarmConfig.is_enabled ? (
+                  <>
+                    <ToggleRight size={18} className="text-emerald-400" />
+                    <span>Swarm Active</span>
+                  </>
+                ) : (
+                  <>
+                    <ToggleLeft size={18} className="text-slate-500" />
+                    <span>Disabled</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Sub-controls grid (Active only if master toggle is on) */}
+            <div className={`space-y-4 transition-opacity duration-200 ${swarmConfig.is_enabled ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
+              
+              {/* Display Mode Selector */}
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Activity size={13} className="text-emerald-400" />
+                  <span>Swarm Display Mode</span>
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {[
+                    { id: 'both', label: 'Dual Mode (Recommended)', desc: 'Hero sandbox + site-wide hotkey/badge' },
+                    { id: 'hero_only', label: 'Hero Sandbox Only', desc: 'Runs inside homepage hero interactive viewport' },
+                    { id: 'site_wide_overlay', label: 'Site-Wide Overlay Only', desc: 'Triggerable across entire page via badge or Alt+S' },
+                  ].map((mode) => (
+                    <button
+                      key={mode.id}
+                      type="button"
+                      onClick={() => setSwarmConfig(prev => ({ ...prev, display_mode: mode.id as any }))}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                        swarmConfig.display_mode === mode.id
+                          ? 'bg-cyan-500/10 border-cyan-500/40 text-white'
+                          : 'bg-white/[0.03] border-white/10 text-slate-400 hover:bg-white/[0.06] hover:text-white'
+                      }`}
+                    >
+                      <div className="font-bold text-xs">{mode.label}</div>
+                      <div className="text-[11px] text-slate-400 mt-1">{mode.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Switches Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Floating Badge Switch */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-white">Floating Trigger Pill</div>
+                    <div className="text-[11px] text-slate-400">Shows "[⚡ Swarm Build]" badge on bottom corner</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSwarmConfig(prev => ({ ...prev, show_floating_badge: !prev.show_floating_badge }))}
+                    className="cursor-pointer"
+                  >
+                    {swarmConfig.show_floating_badge ? (
+                      <ToggleRight size={22} className="text-emerald-400" />
+                    ) : (
+                      <ToggleLeft size={22} className="text-slate-500" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Hotkey Switch */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-white">Keyboard Hotkey</div>
+                    <div className="text-[11px] text-slate-400">Press <kbd className="px-1 py-0.5 rounded bg-white/10 font-mono text-[10px]">Alt + S</kbd> to assemble DOM</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSwarmConfig(prev => ({ ...prev, hotkey_enabled: !prev.hotkey_enabled }))}
+                    className="cursor-pointer"
+                  >
+                    {swarmConfig.hotkey_enabled ? (
+                      <ToggleRight size={22} className="text-emerald-400" />
+                    ) : (
+                      <ToggleLeft size={22} className="text-slate-500" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Sound Synthesizer Switch */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-white flex items-center gap-1.5">
+                      <Volume2 size={13} className="text-amber-400" />
+                      <span>Procedural Web Audio Engine</span>
+                    </div>
+                    <div className="text-[11px] text-slate-400">Zero audio files; synthesized tick & snap clicks</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSwarmConfig(prev => ({ ...prev, audio_synthesizer_enabled: !prev.audio_synthesizer_enabled }))}
+                    className="cursor-pointer"
+                  >
+                    {swarmConfig.audio_synthesizer_enabled ? (
+                      <ToggleRight size={22} className="text-emerald-400" />
+                    ) : (
+                      <ToggleLeft size={22} className="text-slate-500" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Default Speed Selector */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-white">Default Execution Speed</div>
+                    <div className="text-[11px] text-slate-400">Simulation pace for flocking & typing</div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {(['1x', '2x', '3x'] as const).map((spd) => (
+                      <button
+                        key={spd}
+                        type="button"
+                        onClick={() => setSwarmConfig(prev => ({ ...prev, default_speed: spd }))}
+                        className={`px-2 py-1 rounded text-[11px] font-mono font-bold transition-all cursor-pointer ${
+                          swarmConfig.default_speed === spd
+                            ? 'bg-emerald-500 text-slate-950 font-black'
+                            : 'bg-white/5 text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {spd}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Persona Roster Preview */}
+              <div className="p-3.5 rounded-xl bg-[#030610] border border-white/10 space-y-2.5">
+                <div className="flex items-center justify-between text-xs text-slate-400">
+                  <span className="font-semibold text-white flex items-center gap-1.5">
+                    <Sparkles size={13} className="text-emerald-400" />
+                    <span>Active Autonomous Personas (4 Concurrent Cursors)</span>
+                  </span>
+                  <span className="font-mono text-[10px] text-emerald-400">60 FPS Boids Physics</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {Object.values(AGENT_PERSONAS).map((p) => (
+                    <div
+                      key={p.id}
+                      className="p-2.5 rounded-lg border flex items-center gap-2"
+                      style={{ borderColor: `${p.color}35`, backgroundColor: `${p.color}10` }}
+                    >
+                      <div
+                        className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs text-white"
+                        style={{ backgroundColor: p.color }}
+                      >
+                        {p.avatarChar}
+                      </div>
+                      <div className="overflow-hidden">
+                        <div className="text-xs font-bold text-white truncate">{p.name}</div>
+                        <div className="text-[10px] text-slate-400 truncate">{p.role}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
 
