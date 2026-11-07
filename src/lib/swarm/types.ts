@@ -130,6 +130,10 @@ export interface GhostCard {
 
 export interface RealDomTargets {
   header: HTMLElement | null
+  navLogo: HTMLElement | null
+  navLinks: HTMLElement[]
+  navActions: HTMLElement | null
+  techBadges: HTMLElement[]
   badge: HTMLElement | null
   h1: HTMLElement | null
   sub: HTMLElement | null
@@ -139,6 +143,8 @@ export interface RealDomTargets {
   terminal: HTMLElement | null
   terminalHeader: HTMLElement | null
   cards: HTMLElement[]
+  aboutSection: HTMLElement | null
+  aboutPillars: HTMLElement[]
   services: HTMLElement | null
 }
 

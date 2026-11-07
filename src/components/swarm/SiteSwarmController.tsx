@@ -82,6 +82,10 @@ export const SiteSwarmController: React.FC = () => {
       if (isCancelled || isActive || hasActivatedRouteRef.current === location.key) return
 
       const header = (document.querySelector('nav') || document.querySelector('header')) as HTMLElement | null
+      const navLogo = (document.querySelector('nav a[aria-label*="Homepage"]') || document.querySelector('nav a[href="/"]')) as HTMLElement | null
+      const navLinks = Array.from(document.querySelectorAll<HTMLElement>('nav .hidden.md\\:flex a'))
+      const navActions = (document.querySelector('nav .hidden.md\\:flex.items-center.space-x-3') || document.querySelector('nav a[href="/games"]')) as HTMLElement | null
+      const techBadges = Array.from(document.querySelectorAll<HTMLElement>('.hero-banner [class*="animate-float-gentle"]'))
       const badge = document.querySelector('.hero-badge-enter') as HTMLElement | null
       const h1 = (document.querySelector('.hero-h1-enter') || document.querySelector('h1')) as HTMLElement | null
       const sub = document.querySelector('.hero-sub-enter') as HTMLElement | null
@@ -91,6 +95,8 @@ export const SiteSwarmController: React.FC = () => {
       const terminal = document.querySelector('.hero-terminal-box') as HTMLElement | null
       const terminalHeader = (document.querySelector('.hero-terminal-box > div:first-child') || document.querySelector('.hero-terminal-box .flex')) as HTMLElement | null
       const cards = Array.from(document.querySelectorAll<HTMLElement>('.hero-terminal-box .grid > div'))
+      const aboutSection = (document.querySelector('#about') || document.querySelector('section#about')) as HTMLElement | null
+      const aboutPillars = Array.from(document.querySelectorAll<HTMLElement>('#about .grid > div'))
       const services = (document.querySelector('#services') || document.querySelector('section#services')) as HTMLElement | null
 
       // Ready when primary headline and header/terminal exist
@@ -103,6 +109,10 @@ export const SiteSwarmController: React.FC = () => {
 
         const targets: RealDomTargets = {
           header,
+          navLogo,
+          navLinks,
+          navActions,
+          techBadges,
           badge,
           h1,
           sub,
@@ -112,12 +122,30 @@ export const SiteSwarmController: React.FC = () => {
           terminal,
           terminalHeader,
           cards,
+          aboutSection,
+          aboutPillars,
           services,
         }
 
-        // Cache original styles & apply zero-opacity mask in-place
+        // Cache original styles & apply initial blueprint mask
         const elsToMask: Array<HTMLElement | null> = [
-          header, badge, h1, sub, p, ctaPrimary, ctaSecondary, terminal, terminalHeader, ...cards, services
+          header,
+          navLogo,
+          ...navLinks,
+          navActions,
+          ...techBadges,
+          badge,
+          h1,
+          sub,
+          p,
+          ctaPrimary,
+          ctaSecondary,
+          terminal,
+          terminalHeader,
+          ...cards,
+          aboutSection,
+          ...aboutPillars,
+          services,
         ]
 
         elsToMask.forEach((el) => {
@@ -149,8 +177,14 @@ export const SiteSwarmController: React.FC = () => {
         if (ctaSecondary) {
           ctaSecondary.style.transform = 'scale(0.85)'
         }
+        techBadges.forEach((tb) => {
+          tb.style.transform = 'scale(0.7)'
+        })
         cards.forEach((c) => {
           c.style.transform = 'scale(0.92)'
+        })
+        aboutPillars.forEach((ap) => {
+          ap.style.transform = 'scale(0.95)'
         })
 
         targetsRef.current = targets
