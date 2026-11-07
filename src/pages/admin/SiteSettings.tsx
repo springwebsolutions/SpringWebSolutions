@@ -512,16 +512,16 @@ export const SiteSettings: React.FC = () => {
             </div>
           </div>
 
-          {/* Full-Page Swarm Rebuild Governance Card */}
+          {/* Full-Page Swarm Site Animation Governance Card */}
           <div className="border-t border-white/5 pt-6 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h4 className="font-display font-bold text-white text-sm flex items-center gap-2">
                   <Zap size={16} className="text-cyan-400" />
-                  <span>Full-Page "Swarm Rebuild" Animation</span>
+                  <span>Full-Page "Swarm Site Animation"</span>
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Multiplayer cursor swarm that reconstructs the entire website piece-by-piece in front of visitors.
+                  Automated multiplayer cursor animation that constructs the website live on visitor landings.
                 </p>
               </div>
 
@@ -556,13 +556,12 @@ export const SiteSettings: React.FC = () => {
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                   <Activity size={13} className="text-emerald-400" />
-                  <span>Trigger Frequency &amp; Visitor Experience</span>
+                  <span>Animation Frequency &amp; Visitor Experience</span>
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {[
-                    { id: 'first_visit_session', label: 'First Visit in Session', desc: 'Runs on initial visit; subsequent page navs are instant (Recommended)' },
-                    { id: 'every_visit', label: 'Always Rebuild (Demo Mode)', desc: 'Rebuilds on every visit & page refresh for presentations' },
-                    { id: 'manual_only', label: 'Manual Trigger Only', desc: 'Site loads normally; users trigger via Alt+S or bottom pill' },
+                    { id: 'first_visit_session', label: 'First Visit in Session', desc: 'Runs automatically on initial visit; subsequent page navs are instant (Recommended)' },
+                    { id: 'every_visit', label: 'Always Animate (Demo Mode)', desc: 'Rebuilds automatically on every visit & page refresh for presentations' },
                   ].map((mode) => (
                     <button
                       key={mode.id}
@@ -583,52 +582,14 @@ export const SiteSettings: React.FC = () => {
 
               {/* Switches Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                {/* Floating Badge Switch */}
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-xs font-semibold text-white">Floating Trigger Pill</div>
-                    <div className="text-[11px] text-slate-400">Shows "[⚡ Swarm Build]" badge on bottom corner</div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSwarmConfig(prev => ({ ...prev, show_floating_badge: !prev.show_floating_badge }))}
-                    className="cursor-pointer"
-                  >
-                    {swarmConfig.show_floating_badge ? (
-                      <ToggleRight size={22} className="text-emerald-400" />
-                    ) : (
-                      <ToggleLeft size={22} className="text-slate-500" />
-                    )}
-                  </button>
-                </div>
-
-                {/* Hotkey Switch */}
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-xs font-semibold text-white">Keyboard Hotkey</div>
-                    <div className="text-[11px] text-slate-400">Press <kbd className="px-1 py-0.5 rounded bg-white/10 font-mono text-[10px]">Alt + S</kbd> to assemble DOM</div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSwarmConfig(prev => ({ ...prev, hotkey_enabled: !prev.hotkey_enabled }))}
-                    className="cursor-pointer"
-                  >
-                    {swarmConfig.hotkey_enabled ? (
-                      <ToggleRight size={22} className="text-emerald-400" />
-                    ) : (
-                      <ToggleLeft size={22} className="text-slate-500" />
-                    )}
-                  </button>
-                </div>
-
                 {/* Sound Synthesizer Switch */}
                 <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
                   <div>
                     <div className="text-xs font-semibold text-white flex items-center gap-1.5">
                       <Volume2 size={13} className="text-amber-400" />
-                      <span>Procedural Web Audio Engine</span>
+                      <span>Procedural Web Audio</span>
                     </div>
-                    <div className="text-[11px] text-slate-400">Synthesized typewriter clicks and component snap pops</div>
+                    <div className="text-[11px] text-slate-400">Synthesized typewriter ticks and snap pops</div>
                   </div>
                   <button
                     type="button"
@@ -646,8 +607,8 @@ export const SiteSettings: React.FC = () => {
                 {/* Default Speed Selector */}
                 <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
                   <div>
-                    <div className="text-xs font-semibold text-white">Default Execution Speed</div>
-                    <div className="text-[11px] text-slate-400">Pace for crosshairs, typing &amp; snapping</div>
+                    <div className="text-xs font-semibold text-white">Execution Pace</div>
+                    <div className="text-[11px] text-slate-400">Pace for construction waves</div>
                   </div>
                   <div className="flex items-center gap-1">
                     {(['1x', '2x', '3x'] as const).map((spd) => (
@@ -673,11 +634,11 @@ export const SiteSettings: React.FC = () => {
                 <div className="flex items-center justify-between text-xs text-slate-400">
                   <span className="font-semibold text-white flex items-center gap-1.5">
                     <Sparkles size={13} className="text-emerald-400" />
-                    <span>Active Multi-Agent Swarm (6 Concurrent Design-Tool Cursors)</span>
+                    <span>Active Multi-Agent Swarm (4 Synchronized Cursors)</span>
                   </span>
-                  <span className="font-mono text-[10px] text-emerald-400">60 FPS Boids Physics</span>
+                  <span className="font-mono text-[10px] text-emerald-400">Spring Physics &amp; Tilt</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {Object.values(AGENT_PERSONAS).map((p) => (
                     <div
                       key={p.id}
