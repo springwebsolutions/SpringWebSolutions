@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { usePageBuilderStore } from '@/stores/pageBuilderStore'
-import { SwarmStudioCanvas, type RealDomTargets } from './SwarmStudioCanvas'
-import type { SwarmAdminConfig } from '@/lib/swarm/types'
+import { SwarmStudioCanvas } from './SwarmStudioCanvas'
+import type { SwarmAdminConfig, RealDomTargets } from '@/lib/swarm/types'
 import { DEFAULT_SWARM_CONFIG } from '@/lib/swarm/types'
 
 export const SiteSwarmController: React.FC = () => {
@@ -23,15 +23,16 @@ export const SiteSwarmController: React.FC = () => {
   const swarmConfig = getSwarmConfig()
   const [isActive, setIsActive] = useState<boolean>(false)
   const targetsRef = useRef<RealDomTargets | null>(null)
-  const originalStylesRef = useRef<Map<HTMLElement, { opacity: string; transform: string; transition: string }>>(new Map())
+  const originalStylesRef = useRef<Map<HTMLElement, { opacity: string; transform: string; transition: string; clipPath: string }>>(new Map())
   const hasActivatedRouteRef = useRef<string | null>(null)
 
-  // Restore real DOM elements to full visibility and native interactivity
+  // Restore real DOM elements to full visibility, unclipped typography and native interactivity
   const restoreDom = useCallback(() => {
     originalStylesRef.current.forEach((st, el) => {
       el.style.opacity = st.opacity
       el.style.transform = st.transform
       el.style.transition = st.transition
+      el.style.clipPath = st.clipPath || ''
     })
     originalStylesRef.current.clear()
   }, [])
@@ -85,8 +86,10 @@ export const SiteSwarmController: React.FC = () => {
       const h1 = (document.querySelector('.hero-h1-enter') || document.querySelector('h1')) as HTMLElement | null
       const sub = document.querySelector('.hero-sub-enter') as HTMLElement | null
       const p = document.querySelector('.hero-p-enter') as HTMLElement | null
-      const cta = document.querySelector('.hero-cta-enter') as HTMLElement | null
+      const ctaPrimary = (document.querySelector('.hero-cta-enter a:first-child') || document.querySelector('.hero-cta-enter .btn-primary')) as HTMLElement | null
+      const ctaSecondary = document.querySelector('.hero-cta-enter a:last-child') as HTMLElement | null
       const terminal = document.querySelector('.hero-terminal-box') as HTMLElement | null
+      const terminalHeader = (document.querySelector('.hero-terminal-box > div:first-child') || document.querySelector('.hero-terminal-box .flex')) as HTMLElement | null
       const cards = Array.from(document.querySelectorAll<HTMLElement>('.hero-terminal-box .grid > div'))
       const services = (document.querySelector('#services') || document.querySelector('section#services')) as HTMLElement | null
 
@@ -104,15 +107,17 @@ export const SiteSwarmController: React.FC = () => {
           h1,
           sub,
           p,
-          cta,
+          ctaPrimary,
+          ctaSecondary,
           terminal,
+          terminalHeader,
           cards,
           services,
         }
 
         // Cache original styles & apply zero-opacity mask in-place
         const elsToMask: Array<HTMLElement | null> = [
-          header, badge, h1, sub, p, cta, terminal, ...cards, services
+          header, badge, h1, sub, p, ctaPrimary, ctaSecondary, terminal, terminalHeader, ...cards, services
         ]
 
         elsToMask.forEach((el) => {
@@ -121,11 +126,31 @@ export const SiteSwarmController: React.FC = () => {
               opacity: el.style.opacity,
               transform: el.style.transform,
               transition: el.style.transition,
+              clipPath: el.style.clipPath,
             })
-            el.style.transition = 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+            el.style.transition = 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
             el.style.opacity = '0'
-            el.style.transform = 'scale(0.97)'
           }
+        })
+
+        // Prepare elements for progressive builder forming
+        if (h1) {
+          h1.style.clipPath = 'inset(0 100% 0 0)'
+        }
+        if (sub) {
+          sub.style.clipPath = 'inset(0 100% 0 0)'
+        }
+        if (badge) {
+          badge.style.transform = 'scale(0.92)'
+        }
+        if (ctaPrimary) {
+          ctaPrimary.style.transform = 'scale(0.85)'
+        }
+        if (ctaSecondary) {
+          ctaSecondary.style.transform = 'scale(0.85)'
+        }
+        cards.forEach((c) => {
+          c.style.transform = 'scale(0.92)'
         })
 
         targetsRef.current = targets

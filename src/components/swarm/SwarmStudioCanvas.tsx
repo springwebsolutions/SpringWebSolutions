@@ -1,22 +1,17 @@
-
 import React, { useEffect, useRef, useState } from 'react'
-import type { SpringCursorState, AgentPersonaId, LaserGuide, DistanceRuler, StudioBox, GhostCard } from '@/lib/swarm/types'
+import type {
+  SpringCursorState,
+  AgentPersonaId,
+  LaserGuide,
+  DistanceRuler,
+  StudioBox,
+  GhostCard,
+  RealDomTargets,
+} from '@/lib/swarm/types'
 import { AGENT_PERSONAS } from '@/lib/swarm/types'
 import { SwarmSpringEngine } from '@/lib/swarm/swarmSpringEngine'
 import { SwarmAgentCursor } from './SwarmAgentCursor'
 import { swarmAudio } from '@/lib/swarm/audioEngine'
-
-export interface RealDomTargets {
-  header: HTMLElement | null
-  badge: HTMLElement | null
-  h1: HTMLElement | null
-  sub: HTMLElement | null
-  p: HTMLElement | null
-  cta: HTMLElement | null
-  terminal: HTMLElement | null
-  cards: HTMLElement[]
-  services: HTMLElement | null
-}
 
 interface SwarmStudioCanvasProps {
   targets: RealDomTargets
@@ -45,7 +40,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
   const animFrameIdRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(performance.now())
 
-  // Dynamic visual artifacts
+  // Dynamic visual studio artifacts
   const boxesRef = useRef<StudioBox[]>([])
   const laserGuidesRef = useRef<LaserGuide[]>([])
   const distanceRulersRef = useRef<DistanceRuler[]>([])
@@ -90,7 +85,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
     }
   }, [onDismiss])
 
-  // Lock body scroll during animation to prevent drift
+  // Lock body scroll during animation to prevent coordinate drift
   useEffect(() => {
     const originalOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -99,7 +94,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
     }
   }, [])
 
-  // Main 60 FPS Animation & Choreography Loop
+  // Main 60 FPS Swarm Studio Construction Loop
   useEffect(() => {
     const width = window.innerWidth
     const height = window.innerHeight
@@ -107,7 +102,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
     cursorsRef.current = springEngineRef.current.createInitialCursors(width, height)
     startTimeRef.current = performance.now()
 
-    const totalDurationMs = speed === '1x' ? 5200 : speed === '2x' ? 4000 : 3000
+    const totalDurationMs = speed === '1x' ? 5600 : speed === '2x' ? 4200 : 3200
     let running = true
 
     const loop = (now: number) => {
@@ -131,13 +126,16 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       const badgeRect = targets.badge?.getBoundingClientRect()
       const h1Rect = targets.h1?.getBoundingClientRect()
       const subRect = targets.sub?.getBoundingClientRect()
-      const ctaRect = targets.cta?.getBoundingClientRect()
+      const pRect = targets.p?.getBoundingClientRect()
+      const btn1Rect = targets.ctaPrimary?.getBoundingClientRect()
+      const btn2Rect = targets.ctaSecondary?.getBoundingClientRect()
       const terminalRect = targets.terminal?.getBoundingClientRect()
+      const terminalHeaderRect = targets.terminalHeader?.getBoundingClientRect()
       const cardRects = targets.cards.map((c) => c.getBoundingClientRect())
       const servicesRect = targets.services?.getBoundingClientRect()
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 1: NAVBAR REBUILD (0% – 18%)
+      // WAVE 1: NAVBAR REBUILD & STRUCTURE (0% – 18%)
       // ─────────────────────────────────────────────────────────────
       if (progress < 0.18) {
         const p1 = progress / 0.18
@@ -162,7 +160,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
             progress: p1,
           })
 
-          if (p1 > 0.3 && targets.header) {
+          if (p1 > 0.25 && targets.header) {
             targets.header.style.opacity = '1'
             targets.header.style.transform = 'scale(1)'
           }
@@ -182,25 +180,32 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
               id: 'nav-baseline',
               orientation: 'horizontal',
               pos: headerRect.bottom,
-              start: headerRect.left,
-              end: headerRect.right,
+              start: 0,
+              end: dimensions.width,
               color: AGENT_PERSONAS.vikram.color,
               opacity: 0.85,
-              label: 'Navbar Baseline',
+              label: 'Navbar Baseline Align',
             })
           }
 
-          if (arjun && p1 > 0.6) {
-            arjun.targetX = headerRect.right - 80
+          if (alex && p1 > 0.55) {
+            alex.targetX = headerRect.left + headerRect.width * 0.45
+            alex.targetY = headerRect.top + headerRect.height / 2
+            alex.cursorMode = 'arrow'
+            alex.actionText = 'Nav Segment Items'
+          }
+
+          if (arjun && p1 > 0.65) {
+            arjun.targetX = headerRect.right - 90
             arjun.targetY = headerRect.top + headerRect.height / 2
             arjun.cursorMode = 'arrow'
-            arjun.actionText = 'Button: Client Login'
+            arjun.actionText = 'Theme / Arcade'
           }
         }
       }
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 2: HERO HEADLINE & VALUE PROP (18% – 48%)
+      // WAVE 2: TYPOGRAPHY FORMING & PROGRESSIVE CONTENT TYPING (18% – 48%)
       // ─────────────────────────────────────────────────────────────
       else if (progress >= 0.18 && progress < 0.48) {
         const p2 = (progress - 0.18) / 0.3
@@ -209,173 +214,369 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           targets.header.style.transform = 'scale(1)'
         }
 
-        // 1. Location Badge Capsule
+        // 1. Location Badge Capsule (18% - 24%)
         if (badgeRect && targets.badge) {
-          targets.badge.style.opacity = '1'
-          targets.badge.style.transform = 'scale(1)'
+          const pBadge = Math.min(1, p2 / 0.2)
           if (sarah) {
-            sarah.targetX = badgeRect.left + badgeRect.width / 2
+            sarah.targetX = badgeRect.left + badgeRect.width * pBadge
             sarah.targetY = badgeRect.top + badgeRect.height / 2
             sarah.cursorMode = 'crosshair'
             sarah.actionText = 'Badge Capsule'
           }
-        }
-
-        // 2. H1 Title Typography
-        if (h1Rect && targets.h1) {
-          targets.h1.style.opacity = '1'
-          targets.h1.style.transform = 'scale(1)'
 
           boxesRef.current.push({
-            id: 'box-h1',
-            x: h1Rect.left - 8,
-            y: h1Rect.top - 6,
-            w: h1Rect.width + 16,
-            h: h1Rect.height + 12,
-            color: AGENT_PERSONAS.alex.color,
-            label: 'H1 Typography',
-            progress: 1,
+            id: 'box-badge',
+            x: badgeRect.left,
+            y: badgeRect.top,
+            w: badgeRect.width * pBadge,
+            h: badgeRect.height,
+            color: AGENT_PERSONAS.sarah.color,
+            label: 'Badge Capsule',
+            progress: pBadge,
           })
 
+          if (pBadge > 0.3) {
+            targets.badge.style.opacity = '1'
+            targets.badge.style.transform = 'scale(1)'
+            if (!audioPlayedRef.current['snap-badge']) {
+              swarmAudio.playSnapPop(700)
+              audioPlayedRef.current['snap-badge'] = true
+            }
+          }
+        }
+
+        // 2. H1 Headline Progressive Typing (24% - 38%)
+        if (h1Rect && targets.h1) {
+          const pH1 = Math.min(1, Math.max(0, (p2 - 0.15) / 0.5))
+
           if (alex) {
-            alex.targetX = h1Rect.left + (h1Rect.width * Math.min(1, p2 * 1.4))
+            alex.targetX = h1Rect.left + (h1Rect.width * pH1)
             alex.targetY = h1Rect.top + h1Rect.height / 2
             alex.cursorMode = 'caret'
             alex.actionText = 'Typing H1'
             alex.typewriterText = 'Spring Web Solutions'
 
-            if (Math.random() < 0.3) {
+            if (pH1 > 0.05 && pH1 < 0.95 && Math.random() < 0.38) {
               swarmAudio.playTypewriterTick()
             }
           }
+
+          // Marquee framing for H1
+          boxesRef.current.push({
+            id: 'box-h1',
+            x: h1Rect.left - 6,
+            y: h1Rect.top - 4,
+            w: Math.max(4, h1Rect.width * pH1 + 8),
+            h: h1Rect.height + 8,
+            color: AGENT_PERSONAS.alex.color,
+            label: 'H1 Typography',
+            progress: pH1,
+          })
+
+          // Progressive in-place reveal via clipPath
+          targets.h1.style.opacity = '1'
+          targets.h1.style.transition = 'none'
+          if (pH1 < 0.98) {
+            targets.h1.style.clipPath = `inset(0 ${Math.max(0, (1 - pH1) * 100).toFixed(2)}% 0 0)`
+          } else {
+            targets.h1.style.clipPath = ''
+          }
+
+          // Left margin baseline alignment laser
+          if (vikram) {
+            vikram.targetX = h1Rect.left
+            vikram.targetY = h1Rect.bottom + 10
+            vikram.cursorMode = 'arrow'
+            vikram.actionText = 'Left Margin: 0px'
+
+            laserGuidesRef.current.push({
+              id: 'h1-left-align',
+              orientation: 'vertical',
+              pos: h1Rect.left,
+              start: h1Rect.top - 15,
+              end: (subRect ? subRect.bottom : h1Rect.bottom) + 30,
+              color: AGENT_PERSONAS.vikram.color,
+              opacity: 0.75,
+              label: 'Content Left Align',
+            })
+          }
         }
 
-        // 3. Subtitle & CTAs
-        if (p2 > 0.4 && targets.sub) {
-          targets.sub.style.opacity = '1'
-          targets.sub.style.transform = 'scale(1)'
-        }
-        if (p2 > 0.5 && targets.p) {
-          targets.p.style.opacity = '1'
-          targets.p.style.transform = 'scale(1)'
-        }
+        // 3. Subtitle & Description Progressive Typing (38% - 48%)
+        if (p2 > 0.65 && subRect && targets.sub) {
+          const pSub = Math.min(1, Math.max(0, (p2 - 0.65) / 0.35))
 
-        if (p2 > 0.7 && ctaRect && targets.cta) {
-          targets.cta.style.opacity = '1'
-          targets.cta.style.transform = 'scale(1)'
+          if (alex) {
+            alex.targetX = subRect.left + (subRect.width * pSub)
+            alex.targetY = subRect.top + subRect.height / 2
+            alex.cursorMode = 'caret'
+            alex.actionText = 'Typing H2 Subtitle'
 
-          if (arjun) {
-            arjun.targetX = ctaRect.left + ctaRect.width / 4
-            arjun.targetY = ctaRect.top + ctaRect.height / 2
-            arjun.cursorMode = 'arrow'
-            arjun.actionText = 'CTA: Free Consultation'
-
-            if (!audioPlayedRef.current['snap-cta']) {
-              swarmAudio.playSnapPop(580)
-              audioPlayedRef.current['snap-cta'] = true
+            if (pSub > 0.05 && pSub < 0.95 && Math.random() < 0.32) {
+              swarmAudio.playTypewriterTick()
             }
+          }
+
+          boxesRef.current.push({
+            id: 'box-sub',
+            x: subRect.left - 4,
+            y: subRect.top - 2,
+            w: Math.max(4, subRect.width * pSub + 6),
+            h: subRect.height + 4,
+            color: AGENT_PERSONAS.alex.color,
+            label: 'H2 Subtitle',
+            progress: pSub,
+          })
+
+          targets.sub.style.opacity = '1'
+          targets.sub.style.transition = 'none'
+          if (pSub < 0.98) {
+            targets.sub.style.clipPath = `inset(0 ${Math.max(0, (1 - pSub) * 100).toFixed(2)}% 0 0)`
+          } else {
+            targets.sub.style.clipPath = ''
+          }
+
+          if (pSub > 0.4 && targets.p) {
+            targets.p.style.opacity = '1'
+            targets.p.style.transition = 'opacity 0.35s ease'
           }
         }
       }
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 3: ARCHITECTURE TERMINAL & ⌥-GHOST DRAGGED CARDS (48% – 76%)
+      // WAVE 3: BUTTONS & SEGMENTATION FORMING (48% – 76%)
       // ─────────────────────────────────────────────────────────────
       else if (progress >= 0.48 && progress < 0.76) {
         const p3 = (progress - 0.48) / 0.28
 
-        // Guarantee hero elements are visible
+        // Guarantee all typography is 100% visible and unclipped
         if (targets.badge) targets.badge.style.opacity = '1'
-        if (targets.h1) targets.h1.style.opacity = '1'
-        if (targets.sub) targets.sub.style.opacity = '1'
-        if (targets.p) targets.p.style.opacity = '1'
-        if (targets.cta) targets.cta.style.opacity = '1'
-
-        // Terminal Box Framing
-        if (terminalRect && targets.terminal) {
-          targets.terminal.style.opacity = '1'
-          targets.terminal.style.transform = 'scale(1)'
-
-          if (sarah) {
-            sarah.targetX = terminalRect.right
-            sarah.targetY = terminalRect.bottom
-            sarah.cursorMode = 'crosshair'
-            sarah.actionText = 'Architecture Terminal Box'
-          }
-
-          boxesRef.current.push({
-            id: 'box-terminal',
-            x: terminalRect.left,
-            y: terminalRect.top,
-            w: terminalRect.width,
-            h: terminalRect.height,
-            color: AGENT_PERSONAS.sarah.color,
-            label: 'Architecture Terminal Box',
-            progress: 1,
-          })
+        if (targets.h1) {
+          targets.h1.style.opacity = '1'
+          targets.h1.style.clipPath = ''
         }
+        if (targets.sub) {
+          targets.sub.style.opacity = '1'
+          targets.sub.style.clipPath = ''
+        }
+        if (targets.p) targets.p.style.opacity = '1'
 
-        // ⌥-Option Dragging Cards 1 to 4
-        if (cardRects.length >= 4) {
-          const rawStep = p3 * 4.2
-          const activeIdx = Math.min(3, Math.floor(rawStep))
-          const stepSub = Math.min(1, rawStep - activeIdx)
+        // ── 3A: BUTTONS FORMING (48% – 58%) ──
+        if (p3 < 0.4) {
+          const pBtns = p3 / 0.4
 
-          // Reveal completed cards
-          for (let i = 0; i <= activeIdx; i++) {
-            if (targets.cards[i]) {
-              targets.cards[i].style.opacity = '1'
-              targets.cards[i].style.transform = 'scale(1)'
+          // Button 1: Primary CTA ("Get Free Consultation")
+          if (btn1Rect && targets.ctaPrimary) {
+            const pBtn1 = Math.min(1, pBtns * 1.5)
+
+            if (sarah) {
+              sarah.targetX = btn1Rect.left + btn1Rect.width * pBtn1
+              sarah.targetY = btn1Rect.top + btn1Rect.height / 2
+              sarah.cursorMode = 'crosshair'
+              sarah.actionText = 'Button: Primary CTA'
+            }
+
+            boxesRef.current.push({
+              id: 'box-btn-primary',
+              x: btn1Rect.left,
+              y: btn1Rect.top,
+              w: Math.max(4, btn1Rect.width * pBtn1),
+              h: btn1Rect.height,
+              color: AGENT_PERSONAS.sarah.color,
+              label: 'Button: Primary CTA',
+              progress: pBtn1,
+            })
+
+            if (pBtn1 > 0.35) {
+              targets.ctaPrimary.style.opacity = '1'
+              targets.ctaPrimary.style.transform = 'scale(1)'
+              targets.ctaPrimary.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease'
+
+              if (!audioPlayedRef.current['snap-btn1']) {
+                swarmAudio.playSnapPop(640)
+                audioPlayedRef.current['snap-btn1'] = true
+              }
             }
           }
 
-          if (arjun) {
-            if (activeIdx === 0) {
-              arjun.targetX = cardRects[0].left + cardRects[0].width / 2
-              arjun.targetY = cardRects[0].top + cardRects[0].height / 2
-              arjun.cursorMode = 'crosshair'
-              arjun.actionText = 'Card 1: Base Metric'
+          // Button 2: Secondary CTA ("Explore Services") & Distance Ruler
+          if (pBtns > 0.4 && btn2Rect && targets.ctaSecondary) {
+            const pBtn2 = Math.min(1, (pBtns - 0.4) / 0.6)
 
-              if (!audioPlayedRef.current['card-0']) {
-                swarmAudio.playSnapPop(520)
-                audioPlayedRef.current['card-0'] = true
-              }
-            } else {
-              // Ghost card slides from previous card to target card!
-              const prevRect = cardRects[activeIdx - 1]
-              const targetRect = cardRects[activeIdx]
+            if (arjun) {
+              arjun.targetX = btn2Rect.left + btn2Rect.width * pBtn2
+              arjun.targetY = btn2Rect.top + btn2Rect.height / 2
+              arjun.cursorMode = 'arrow'
+              arjun.actionText = 'Button: Secondary CTA'
+            }
 
-              const ghostX = prevRect.left + (targetRect.left - prevRect.left) * stepSub
-              const ghostY = targetRect.top
+            boxesRef.current.push({
+              id: 'box-btn-secondary',
+              x: btn2Rect.left,
+              y: btn2Rect.top,
+              w: Math.max(4, btn2Rect.width * pBtn2),
+              h: btn2Rect.height,
+              color: AGENT_PERSONAS.arjun.color,
+              label: 'Button: Secondary CTA',
+              progress: pBtn2,
+            })
 
-              arjun.targetX = ghostX + targetRect.width / 2
-              arjun.targetY = ghostY + targetRect.height / 2
-              arjun.cursorMode = 'clone'
-              arjun.actionText = `⌥ Dragging Card ${activeIdx + 1}`
-
-              ghostCardRef.current = {
-                x: ghostX,
-                y: ghostY,
-                w: targetRect.width,
-                h: targetRect.height,
-                opacity: 0.75,
-              }
-
+            if (btn1Rect && btn2Rect) {
               distanceRulersRef.current.push({
-                id: 'dist-ruler',
-                x1: prevRect.right,
-                y1: targetRect.top + targetRect.height / 2,
-                x2: Math.max(prevRect.right + 4, ghostX),
-                y2: targetRect.top + targetRect.height / 2,
-                gapPx: Math.round(Math.max(4, ghostX - prevRect.right)),
+                id: 'dist-buttons',
+                x1: btn1Rect.right,
+                y1: btn1Rect.top + btn1Rect.height / 2,
+                x2: btn2Rect.left,
+                y2: btn2Rect.top + btn2Rect.height / 2,
+                gapPx: Math.round(Math.max(4, btn2Rect.left - btn1Rect.right)),
                 color: '#f43f5e',
               })
+            }
 
-              const audioKey = `card-${activeIdx}`
-              if (!audioPlayedRef.current[audioKey] && stepSub > 0.8) {
-                swarmAudio.playSnapPop(520 + activeIdx * 50)
-                audioPlayedRef.current[audioKey] = true
+            if (pBtn2 > 0.35) {
+              targets.ctaSecondary.style.opacity = '1'
+              targets.ctaSecondary.style.transform = 'scale(1)'
+              targets.ctaSecondary.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease'
+
+              if (!audioPlayedRef.current['snap-btn2']) {
+                swarmAudio.playSnapPop(720)
+                audioPlayedRef.current['snap-btn2'] = true
               }
+            }
+          }
+        }
+
+        // ── 3B: ARCHITECTURE TERMINAL & SEGMENTATIONS (58% – 76%) ──
+        else {
+          const pTerm = (p3 - 0.4) / 0.6
+
+          // Ensure both CTA buttons are rendered
+          if (targets.ctaPrimary) targets.ctaPrimary.style.opacity = '1'
+          if (targets.ctaSecondary) targets.ctaSecondary.style.opacity = '1'
+
+          // Terminal Box Framing
+          if (terminalRect && targets.terminal) {
+            targets.terminal.style.opacity = '1'
+            targets.terminal.style.transform = 'scale(1)'
+
+            if (sarah) {
+              sarah.targetX = terminalRect.right
+              sarah.targetY = terminalRect.bottom
+              sarah.cursorMode = 'crosshair'
+              sarah.actionText = 'Architecture Terminal Box'
+            }
+
+            boxesRef.current.push({
+              id: 'box-terminal',
+              x: terminalRect.left,
+              y: terminalRect.top,
+              w: terminalRect.width,
+              h: terminalRect.height,
+              color: AGENT_PERSONAS.sarah.color,
+              label: 'Architecture Terminal Box',
+              progress: 1,
+            })
+
+            // Terminal Header Segments
+            if (terminalHeaderRect && targets.terminalHeader) {
+              targets.terminalHeader.style.opacity = '1'
+              targets.terminalHeader.style.transform = 'scale(1)'
+
+              if (!audioPlayedRef.current['snap-term-header']) {
+                swarmAudio.playSnapPop(850)
+                audioPlayedRef.current['snap-term-header'] = true
+              }
+
+              boxesRef.current.push({
+                id: 'box-tab',
+                x: terminalHeaderRect.left + 50,
+                y: terminalHeaderRect.top + 4,
+                w: 220,
+                h: 22,
+                color: AGENT_PERSONAS.alex.color,
+                label: 'Segment: architecture-v3.ts',
+                progress: 1,
+              })
+            }
+          }
+
+          // ⌥-Option Dragging Cards across the 4 Columns
+          if (cardRects.length >= 4) {
+            const rawStep = pTerm * 4.2
+            const activeIdx = Math.min(3, Math.floor(rawStep))
+            const stepSub = Math.min(1, rawStep - activeIdx)
+
+            // Reveal completed cards
+            for (let i = 0; i <= activeIdx; i++) {
+              if (targets.cards[i]) {
+                targets.cards[i].style.opacity = '1'
+                targets.cards[i].style.transform = 'scale(1)'
+                targets.cards[i].style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease'
+              }
+            }
+
+            if (arjun) {
+              if (activeIdx === 0) {
+                arjun.targetX = cardRects[0].left + cardRects[0].width / 2
+                arjun.targetY = cardRects[0].top + cardRects[0].height / 2
+                arjun.cursorMode = 'crosshair'
+                arjun.actionText = 'Card 1: Base Metric'
+
+                if (!audioPlayedRef.current['card-0']) {
+                  swarmAudio.playSnapPop(520)
+                  audioPlayedRef.current['card-0'] = true
+                }
+              } else {
+                // Ghost card slides from previous card to target card!
+                const prevRect = cardRects[activeIdx - 1]
+                const targetRect = cardRects[activeIdx]
+
+                const ghostX = prevRect.left + (targetRect.left - prevRect.left) * stepSub
+                const ghostY = targetRect.top
+
+                arjun.targetX = ghostX + targetRect.width / 2
+                arjun.targetY = ghostY + targetRect.height / 2
+                arjun.cursorMode = 'clone'
+                arjun.actionText = `⌥ Dragging Card ${activeIdx + 1}`
+
+                ghostCardRef.current = {
+                  x: ghostX,
+                  y: ghostY,
+                  w: targetRect.width,
+                  h: targetRect.height,
+                  opacity: 0.75,
+                }
+
+                distanceRulersRef.current.push({
+                  id: 'dist-ruler',
+                  x1: prevRect.right,
+                  y1: targetRect.top + targetRect.height / 2,
+                  x2: Math.max(prevRect.right + 4, ghostX),
+                  y2: targetRect.top + targetRect.height / 2,
+                  gapPx: Math.round(Math.max(4, ghostX - prevRect.right)),
+                  color: '#f43f5e',
+                })
+
+                const audioKey = `card-${activeIdx}`
+                if (!audioPlayedRef.current[audioKey] && stepSub > 0.8) {
+                  swarmAudio.playSnapPop(520 + activeIdx * 50)
+                  audioPlayedRef.current[audioKey] = true
+                }
+              }
+            }
+
+            // Vikram draws a horizontal laser baseline across all 4 cards
+            if (vikram && cardRects[0] && cardRects[3]) {
+              laserGuidesRef.current.push({
+                id: 'cards-baseline',
+                orientation: 'horizontal',
+                pos: cardRects[0].bottom,
+                start: cardRects[0].left,
+                end: cardRects[3].right,
+                color: AGENT_PERSONAS.vikram.color,
+                opacity: 0.8,
+                label: 'Cards Baseline Align',
+              })
             }
           }
         }
@@ -387,7 +588,10 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       else if (progress >= 0.76 && progress < 0.88) {
         const p4 = (progress - 0.76) / 0.12
 
-        // Reveal all cards
+        // Reveal all terminal cards & buttons
+        if (targets.ctaPrimary) targets.ctaPrimary.style.opacity = '1'
+        if (targets.ctaSecondary) targets.ctaSecondary.style.opacity = '1'
+        if (targets.terminalHeader) targets.terminalHeader.style.opacity = '1'
         targets.cards.forEach((c) => {
           c.style.opacity = '1'
           c.style.transform = 'scale(1)'
@@ -423,14 +627,22 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       else {
         const p5 = (progress - 0.88) / 0.12
 
-        // Reveal all components
+        // Reveal all components with zero clips
         if (targets.header) targets.header.style.opacity = '1'
         if (targets.badge) targets.badge.style.opacity = '1'
-        if (targets.h1) targets.h1.style.opacity = '1'
-        if (targets.sub) targets.sub.style.opacity = '1'
+        if (targets.h1) {
+          targets.h1.style.opacity = '1'
+          targets.h1.style.clipPath = ''
+        }
+        if (targets.sub) {
+          targets.sub.style.opacity = '1'
+          targets.sub.style.clipPath = ''
+        }
         if (targets.p) targets.p.style.opacity = '1'
-        if (targets.cta) targets.cta.style.opacity = '1'
+        if (targets.ctaPrimary) targets.ctaPrimary.style.opacity = '1'
+        if (targets.ctaSecondary) targets.ctaSecondary.style.opacity = '1'
         if (targets.terminal) targets.terminal.style.opacity = '1'
+        if (targets.terminalHeader) targets.terminalHeader.style.opacity = '1'
         targets.cards.forEach((c) => (c.style.opacity = '1'))
         if (targets.services) targets.services.style.opacity = '1'
 
@@ -471,28 +683,33 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
 
     return () => {
       running = false
-      if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
+      if (animFrameIdRef.current !== null) {
+        cancelAnimationFrame(animFrameIdRef.current)
+      }
     }
-  }, [speed, onComplete, targets])
+  }, [targets, speed, onComplete])
 
+  const cursorsList = Array.from(cursorsRef.current.values())
   const boxes = boxesRef.current
   const laserGuides = laserGuidesRef.current
   const distanceRulers = distanceRulersRef.current
   const ghostCard = ghostCardRef.current
   const sweepY = sweepYRef.current
-  const cursorsList = Array.from(cursorsRef.current.values())
 
   return (
     <div
-      onClick={onDismiss}
-      className="fixed inset-0 z-[9999] cursor-pointer select-none pointer-events-none overflow-hidden"
-      title="Click or press Esc to skip animation"
+      className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden select-none"
+      style={{ width: '100vw', height: '100vh' }}
     >
-      {/* ── Multi-User Design Tool SVG Layer (Wireframes, Brackets, Guides, Sweep) ── */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-30">
+      {/* ── Studio Vector Graphics Canvas Overlay ── */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        width={dimensions.width}
+        height={dimensions.height}
+      >
         <defs>
           <filter id="laserGlowHigh" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feGaussianBlur stdDeviation="3" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -500,11 +717,11 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           </filter>
         </defs>
 
-        {/* 1. Active Figma Bounding Boxes with Corner Handles ⌜ ⌝ ⌞ ⌟ */}
+        {/* 1. Active Bounding Boxes with 8 Corner/Edge Anchor Handles & Studio Header Tag Pills */}
         {boxes.map((box) => {
-          const w = Math.max(2, box.w)
-          const h = Math.max(2, box.h)
-          const handle = 5
+          const w = Math.max(4, box.w)
+          const h = Math.max(4, box.h)
+          const handle = 6
 
           return (
             <g key={box.id}>
@@ -514,18 +731,47 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
                 y={box.y}
                 width={w}
                 height={h}
-                fill={`${box.color}10`}
+                fill={`${box.color}14`}
                 stroke={box.color}
                 strokeWidth="1.5"
                 strokeDasharray="6 4"
                 rx="6"
               />
 
-              {/* Corner Figma Brackets */}
-              <rect x={box.x - 2} y={box.y - 2} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
-              <rect x={box.x + w - 3} y={box.y - 2} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
-              <rect x={box.x - 2} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
-              <rect x={box.x + w - 3} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
+              {/* 8 Corner & Edge Anchor Handles */}
+              <rect x={box.x - 3} y={box.y - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x + w / 2 - 3} y={box.y - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x + w - 3} y={box.y - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x - 3} y={box.y + h / 2 - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x + w - 3} y={box.y + h / 2 - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x - 3} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x + w / 2 - 3} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+              <rect x={box.x + w - 3} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1.5" rx="1" />
+
+              {/* Studio Header Tag Pill showing Component Type & Dimensions */}
+              {box.label && (
+                <g>
+                  <rect
+                    x={box.x}
+                    y={box.y - 17}
+                    width={box.label.length * 6.6 + 48}
+                    height="16"
+                    fill={box.color}
+                    rx="4"
+                  />
+                  <text
+                    x={box.x + 6}
+                    y={box.y - 5}
+                    fill="#ffffff"
+                    fontSize="9"
+                    fontFamily="monospace"
+                    fontWeight="bold"
+                    letterSpacing="0.02em"
+                  >
+                    {box.label} [{Math.round(w)}×{Math.round(h)}]
+                  </text>
+                </g>
+              )}
             </g>
           )
         })}
@@ -565,7 +811,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           </g>
         )}
 
-        {/* 3. Laser Snap Guides */}
+        {/* 3. Laser Snap Alignment Guides */}
         {laserGuides.map((guide) => {
           if (guide.orientation === 'horizontal') {
             return (
@@ -600,7 +846,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           }
         })}
 
-        {/* 4. Red Distance Gap Indicators for ⌥-Cloned Cards */}
+        {/* 4. Distance Gap Measurement Indicators for ⌥-Cloned Cards & Buttons */}
         {distanceRulers.map((dist) => (
           <g key={dist.id}>
             <line x1={dist.x1} y1={dist.y1} x2={dist.x2} y2={dist.y2} stroke={dist.color} strokeWidth="1.5" />

@@ -128,3 +128,18 @@ export interface GhostCard {
   opacity: number
 }
 
+export interface RealDomTargets {
+  header: HTMLElement | null
+  badge: HTMLElement | null
+  h1: HTMLElement | null
+  sub: HTMLElement | null
+  p: HTMLElement | null
+  ctaPrimary: HTMLElement | null
+  ctaSecondary: HTMLElement | null
+  terminal: HTMLElement | null
+  terminalHeader: HTMLElement | null
+  cards: HTMLElement[]
+  services: HTMLElement | null
+}
+
+
