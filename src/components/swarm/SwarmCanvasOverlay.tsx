@@ -224,3 +224,4 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
     </div>
   )
 }
+

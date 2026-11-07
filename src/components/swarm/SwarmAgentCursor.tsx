@@ -68,3 +68,4 @@ export const SwarmAgentCursor: React.FC<SwarmAgentCursorProps> = ({ agent }) => 
     </div>
   )
 }
+

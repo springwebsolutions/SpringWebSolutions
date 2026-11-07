@@ -165,7 +165,13 @@ export const AdminLayout: React.FC = () => {
   const [currentTime, setCurrentTime]   = useState(new Date())
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
   const [notifCount, setNotifCount]     = useState(0)
-  const [notifDetails, setNotifDetails] = useState<{ tickets: number; newLeads: number }>({ tickets: 0, newLeads: 0 })
+  const [notifDetails, setNotifDetails] = useState<{
+    tickets: number
+    newLeads: number
+    contacts: number
+    applications: number
+  }>({ tickets: 0, newLeads: 0, contacts: 0, applications: 0 })
+  const [notifLoading, setNotifLoading] = useState(false)
   const [notifOpen, setNotifOpen]       = useState(false)
   const notifRef = useRef<HTMLDivElement>(null)
 
@@ -213,16 +219,25 @@ export const AdminLayout: React.FC = () => {
   // Fetch notification counts from Supabase
   const fetchNotifCounts = useCallback(async () => {
     if (!isSupabaseConfigured) return
+    setNotifLoading(true)
     try {
-      const [{ count: tickets }, { count: newLeads }] = await Promise.all([
+      const [ticketsRes, leadsRes, contactsRes, appsRes] = await Promise.allSettled([
         supabase.from('support_tickets').select('*', { count: 'exact', head: true }).eq('status', 'open'),
         supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+        supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+        supabase.from('job_applications').select('*', { count: 'exact', head: true }).eq('status', 'new'),
       ])
-      const t = tickets ?? 0
-      const l = newLeads ?? 0
-      setNotifDetails({ tickets: t, newLeads: l })
-      setNotifCount(t + l)
-    } catch {}
+
+      const t = ticketsRes.status === 'fulfilled' ? ticketsRes.value.count ?? 0 : 0
+      const l = leadsRes.status === 'fulfilled' ? leadsRes.value.count ?? 0 : 0
+      const c = contactsRes.status === 'fulfilled' ? contactsRes.value.count ?? 0 : 0
+      const a = appsRes.status === 'fulfilled' ? appsRes.value.count ?? 0 : 0
+
+      setNotifDetails({ tickets: t, newLeads: l, contacts: c, applications: a })
+      setNotifCount(t + l + c + a)
+    } catch {} finally {
+      setNotifLoading(false)
+    }
   }, [])
 
   useEffect(() => {
@@ -518,7 +533,7 @@ export const AdminLayout: React.FC = () => {
       <main className="flex-1 flex flex-col overflow-hidden min-w-0">
 
         {/* ── Top Bar ── */}
-        <header className="h-[60px] border-b border-white/[0.05] bg-[#06080f]/90 backdrop-blur-xl flex items-center justify-between px-4 sm:px-5 shrink-0 gap-4">
+        <header className="relative z-40 h-[60px] border-b border-white/[0.05] bg-[#06080f]/95 backdrop-blur-xl flex items-center justify-between px-4 sm:px-5 shrink-0 gap-4">
           <div className="flex items-center gap-3">
             {/* Mobile hamburger */}
             <button
@@ -596,53 +611,120 @@ export const AdminLayout: React.FC = () => {
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setNotifOpen(v => !v)}
-                className="relative p-2 rounded-lg hover:bg-white/[0.05] text-slate-500 hover:text-white transition-all"
+                className={`relative p-2 rounded-lg transition-all cursor-pointer ${
+                  notifOpen ? 'bg-white/10 text-white' : 'hover:bg-white/[0.05] text-slate-400 hover:text-white'
+                }`}
+                aria-label="Toggle notifications"
               >
                 <Bell size={16} />
                 {notifCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-rose-500 border border-[#06080f] flex items-center justify-center text-[9px] font-bold text-white">
+                  <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-rose-500 border border-[#06080f] flex items-center justify-center text-[9px] font-bold text-white shadow-sm shadow-rose-500/50">
                     {notifCount > 9 ? '9+' : notifCount}
                   </span>
                 )}
               </button>
 
               {notifOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 bg-[#0c1018]/95 backdrop-blur-xl border border-white/[0.1] rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-white/[0.07] flex items-center justify-between">
-                    <span className="text-xs font-bold text-white">Notifications</span>
-                    <button onClick={fetchNotifCounts} className="p-1 rounded hover:bg-white/5 text-slate-600 hover:text-slate-300 transition-all">
-                      <RefreshCw size={11} />
+                <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-[#0c121e] border border-white/15 rounded-2xl shadow-2xl shadow-black/90 z-50 overflow-hidden ring-1 ring-white/10 animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-4 py-3 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-white">Notifications</span>
+                      {notifCount > 0 && (
+                        <span className="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/25 text-[10px] font-bold">
+                          {notifCount} new
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={fetchNotifCounts}
+                      disabled={notifLoading}
+                      className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-all cursor-pointer disabled:opacity-50"
+                      title="Refresh alerts"
+                    >
+                      <RefreshCw size={12} className={notifLoading ? 'animate-spin text-emerald-400' : ''} />
                     </button>
                   </div>
-                  <div className="p-2 space-y-1">
-                    {notifDetails.newLeads > 0 ? (
-                      <Link to={`${prefix}/crm`} onClick={() => setNotifOpen(false)}
-                        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.04] transition-all group">
-                        <div className="h-8 w-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                          <Users size={14} className="text-emerald-400" />
+
+                  <div className="p-2 space-y-1.5 max-h-[380px] overflow-y-auto">
+                    {notifDetails.newLeads > 0 && (
+                      <Link
+                        to={`${prefix}/crm`}
+                        onClick={() => setNotifOpen(false)}
+                        className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.05] border border-transparent hover:border-emerald-500/20 transition-all group"
+                      >
+                        <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                          <Users size={16} className="text-emerald-400" />
                         </div>
-                        <div>
-                          <div className="text-xs font-semibold text-slate-200 group-hover:text-white">{notifDetails.newLeads} New Lead{notifDetails.newLeads > 1 ? 's' : ''}</div>
-                          <div className="text-[10px] text-slate-600">Awaiting review in CRM</div>
-                        </div>
-                      </Link>
-                    ) : null}
-                    {notifDetails.tickets > 0 ? (
-                      <Link to={`${prefix}/support`} onClick={() => setNotifOpen(false)}
-                        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.04] transition-all group">
-                        <div className="h-8 w-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center">
-                          <Ticket size={14} className="text-rose-400" />
-                        </div>
-                        <div>
-                          <div className="text-xs font-semibold text-slate-200 group-hover:text-white">{notifDetails.tickets} Open Ticket{notifDetails.tickets > 1 ? 's' : ''}</div>
-                          <div className="text-[10px] text-slate-600">Support desk awaiting response</div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors">
+                            {notifDetails.newLeads} New Lead{notifDetails.newLeads > 1 ? 's' : ''}
+                          </div>
+                          <div className="text-[11px] text-slate-400 truncate">Awaiting review in CRM pipeline</div>
                         </div>
                       </Link>
-                    ) : null}
+                    )}
+
+                    {notifDetails.contacts > 0 && (
+                      <Link
+                        to={`${prefix}/contacts`}
+                        onClick={() => setNotifOpen(false)}
+                        className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.05] border border-transparent hover:border-sky-500/20 transition-all group"
+                      >
+                        <div className="h-9 w-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center shrink-0">
+                          <MessageSquare size={16} className="text-sky-400" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-white group-hover:text-sky-400 transition-colors">
+                            {notifDetails.contacts} New Contact Enquiry{notifDetails.contacts > 1 ? 'ies' : ''}
+                          </div>
+                          <div className="text-[11px] text-slate-400 truncate">Inbound submission awaiting reply</div>
+                        </div>
+                      </Link>
+                    )}
+
+                    {notifDetails.tickets > 0 && (
+                      <Link
+                        to={`${prefix}/support`}
+                        onClick={() => setNotifOpen(false)}
+                        className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.05] border border-transparent hover:border-rose-500/20 transition-all group"
+                      >
+                        <div className="h-9 w-9 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center shrink-0">
+                          <Ticket size={16} className="text-rose-400" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-white group-hover:text-rose-400 transition-colors">
+                            {notifDetails.tickets} Open Ticket{notifDetails.tickets > 1 ? 's' : ''}
+                          </div>
+                          <div className="text-[11px] text-slate-400 truncate">Support desk awaiting agent response</div>
+                        </div>
+                      </Link>
+                    )}
+
+                    {notifDetails.applications > 0 && (
+                      <Link
+                        to={`${prefix}/job-applications`}
+                        onClick={() => setNotifOpen(false)}
+                        className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.05] border border-transparent hover:border-teal-500/20 transition-all group"
+                      >
+                        <div className="h-9 w-9 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center shrink-0">
+                          <Briefcase size={16} className="text-teal-400" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-white group-hover:text-teal-400 transition-colors">
+                            {notifDetails.applications} New Applicant{notifDetails.applications > 1 ? 's' : ''}
+                          </div>
+                          <div className="text-[11px] text-slate-400 truncate">Candidate review pending</div>
+                        </div>
+                      </Link>
+                    )}
+
                     {notifCount === 0 && (
-                      <div className="text-center py-6 text-xs text-slate-600">
-                        <Star size={20} className="mx-auto mb-2 text-slate-700" />
-                        All clear — no pending items
+                      <div className="text-center py-7 px-4 text-xs text-slate-500 space-y-2">
+                        <div className="h-10 w-10 rounded-full bg-white/5 mx-auto flex items-center justify-center text-slate-400">
+                          <Star size={18} className="text-emerald-400/70" />
+                        </div>
+                        <div className="font-semibold text-slate-300">All clear — no pending alerts</div>
+                        <p className="text-[11px] text-slate-500">You are all caught up on leads, support tickets &amp; enquiries.</p>
                       </div>
                     )}
                   </div>
