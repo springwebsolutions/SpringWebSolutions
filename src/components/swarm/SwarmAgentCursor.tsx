@@ -34,11 +34,11 @@ export const SwarmAgentCursor: React.FC<SwarmAgentCursorProps> = ({ cursor }) =>
             </svg>
           </div>
         ) : cursor.cursorMode === 'caret' ? (
-          /* Blinking Typewriter I-Beam Caret */
+          /* Blinking Typewriter I-Beam Caret with Neon Glow */
           <div className="relative -translate-x-[2px] -translate-y-3">
             <div
-              className="w-1 h-7 rounded-full animate-pulse"
-              style={{ backgroundColor: persona.color, boxShadow: `0 0 10px ${persona.color}` }}
+              className="w-1.5 h-8 rounded-full animate-pulse"
+              style={{ backgroundColor: persona.color, boxShadow: `0 0 14px ${persona.color}` }}
             />
           </div>
         ) : cursor.cursorMode === 'clone' ? (
@@ -56,6 +56,22 @@ export const SwarmAgentCursor: React.FC<SwarmAgentCursorProps> = ({ cursor }) =>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
             <path d="M3 2L18.5 13.5L11.5 15.5L8 22L3 2Z" fill={persona.color} stroke="#ffffff" strokeWidth="1.5" strokeLinejoin="round" />
           </svg>
+        )}
+
+        {/* Minimalist Design Tool Pill (Dimensions / Actions only — zero agent names) */}
+        {cursor.actionText && (
+          <div
+            className="absolute top-5 left-3 px-1.5 py-0.5 rounded shadow-lg border text-[9px] font-mono font-bold whitespace-nowrap pointer-events-none"
+            style={{
+              backgroundColor: 'rgba(4, 6, 12, 0.94)',
+              borderColor: `${persona.color}80`,
+              color: '#ffffff',
+              boxShadow: `0 2px 8px rgba(0,0,0,0.85), 0 0 8px ${persona.color}40`,
+            }}
+          >
+            <span style={{ color: persona.color }} className="mr-1">▸</span>
+            {cursor.actionText}
+          </div>
         )}
 
       </div>

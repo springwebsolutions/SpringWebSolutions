@@ -94,6 +94,15 @@ class SwarmAudioEngine {
   }
 
   /**
+   * Sequential Dot Pop (Red, Amber, Green window lights)
+   */
+  public playDotPop(noteIdx: number = 0): void {
+    if (!this.isEnabled) return
+    const freqs = [580, 720, 880, 1050]
+    this.playSnapPop(freqs[noteIdx % freqs.length])
+  }
+
+  /**
    * Harmonic Major Pentatonic Completion Chime
    */
   public playCompletionChime(): void {
