@@ -512,16 +512,16 @@ export const SiteSettings: React.FC = () => {
             </div>
           </div>
 
-          {/* Autonomous Engineering Swarm Governance Card */}
+          {/* Full-Page Swarm Rebuild Governance Card */}
           <div className="border-t border-white/5 pt-6 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h4 className="font-display font-bold text-white text-sm flex items-center gap-2">
                   <Zap size={16} className="text-cyan-400" />
-                  <span>Autonomous Engineering Swarm Controls</span>
+                  <span>Full-Page "Swarm Rebuild" Animation</span>
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Multi-cursor AI flocking simulation (inspired by Swarm Rebuild) with branded engineering personas.
+                  Multiplayer cursor swarm that reconstructs the entire website piece-by-piece in front of visitors.
                 </p>
               </div>
 
@@ -552,24 +552,24 @@ export const SiteSettings: React.FC = () => {
             {/* Sub-controls grid (Active only if master toggle is on) */}
             <div className={`space-y-4 transition-opacity duration-200 ${swarmConfig.is_enabled ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
               
-              {/* Display Mode Selector */}
+              {/* Trigger Frequency Selector */}
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                   <Activity size={13} className="text-emerald-400" />
-                  <span>Swarm Display Mode</span>
+                  <span>Trigger Frequency &amp; Visitor Experience</span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   {[
-                    { id: 'both', label: 'Dual Mode (Recommended)', desc: 'Hero sandbox + site-wide hotkey/badge' },
-                    { id: 'hero_only', label: 'Hero Sandbox Only', desc: 'Runs inside homepage hero interactive viewport' },
-                    { id: 'site_wide_overlay', label: 'Site-Wide Overlay Only', desc: 'Triggerable across entire page via badge or Alt+S' },
+                    { id: 'first_visit_session', label: 'First Visit in Session', desc: 'Runs on initial visit; subsequent page navs are instant (Recommended)' },
+                    { id: 'every_visit', label: 'Always Rebuild (Demo Mode)', desc: 'Rebuilds on every visit & page refresh for presentations' },
+                    { id: 'manual_only', label: 'Manual Trigger Only', desc: 'Site loads normally; users trigger via Alt+S or bottom pill' },
                   ].map((mode) => (
                     <button
                       key={mode.id}
                       type="button"
-                      onClick={() => setSwarmConfig(prev => ({ ...prev, display_mode: mode.id as any }))}
+                      onClick={() => setSwarmConfig(prev => ({ ...prev, trigger_frequency: mode.id as any }))}
                       className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                        swarmConfig.display_mode === mode.id
+                        swarmConfig.trigger_frequency === mode.id
                           ? 'bg-cyan-500/10 border-cyan-500/40 text-white'
                           : 'bg-white/[0.03] border-white/10 text-slate-400 hover:bg-white/[0.06] hover:text-white'
                       }`}
@@ -628,14 +628,14 @@ export const SiteSettings: React.FC = () => {
                       <Volume2 size={13} className="text-amber-400" />
                       <span>Procedural Web Audio Engine</span>
                     </div>
-                    <div className="text-[11px] text-slate-400">Zero audio files; synthesized tick & snap clicks</div>
+                    <div className="text-[11px] text-slate-400">Synthesized typewriter clicks and component snap pops</div>
                   </div>
                   <button
                     type="button"
-                    onClick={() => setSwarmConfig(prev => ({ ...prev, audio_synthesizer_enabled: !prev.audio_synthesizer_enabled }))}
+                    onClick={() => setSwarmConfig(prev => ({ ...prev, sound_enabled: !prev.sound_enabled }))}
                     className="cursor-pointer"
                   >
-                    {swarmConfig.audio_synthesizer_enabled ? (
+                    {swarmConfig.sound_enabled ? (
                       <ToggleRight size={22} className="text-emerald-400" />
                     ) : (
                       <ToggleLeft size={22} className="text-slate-500" />
@@ -647,7 +647,7 @@ export const SiteSettings: React.FC = () => {
                 <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
                   <div>
                     <div className="text-xs font-semibold text-white">Default Execution Speed</div>
-                    <div className="text-[11px] text-slate-400">Simulation pace for flocking & typing</div>
+                    <div className="text-[11px] text-slate-400">Pace for crosshairs, typing &amp; snapping</div>
                   </div>
                   <div className="flex items-center gap-1">
                     {(['1x', '2x', '3x'] as const).map((spd) => (
@@ -673,11 +673,11 @@ export const SiteSettings: React.FC = () => {
                 <div className="flex items-center justify-between text-xs text-slate-400">
                   <span className="font-semibold text-white flex items-center gap-1.5">
                     <Sparkles size={13} className="text-emerald-400" />
-                    <span>Active Autonomous Personas (4 Concurrent Cursors)</span>
+                    <span>Active Multi-Agent Swarm (6 Concurrent Design-Tool Cursors)</span>
                   </span>
                   <span className="font-mono text-[10px] text-emerald-400">60 FPS Boids Physics</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
                   {Object.values(AGENT_PERSONAS).map((p) => (
                     <div
                       key={p.id}
@@ -685,7 +685,7 @@ export const SiteSettings: React.FC = () => {
                       style={{ borderColor: `${p.color}35`, backgroundColor: `${p.color}10` }}
                     >
                       <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs text-white"
+                        className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs text-white shrink-0"
                         style={{ backgroundColor: p.color }}
                       >
                         {p.avatarChar}

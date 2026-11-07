@@ -1,10 +1,7 @@
-import React, { useEffect, useRef, useState, lazy, Suspense } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Sparkles, Zap, CheckCircle2, ShieldCheck, Award } from 'lucide-react'
 import AnimatedBackground from '../ui/AnimatedBackground'
-import { usePageBuilderStore } from '@/stores/pageBuilderStore'
-
-const SwarmHeroShowcase = lazy(() => import('@/components/swarm/SwarmHeroShowcase').then(m => ({ default: m.SwarmHeroShowcase })))
 
 interface HeroProps {
   content: {
@@ -245,10 +242,6 @@ const ParticleCanvas: React.FC = () => {
 }
 
 export const HeroSection: React.FC<HeroProps> = ({ content }) => {
-  const { siteConfig } = usePageBuilderStore()
-  const swarmConfig = siteConfig?.swarm_config
-  const isSwarmEnabled = swarmConfig?.is_enabled !== false && (swarmConfig?.display_mode === 'hero_only' || swarmConfig?.display_mode === 'both' || !swarmConfig?.display_mode)
-
   const {
     headline,
     subheadline,
@@ -459,13 +452,6 @@ export const HeroSection: React.FC<HeroProps> = ({ content }) => {
 
           </div>
         </div>
-
-        {/* Autonomous Swarm Multi-Cursor Showcase Sandbox */}
-        {isSwarmEnabled && (
-          <Suspense fallback={null}>
-            <SwarmHeroShowcase />
-          </Suspense>
-        )}
 
       </div>
     </section>

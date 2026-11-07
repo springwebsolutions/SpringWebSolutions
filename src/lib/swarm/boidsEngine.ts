@@ -1,15 +1,14 @@
 /**
  * Boids Physics Engine — 60 FPS multi-cursor flocking simulation
  * 
- * Implements Reynolds Flocking algorithm tailored for UI engineering cursors:
+ * Reynolds Flocking algorithm tailored for full-page UI engineering cursors:
  * - Separation, Alignment, Cohesion
- * - Arrival deceleration curve (avoids overshoot)
- * - User cursor repulsion field
+ * - Arrival deceleration curve
+ * - User mouse repulsion field
  * - Micro-tremor natural human hand motion
  */
 
-import type { AgentBoidState, AgentPersonaId, BlueprintTask } from './types'
-import { AGENT_PERSONAS } from './types'
+import type { SwarmAgentState, AgentPersonaId } from './types'
 
 export interface PhysicsWorldConfig {
   maxSpeed: number
@@ -21,10 +20,10 @@ export interface PhysicsWorldConfig {
 }
 
 export const DEFAULT_PHYSICS_CONFIG: PhysicsWorldConfig = {
-  maxSpeed: 14,
-  maxForce: 0.8,
-  slowingRadius: 120,
-  separationRadius: 70,
+  maxSpeed: 16,
+  maxForce: 1.1,
+  slowingRadius: 100,
+  separationRadius: 75,
   neighborRadius: 180,
   mouseRepulsionRadius: 110,
 }
@@ -56,15 +55,22 @@ export class BoidsEngine {
    */
   public createInitialAgents(
     bounds: { width: number; height: number },
-    agentIds: AgentPersonaId[] = ['frontend', 'typescript', 'database', 'sre']
-  ): Map<AgentPersonaId, AgentBoidState> {
-    const agents = new Map<AgentPersonaId, AgentBoidState>()
+    agentIds: AgentPersonaId[] = ['sarah', 'alex', 'arjun', 'vikram', 'elena', 'dev']
+  ): Map<AgentPersonaId, SwarmAgentState> {
+    const agents = new Map<AgentPersonaId, SwarmAgentState>()
 
-    const spawnAngles = [Math.PI * 0.25, Math.PI * 0.75, Math.PI * 1.25, Math.PI * 1.75]
+    const spawnAngles = [
+      Math.PI * 0.15,
+      Math.PI * 0.45,
+      Math.PI * 0.85,
+      Math.PI * 1.15,
+      Math.PI * 1.55,
+      Math.PI * 1.85,
+    ]
 
     agentIds.forEach((id, index) => {
       const angle = spawnAngles[index % spawnAngles.length]
-      const radius = Math.min(bounds.width, bounds.height) * 0.4
+      const radius = Math.min(bounds.width, bounds.height) * 0.45
       const centerX = bounds.width / 2
       const centerY = bounds.height / 2
 
@@ -75,14 +81,15 @@ export class BoidsEngine {
         id,
         x: startX,
         y: startY,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
         targetX: startX,
         targetY: startY,
-        currentTaskId: null,
         isWorking: false,
+        currentTaskId: null,
         actionText: 'Ready',
-        marqueeSelection: null,
+        cursorMode: 'arrow',
+        marqueeBox: null,
         typewriterText: '',
         progress: 0,
       })
@@ -95,7 +102,7 @@ export class BoidsEngine {
    * Main 60 FPS physics tick
    */
   public update(
-    agents: Map<AgentPersonaId, AgentBoidState>,
+    agents: Map<AgentPersonaId, SwarmAgentState>,
     bounds: { width: number; height: number },
     deltaFactor: number = 1
   ): void {
@@ -108,22 +115,22 @@ export class BoidsEngine {
 
       // 1. Steering toward Target
       const targetSteer = this.steerToward(agent, agent.targetX, agent.targetY)
-      steerX += targetSteer.x * 1.6
-      steerY += targetSteer.y * 1.6
+      steerX += targetSteer.x * 1.8
+      steerY += targetSteer.y * 1.8
 
       // 2. Separation force (avoid overlapping with other cursors)
       const sep = this.calculateSeparation(agent, agentList)
-      steerX += sep.x * 2.2
-      steerY += sep.y * 2.2
+      steerX += sep.x * 2.4
+      steerY += sep.y * 2.4
 
-      // 3. User cursor repulsion field
+      // 3. User mouse repulsion
       if (this.userMouse) {
         const rep = this.calculateMouseRepulsion(agent, this.userMouse.x, this.userMouse.y)
         steerX += rep.x * 3.0
         steerY += rep.y * 3.0
       }
 
-      // Apply steering force to velocity with max force cap
+      // Apply steering force to velocity with cap
       const steerMag = Math.hypot(steerX, steerY)
       if (steerMag > this.config.maxForce) {
         steerX = (steerX / steerMag) * this.config.maxForce
@@ -133,39 +140,39 @@ export class BoidsEngine {
       agent.vx += steerX * deltaFactor
       agent.vy += steerY * deltaFactor
 
-      // Limit speed
+      // Cap speed
       const speed = Math.hypot(agent.vx, agent.vy)
       if (speed > this.config.maxSpeed) {
         agent.vx = (agent.vx / speed) * this.config.maxSpeed
         agent.vy = (agent.vy / speed) * this.config.maxSpeed
       }
 
-      // Add gentle damping when very close to target
+      // Damping when close to target
       const distToTarget = Math.hypot(agent.targetX - agent.x, agent.targetY - agent.y)
-      if (distToTarget < 12) {
-        agent.vx *= 0.6
-        agent.vy *= 0.6
+      if (distToTarget < 15) {
+        agent.vx *= 0.7
+        agent.vy *= 0.7
       }
 
       // Update position
       agent.x += agent.vx * deltaFactor
       agent.y += agent.vy * deltaFactor
 
-      // Clamp within visible bounds with soft padding
-      const pad = 20
+      // Clamp within visible bounds with padding
+      const pad = 10
       agent.x = Math.max(pad, Math.min(bounds.width - pad, agent.x))
       agent.y = Math.max(pad, Math.min(bounds.height - pad, agent.y))
     })
   }
 
-  private steerToward(agent: AgentBoidState, targetX: number, targetY: number): { x: number; y: number } {
+  private steerToward(agent: SwarmAgentState, targetX: number, targetY: number): { x: number; y: number } {
     const dx = targetX - agent.x
     const dy = targetY - agent.y
     const dist = Math.hypot(dx, dy)
 
     if (dist < 1) return { x: 0, y: 0 }
 
-    // Arrival deceleration curve
+    // Arrival deceleration
     let desiredSpeed = this.config.maxSpeed
     if (dist < this.config.slowingRadius) {
       desiredSpeed = this.config.maxSpeed * (dist / this.config.slowingRadius)
@@ -181,8 +188,8 @@ export class BoidsEngine {
   }
 
   private calculateSeparation(
-    agent: AgentBoidState,
-    allAgents: AgentBoidState[]
+    agent: SwarmAgentState,
+    allAgents: SwarmAgentState[]
   ): { x: number; y: number } {
     let steerX = 0
     let steerY = 0
@@ -196,10 +203,9 @@ export class BoidsEngine {
       const dist = Math.hypot(dx, dy)
 
       if (dist > 0 && dist < this.config.separationRadius) {
-        // Force inversely proportional to distance squared
         const force = 1 / Math.max(dist, 1)
-        steerX += (dx / dist) * force * 40
-        steerY += (dy / dist) * force * 40
+        steerX += (dx / dist) * force * 45
+        steerY += (dy / dist) * force * 45
         count++
       }
     })
@@ -213,7 +219,7 @@ export class BoidsEngine {
   }
 
   private calculateMouseRepulsion(
-    agent: AgentBoidState,
+    agent: SwarmAgentState,
     mouseX: number,
     mouseY: number
   ): { x: number; y: number } {
@@ -232,4 +238,3 @@ export class BoidsEngine {
     return { x: 0, y: 0 }
   }
 }
-

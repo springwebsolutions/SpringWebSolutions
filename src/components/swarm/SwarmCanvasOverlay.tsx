@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import type { AgentBoidState, AgentPersonaId, BlueprintTask } from '@/lib/swarm/types'
-import { AGENT_PERSONAS } from '@/lib/swarm/types'
+import type { SwarmAgentState, AgentPersonaId, SwarmRebuildTask } from '@/lib/swarm/types'
 import { BoidsEngine } from '@/lib/swarm/boidsEngine'
 import { TaskChoreographer } from '@/lib/swarm/taskChoreographer'
 import { SwarmAgentCursor } from './SwarmAgentCursor'
@@ -8,21 +7,17 @@ import { SwarmControlsToolbar } from './SwarmControlsToolbar'
 import { swarmAudio } from '@/lib/swarm/audioSynthesizer'
 
 interface SwarmCanvasOverlayProps {
-  tasks: BlueprintTask[]
-  containerRef?: React.RefObject<HTMLElement | null>
+  tasks: SwarmRebuildTask[]
   defaultSpeed?: '1x' | '2x' | '3x'
   defaultMuted?: boolean
-  isInline?: boolean
   onComplete?: () => void
   onDismiss: () => void
 }
 
 export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
   tasks,
-  containerRef,
   defaultSpeed = '2x',
   defaultMuted = true,
-  isInline = false,
   onComplete,
   onDismiss,
 }) => {
@@ -32,31 +27,42 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
   const [progress, setProgress] = useState<number>(0)
   const [completedCount, setCompletedCount] = useState<number>(0)
 
-  // Agent states map
-  const agentsRef = useRef<Map<AgentPersonaId, AgentBoidState>>(new Map())
+  const agentsRef = useRef<Map<AgentPersonaId, SwarmAgentState>>(new Map())
   const [, setFrameTick] = useState<number>(0)
 
-  // Engines
   const boidsEngineRef = useRef<BoidsEngine>(new BoidsEngine())
   const choreographerRef = useRef<TaskChoreographer | null>(null)
   const animFrameIdRef = useRef<number | null>(null)
   const lastTimeRef = useRef<number>(performance.now())
 
-  // Initialize Audio & Choreographer
+  // Audio mute sync
   useEffect(() => {
     swarmAudio.setMuted(isMuted)
   }, [isMuted])
 
+  // Esc key listener for instant Go Live
   useEffect(() => {
-    const container = containerRef?.current || document.body
-    const rect = container.getBoundingClientRect()
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onDismiss()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onDismiss])
+
+  // Main Swarm Loop
+  useEffect(() => {
     const bounds = {
-      width: rect.width || window.innerWidth,
-      height: rect.height || window.innerHeight,
+      width: window.innerWidth,
+      height: window.innerHeight,
     }
 
-    // Initialize initial agents
-    const initialAgents = boidsEngineRef.current.createInitialAgents(bounds)
+    // Initialize 6 personas
+    const initialAgents = boidsEngineRef.current.createInitialAgents(bounds, [
+      'sarah', 'alex', 'arjun', 'vikram', 'elena', 'dev'
+    ])
     agentsRef.current = initialAgents
 
     // Initialize Choreographer
@@ -74,18 +80,10 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
     choreographer.start()
     choreographerRef.current = choreographer
 
-    // Mouse listener for cursor repulsion
+    // User mouse repulsion listener
     const handleMouseMove = (e: MouseEvent) => {
-      let x = e.clientX
-      let y = e.clientY
-      if (containerRef?.current) {
-        const cRect = containerRef.current.getBoundingClientRect()
-        x -= cRect.left
-        y -= cRect.top
-      }
-      boidsEngineRef.current.setUserMouse(x, y)
+      boidsEngineRef.current.setUserMouse(e.clientX, e.clientY)
     }
-
     const handleMouseLeave = () => {
       boidsEngineRef.current.setUserMouse(null, null)
     }
@@ -93,7 +91,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseleave', handleMouseLeave)
 
-    // Main 60 FPS Render Loop
+    // 60 FPS Render Loop
     let running = true
     const loop = (time: number) => {
       if (!running) return
@@ -109,9 +107,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         choreographerRef.current.update(agentsRef.current, deltaMs)
       }
 
-      // Trigger React render tick for cursor transforms
       setFrameTick((prev) => (prev + 1) % 1000)
-
       animFrameIdRef.current = requestAnimationFrame(loop)
     }
 
@@ -119,22 +115,18 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
 
     return () => {
       running = false
-      if (animFrameIdRef.current) {
-        cancelAnimationFrame(animFrameIdRef.current)
-      }
+      if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [tasks])
 
-  // Handle speed changes
   const handleSpeedChange = (newSpeed: '1x' | '2x' | '3x') => {
     setSpeed(newSpeed)
     choreographerRef.current?.setSpeed(newSpeed)
     boidsEngineRef.current.setSpeedMultiplier(newSpeed === '1x' ? 1 : newSpeed === '2x' ? 1.6 : 2.4)
   }
 
-  // Handle Play/Pause
   const handleTogglePlay = () => {
     if (isPlaying) {
       choreographerRef.current?.pause()
@@ -145,7 +137,6 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
     }
   }
 
-  // Handle Replay
   const handleReplay = () => {
     choreographerRef.current?.reset()
     choreographerRef.current?.start()
@@ -155,11 +146,12 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
   }
 
   const agentsList = Array.from(agentsRef.current.values())
+  const laserLines = choreographerRef.current?.activeLaserLines || []
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden select-none">
+    <div className="fixed inset-0 pointer-events-none z-[80] overflow-hidden select-none">
       
-      {/* Top Controls Toolbar */}
+      {/* Top Floating Controls HUD */}
       <SwarmControlsToolbar
         progress={progress}
         activeCount={completedCount}
@@ -167,7 +159,6 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         isPlaying={isPlaying}
         isMuted={isMuted}
         speed={speed}
-        isInline={isInline}
         onTogglePlay={handleTogglePlay}
         onToggleMute={() => setIsMuted((prev) => !prev)}
         onChangeSpeed={handleSpeedChange}
@@ -175,15 +166,48 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         onDismiss={onDismiss}
       />
 
-      {/* SVG Canvas for Marquee Selections & Alignment Guidelines */}
+      {/* Full-Viewport SVG for Marquee Crosshairs & Alignment Laser Lines */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        {/* Laser Ruler Guides */}
+        {laserLines.map((line) => {
+          if (line.orientation === 'horizontal') {
+            return (
+              <line
+                key={line.id}
+                x1={line.startPos}
+                y1={line.pos}
+                x2={line.endPos}
+                y2={line.pos}
+                stroke={line.color}
+                strokeWidth="1.2"
+                strokeDasharray="6 4"
+                opacity={line.opacity}
+              />
+            )
+          } else {
+            return (
+              <line
+                key={line.id}
+                x1={line.pos}
+                y1={line.startPos}
+                x2={line.pos}
+                y2={line.endPos}
+                stroke={line.color}
+                strokeWidth="1.2"
+                strokeDasharray="6 4"
+                opacity={line.opacity}
+              />
+            )
+          }
+        })}
+
+        {/* Marquee Boxes */}
         {agentsList.map((agent) => {
-          const m = agent.marqueeSelection
+          const m = agent.marqueeBox
           if (!m) return null
 
           return (
             <g key={`marquee-${agent.id}`}>
-              {/* Marquee Box */}
               <rect
                 x={m.x}
                 y={m.y}
@@ -195,8 +219,6 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
                 strokeDasharray="4 4"
                 rx="6"
               />
-
-              {/* Top-Left Marquee Badge Tag */}
               <rect
                 x={m.x}
                 y={Math.max(0, m.y - 18)}
@@ -220,11 +242,10 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         })}
       </svg>
 
-      {/* Render 4 Live Agent Cursors */}
+      {/* 6 Live Agent Cursors */}
       {agentsList.map((agent) => (
         <SwarmAgentCursor key={agent.id} agent={agent} />
       ))}
     </div>
   )
 }
-
