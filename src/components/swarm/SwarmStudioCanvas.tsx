@@ -7,7 +7,7 @@ import { swarmAudio } from '@/lib/swarm/audioEngine'
 import { Logo } from '@/components/ui/Logo'
 import { 
   Sparkles, ArrowRight, ArrowUpRight, Award, 
-  CheckCircle2, Zap, ShieldCheck 
+  CheckCircle2, Zap, ShieldCheck, Globe, Cpu, Smartphone 
 } from 'lucide-react'
 
 interface SwarmStudioCanvasProps {
@@ -117,13 +117,16 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
     ctasProgress: 0,
     terminalProgress: 0,
     visibleCardsCount: 0,
+    servicesProgress: 0,
     techBadgesProgress: 0,
     sweepY: null,
     canvasOpacity: 1,
   }
 
+  const boxes = ch?.activeBoxes || []
   const laserGuides = ch?.activeLaserGuides || []
   const distanceRulers = ch?.activeDistanceRulers || []
+  const ghostCard = ch?.ghostCard || null
   const cursorsList = Array.from(cursorsRef.current.values())
 
   // Format H1 streaming text
@@ -203,7 +206,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
         </header>
 
         {/* 2. Hero Section Component */}
-        <main className="flex-grow flex flex-col items-center justify-start pt-8 sm:pt-12 px-6 sm:px-10 lg:px-14 text-center max-w-[1400px] mx-auto w-full space-y-7">
+        <main className="flex-grow flex flex-col items-center justify-start pt-6 sm:pt-10 px-6 sm:px-10 lg:px-14 text-center max-w-[1400px] mx-auto w-full space-y-6">
           
           {/* Location Badge Capsule */}
           <div
@@ -220,7 +223,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           </div>
 
           {/* H1 Headline Title */}
-          <div className="min-h-[64px] sm:min-h-[80px] flex items-center justify-center">
+          <div className="min-h-[56px] sm:min-h-[72px] flex items-center justify-center">
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)]">
               {firstPart}
               {solutionsPart && (
@@ -239,7 +242,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
               transform: `translateY(${(1 - stage.subtitleProgress) * 10}px)`,
             }}
           >
-            <h2 className="text-lg sm:text-2xl font-extrabold text-white font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
+            <h2 className="text-base sm:text-xl font-extrabold text-white font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
               Helping Businesses Grow in Udumalpet &amp; Beyond Through{' '}
               <span className="text-emerald-400 font-black">Websites &amp; Web Apps</span>
             </h2>
@@ -265,7 +268,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
 
           {/* 3. Architecture Showcase Terminal Card */}
           <div
-            className="w-full max-w-4xl mx-auto pt-2 transition-all duration-300"
+            className="w-full max-w-4xl mx-auto pt-1 transition-all duration-300"
             style={{
               opacity: stage.terminalProgress,
               transform: `scale(${0.96 + stage.terminalProgress * 0.04})`,
@@ -349,9 +352,51 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
             </div>
           </div>
 
+          {/* 4. Services Section Wireframe Preview Peek */}
+          <div
+            className="w-full max-w-5xl mx-auto pt-4 transition-all duration-300"
+            style={{
+              opacity: stage.servicesProgress,
+              transform: `translateY(${(1 - stage.servicesProgress) * 20}px)`,
+            }}
+          >
+            <div className="text-left space-y-3 p-4 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Section: Engineered Services</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-500">Live Grid Ready</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-3">
+                  <Globe size={18} className="text-emerald-400 shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-white font-display">Web &amp; Cloud Apps</div>
+                    <div className="text-[10px] text-slate-400">Next.js 15 &amp; React 19</div>
+                  </div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-3">
+                  <Cpu size={18} className="text-indigo-400 shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-white font-display">Custom ERP &amp; CRM</div>
+                    <div className="text-[10px] text-slate-400">PostgreSQL &amp; WhatsApp</div>
+                  </div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-3">
+                  <Smartphone size={18} className="text-teal-400 shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-white font-display">Native Mobile &amp; Desktop</div>
+                    <div className="text-[10px] text-slate-400">Kotlin &amp; WinUI 3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Floating Tech Badges */}
           <div
-            className="w-full flex items-center justify-center gap-2 flex-wrap pt-2 transition-all duration-300"
+            className="w-full flex items-center justify-center gap-2 flex-wrap pt-1 transition-all duration-300"
             style={{ opacity: stage.techBadgesProgress }}
           >
             {['<React 19 />', '<Next.js 15 />', 'Kotlin Native', 'WinUI 3 & WPF', 'Supabase SQL', 'WhatsApp CRM'].map((badge, idx) => (
@@ -367,7 +412,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
         </main>
       </div>
 
-      {/* ── Multi-User Design Tool SVG Layer (Guides, Rulers, Sweep) ── */}
+      {/* ── Multi-User Design Tool SVG Layer (Wireframes, Brackets, Guides, Sweep) ── */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-30">
         <defs>
           <filter id="laserGlowHigh" x="-20%" y="-20%" width="140%" height="140%">
@@ -379,7 +424,92 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           </filter>
         </defs>
 
-        {/* Laser Snap Guides */}
+        {/* 1. Active Figma Bounding Boxes with Corner Handles ⌜ ⌝ ⌞ ⌟ */}
+        {boxes.map((box) => {
+          const w = Math.max(2, box.w)
+          const h = Math.max(2, box.h)
+          const handle = 5
+
+          return (
+            <g key={box.id}>
+              {/* Dashed selection rect */}
+              <rect
+                x={box.x}
+                y={box.y}
+                width={w}
+                height={h}
+                fill={`${box.color}12`}
+                stroke={box.color}
+                strokeWidth="1.5"
+                strokeDasharray="6 4"
+                rx="6"
+              />
+
+              {/* Corner Figma Brackets */}
+              <rect x={box.x - 2} y={box.y - 2} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
+              <rect x={box.x + w - 3} y={box.y - 2} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
+              <rect x={box.x - 2} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
+              <rect x={box.x + w - 3} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
+
+              {/* Dimension / Label Pill */}
+              <rect
+                x={box.x}
+                y={Math.max(0, box.y - 18)}
+                width={box.label.length * 6.5 + 16}
+                height="16"
+                fill={box.color}
+                rx="4"
+              />
+              <text
+                x={box.x + 6}
+                y={Math.max(11, box.y - 6)}
+                fill="#ffffff"
+                fontSize="10"
+                fontFamily="sans-serif"
+                fontWeight="bold"
+              >
+                {box.label}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* 2. Ghost Card Being Actively Option-Dragged across Columns */}
+        {ghostCard && (
+          <g opacity={ghostCard.opacity}>
+            <rect
+              x={ghostCard.x}
+              y={ghostCard.y}
+              width={ghostCard.w}
+              height={ghostCard.h}
+              fill="rgba(168, 85, 247, 0.25)"
+              stroke="#a855f7"
+              strokeWidth="2"
+              strokeDasharray="4 3"
+              rx="16"
+            />
+            <rect
+              x={ghostCard.x + 8}
+              y={ghostCard.y - 12}
+              width="64"
+              height="16"
+              fill="#a855f7"
+              rx="4"
+            />
+            <text
+              x={ghostCard.x + 12}
+              y={ghostCard.y}
+              fill="#ffffff"
+              fontSize="9"
+              fontFamily="monospace"
+              fontWeight="bold"
+            >
+              ⌥ CLONE
+            </text>
+          </g>
+        )}
+
+        {/* 3. Laser Snap Guides */}
         {laserGuides.map((guide) => {
           if (guide.orientation === 'horizontal') {
             return (
@@ -438,7 +568,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           }
         })}
 
-        {/* Red Distance Gap Indicators for ⌥-Cloned Cards */}
+        {/* 4. Red Distance Gap Indicators for ⌥-Cloned Cards */}
         {distanceRulers.map((dist) => (
           <g key={dist.id}>
             <line x1={dist.x1} y1={dist.y1} x2={dist.x2} y2={dist.y2} stroke={dist.color} strokeWidth="1.5" />
@@ -466,7 +596,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           </g>
         ))}
 
-        {/* Luminous Synthesis Beam (Wave 4) */}
+        {/* 5. Luminous Synthesis Beam (Wave 5) */}
         {stage.sweepY !== null && (
           <g>
             <line

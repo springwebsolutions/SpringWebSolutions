@@ -119,3 +119,12 @@ export interface DistanceRuler {
   gapPx: number
   color: string
 }
+
+export interface GhostCard {
+  x: number
+  y: number
+  w: number
+  h: number
+  opacity: number
+}
+
