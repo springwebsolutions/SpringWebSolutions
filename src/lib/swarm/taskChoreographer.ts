@@ -66,22 +66,25 @@ export class TaskChoreographer {
   public update(agents: Map<AgentPersonaId, AgentBoidState>, deltaMs: number): void {
     if (!this.isRunning) return
 
-    // 1. Assign pending tasks to available agents
+    // 1. Assign pending tasks to available agents (Multi-Agent Concurrent Pipeline)
     this.pendingTasks = this.pendingTasks.filter((task) => {
-      // Check if task dependencies are satisfied
-      const depsReady = task.dependencies.every((depId) => this.completedTaskIds.has(depId))
+      // Check if task dependencies are satisfied (if any)
+      const depsReady = task.dependencies.length === 0 || task.dependencies.every((depId) => this.completedTaskIds.has(depId))
       if (!depsReady) return true // Keep waiting
 
-      // Check if assigned agent is free
-      const agent = agents.get(task.assignedAgent)
-      if (!agent || agent.isWorking) return true
+      // Try assigned persona first; if busy, allow any idle persona to assist
+      let agent = agents.get(task.assignedAgent)
+      if (!agent || agent.isWorking) {
+        agent = Array.from(agents.values()).find((a) => !a.isWorking)
+      }
+      if (!agent) return true // All 4 agents are actively working
 
       // Assign task to this agent
       agent.isWorking = true
       agent.currentTaskId = task.id
       agent.progress = 0
 
-      // Calculate anchor point
+      // Calculate anchor point (center of the element)
       const targetX = task.rect.x + task.rect.width / 2
       const targetY = task.rect.y + task.rect.height / 2
       agent.targetX = targetX
@@ -98,7 +101,7 @@ export class TaskChoreographer {
         agent.actionText = `Hydrate Component`
       }
 
-      return false // Removed from pending
+      return false // Successfully assigned and dequeued
     })
 
     // 2. Step work progress for active agents
@@ -112,16 +115,9 @@ export class TaskChoreographer {
         return
       }
 
-      // Check if agent has arrived near task
-      const dist = Math.hypot(agent.targetX - agent.x, agent.targetY - agent.y)
-      if (dist > 35 && agent.progress === 0) {
-        // Still flying toward target, don't advance work progress yet
-        return
-      }
-
-      // Advance work progress
+      // Advance work progress smoothly
       const duration = task.durationMs / this.speedMultiplier
-      const step = (deltaMs / duration)
+      const step = deltaMs / duration
       agent.progress = Math.min(1, agent.progress + step)
 
       const persona = AGENT_PERSONAS[agent.id]
@@ -168,7 +164,7 @@ export class TaskChoreographer {
         this.events.onProgress?.(currentProgress, this.completedTaskIds.size, this.tasks.length)
 
         // All tasks completed check
-        if (this.completedTaskIds.size === this.tasks.length) {
+        if (this.completedTaskIds.size >= this.tasks.length) {
           this.isRunning = false
           swarmAudio.playBuildCompleteChime()
           this.events.onAllCompleted?.()

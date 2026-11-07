@@ -11,6 +11,7 @@ interface SwarmControlsToolbarProps {
   isPlaying: boolean
   isMuted: boolean
   speed: '1x' | '2x' | '3x'
+  isInline?: boolean
   onTogglePlay: () => void
   onToggleMute: () => void
   onChangeSpeed: (speed: '1x' | '2x' | '3x') => void
@@ -25,6 +26,7 @@ export const SwarmControlsToolbar: React.FC<SwarmControlsToolbarProps> = ({
   isPlaying,
   isMuted,
   speed,
+  isInline = false,
   onTogglePlay,
   onToggleMute,
   onChangeSpeed,
@@ -34,8 +36,16 @@ export const SwarmControlsToolbar: React.FC<SwarmControlsToolbarProps> = ({
   const isComplete = progress >= 100
 
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] max-w-2xl w-[92vw] pointer-events-auto">
-      <div className="p-3 sm:p-3.5 rounded-2xl bg-[#060a14]/90 backdrop-blur-xl border border-white/15 shadow-2xl text-white flex items-center justify-between gap-3 sm:gap-4 flex-wrap sm:flex-nowrap">
+    <div
+      className={
+        isInline
+          ? 'absolute top-3 left-1/2 -translate-x-1/2 z-[60] w-[95%] max-w-xl pointer-events-auto'
+          : 'fixed top-4 left-1/2 -translate-x-1/2 z-[100] max-w-2xl w-[92vw] pointer-events-auto'
+      }
+    >
+      <div className={`rounded-2xl bg-[#060a14]/95 backdrop-blur-2xl border border-white/20 shadow-2xl text-white flex items-center justify-between gap-2.5 sm:gap-4 flex-wrap sm:flex-nowrap ${
+        isInline ? 'p-2 sm:p-2.5 ring-1 ring-white/10' : 'p-3 sm:p-3.5'
+      }`}>
         
         {/* Left: Swarm status and progress badge */}
         <div className="flex items-center gap-2.5 min-w-0">

@@ -61,7 +61,7 @@ export class DOMBlueprintScanner {
       const assignedAgent = this.assignPersona(taskType, index)
 
       const task: BlueprintTask = {
-        id: `swarm-task-${index}-${Date.now()}`,
+        id: `swarm-task-${index}`,
         type: taskType,
         rect: {
           x: relativeX,
@@ -71,8 +71,8 @@ export class DOMBlueprintScanner {
         },
         textContent: (el.innerText || el.textContent || '').trim().slice(0, 80),
         assignedAgent,
-        dependencies: index > 0 ? [`swarm-task-${index - 1}`] : [],
-        durationMs: taskType === 'text' ? 450 : 350,
+        dependencies: [], // Concurrently executable by the 4-agent swarm
+        durationMs: taskType === 'text' ? 400 : 320,
         domElement: el,
         orderIndex: index
       }

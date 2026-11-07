@@ -12,6 +12,7 @@ interface SwarmCanvasOverlayProps {
   containerRef?: React.RefObject<HTMLElement | null>
   defaultSpeed?: '1x' | '2x' | '3x'
   defaultMuted?: boolean
+  isInline?: boolean
   onComplete?: () => void
   onDismiss: () => void
 }
@@ -21,6 +22,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
   containerRef,
   defaultSpeed = '2x',
   defaultMuted = true,
+  isInline = false,
   onComplete,
   onDismiss,
 }) => {
@@ -157,7 +159,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
   return (
     <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden select-none">
       
-      {/* Top Floating Controls Toolbar */}
+      {/* Top Controls Toolbar */}
       <SwarmControlsToolbar
         progress={progress}
         activeCount={completedCount}
@@ -165,6 +167,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         isPlaying={isPlaying}
         isMuted={isMuted}
         speed={speed}
+        isInline={isInline}
         onTogglePlay={handleTogglePlay}
         onToggleMute={() => setIsMuted((prev) => !prev)}
         onChangeSpeed={handleSpeedChange}

@@ -72,23 +72,24 @@ export const SwarmHeroShowcase: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Multi-Cursor Overlay (renders only when swarm is active) */}
-        {isSwarmActive && scannedBlueprint && (
-          <SwarmCanvasOverlay
-            tasks={scannedBlueprint.tasks}
-            containerRef={containerRef}
-            defaultSpeed="2x"
-            defaultMuted={true}
-            onComplete={() => {
-              setAssembledCount(prev => prev + 1)
-            }}
-            onDismiss={handleDismiss}
-          />
-        )}
-
         {/* Interactive Architecture Workspace (Target for DOM Scanner) */}
-        <div ref={containerRef} className="p-6 sm:p-8 space-y-6">
+        <div ref={containerRef} className="relative p-6 sm:p-8 space-y-6">
           
+          {/* Live Multi-Cursor Overlay (renders directly inside workspace with exact 1:1 coordinates) */}
+          {isSwarmActive && scannedBlueprint && (
+            <SwarmCanvasOverlay
+              tasks={scannedBlueprint.tasks}
+              containerRef={containerRef}
+              defaultSpeed="2x"
+              defaultMuted={true}
+              isInline={true}
+              onComplete={() => {
+                setAssembledCount(prev => prev + 1)
+              }}
+              onDismiss={handleDismiss}
+            />
+          )}
+
           {/* Top Metric Cards Row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             
