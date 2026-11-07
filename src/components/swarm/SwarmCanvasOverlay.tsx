@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import type { SwarmAgentState, AgentPersonaId, SwarmRebuildTask } from '@/lib/swarm/types'
+import type { SwarmAgentState, AgentPersonaId, SwarmRebuildTask, SwarmPhaseId } from '@/lib/swarm/types'
 import { BoidsEngine } from '@/lib/swarm/boidsEngine'
 import { TaskChoreographer } from '@/lib/swarm/taskChoreographer'
 import { SwarmAgentCursor } from './SwarmAgentCursor'
@@ -26,6 +26,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(true)
   const [progress, setProgress] = useState<number>(0)
   const [completedCount, setCompletedCount] = useState<number>(0)
+  const [currentPhase, setCurrentPhase] = useState<SwarmPhaseId>(1)
 
   const agentsRef = useRef<Map<AgentPersonaId, SwarmAgentState>>(new Map())
   const [, setFrameTick] = useState<number>(0)
@@ -67,12 +68,17 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
 
     // Initialize Choreographer
     const choreographer = new TaskChoreographer(tasks, {
-      onProgress: (p, compCount) => {
+      onProgress: (p, compCount, _total, phase) => {
         setProgress(p)
         setCompletedCount(compCount)
+        if (phase) setCurrentPhase(phase)
+      },
+      onPhaseChange: (phase) => {
+        setCurrentPhase(phase)
       },
       onAllCompleted: () => {
         setIsPlaying(false)
+        setCurrentPhase(5)
         onComplete?.()
       },
     })
@@ -142,11 +148,13 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
     choreographerRef.current?.start()
     setProgress(0)
     setCompletedCount(0)
+    setCurrentPhase(1)
     setIsPlaying(true)
   }
 
   const agentsList = Array.from(agentsRef.current.values())
   const laserLines = choreographerRef.current?.activeLaserLines || []
+  const distanceIndicators = choreographerRef.current?.activeDistanceIndicators || []
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[80] overflow-hidden select-none">
@@ -156,6 +164,7 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         progress={progress}
         activeCount={completedCount}
         totalCount={tasks.length}
+        currentPhase={currentPhase}
         isPlaying={isPlaying}
         isMuted={isMuted}
         speed={speed}
@@ -166,59 +175,133 @@ export const SwarmCanvasOverlay: React.FC<SwarmCanvasOverlayProps> = ({
         onDismiss={onDismiss}
       />
 
-      {/* Full-Viewport SVG for Marquee Crosshairs & Alignment Laser Lines */}
+      {/* Full-Viewport SVG for Marquee Crosshairs, Laser Guides & Distance Lines */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <defs>
+          <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
         {/* Laser Ruler Guides */}
         {laserLines.map((line) => {
           if (line.orientation === 'horizontal') {
             return (
-              <line
-                key={line.id}
-                x1={line.startPos}
-                y1={line.pos}
-                x2={line.endPos}
-                y2={line.pos}
-                stroke={line.color}
-                strokeWidth="1.2"
-                strokeDasharray="6 4"
-                opacity={line.opacity}
-              />
+              <g key={line.id} opacity={line.opacity}>
+                <line
+                  x1={line.startPos}
+                  y1={line.pos}
+                  x2={line.endPos}
+                  y2={line.pos}
+                  stroke={line.color}
+                  strokeWidth="1.5"
+                  strokeDasharray="6 4"
+                  filter="url(#laserGlow)"
+                />
+                {line.label && (
+                  <text
+                    x={line.startPos + 10}
+                    y={line.pos - 4}
+                    fill={line.color}
+                    fontSize="10"
+                    fontFamily="monospace"
+                    fontWeight="bold"
+                  >
+                    {line.label}
+                  </text>
+                )}
+              </g>
             )
           } else {
             return (
-              <line
-                key={line.id}
-                x1={line.pos}
-                y1={line.startPos}
-                x2={line.pos}
-                y2={line.endPos}
-                stroke={line.color}
-                strokeWidth="1.2"
-                strokeDasharray="6 4"
-                opacity={line.opacity}
-              />
+              <g key={line.id} opacity={line.opacity}>
+                <line
+                  x1={line.pos}
+                  y1={line.startPos}
+                  x2={line.pos}
+                  y2={line.endPos}
+                  stroke={line.color}
+                  strokeWidth="1.5"
+                  strokeDasharray="6 4"
+                  filter="url(#laserGlow)"
+                />
+              </g>
             )
           }
         })}
 
-        {/* Marquee Boxes */}
+        {/* Distance Gap Indicators (for Option-Clone Cards) */}
+        {distanceIndicators.map((dist, idx) => (
+          <g key={`dist-${idx}`}>
+            <line
+              x1={dist.x1}
+              y1={dist.y1}
+              x2={dist.x2}
+              y2={dist.y2}
+              stroke={dist.color}
+              strokeWidth="1.5"
+            />
+            {/* End caps */}
+            <line x1={dist.x1} y1={dist.y1 - 4} x2={dist.x1} y2={dist.y1 + 4} stroke={dist.color} strokeWidth="1.5" />
+            <line x1={dist.x2} y1={dist.y2 - 4} x2={dist.x2} y2={dist.y2 + 4} stroke={dist.color} strokeWidth="1.5" />
+            {/* Pill */}
+            <rect
+              x={(dist.x1 + dist.x2) / 2 - 16}
+              y={dist.y1 - 10}
+              width="32"
+              height="14"
+              fill={dist.color}
+              rx="3"
+            />
+            <text
+              x={(dist.x1 + dist.x2) / 2}
+              y={dist.y1}
+              fill="#ffffff"
+              fontSize="9"
+              fontFamily="monospace"
+              fontWeight="bold"
+              textAnchor="middle"
+            >
+              {dist.label}
+            </text>
+          </g>
+        ))}
+
+        {/* Marquee Bounding Boxes with Corner Handles */}
         {agentsList.map((agent) => {
           const m = agent.marqueeBox
           if (!m) return null
 
+          const w = Math.max(2, m.width)
+          const h = Math.max(2, m.height)
+          const handleSize = 5
+
           return (
             <g key={`marquee-${agent.id}`}>
+              {/* Dashed selection rect */}
               <rect
                 x={m.x}
                 y={m.y}
-                width={Math.max(1, m.width)}
-                height={Math.max(1, m.height)}
+                width={w}
+                height={h}
                 fill={`${m.color}15`}
                 stroke={m.color}
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
                 rx="6"
               />
+
+              {/* Figma Corner Handles */}
+              <rect x={m.x - 2} y={m.y - 2} width={handleSize} height={handleSize} fill="#ffffff" stroke={m.color} strokeWidth="1" />
+              <rect x={m.x + w - 3} y={m.y - 2} width={handleSize} height={handleSize} fill="#ffffff" stroke={m.color} strokeWidth="1" />
+              <rect x={m.x - 2} y={m.y + h - 3} width={handleSize} height={handleSize} fill="#ffffff" stroke={m.color} strokeWidth="1" />
+              <rect x={m.x + w - 3} y={m.y + h - 3} width={handleSize} height={handleSize} fill="#ffffff" stroke={m.color} strokeWidth="1" />
+
+              {/* Label Pill */}
               <rect
                 x={m.x}
                 y={Math.max(0, m.y - 18)}

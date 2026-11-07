@@ -87,12 +87,59 @@ export const AGENT_PERSONAS: Record<AgentPersonaId, AgentPersona> = {
   }
 }
 
+export type SwarmPhaseId = 1 | 2 | 3 | 4 | 5
+
+export interface SwarmPhaseMeta {
+  id: SwarmPhaseId
+  title: string
+  subtitle: string
+  badgeText: string
+}
+
+export const SWARM_PHASES: Record<SwarmPhaseId, SwarmPhaseMeta> = {
+  1: {
+    id: 1,
+    title: 'Phase 1/4 • Wireframing Containers',
+    subtitle: 'Drawing layout bounding boxes and structural frames',
+    badgeText: 'Wireframing Frames'
+  },
+  2: {
+    id: 2,
+    title: 'Phase 2/4 • Alignment & Laser Guides',
+    subtitle: 'Snapping column axes, margins, and center baselines',
+    badgeText: 'Snapping Guides'
+  },
+  3: {
+    id: 3,
+    title: 'Phase 3/4 • Typographic Streaming',
+    subtitle: 'Typing headlines, subheadings, and copy with carets',
+    badgeText: 'Streaming Copy'
+  },
+  4: {
+    id: 4,
+    title: 'Phase 4/4 • Duplicating & Detailing',
+    subtitle: '⌥-Cloning cards, detailing buttons, and snapping badges',
+    badgeText: 'Detailing Components'
+  },
+  5: {
+    id: 5,
+    title: 'Phase 5/5 • Synthesizing Live DOM',
+    subtitle: 'Releasing canvas masks and unlocking full interactivity',
+    badgeText: 'Going Live!'
+  }
+}
+
 export type SwarmTaskType = 'marquee_box' | 'typewriter' | 'snap_guide' | 'option_clone' | 'vector_pen'
 
 export interface SwarmRebuildTask {
   id: string
   domElement: HTMLElement
   type: SwarmTaskType
+  phase: SwarmPhaseId
+  parentTaskId?: string
+  cloneFromTaskId?: string
+  distanceGapPx?: number
+  bandName?: string
   rect: {
     x: number
     y: number
@@ -122,6 +169,17 @@ export interface LaserSnapLine {
   endPos: number
   color: string
   opacity: number
+  label?: string
+}
+
+export interface DistanceIndicator {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  gapPx: number
+  label: string
+  color: string
 }
 
 export interface SwarmAgentState {
@@ -137,6 +195,7 @@ export interface SwarmAgentState {
   actionText: string
   cursorMode: 'arrow' | 'crosshair' | 'caret' | 'clone'
   marqueeBox: MarqueeCrosshair | null
+  distanceIndicator?: DistanceIndicator | null
   typewriterText: string
   progress: number
 }

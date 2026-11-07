@@ -3,11 +3,14 @@ import {
   Zap, Volume2, VolumeX, Play, Pause,
   RotateCcw, CheckCircle2, X
 } from 'lucide-react'
+import type { SwarmPhaseId } from '@/lib/swarm/types'
+import { SWARM_PHASES } from '@/lib/swarm/types'
 
 interface SwarmControlsToolbarProps {
   progress: number
   activeCount: number
   totalCount: number
+  currentPhase: SwarmPhaseId
   isPlaying: boolean
   isMuted: boolean
   speed: '1x' | '2x' | '3x'
@@ -22,6 +25,7 @@ export const SwarmControlsToolbar: React.FC<SwarmControlsToolbarProps> = ({
   progress,
   activeCount,
   totalCount,
+  currentPhase,
   isPlaying,
   isMuted,
   speed,
@@ -31,13 +35,14 @@ export const SwarmControlsToolbar: React.FC<SwarmControlsToolbarProps> = ({
   onReplay,
   onDismiss,
 }) => {
-  const isComplete = progress >= 100
+  const isComplete = progress >= 100 || currentPhase === 5
+  const phaseMeta = SWARM_PHASES[currentPhase] || SWARM_PHASES[1]
 
   return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-2xl w-[92vw] pointer-events-auto select-none animate-in fade-in slide-in-from-top-4 duration-300">
+    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[100] max-w-2xl w-[94vw] pointer-events-auto select-none animate-in fade-in slide-in-from-top-4 duration-300">
       <div className="p-2.5 sm:p-3 rounded-2xl bg-[#060a14]/95 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-black/80 text-white flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap ring-1 ring-white/10">
         
-        {/* Left: Swarm status and progress badge */}
+        {/* Left: Swarm status, Phase name, and progress bar */}
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="p-1.5 rounded-xl bg-gradient-to-br from-emerald-500/25 to-cyan-500/25 border border-emerald-500/40 text-emerald-400 shrink-0 shadow-sm shadow-emerald-500/20">
             <Zap size={16} className="animate-pulse" />
@@ -49,14 +54,17 @@ export const SwarmControlsToolbar: React.FC<SwarmControlsToolbarProps> = ({
                 Swarm Rebuild
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold shrink-0">
-                {isComplete ? 'Page Live' : `${progress}% Built`}
+                {isComplete ? 'Page Live' : `${progress}%`}
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-cyan-300 border border-white/10 font-medium truncate hidden md:inline-block">
+                {isComplete ? 'Live DOM Ready' : phaseMeta.badgeText}
               </span>
             </div>
 
             {/* Micro Progress Bar */}
-            <div className="w-24 sm:w-36 h-1.5 bg-white/10 rounded-full mt-1.5 overflow-hidden">
+            <div className="w-28 sm:w-40 h-1.5 bg-white/10 rounded-full mt-1.5 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full transition-all duration-200"
+                className="h-full bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 rounded-full transition-all duration-200"
                 style={{ width: `${progress}%` }}
               />
             </div>
