@@ -168,6 +168,9 @@ export const SiteSwarmController: React.FC = () => {
         if (sub) {
           sub.style.clipPath = 'inset(0 100% 0 0)'
         }
+        if (p) {
+          p.style.clipPath = 'inset(0 100% 0 0)'
+        }
         if (badge) {
           badge.style.transform = 'scale(0.92)'
         }

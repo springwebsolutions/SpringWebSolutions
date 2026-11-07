@@ -160,6 +160,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       const badgeRect = targets.badge?.getBoundingClientRect()
       const h1Rect = targets.h1?.getBoundingClientRect()
       const subRect = targets.sub?.getBoundingClientRect()
+      const pRect = targets.p?.getBoundingClientRect()
       const btn1Rect = targets.ctaPrimary?.getBoundingClientRect()
       const btn2Rect = targets.ctaSecondary?.getBoundingClientRect()
       const terminalRect = targets.terminal?.getBoundingClientRect()
@@ -301,10 +302,10 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       }
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 2: HERO LOCATION BADGE & PROGRESSIVE TYPING (20% – 48%)
+      // WAVE 2: HERO BADGE, H1, H2 & VALUE PROP TYPING (18% – 52%)
       // ─────────────────────────────────────────────────────────────
-      else if (progress >= 0.2 && progress < 0.48) {
-        const p2 = (progress - 0.2) / 0.28
+      else if (progress >= 0.18 && progress < 0.52) {
+        const p2 = (progress - 0.18) / 0.34
 
         // Ensure all Wave 1 items are 100% visible
         if (targets.header) targets.header.style.opacity = '1'
@@ -316,9 +317,9 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           tb.style.transform = 'scale(1)'
         })
 
-        // Sarah: Draws Location Badge Capsule
+        // ── 2A: Location Badge Capsule (0% – 18% of Wave 2) ──
         if (badgeRect && targets.badge) {
-          const pBadge = Math.min(1, p2 / 0.22)
+          const pBadge = Math.min(1, p2 / 0.18)
           if (sarah) {
             sarah.targetX = badgeRect.left + badgeRect.width * pBadge
             sarah.targetY = badgeRect.top + badgeRect.height / 2
@@ -348,18 +349,18 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           }
         }
 
-        // Alex: Types H1 Headline Progressive Characters (24% – 42%)
+        // ── 2B: H1 Headline Typing: "Spring Web Solutions" (18% – 45% of Wave 2) ──
         if (h1Rect && targets.h1) {
-          const pH1 = Math.min(1, Math.max(0, (p2 - 0.1) / 0.55))
+          const pH1 = Math.min(1, Math.max(0, (p2 - 0.18) / 0.27))
 
-          if (alex) {
+          if (alex && p2 >= 0.18 && p2 < 0.45) {
             alex.targetX = h1Rect.left + (h1Rect.width * pH1)
             alex.targetY = h1Rect.top + h1Rect.height / 2
             alex.cursorMode = 'caret'
             alex.actionText = 'Typing: Spring Web Solutions'
             alex.typewriterText = 'Spring Web Solutions'
 
-            if (pH1 > 0.05 && pH1 < 0.96 && Math.random() < 0.4) {
+            if (pH1 > 0.05 && pH1 < 0.96 && Math.random() < 0.42) {
               swarmAudio.playTypewriterTick()
             }
           }
@@ -385,44 +386,17 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           }
         }
 
-        // Arjun: Previews CTA Button Anchors simultaneously
-        if (btn1Rect && arjun) {
-          arjun.targetX = btn1Rect.left + btn1Rect.width / 2
-          arjun.targetY = btn1Rect.top + btn1Rect.height / 2
-          arjun.cursorMode = 'crosshair'
-          arjun.actionText = 'Primary CTA Frame'
-        }
+        // ── 2C: H2 Subtitle Typing: "Helping Businesses Grow..." (45% – 68% of Wave 2) ──
+        if (subRect && targets.sub) {
+          const pSub = Math.min(1, Math.max(0, (p2 - 0.45) / 0.23))
 
-        // Vikram: Snaps Left Margin Laser Guide
-        if (h1Rect && vikram) {
-          vikram.targetX = h1Rect.left
-          vikram.targetY = h1Rect.bottom + 12
-          vikram.cursorMode = 'arrow'
-          vikram.actionText = 'Content Left Align: 0px'
-
-          laserGuidesRef.current.push({
-            id: 'h1-left-align',
-            orientation: 'vertical',
-            pos: h1Rect.left,
-            start: h1Rect.top - 20,
-            end: (subRect ? subRect.bottom : h1Rect.bottom) + 40,
-            color: AGENT_PERSONAS.vikram.color,
-            opacity: 0.8,
-            label: 'Content Left Align',
-          })
-        }
-
-        // Alex transitions to H2 Subtitle (40% – 48%)
-        if (p2 > 0.65 && subRect && targets.sub) {
-          const pSub = Math.min(1, Math.max(0, (p2 - 0.65) / 0.35))
-
-          if (alex) {
+          if (alex && p2 >= 0.45 && p2 < 0.68) {
             alex.targetX = subRect.left + (subRect.width * pSub)
             alex.targetY = subRect.top + subRect.height / 2
             alex.cursorMode = 'caret'
             alex.actionText = 'Typing H2 Subtitle'
 
-            if (pSub > 0.05 && pSub < 0.95 && Math.random() < 0.32) {
+            if (pSub > 0.05 && pSub < 0.95 && Math.random() < 0.38) {
               swarmAudio.playTypewriterTick()
             }
           }
@@ -445,19 +419,85 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           } else {
             targets.sub.style.clipPath = ''
           }
+        }
 
-          if (pSub > 0.35 && targets.p) {
-            targets.p.style.opacity = '1'
-            targets.p.style.transition = 'opacity 0.35s ease'
+        // ── 2D: The Core Value Proposition Paragraph Typing (68% – 100% of Wave 2) ──
+        // "We engineer high-performance business websites, custom software solutions, SEO strategies, and custom integrations that save hundreds of hours, boost organic lead generation, and accelerate revenue growth."
+        if (pRect && targets.p) {
+          const pP = Math.min(1, Math.max(0, (p2 - 0.68) / 0.32))
+
+          if (alex && p2 >= 0.68) {
+            alex.targetX = pRect.left + (pRect.width * pP)
+            alex.targetY = pRect.top + pRect.height / 2
+            alex.cursorMode = 'caret'
+            alex.actionText = 'Typing: Core Value Prop'
+            alex.typewriterText = 'We engineer high-performance business websites...'
+
+            if (pP > 0.05 && pP < 0.96 && Math.random() < 0.45) {
+              swarmAudio.playTypewriterTick()
+            }
           }
+
+          boxesRef.current.push({
+            id: 'box-p',
+            x: pRect.left - 6,
+            y: pRect.top - 4,
+            w: Math.max(4, pRect.width * pP + 8),
+            h: pRect.height + 8,
+            color: AGENT_PERSONAS.alex.color,
+            label: 'Body Copy [Value Prop]',
+            progress: pP,
+          })
+
+          // Progressive in-place reveal via clipPath
+          targets.p.style.opacity = '1'
+          targets.p.style.transition = 'none'
+          if (pP < 0.98) {
+            targets.p.style.clipPath = `inset(0 ${Math.max(0, (1 - pP) * 100).toFixed(2)}% 0 0)`
+          } else {
+            targets.p.style.clipPath = ''
+          }
+
+          if (pP > 0.9 && !audioPlayedRef.current['p-done']) {
+            triggerClickRipple(pRect.left + pRect.width / 2, pRect.top + pRect.height / 2, AGENT_PERSONAS.alex.color)
+            swarmAudio.playSnapPop(680)
+            audioPlayedRef.current['p-done'] = true
+          }
+        }
+
+        // Arjun: Previews CTA Button Anchors simultaneously
+        if (btn1Rect && arjun) {
+          arjun.targetX = btn1Rect.left + btn1Rect.width / 2
+          arjun.targetY = btn1Rect.top + btn1Rect.height / 2
+          arjun.cursorMode = 'crosshair'
+          arjun.actionText = 'Primary CTA Frame'
+        }
+
+        // Vikram: Snaps Left Margin Laser Guide down entire content column
+        if (h1Rect && vikram) {
+          vikram.targetX = h1Rect.left
+          vikram.targetY = (pRect ? pRect.bottom : h1Rect.bottom) + 12
+          vikram.cursorMode = 'arrow'
+          vikram.actionText = 'Content Left Align: 0px'
+
+          laserGuidesRef.current.push({
+            id: 'h1-left-align',
+            orientation: 'vertical',
+            pos: h1Rect.left,
+            start: h1Rect.top - 20,
+            end: (pRect ? pRect.bottom : h1Rect.bottom) + 30,
+            color: AGENT_PERSONAS.vikram.color,
+            opacity: 0.8,
+            label: 'Content Left Align',
+          })
         }
       }
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 3: INTERACTIVE CTA BUTTONS ASSEMBLY (48% – 68%)
+      // WAVE 3: INTERACTIVE CTA BUTTONS ASSEMBLY (52% – 70%)
       // ─────────────────────────────────────────────────────────────
-      else if (progress >= 0.48 && progress < 0.68) {
-        const p3 = (progress - 0.48) / 0.2
+      else if (progress >= 0.52 && progress < 0.70) {
+        const p3 = (progress - 0.52) / 0.18
 
         // Guarantee all typography is 100% visible and unclipped
         if (targets.badge) targets.badge.style.opacity = '1'
@@ -469,7 +509,10 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
           targets.sub.style.opacity = '1'
           targets.sub.style.clipPath = ''
         }
-        if (targets.p) targets.p.style.opacity = '1'
+        if (targets.p) {
+          targets.p.style.opacity = '1'
+          targets.p.style.clipPath = ''
+        }
 
         // Button 1: Primary CTA ("Get Free Consultation")
         if (btn1Rect && targets.ctaPrimary) {
@@ -574,10 +617,10 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       }
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 4: ARCHITECTURE TERMINAL & ⌥-CLONED CARDS (68% – 84%)
+      // WAVE 4: ARCHITECTURE TERMINAL & ⌥-CLONED CARDS (70% – 85%)
       // ─────────────────────────────────────────────────────────────
-      else if (progress >= 0.68 && progress < 0.84) {
-        const p4 = (progress - 0.68) / 0.16
+      else if (progress >= 0.70 && progress < 0.85) {
+        const p4 = (progress - 0.70) / 0.15
 
         // Ensure both CTA buttons are rendered
         if (targets.ctaPrimary) targets.ctaPrimary.style.opacity = '1'
@@ -743,10 +786,10 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       }
 
       // ─────────────────────────────────────────────────────────────
-      // WAVE 5: ABOUT SECTION PILLARS & LIVE SYNTHESIS SWEEP (84% – 100%)
+      // WAVE 5: ABOUT SECTION PILLARS & LIVE SYNTHESIS SWEEP (85% – 100%)
       // ─────────────────────────────────────────────────────────────
       else {
-        const p5 = (progress - 0.84) / 0.16
+        const p5 = (progress - 0.85) / 0.15
 
         // Reveal About Section & Pillars
         if (aboutRect && targets.aboutSection) {
