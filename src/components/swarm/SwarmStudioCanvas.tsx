@@ -514,26 +514,6 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
               <rect x={box.x + w - 3} y={box.y - 2} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
               <rect x={box.x - 2} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
               <rect x={box.x + w - 3} y={box.y + h - 3} width={handle} height={handle} fill="#ffffff" stroke={box.color} strokeWidth="1" />
-
-              {/* Dimension / Label Pill */}
-              <rect
-                x={box.x}
-                y={Math.max(0, box.y - 18)}
-                width={box.label.length * 6.5 + 16}
-                height="16"
-                fill={box.color}
-                rx="4"
-              />
-              <text
-                x={box.x + 6}
-                y={Math.max(11, box.y - 6)}
-                fill="#ffffff"
-                fontSize="10"
-                fontFamily="sans-serif"
-                fontWeight="bold"
-              >
-                {box.label}
-              </text>
             </g>
           )
         })}
@@ -588,18 +568,6 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
                   strokeDasharray="6 4"
                   filter="url(#laserGlowHigh)"
                 />
-                {guide.label && (
-                  <text
-                    x={guide.start + 14}
-                    y={guide.pos - 5}
-                    fill={guide.color}
-                    fontSize="10"
-                    fontFamily="monospace"
-                    fontWeight="bold"
-                  >
-                    {guide.label}
-                  </text>
-                )}
               </g>
             )
           } else {
@@ -615,18 +583,6 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
                   strokeDasharray="6 4"
                   filter="url(#laserGlowHigh)"
                 />
-                {guide.label && (
-                  <text
-                    x={guide.pos + 6}
-                    y={guide.start + 24}
-                    fill={guide.color}
-                    fontSize="10"
-                    fontFamily="monospace"
-                    fontWeight="bold"
-                  >
-                    {guide.label}
-                  </text>
-                )}
               </g>
             )
           }
