@@ -1,16 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react'
-import type { SpringCursorState, AgentPersonaId } from '@/lib/swarm/types'
+import type { SpringCursorState, AgentPersonaId, LaserGuide, DistanceRuler, StudioBox, GhostCard } from '@/lib/swarm/types'
+import { AGENT_PERSONAS } from '@/lib/swarm/types'
 import { SwarmSpringEngine } from '@/lib/swarm/swarmSpringEngine'
-import { SwarmWaveChoreographer } from '@/lib/swarm/swarmWaveChoreographer'
 import { SwarmAgentCursor } from './SwarmAgentCursor'
 import { swarmAudio } from '@/lib/swarm/audioEngine'
-import { Logo } from '@/components/ui/Logo'
-import { 
-  Sparkles, ArrowRight, ArrowUpRight, Award, 
-  CheckCircle2, Zap, ShieldCheck, Globe, Cpu, Smartphone 
-} from 'lucide-react'
+
+export interface RealDomTargets {
+  header: HTMLElement | null
+  badge: HTMLElement | null
+  h1: HTMLElement | null
+  sub: HTMLElement | null
+  p: HTMLElement | null
+  cta: HTMLElement | null
+  terminal: HTMLElement | null
+  cards: HTMLElement[]
+  services: HTMLElement | null
+}
 
 interface SwarmStudioCanvasProps {
+  targets: RealDomTargets
   speed?: '1x' | '2x' | '3x'
   soundEnabled?: boolean
   onComplete: () => void
@@ -18,6 +26,7 @@ interface SwarmStudioCanvasProps {
 }
 
 export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
+  targets,
   speed = '2x',
   soundEnabled = true,
   onComplete,
@@ -32,16 +41,23 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
   const [, setFrameTick] = useState<number>(0)
 
   const springEngineRef = useRef<SwarmSpringEngine>(new SwarmSpringEngine())
-  const choreographerRef = useRef<SwarmWaveChoreographer | null>(null)
   const animFrameIdRef = useRef<number | null>(null)
-  const lastTimeRef = useRef<number>(performance.now())
+  const startTimeRef = useRef<number>(performance.now())
 
-  // Configure Audio
+  // Dynamic visual artifacts
+  const boxesRef = useRef<StudioBox[]>([])
+  const laserGuidesRef = useRef<LaserGuide[]>([])
+  const distanceRulersRef = useRef<DistanceRuler[]>([])
+  const ghostCardRef = useRef<GhostCard | null>(null)
+  const sweepYRef = useRef<number | null>(null)
+  const audioPlayedRef = useRef<Record<string, boolean>>({})
+
+  // Audio setup
   useEffect(() => {
     swarmAudio.setEnabled(soundEnabled)
   }, [soundEnabled])
 
-  // Handle Window Resizing
+  // Resize listener
   useEffect(() => {
     const handleResize = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight })
@@ -71,30 +87,369 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
     }
   }, [])
 
-  // Initialize and run 60 FPS animation loop
+  // Main 60 FPS Animation & Choreography Loop
   useEffect(() => {
     const width = window.innerWidth
     const height = window.innerHeight
 
     cursorsRef.current = springEngineRef.current.createInitialCursors(width, height)
+    startTimeRef.current = performance.now()
 
-    const choreographer = new SwarmWaveChoreographer(speed, onComplete)
-    choreographerRef.current = choreographer
-
+    const totalDurationMs = speed === '1x' ? 5200 : speed === '2x' ? 4000 : 3000
     let running = true
 
-    const loop = (time: number) => {
+    const loop = (now: number) => {
       if (!running) return
 
-      const deltaMs = Math.min(time - lastTimeRef.current, 45)
-      lastTimeRef.current = time
+      const elapsed = now - startTimeRef.current
+      const progress = Math.min(1, elapsed / totalDurationMs)
 
-      // Update Choreographer
-      choreographer.update(cursorsRef.current, width, height, deltaMs)
+      const sarah = cursorsRef.current.get('sarah')
+      const alex = cursorsRef.current.get('alex')
+      const arjun = cursorsRef.current.get('arjun')
+      const vikram = cursorsRef.current.get('vikram')
 
-      // Update Spring Physics
+      boxesRef.current = []
+      laserGuidesRef.current = []
+      distanceRulersRef.current = []
+      ghostCardRef.current = null
+
+      // Get real sub-pixel DOM rects
+      const headerRect = targets.header?.getBoundingClientRect()
+      const badgeRect = targets.badge?.getBoundingClientRect()
+      const h1Rect = targets.h1?.getBoundingClientRect()
+      const subRect = targets.sub?.getBoundingClientRect()
+      const ctaRect = targets.cta?.getBoundingClientRect()
+      const terminalRect = targets.terminal?.getBoundingClientRect()
+      const cardRects = targets.cards.map((c) => c.getBoundingClientRect())
+      const servicesRect = targets.services?.getBoundingClientRect()
+
+      // ─────────────────────────────────────────────────────────────
+      // WAVE 1: NAVBAR REBUILD (0% – 18%)
+      // ─────────────────────────────────────────────────────────────
+      if (progress < 0.18) {
+        const p1 = progress / 0.18
+        if (headerRect) {
+          const dragW = headerRect.width * Math.min(1, p1 * 1.3)
+
+          if (sarah) {
+            sarah.targetX = headerRect.left + dragW
+            sarah.targetY = headerRect.top + headerRect.height / 2
+            sarah.cursorMode = 'crosshair'
+            sarah.actionText = `Navbar [${Math.round(dragW)}×${Math.round(headerRect.height)}]`
+          }
+
+          boxesRef.current.push({
+            id: 'box-navbar',
+            x: headerRect.left,
+            y: headerRect.top,
+            w: dragW,
+            h: headerRect.height,
+            color: AGENT_PERSONAS.sarah.color,
+            label: 'Header Navbar',
+            progress: p1,
+          })
+
+          if (p1 > 0.3 && targets.header) {
+            targets.header.style.opacity = '1'
+            targets.header.style.transform = 'scale(1)'
+          }
+
+          if (vikram && p1 > 0.4) {
+            vikram.targetX = headerRect.right
+            vikram.targetY = headerRect.bottom
+            vikram.cursorMode = 'arrow'
+            vikram.actionText = 'Align Margin Y: 64px'
+
+            if (!audioPlayedRef.current['snap-nav']) {
+              swarmAudio.playSnapPop(800)
+              audioPlayedRef.current['snap-nav'] = true
+            }
+
+            laserGuidesRef.current.push({
+              id: 'nav-baseline',
+              orientation: 'horizontal',
+              pos: headerRect.bottom,
+              start: headerRect.left,
+              end: headerRect.right,
+              color: AGENT_PERSONAS.vikram.color,
+              opacity: 0.85,
+              label: 'Navbar Baseline',
+            })
+          }
+
+          if (arjun && p1 > 0.6) {
+            arjun.targetX = headerRect.right - 80
+            arjun.targetY = headerRect.top + headerRect.height / 2
+            arjun.cursorMode = 'arrow'
+            arjun.actionText = 'Button: Client Login'
+          }
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // WAVE 2: HERO HEADLINE & VALUE PROP (18% – 48%)
+      // ─────────────────────────────────────────────────────────────
+      else if (progress >= 0.18 && progress < 0.48) {
+        const p2 = (progress - 0.18) / 0.3
+        if (targets.header) {
+          targets.header.style.opacity = '1'
+          targets.header.style.transform = 'scale(1)'
+        }
+
+        // 1. Location Badge Capsule
+        if (badgeRect && targets.badge) {
+          targets.badge.style.opacity = '1'
+          targets.badge.style.transform = 'scale(1)'
+          if (sarah) {
+            sarah.targetX = badgeRect.left + badgeRect.width / 2
+            sarah.targetY = badgeRect.top + badgeRect.height / 2
+            sarah.cursorMode = 'crosshair'
+            sarah.actionText = 'Badge Capsule'
+          }
+        }
+
+        // 2. H1 Title Typography
+        if (h1Rect && targets.h1) {
+          targets.h1.style.opacity = '1'
+          targets.h1.style.transform = 'scale(1)'
+
+          boxesRef.current.push({
+            id: 'box-h1',
+            x: h1Rect.left - 8,
+            y: h1Rect.top - 6,
+            w: h1Rect.width + 16,
+            h: h1Rect.height + 12,
+            color: AGENT_PERSONAS.alex.color,
+            label: 'H1 Typography',
+            progress: 1,
+          })
+
+          if (alex) {
+            alex.targetX = h1Rect.left + (h1Rect.width * Math.min(1, p2 * 1.4))
+            alex.targetY = h1Rect.top + h1Rect.height / 2
+            alex.cursorMode = 'caret'
+            alex.actionText = 'Typing H1'
+            alex.typewriterText = 'Spring Web Solutions'
+
+            if (Math.random() < 0.3) {
+              swarmAudio.playTypewriterTick()
+            }
+          }
+        }
+
+        // 3. Subtitle & CTAs
+        if (p2 > 0.4 && targets.sub) {
+          targets.sub.style.opacity = '1'
+          targets.sub.style.transform = 'scale(1)'
+        }
+        if (p2 > 0.5 && targets.p) {
+          targets.p.style.opacity = '1'
+          targets.p.style.transform = 'scale(1)'
+        }
+
+        if (p2 > 0.7 && ctaRect && targets.cta) {
+          targets.cta.style.opacity = '1'
+          targets.cta.style.transform = 'scale(1)'
+
+          if (arjun) {
+            arjun.targetX = ctaRect.left + ctaRect.width / 4
+            arjun.targetY = ctaRect.top + ctaRect.height / 2
+            arjun.cursorMode = 'arrow'
+            arjun.actionText = 'CTA: Free Consultation'
+
+            if (!audioPlayedRef.current['snap-cta']) {
+              swarmAudio.playSnapPop(580)
+              audioPlayedRef.current['snap-cta'] = true
+            }
+          }
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // WAVE 3: ARCHITECTURE TERMINAL & ⌥-GHOST DRAGGED CARDS (48% – 76%)
+      // ─────────────────────────────────────────────────────────────
+      else if (progress >= 0.48 && progress < 0.76) {
+        const p3 = (progress - 0.48) / 0.28
+
+        // Guarantee hero elements are visible
+        if (targets.badge) targets.badge.style.opacity = '1'
+        if (targets.h1) targets.h1.style.opacity = '1'
+        if (targets.sub) targets.sub.style.opacity = '1'
+        if (targets.p) targets.p.style.opacity = '1'
+        if (targets.cta) targets.cta.style.opacity = '1'
+
+        // Terminal Box Framing
+        if (terminalRect && targets.terminal) {
+          targets.terminal.style.opacity = '1'
+          targets.terminal.style.transform = 'scale(1)'
+
+          if (sarah) {
+            sarah.targetX = terminalRect.right
+            sarah.targetY = terminalRect.bottom
+            sarah.cursorMode = 'crosshair'
+            sarah.actionText = 'Architecture Terminal Box'
+          }
+
+          boxesRef.current.push({
+            id: 'box-terminal',
+            x: terminalRect.left,
+            y: terminalRect.top,
+            w: terminalRect.width,
+            h: terminalRect.height,
+            color: AGENT_PERSONAS.sarah.color,
+            label: 'Architecture Terminal Box',
+            progress: 1,
+          })
+        }
+
+        // ⌥-Option Dragging Cards 1 to 4
+        if (cardRects.length >= 4) {
+          const rawStep = p3 * 4.2
+          const activeIdx = Math.min(3, Math.floor(rawStep))
+          const stepSub = Math.min(1, rawStep - activeIdx)
+
+          // Reveal completed cards
+          for (let i = 0; i <= activeIdx; i++) {
+            if (targets.cards[i]) {
+              targets.cards[i].style.opacity = '1'
+              targets.cards[i].style.transform = 'scale(1)'
+            }
+          }
+
+          if (arjun) {
+            if (activeIdx === 0) {
+              arjun.targetX = cardRects[0].left + cardRects[0].width / 2
+              arjun.targetY = cardRects[0].top + cardRects[0].height / 2
+              arjun.cursorMode = 'crosshair'
+              arjun.actionText = 'Card 1: Base Metric'
+
+              if (!audioPlayedRef.current['card-0']) {
+                swarmAudio.playSnapPop(520)
+                audioPlayedRef.current['card-0'] = true
+              }
+            } else {
+              // Ghost card slides from previous card to target card!
+              const prevRect = cardRects[activeIdx - 1]
+              const targetRect = cardRects[activeIdx]
+
+              const ghostX = prevRect.left + (targetRect.left - prevRect.left) * stepSub
+              const ghostY = targetRect.top
+
+              arjun.targetX = ghostX + targetRect.width / 2
+              arjun.targetY = ghostY + targetRect.height / 2
+              arjun.cursorMode = 'clone'
+              arjun.actionText = `⌥ Dragging Card ${activeIdx + 1}`
+
+              ghostCardRef.current = {
+                x: ghostX,
+                y: ghostY,
+                w: targetRect.width,
+                h: targetRect.height,
+                opacity: 0.75,
+              }
+
+              distanceRulersRef.current.push({
+                id: 'dist-ruler',
+                x1: prevRect.right,
+                y1: targetRect.top + targetRect.height / 2,
+                x2: Math.max(prevRect.right + 4, ghostX),
+                y2: targetRect.top + targetRect.height / 2,
+                gapPx: Math.round(Math.max(4, ghostX - prevRect.right)),
+                color: '#f43f5e',
+              })
+
+              const audioKey = `card-${activeIdx}`
+              if (!audioPlayedRef.current[audioKey] && stepSub > 0.8) {
+                swarmAudio.playSnapPop(520 + activeIdx * 50)
+                audioPlayedRef.current[audioKey] = true
+              }
+            }
+          }
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // WAVE 4: SERVICES SECTION FRAMING (76% – 88%)
+      // ─────────────────────────────────────────────────────────────
+      else if (progress >= 0.76 && progress < 0.88) {
+        const p4 = (progress - 0.76) / 0.12
+
+        // Reveal all cards
+        targets.cards.forEach((c) => {
+          c.style.opacity = '1'
+          c.style.transform = 'scale(1)'
+        })
+
+        if (servicesRect && targets.services) {
+          targets.services.style.opacity = '1'
+          targets.services.style.transform = 'scale(1)'
+
+          if (sarah) {
+            sarah.targetX = servicesRect.left + servicesRect.width * Math.min(1, p4 * 1.3)
+            sarah.targetY = servicesRect.top + 80
+            sarah.cursorMode = 'crosshair'
+            sarah.actionText = 'Section: Engineered Services'
+          }
+
+          boxesRef.current.push({
+            id: 'box-services',
+            x: servicesRect.left,
+            y: servicesRect.top,
+            w: servicesRect.width * Math.min(1, p4 * 1.3),
+            h: 120,
+            color: AGENT_PERSONAS.sarah.color,
+            label: 'Section: Engineered Services',
+            progress: p4,
+          })
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // WAVE 5: LIVE SYNTHESIS SWEEP & UNLOCK (88% – 100%)
+      // ─────────────────────────────────────────────────────────────
+      else {
+        const p5 = (progress - 0.88) / 0.12
+
+        // Reveal all components
+        if (targets.header) targets.header.style.opacity = '1'
+        if (targets.badge) targets.badge.style.opacity = '1'
+        if (targets.h1) targets.h1.style.opacity = '1'
+        if (targets.sub) targets.sub.style.opacity = '1'
+        if (targets.p) targets.p.style.opacity = '1'
+        if (targets.cta) targets.cta.style.opacity = '1'
+        if (targets.terminal) targets.terminal.style.opacity = '1'
+        targets.cards.forEach((c) => (c.style.opacity = '1'))
+        if (targets.services) targets.services.style.opacity = '1'
+
+        // Laser sweep beam wipes down the page
+        sweepYRef.current = p5 * (height + 120)
+
+        // Cursors scatter outward in celebration
+        cursorsRef.current.forEach((cursor, id) => {
+          cursor.cursorMode = 'arrow'
+          cursor.actionText = 'Live'
+          cursor.typewriterText = ''
+          if (id === 'sarah') cursor.targetY = -80
+          if (id === 'alex') cursor.targetX = -80
+          if (id === 'arjun') cursor.targetX = width + 80
+          if (id === 'vikram') cursor.targetY = height + 80
+        })
+
+        if (!audioPlayedRef.current['chime-finish']) {
+          swarmAudio.playCompletionChime()
+          audioPlayedRef.current['chime-finish'] = true
+        }
+
+        if (progress >= 1 && running) {
+          running = false
+          onComplete()
+        }
+      }
+
+      // Update Cursor Spring Physics
       const speedMult = speed === '1x' ? 1 : speed === '2x' ? 1.6 : 2.2
-      springEngineRef.current.update(cursorsRef.current, speedMult, deltaMs / 16.66)
+      springEngineRef.current.update(cursorsRef.current, speedMult, 1)
 
       setFrameTick((prev) => (prev + 1) % 1000)
       animFrameIdRef.current = requestAnimationFrame(loop)
@@ -106,312 +461,21 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
       running = false
       if (animFrameIdRef.current) cancelAnimationFrame(animFrameIdRef.current)
     }
-  }, [speed, onComplete])
+  }, [speed, onComplete, targets])
 
-  const ch = choreographerRef.current
-  const stage = ch?.stage || {
-    navProgress: 0,
-    badgeProgress: 0,
-    h1CharsCount: 0,
-    subtitleProgress: 0,
-    ctasProgress: 0,
-    terminalProgress: 0,
-    visibleCardsCount: 0,
-    servicesProgress: 0,
-    techBadgesProgress: 0,
-    sweepY: null,
-    canvasOpacity: 1,
-  }
-
-  const boxes = ch?.activeBoxes || []
-  const laserGuides = ch?.activeLaserGuides || []
-  const distanceRulers = ch?.activeDistanceRulers || []
-  const ghostCard = ch?.ghostCard || null
+  const boxes = boxesRef.current
+  const laserGuides = laserGuidesRef.current
+  const distanceRulers = distanceRulersRef.current
+  const ghostCard = ghostCardRef.current
+  const sweepY = sweepYRef.current
   const cursorsList = Array.from(cursorsRef.current.values())
-
-  // Format H1 streaming text
-  const fullHeadline = 'Spring Web Solutions'
-  const renderedChars = fullHeadline.slice(0, stage.h1CharsCount)
-  const isSolutionsActive = stage.h1CharsCount > 11
-  const firstPart = renderedChars.slice(0, 11)
-  const solutionsPart = isSolutionsActive ? renderedChars.slice(11) : ''
 
   return (
     <div
       onClick={onDismiss}
-      className="fixed inset-0 z-[9999] cursor-pointer select-none overflow-hidden"
-      style={{
-        opacity: stage.canvasOpacity,
-        transition: 'opacity 0.2s ease-out',
-      }}
+      className="fixed inset-0 z-[9999] cursor-pointer select-none pointer-events-none overflow-hidden"
       title="Click or press Esc to skip animation"
     >
-      {/* ── Real Site Backdrop Atmosphere ── */}
-      <div className="absolute inset-0 bg-[#040509]">
-        {/* Fine Dot Grid Overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-40"
-          style={{
-            backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px)`,
-            backgroundSize: '2.5rem 2.5rem',
-            maskImage: 'radial-gradient(ellipse 80% 70% at 50% 50%, #000 60%, transparent 100%)',
-          }}
-        />
-
-        {/* Emerald & Indigo Ambient Radial Spotlights */}
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[450px] bg-gradient-to-b from-emerald-500/15 via-teal-500/5 to-transparent blur-[120px] pointer-events-none" />
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[350px] bg-indigo-500/10 blur-[130px] pointer-events-none" />
-      </div>
-
-      {/* ── Real Components Layer Being Constructed Live ── */}
-      <div className="relative z-10 w-full min-h-screen flex flex-col pointer-events-none">
-        
-        {/* 1. Header Navbar Component */}
-        <header
-          className="sticky top-0 w-full border-b bg-[#040509]/90 border-white/10 backdrop-blur-xl transition-all duration-200"
-          style={{
-            opacity: stage.navProgress,
-            transform: `translateY(${(1 - stage.navProgress) * -16}px)`,
-          }}
-        >
-          <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-14">
-            <div className="flex h-16 items-center justify-between">
-              {/* Logo */}
-              <div className="flex items-center">
-                <Logo size="sm" />
-              </div>
-
-              {/* Nav Links */}
-              <div className="hidden md:flex items-center space-x-2.5">
-                {['Home', 'About', 'Services', 'Portfolio', 'Blog', 'Contact'].map((item, idx) => (
-                  <span
-                    key={idx}
-                    className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-xl font-display ${
-                      idx === 0 ? 'text-emerald-400 bg-white/5 border border-white/10' : 'text-slate-300'
-                    }`}
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
-
-              {/* Client Login CTA */}
-              <div className="flex items-center space-x-3">
-                <span className="btn-primary text-xs font-bold py-2 px-4 shadow-lg shadow-emerald-500/20">
-                  Client Login
-                </span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* 2. Hero Section Component */}
-        <main className="flex-grow flex flex-col items-center justify-start pt-6 sm:pt-10 px-6 sm:px-10 lg:px-14 text-center max-w-[1400px] mx-auto w-full space-y-6">
-          
-          {/* Location Badge Capsule */}
-          <div
-            className="transition-all duration-300"
-            style={{
-              opacity: stage.badgeProgress,
-              transform: `scale(${0.9 + stage.badgeProgress * 0.1})`,
-            }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#060913]/90 border border-emerald-500/40 text-emerald-400 text-xs font-extrabold uppercase tracking-widest font-display shadow-2xl backdrop-blur-md">
-              <Sparkles size={14} className="text-emerald-400 animate-spin" />
-              <span>#1 Web Development &amp; Software Engineering Agency in Udumalpet</span>
-            </div>
-          </div>
-
-          {/* H1 Headline Title */}
-          <div className="min-h-[56px] sm:min-h-[72px] flex items-center justify-center">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight font-display text-white leading-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.98)]">
-              {firstPart}
-              {solutionsPart && (
-                <span className="ml-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400">
-                  {solutionsPart}
-                </span>
-              )}
-            </h1>
-          </div>
-
-          {/* Subtitle */}
-          <div
-            className="max-w-2xl mx-auto transition-all duration-300"
-            style={{
-              opacity: stage.subtitleProgress,
-              transform: `translateY(${(1 - stage.subtitleProgress) * 10}px)`,
-            }}
-          >
-            <h2 className="text-base sm:text-xl font-extrabold text-white font-display leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-              Helping Businesses Grow in Udumalpet &amp; Beyond Through{' '}
-              <span className="text-emerald-400 font-black">Websites &amp; Web Apps</span>
-            </h2>
-          </div>
-
-          {/* CTAs */}
-          <div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-1 transition-all duration-300"
-            style={{
-              opacity: stage.ctasProgress,
-              transform: `scale(${0.95 + stage.ctasProgress * 0.05})`,
-            }}
-          >
-            <div className="btn-primary flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 shadow-xl shadow-blue-500/40 rounded-xl">
-              <span>Get Free Consultation</span>
-              <ArrowRight size={16} />
-            </div>
-            <div className="flex items-center justify-center gap-2 text-sm font-bold py-3.5 px-8 bg-white/10 text-white border border-white/20 backdrop-blur-md rounded-xl shadow-xl">
-              <span>Explore Services</span>
-              <ArrowUpRight size={16} />
-            </div>
-          </div>
-
-          {/* 3. Architecture Showcase Terminal Card */}
-          <div
-            className="w-full max-w-4xl mx-auto pt-1 transition-all duration-300"
-            style={{
-              opacity: stage.terminalProgress,
-              transform: `scale(${0.96 + stage.terminalProgress * 0.04})`,
-            }}
-          >
-            <div className="rounded-3xl border border-white/15 bg-[#080b14]/90 p-4 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
-              
-              {/* Terminal Header */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs text-slate-400">
-                <div className="flex items-center space-x-2">
-                  <span className="h-3 w-3 rounded-full bg-rose-500/80 inline-block" />
-                  <span className="h-3 w-3 rounded-full bg-amber-500/80 inline-block" />
-                  <span className="h-3 w-3 rounded-full bg-emerald-500/80 inline-block" />
-                  <span className="ml-2 font-mono text-[11px] text-slate-300 font-semibold">springweb-architecture-v3.ts</span>
-                </div>
-                <div className="flex items-center space-x-2 text-[11px] font-mono text-emerald-400">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span>STATUS: 99.9% UPTIME SLA</span>
-                </div>
-              </div>
-
-              {/* 4 Metric Cards Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-                {/* Card 1 */}
-                <div
-                  className="p-4 rounded-2xl bg-white/[0.06] border border-white/15 space-y-1 transition-all duration-200"
-                  style={{
-                    opacity: stage.visibleCardsCount >= 1 ? 1 : 0,
-                    transform: stage.visibleCardsCount >= 1 ? 'scale(1)' : 'scale(0.9)',
-                  }}
-                >
-                  <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider font-display">
-                    <Award size={14} /> Completed Projects
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white font-display">3</div>
-                </div>
-
-                {/* Card 2 */}
-                <div
-                  className="p-4 rounded-2xl bg-white/[0.06] border border-white/15 space-y-1 transition-all duration-200"
-                  style={{
-                    opacity: stage.visibleCardsCount >= 2 ? 1 : 0,
-                    transform: stage.visibleCardsCount >= 2 ? 'scale(1)' : 'scale(0.9)',
-                  }}
-                >
-                  <div className="flex items-center gap-1.5 text-indigo-400 text-[11px] font-bold uppercase tracking-wider font-display">
-                    <CheckCircle2 size={14} /> Sprint Delivery
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white font-display">100%</div>
-                </div>
-
-                {/* Card 3 */}
-                <div
-                  className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1 transition-all duration-200"
-                  style={{
-                    opacity: stage.visibleCardsCount >= 3 ? 1 : 0,
-                    transform: stage.visibleCardsCount >= 3 ? 'scale(1)' : 'scale(0.9)',
-                  }}
-                >
-                  <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-bold uppercase tracking-wider font-display">
-                    <Zap size={14} /> PageSpeed
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white font-display">&lt; 1s Load</div>
-                </div>
-
-                {/* Card 4 */}
-                <div
-                  className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-1 transition-all duration-200"
-                  style={{
-                    opacity: stage.visibleCardsCount >= 4 ? 1 : 0,
-                    transform: stage.visibleCardsCount >= 4 ? 'scale(1)' : 'scale(0.9)',
-                  }}
-                >
-                  <div className="flex items-center gap-1.5 text-teal-400 text-[11px] font-bold uppercase tracking-wider font-display">
-                    <ShieldCheck size={14} /> Uptime SLA
-                  </div>
-                  <div className="text-2xl sm:text-3xl font-black text-white font-display">99.9%</div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* 4. Services Section Wireframe Preview Peek */}
-          <div
-            className="w-full max-w-5xl mx-auto pt-4 transition-all duration-300"
-            style={{
-              opacity: stage.servicesProgress,
-              transform: `translateY(${(1 - stage.servicesProgress) * 20}px)`,
-            }}
-          >
-            <div className="text-left space-y-3 p-4 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md">
-              <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Section: Engineered Services</span>
-                </span>
-                <span className="text-[10px] font-mono text-slate-500">Live Grid Ready</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-3">
-                  <Globe size={18} className="text-emerald-400 shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-white font-display">Web &amp; Cloud Apps</div>
-                    <div className="text-[10px] text-slate-400">Next.js 15 &amp; React 19</div>
-                  </div>
-                </div>
-                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-3">
-                  <Cpu size={18} className="text-indigo-400 shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-white font-display">Custom ERP &amp; CRM</div>
-                    <div className="text-[10px] text-slate-400">PostgreSQL &amp; WhatsApp</div>
-                  </div>
-                </div>
-                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center gap-3">
-                  <Smartphone size={18} className="text-teal-400 shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-white font-display">Native Mobile &amp; Desktop</div>
-                    <div className="text-[10px] text-slate-400">Kotlin &amp; WinUI 3</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Floating Tech Badges */}
-          <div
-            className="w-full flex items-center justify-center gap-2 flex-wrap pt-1 transition-all duration-300"
-            style={{ opacity: stage.techBadgesProgress }}
-          >
-            {['<React 19 />', '<Next.js 15 />', 'Kotlin Native', 'WinUI 3 & WPF', 'Supabase SQL', 'WhatsApp CRM'].map((badge, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 rounded-full bg-white/[0.04] border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold shadow-md backdrop-blur-md"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-
-        </main>
-      </div>
-
       {/* ── Multi-User Design Tool SVG Layer (Wireframes, Brackets, Guides, Sweep) ── */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-30">
         <defs>
@@ -438,7 +502,7 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
                 y={box.y}
                 width={w}
                 height={h}
-                fill={`${box.color}12`}
+                fill={`${box.color}10`}
                 stroke={box.color}
                 strokeWidth="1.5"
                 strokeDasharray="6 4"
@@ -597,13 +661,13 @@ export const SwarmStudioCanvas: React.FC<SwarmStudioCanvasProps> = ({
         ))}
 
         {/* 5. Luminous Synthesis Beam (Wave 5) */}
-        {stage.sweepY !== null && (
+        {sweepY !== null && (
           <g>
             <line
               x1="0"
-              y1={stage.sweepY}
+              y1={sweepY}
               x2={dimensions.width}
-              y2={stage.sweepY}
+              y2={sweepY}
               stroke="#38bdf8"
               strokeWidth="3.5"
               filter="url(#laserGlowHigh)"
